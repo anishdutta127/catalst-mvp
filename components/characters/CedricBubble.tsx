@@ -47,7 +47,7 @@ export function CedricBubble({ text, onComplete, delay = 0 }: CedricBubbleProps)
       className="bg-dark-surface border border-white/10 rounded-lg px-4 py-3 max-w-[85%]"
     >
       <div className="flex items-center gap-2 mb-1">
-        <span className="text-xs font-semibold text-gold">🔥 Cedric</span>
+        <span className="text-xs font-semibold text-gold">🧙 Cedric</span>
       </div>
       <p className="text-sm leading-relaxed text-ivory">
         {words.map((word, i) => (

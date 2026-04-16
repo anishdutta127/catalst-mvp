@@ -27,7 +27,7 @@ export const MILESTONES: Milestone[] = [
   { id: 'world',   icon: '🌍', label: 'World',   screens: ['s04'] },
   { id: 'test',    icon: '⚡', label: 'Test',    screens: ['s05'] },
   { id: 'crystal', icon: '💎', label: 'Crystal',  screens: ['s06', 's07'] },
-  { id: 'forge',   icon: '🔥', label: 'Forge',   screens: ['s08'] },
+  { id: 'forge',   icon: '⚒️', label: 'Forge',   screens: ['s08'] },
   { id: 'ideas',   icon: '💡', label: 'Ideas',   screens: ['s09', 's09b'] },
   { id: 'home',    icon: '🏠', label: 'Home',    screens: ['s10', 's11'] },
 ];
@@ -68,7 +68,7 @@ export interface CrystalOrbDef {
 }
 
 export const CRYSTAL_ORBS: CrystalOrbDef[] = [
-  { id: 'grit',      name: 'Grit',      icon: '🔥', color: '#F59E0B', description: 'Resilience, persistence, hustle' },
+  { id: 'grit',      name: 'Grit',      icon: '💪', color: '#F59E0B', description: 'Resilience, persistence, hustle' },
   { id: 'vision',    name: 'Vision',    icon: '💡', color: '#EAB308', description: 'Big-picture thinking, future sight' },
   { id: 'craft',     name: 'Craft',     icon: '🔧', color: '#CD7F32', description: 'Building, making, technical excellence' },
   { id: 'influence', name: 'Influence', icon: '🗣️', color: '#A855F7', description: 'Persuasion, leadership, moving people' },

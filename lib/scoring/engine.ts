@@ -171,7 +171,7 @@ const BLOT2: Record<string, ND> = {
 
 const BLOT3: Record<string, ND> = {
   '🔬': { nAch: 1, nAff: 0, nPow: 0 },
-  '🔥': { nAch: 1, nAff: 0, nPow: 0 },
+  '🌋': { nAch: 1, nAff: 0, nPow: 0 },
   '🎨': { nAch: 1, nAff: 0, nPow: 0 },
   '🌺': { nAch: 1, nAff: 0, nPow: 0 },
   '👤': { nAch: 0, nAff: 2, nPow: 0 },
@@ -380,7 +380,7 @@ function computeBoldness(p: ForgeProfile): number {
   if (p.word_responses[3] === 'Thrill') b += 3;
   const b3 = p.blot_responses[2];
   if (b3 === '☁️') b += 3;
-  else if (b3 === '🔥' || b3 === '🔬') b += 2;
+  else if (b3 === '🌋' || b3 === '🔬') b += 2;
   if (stdDev(p.word_response_times.filter(t => t > 0)) > 1000) b += 1;
   return b;
 }

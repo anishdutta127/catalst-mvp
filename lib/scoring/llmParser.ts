@@ -95,7 +95,7 @@ export function parseLLMResponse(text: string): Partial<ForgeProfile> {
 
   const blot1 = drive === 'affiliation' ? '👥' : drive === 'achievement' ? '🦋' : drive === 'power' ? '💥' : '🩸';
   const blot2 = work === 'builder' ? '👢' : work === 'host' ? '🌳' : work === 'researcher' ? '🗿' : '🦇';
-  const blot3 = risk === 'thrill-seeker' ? '☁️' : risk === 'cautious' ? '🌺' : '🔥';
+  const blot3 = risk === 'thrill-seeker' ? '☁️' : risk === 'cautious' ? '🌺' : '🌋';
 
   const powerWord = decision === 'vision-first' || drive === 'power' ? 'Control' : 'Freedom';
   const togetherWord = team === 'solo' ? 'Slower' : 'Stronger';
