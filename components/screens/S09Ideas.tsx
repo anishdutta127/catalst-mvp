@@ -9,7 +9,7 @@ import { analytics } from '@/lib/analytics';
 import type { ScoredIdea } from '@/lib/scoring/types';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { FitRadar } from '@/components/ui/FitRadar';
-import { MarketBar } from '@/components/ui/MarketBar';
+import { AreaChart, Area, XAxis, ResponsiveContainer } from 'recharts';
 
 /**
  * S09 — Ideas Revealed (enriched)
@@ -154,25 +154,118 @@ export function S09Ideas() {
         // Market size from idea stats
         const marketStats = idea.analytics || {} as Record<string, string>;
 
+        const dc = (idea as unknown as Record<string, unknown>).deep_content as Record<string, unknown> | undefined;
+        const cp = dc?.consumer_psychology as Record<string, string> | undefined;
+        const md = dc?.market_data as Record<string, unknown> | undefined;
+        const pestle = dc?.pestle as Record<string, string> | undefined;
+        const competitors = dc?.competitors as Array<{ name: string; weakness: string; market_share_pct: number }> | undefined;
+        const revenueModel = dc?.revenue_model as Record<string, string> | undefined;
+        const firstSteps = dc?.first_steps as Array<{ step: number; action: string; timeline: string }> | undefined;
+        const growthChart = md?.growth_chart as Array<{ year: string; value: number }> | undefined;
+
         const sections = [
-          { key: 'idea', title: 'The Idea', content: idea.pain_to_promise, jsx: null as React.ReactNode },
-          { key: 'why', title: 'Why You', content: whyYou || '', jsx: null as React.ReactNode },
-          { key: 'market', title: 'The Market', content: '', jsx: (
-            <div className="px-4 pb-3 space-y-4">
-              <p className="text-xs text-ivory/50 leading-relaxed">{idea.domain_primary.replace(/_/g, ' ')} — {idea.why_now}</p>
-              <MarketBar
-                tam={marketStats.priceRange || '$10B+'}
-                sam={marketStats.year1RevenueRange || '$1B'}
-                som={marketStats.grossMargin || '$50M'}
-              />
-              <div className="border-t border-white/5 pt-3">
-                <p className="text-[10px] font-mono text-gold/60 uppercase tracking-wider mb-2">YOUR FIT</p>
-                <FitRadar scores={fitScores} />
+          { key: 'idea', title: 'The Idea', content: idea.pain_to_promise, jsx: cp?.jobs_to_be_done ? (
+            <div className="p-4 space-y-3">
+              <p className="text-ivory/80 text-[14px] leading-relaxed">{idea.pain_to_promise}</p>
+              <div className="bg-gold/8 border-l-2 border-gold px-4 py-3 rounded-r-xl">
+                <p className="text-[10px] text-gold/60 uppercase tracking-wider mb-1">The job this idea does</p>
+                <p className="text-ivory/80 text-[13px] italic leading-relaxed">&ldquo;{cp.jobs_to_be_done}&rdquo;</p>
               </div>
             </div>
+          ) : null as React.ReactNode },
+          { key: 'why', title: 'Why You', content: whyYou || '', jsx: (whyYou && whyYou !== '__loading__') ? (
+            <div className="p-4 space-y-3">
+              <p className="text-ivory/70 text-[13px] leading-relaxed">{whyYou}</p>
+              <div className="flex flex-col items-center pt-2">
+                <p className="text-[10px] text-ivory/35 uppercase tracking-wider mb-2">Your founder fit</p>
+                <FitRadar scores={fitScores} />
+                <p className="text-[10px] text-ivory/25 italic mt-1">Gold = your profile. Grey = average founder.</p>
+              </div>
+            </div>
+          ) : null as React.ReactNode },
+          { key: 'market', title: 'The Market', content: '', jsx: (
+            <div className="p-4 space-y-4">
+              <p className="text-xs text-ivory/50 leading-relaxed">{idea.domain_primary.replace(/_/g, ' ')} — {idea.why_now}</p>
+              {growthChart && growthChart.length > 0 && (
+                <div>
+                  <p className="text-[10px] text-ivory/40 uppercase tracking-wider mb-2">Market Growth ($B)</p>
+                  <div className="h-20">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={growthChart}>
+                        <defs><linearGradient id={`ig-${idea.idea_id}`} x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#D4A843" stopOpacity={0.4}/><stop offset="95%" stopColor="#D4A843" stopOpacity={0}/></linearGradient></defs>
+                        <Area type="monotone" dataKey="value" stroke="#D4A843" strokeWidth={2} fill={`url(#ig-${idea.idea_id})`} dot={false}/>
+                        <XAxis dataKey="year" tick={{fill:'rgba(255,255,255,0.25)',fontSize:9}} axisLine={false} tickLine={false}/>
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              )}
+              {pestle && (
+                <div>
+                  <p className="text-[10px] text-ivory/35 uppercase tracking-wider mb-2">Context scan</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[['political','🏛️','Political'],['economic','💰','Economic'],['social','👥','Social'],['technological','⚡','Tech'],['legal','⚖️','Legal'],['environmental','🌱','Green']].map(([key,icon,label]) => (
+                      pestle[key] ? (
+                        <div key={key} className="bg-white/4 rounded-xl p-2.5">
+                          <p className="text-[9px] text-ivory/30 uppercase tracking-wider mb-0.5">{icon} {label}</p>
+                          <p className="text-ivory/65 text-[11px] leading-snug">{pestle[key]}</p>
+                        </div>
+                      ) : null
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           ) },
-          { key: 'steps', title: 'First Steps', content: `Week 1: ${idea.quickStart.week1}\nMVP: ${idea.quickStart.mvp}\nFirst customers: ${idea.quickStart.firstCustomers}`, jsx: null as React.ReactNode },
-          { key: 'risk', title: 'The Risk', content: idea.proof.gap, jsx: null as React.ReactNode },
+          { key: 'steps', title: 'First Steps', content: '', jsx: (
+            <div className="p-4 space-y-3">
+              {(firstSteps || [
+                {step:1, action: idea.quickStart.week1, timeline:'Week 1'},
+                {step:2, action: idea.quickStart.mvp, timeline:'Week 2-4'},
+                {step:3, action: idea.quickStart.firstCustomers, timeline:'Month 2'},
+              ]).map(({step, action, timeline}) => (
+                <div key={step} className="flex gap-3 items-start">
+                  <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center text-gold text-[12px] font-bold flex-shrink-0 mt-0.5">{step}</div>
+                  <div className="flex-1">
+                    <p className="text-ivory text-[13px] font-medium leading-snug">{action}</p>
+                    <span className="inline-block mt-1 text-[10px] bg-white/8 text-ivory/40 rounded-full px-2 py-0.5">{timeline}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) },
+          { key: 'risk', title: 'The Risk', content: '', jsx: (
+            <div className="p-4 space-y-4">
+              <div className="bg-orange-500/8 border border-orange-500/25 rounded-xl p-4">
+                <p className="text-[9px] text-orange-400/70 uppercase tracking-wider mb-2">The honest risk</p>
+                <p className="text-ivory/80 text-[13px] leading-relaxed">{(dc?.honest_risk as string) || idea.proof.gap}</p>
+              </div>
+              {competitors && competitors.length > 0 && (
+                <div>
+                  <p className="text-[10px] text-ivory/35 uppercase tracking-wider mb-2">Competition</p>
+                  {competitors.map((c) => (
+                    <div key={c.name} className="flex items-start gap-3 py-2.5 border-b border-white/6 last:border-0">
+                      <div className="flex-1">
+                        <p className="text-ivory/80 text-[13px] font-medium">{c.name}</p>
+                        <p className="text-ivory/40 text-[11px] mt-0.5">Gap: {c.weakness}</p>
+                      </div>
+                      <div className="text-right flex-shrink-0">
+                        <p className="text-[11px] text-ivory/40">{c.market_share_pct}% share</p>
+                        <div className="w-16 h-1.5 bg-white/10 rounded-full mt-1"><div className="h-full bg-red-400/50 rounded-full" style={{width:`${c.market_share_pct}%`}}/></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {revenueModel && (
+                <div className="bg-white/4 rounded-xl p-3 space-y-1">
+                  <p className="text-[10px] text-ivory/35 uppercase tracking-wider">Revenue model</p>
+                  <p className="text-ivory/70 text-[12px]">{revenueModel.primary}</p>
+                  {revenueModel.secondary && <p className="text-ivory/45 text-[11px]">+ {revenueModel.secondary}</p>}
+                </div>
+              )}
+            </div>
+          ) },
         ];
 
         return (
@@ -233,14 +326,16 @@ export function S09Ideas() {
 
       <ScreenQuote screen="s09" />
 
-      {/* Crown CTA */}
+      {/* Crown CTA — purple premium */}
       {crownedIdeaId && (
         <motion.button
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.02, boxShadow: '0 0 28px rgba(124,58,237,0.55)' }}
+          whileTap={{ scale: 0.97 }}
           onClick={() => advanceScreen()}
           data-testid="crown-cta"
-          className="w-full py-3 rounded-full bg-gold text-dark font-semibold hover:bg-gold/90 transition-all"
+          className="w-full h-14 rounded-2xl font-bold text-[16px] text-white bg-gradient-to-r from-violet-700 to-purple-600 border border-violet-400/25 shadow-[0_0_18px_rgba(124,58,237,0.35)] flex items-center justify-center gap-2 transition-all"
         >
           This is my idea →
         </motion.button>
