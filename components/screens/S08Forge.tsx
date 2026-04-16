@@ -9,162 +9,109 @@ import { finalRun } from '@/lib/scoring/orchestrator';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
 
 /**
- * S08 — The Forge
+ * S08 — The Forge (enriched)
  *
- * SEQUENCING CONTRACT (non-negotiable):
+ * CSS 3D crystal animation with perspective transform.
+ * Phase 1 (0-2s): Crystal floats, slow rotate
+ * Phase 2 (2-5s): Crystal descends toward forge glow
+ * Phase 3 (5-7s): Crystal hits forge, gold particle burst
+ * Phase 4 (7-8s): Particles settle, transition glow
  *
- *   On mount: start animation timeline independently. Check matchedIdeas.
- *   1. If matchedIdeas already populated (preload from S07): hold until
- *      animation minimum (8s Path A/B, 3s Path C), then advance to S09.
- *   2. If matchedIdeas empty: call finalRun() async. Poll store every 500ms.
- *      - Results arrive before animation ends: hold until minimum, then advance.
- *      - Animation ends, not ready: loop last phase, show "Almost there..."
- *      - 30s total elapsed, still no results: trigger Level 3 fallback, advance.
- *
- *   KEY INVARIANT: S09 NEVER mounts without matchedIdeas in store.
- *   S08 is the gatekeeper. Enforce with guard.
+ * Sequencing contract unchanged from Gate 5.
  */
 
-const MIN_ANIMATION_MS = { ab: 8000, c: 3000 };
+const MIN_MS = { ab: 8000, c: 3000 };
 const TIMEOUT_MS = 30000;
 const POLL_MS = 500;
 
-type ForgePhase = 'gathering' | 'forming' | 'crystallizing' | 'waiting' | 'complete';
+type ForgePhase = 'float' | 'descend' | 'burst' | 'settle' | 'waiting' | 'complete';
 
 export function S08Forge() {
   const matchedIdeas = useJourneyStore((s) => s.matchedIdeas);
-  const houseId = useJourneyStore((s) => s.houseId);
   const ideaMode = useJourneyStore((s) => s.ideaMode);
-  const setMatchedIdeas = useJourneyStore((s) => s.setMatchedIdeas);
-  const setHouseId = useJourneyStore((s) => s.setHouseId);
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
 
-  const [phase, setPhase] = useState<ForgePhase>('gathering');
+  const [phase, setPhase] = useState<ForgePhase>('float');
   const [progress, setProgress] = useState(0);
   const mountTime = useRef(Date.now());
   const hasRun = useRef(false);
   const hasAdvanced = useRef(false);
 
-  const minMs = ideaMode === 'shortcut' ? MIN_ANIMATION_MS.c : MIN_ANIMATION_MS.ab;
+  const minMs = ideaMode === 'shortcut' ? MIN_MS.c : MIN_MS.ab;
 
-  // ── Cedric line on mount ──
+  // Cedric is SILENT during phases 1-3. Only speaks at settle.
   useEffect(() => {
-    enqueueMessage({
-      speaker: 'cedric',
-      text: lines.s08.cedric.line1,
-      type: 'dialogue',
-    });
-  }, [enqueueMessage]);
-
-  // ── Animation timeline (independent of engine) ──
-  useEffect(() => {
-    const phases: { phase: ForgePhase; at: number }[] = [
-      { phase: 'gathering', at: 0 },
-      { phase: 'forming', at: 0.3 },
-      { phase: 'crystallizing', at: 0.6 },
+    // Phase timeline
+    const phases = [
+      { at: 0.0, phase: 'float' as const },
+      { at: 0.25, phase: 'descend' as const },
+      { at: 0.65, phase: 'burst' as const },
+      { at: 0.85, phase: 'settle' as const },
     ];
 
     const interval = setInterval(() => {
       const elapsed = Date.now() - mountTime.current;
       const pct = Math.min(elapsed / minMs, 1);
       setProgress(pct);
-
-      // Advance through phases
       for (const p of phases) {
         if (pct >= p.at) setPhase(p.phase);
       }
-
-      if (pct >= 1) {
-        clearInterval(interval);
-      }
+      if (pct >= 1) clearInterval(interval);
     }, 50);
 
     return () => clearInterval(interval);
   }, [minMs]);
 
-  // ── Engine check + poll loop ──
+  // Engine check + poll (same sequencing contract as before)
   useEffect(() => {
     if (hasAdvanced.current) return;
 
-    // If ideas already in store (preload from S07), just wait for animation
     if (matchedIdeas) {
-      const waitForAnimation = () => {
-        const elapsed = Date.now() - mountTime.current;
-        if (elapsed >= minMs) {
-          doAdvance();
-        } else {
-          setTimeout(waitForAnimation, 200);
-        }
+      const wait = () => {
+        if (Date.now() - mountTime.current >= minMs) doAdvance();
+        else setTimeout(wait, 200);
       };
-      waitForAnimation();
+      wait();
       return;
     }
 
-    // Ideas not in store — fire finalRun if not already fired
     if (!hasRun.current) {
       hasRun.current = true;
       const state = useJourneyStore.getState();
       const profile = buildForgeProfile(state);
-
-      // Fire async
       setTimeout(() => {
         try {
           const result = finalRun(profile);
-          useJourneyStore.setState({
-            matchedIdeas: result.pipeline,
-            houseId: result.house,
-          });
-        } catch (err) {
-          console.error('[S08] finalRun failed, Level 3 will be triggered by timeout');
-        }
+          useJourneyStore.setState({ matchedIdeas: result.pipeline, houseId: result.house });
+        } catch { /* timeout fallback handles it */ }
       }, 0);
     }
 
-    // Poll for results
     const poll = setInterval(() => {
       const current = useJourneyStore.getState();
       const elapsed = Date.now() - mountTime.current;
 
       if (current.matchedIdeas) {
-        // Results arrived — wait for animation minimum
         clearInterval(poll);
-        if (elapsed >= minMs) {
-          doAdvance();
-        } else {
-          setPhase('crystallizing');
-          setTimeout(() => doAdvance(), minMs - elapsed);
-        }
+        if (elapsed >= minMs) doAdvance();
+        else setTimeout(() => doAdvance(), minMs - elapsed);
         return;
       }
 
-      // Animation ended but no results yet
       if (elapsed >= minMs && phase !== 'waiting') {
         setPhase('waiting');
-        enqueueMessage({
-          speaker: 'cedric',
-          text: 'Almost there...',
-          type: 'dialogue',
-        });
+        enqueueMessage({ speaker: 'cedric', text: 'Almost there...', type: 'dialogue' });
       }
 
-      // 30s timeout — Level 3 fallback
       if (elapsed >= TIMEOUT_MS) {
         clearInterval(poll);
-        console.error('[S08] 30s timeout — triggering Level 3 fallback');
         try {
-          const state2 = useJourneyStore.getState();
-          const profile2 = buildForgeProfile(state2);
-          const result = finalRun(profile2);
-          useJourneyStore.setState({
-            matchedIdeas: result.pipeline,
-            houseId: result.house,
-          });
-        } catch {
-          // finalRun has its own Level 3 inside — this should never fail
-          // but if it does, create minimal safe state
-          console.error('[S08] Even Level 3 fallback failed — emergency state');
-        }
+          const s = useJourneyStore.getState();
+          const p = buildForgeProfile(s);
+          const r = finalRun(p);
+          useJourneyStore.setState({ matchedIdeas: r.pipeline, houseId: r.house });
+        } catch { /* emergency */ }
         doAdvance();
       }
     }, POLL_MS);
@@ -176,85 +123,104 @@ export function S08Forge() {
   function doAdvance() {
     if (hasAdvanced.current) return;
     hasAdvanced.current = true;
-
-    // Final guard: ensure matchedIdeas exists before advancing
-    const state = useJourneyStore.getState();
-    if (!state.matchedIdeas) {
-      console.error('[S08] GUARD: advancing without matchedIdeas — should not happen');
-      return;
-    }
+    const s = useJourneyStore.getState();
+    if (!s.matchedIdeas) return;
 
     setPhase('complete');
-    enqueueMessage({
-      speaker: 'cedric',
-      text: lines.s08.cedric.line2,
-      type: 'dialogue',
-    });
-    enqueueMessage({
-      speaker: 'pip',
-      text: lines.s08.pip.whisper,
-      type: 'dialogue',
-    });
-
-    setTimeout(() => advanceScreen(), 1000);
+    enqueueMessage({ speaker: 'cedric', text: lines.s08.cedric.line2, type: 'dialogue' });
+    setTimeout(() => {
+      enqueueMessage({ speaker: 'pip', text: lines.s08.pip.whisper, type: 'dialogue' });
+    }, 800);
+    setTimeout(() => advanceScreen(), 1500);
   }
 
-  // ── Animation visuals ──
-  const phaseColors: Record<ForgePhase, string> = {
-    gathering: '#2563EB',
-    forming: '#D4A843',
-    crystallizing: '#F59E0B',
-    waiting: '#F59E0B',
-    complete: '#D4A843',
-  };
-
-  const pulseScale = phase === 'waiting' ? [1, 1.08, 1] : phase === 'complete' ? 1.1 : 1;
+  // Crystal Y position based on phase
+  const crystalY = phase === 'descend' ? 60 : phase === 'burst' || phase === 'settle' ? 80 : 0;
+  const crystalScale = phase === 'burst' ? 0.3 : phase === 'settle' || phase === 'complete' ? 0 : 1;
+  const crystalOpacity = phase === 'burst' || phase === 'settle' || phase === 'complete' ? 0 : 1;
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 h-full text-center">
-      {/* Crystal orb animation */}
+    <div className="flex flex-col items-center justify-center h-full relative" style={{ perspective: '600px' }}>
+      {/* Crystal — CSS 3D transform */}
       <motion.div
+        data-testid="forge-crystal"
         animate={{
-          scale: pulseScale,
-          boxShadow: `0 0 ${progress * 40 + 10}px ${phaseColors[phase]}60`,
+          y: crystalY,
+          scale: crystalScale,
+          opacity: crystalOpacity,
+          rotateY: phase === 'float' ? 360 : 0,
         }}
         transition={{
-          scale: { duration: 1.5, repeat: phase === 'waiting' ? Infinity : 0, ease: 'easeInOut' },
-          boxShadow: { duration: 0.5 },
+          y: { duration: 2, ease: 'easeInOut' },
+          scale: { duration: 0.5 },
+          opacity: { duration: 0.3 },
+          rotateY: { duration: 4, repeat: phase === 'float' ? Infinity : 0, ease: 'linear' },
         }}
-        data-testid="forge-crystal"
-        className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-2 flex items-center justify-center"
-        style={{
-          borderColor: phaseColors[phase],
-          background: `radial-gradient(circle at 40% 35%, ${phaseColors[phase]}30, ${phaseColors[phase]}08)`,
-        }}
+        className="w-20 h-20 relative"
+        style={{ transformStyle: 'preserve-3d' }}
       >
-        <motion.span
-          className="text-4xl"
-          animate={{ rotate: phase === 'crystallizing' || phase === 'waiting' ? 360 : 0 }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-        >
-          {phase === 'complete' ? '✨' : '💎'}
-        </motion.span>
+        <div
+          className="absolute inset-0 border-2 border-gold/60"
+          style={{
+            clipPath: 'polygon(50% 0%, 90% 35%, 75% 90%, 25% 90%, 10% 35%)',
+            background: 'linear-gradient(135deg, #D4A84340, #F59E0B20)',
+            boxShadow: '0 0 30px #D4A84340',
+          }}
+        />
       </motion.div>
 
+      {/* Gold particle burst */}
+      {(phase === 'burst' || phase === 'settle') && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          {Array.from({ length: 12 }).map((_, i) => {
+            const angle = (i / 12) * 360;
+            const rad = (angle * Math.PI) / 180;
+            return (
+              <motion.div
+                key={i}
+                initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                animate={{
+                  x: Math.cos(rad) * 120,
+                  y: Math.sin(rad) * 120 + 40,
+                  opacity: 0,
+                  scale: 0.3,
+                }}
+                transition={{ duration: 1.5, ease: 'easeOut', delay: i * 0.03 }}
+                className="absolute w-2 h-2 rounded-full bg-gold"
+              />
+            );
+          })}
+        </div>
+      )}
+
+      {/* Forge glow (bottom) */}
+      <motion.div
+        animate={{
+          opacity: phase === 'descend' || phase === 'burst' ? 0.6 : 0.2,
+          scale: phase === 'burst' ? 1.3 : 1,
+        }}
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full pointer-events-none"
+        style={{
+          background: 'radial-gradient(ellipse at center, #D4A84340 0%, transparent 70%)',
+        }}
+      />
+
       {/* Phase label */}
-      <div className="flex flex-col gap-1" data-testid="forge-phase">
-        <p className="text-xs font-mono text-ivory/30 uppercase tracking-widest">
-          {phase === 'gathering' && 'Gathering instincts...'}
-          {phase === 'forming' && 'Forming connections...'}
-          {phase === 'crystallizing' && 'Crystallizing ideas...'}
+      <div data-testid="forge-phase" className="absolute bottom-8 text-center">
+        <p className="text-[10px] font-mono text-ivory/30 uppercase tracking-widest">
+          {phase === 'float' && 'Gathering instincts...'}
+          {phase === 'descend' && 'Forming connections...'}
+          {phase === 'burst' && 'Crystallizing...'}
+          {phase === 'settle' && 'Almost ready...'}
           {phase === 'waiting' && 'Almost there...'}
-          {phase === 'complete' && 'Ready.'}
+          {phase === 'complete' && ''}
         </p>
 
         {/* Progress bar */}
-        <div className="w-48 h-0.5 bg-white/10 rounded-full overflow-hidden mx-auto">
+        <div className="w-48 h-0.5 bg-white/10 rounded-full overflow-hidden mx-auto mt-2">
           <motion.div
-            className="h-full rounded-full"
-            style={{ backgroundColor: phaseColors[phase] }}
-            animate={{ width: `${Math.min(progress * 100, 100)}%` }}
-            transition={{ duration: 0.1 }}
+            className="h-full rounded-full bg-gold"
+            style={{ width: `${progress * 100}%` }}
           />
         </div>
       </div>
