@@ -17,15 +17,17 @@ interface JourneyShellProps {
 }
 
 /**
- * JourneyShell — the full-viewport container implementing Option C layout.
+ * JourneyShell — full-viewport container using CSS Grid with named areas.
  *
- * Layers (bottom to top):
- * - Background image (full bleed, crossfade transitions)
- * - Dark gradient overlay (readability)
- * - Activity area (centered content slot)
- * - Dialogue strip (overlay at top)
- * - Header (absolute top)
- * - CTA bar (sticky bottom)
+ * Grid layout (top to bottom):
+ *   header    — CATALST wordmark + milestone bar
+ *   dialogue  — Cedric/Pip message strip (reserved space, not overlay)
+ *   activity  — screen-specific interactions (1fr)
+ *   pip       — Pip character zone (auto height)
+ *   cta       — sticky action buttons
+ *
+ * Background: full-bleed Midjourney image with dark vignette overlay.
+ * Content: max-w-[720px] centered on desktop, full-width with padding on mobile.
  */
 export function JourneyShell({
   currentScreen,
@@ -38,7 +40,7 @@ export function JourneyShell({
   const bgImage = SCREEN_BACKGROUNDS[currentScreen];
 
   return (
-    <div className="relative h-dvh w-full overflow-hidden bg-dark">
+    <div className="journey-shell relative h-dvh w-full overflow-hidden bg-dark">
       {/* Background layer — crossfade between screens */}
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="popLayout">
@@ -62,41 +64,53 @@ export function JourneyShell({
         </AnimatePresence>
       </div>
 
-      {/* Header */}
-      <Header
-        currentScreen={currentScreen}
-        completedScreens={completedScreens}
-      />
-
-      {/* Dialogue overlay */}
-      <DialogueStrip />
-
-      {/* Activity area — centered content slot */}
-      <main
-        className="relative z-10 flex items-center justify-center px-4"
-        style={{ height: 'calc(100dvh - 120px)', marginTop: '48px' }}
-      >
-        <div className="w-full max-w-[720px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentScreen}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+      {/* Grid container — sits above background */}
+      <div className="relative z-10 grid h-dvh journey-grid">
+        {/* Zone 1: Header */}
+        <div className="[grid-area:header]">
+          <Header
+            currentScreen={currentScreen}
+            completedScreens={completedScreens}
+          />
         </div>
-      </main>
 
-      {/* CTA bar */}
-      <CTABar visible={ctaVisible}>
-        {ctaContent}
-      </CTABar>
+        {/* Zone 2: Dialogue strip (reserved space, not overlay) */}
+        <div className="[grid-area:dialogue] overflow-y-auto">
+          <DialogueStrip />
+        </div>
 
-      {/* Optional footer */}
+        {/* Zone 3: Activity area — screen content */}
+        <div className="[grid-area:activity] overflow-y-auto px-4">
+          <div className="mx-auto w-full max-w-[720px] h-full flex items-center justify-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentScreen}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+                className="w-full"
+              >
+                {children}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Zone 4: Pip character (singleton renders here, controlled by store) */}
+        <div className="[grid-area:pip] flex items-center justify-center">
+          {/* PipCharacter will render here in a later gate */}
+        </div>
+
+        {/* Zone 5: CTA bar */}
+        <div className="[grid-area:cta]">
+          <CTABar visible={ctaVisible}>
+            {ctaContent}
+          </CTABar>
+        </div>
+      </div>
+
+      {/* Optional footer (absolute, outside grid) */}
       {footerContent && (
         <div className="absolute bottom-1 left-0 right-0 z-20 flex justify-center">
           <span className="text-xs text-ivory/20">{footerContent}</span>

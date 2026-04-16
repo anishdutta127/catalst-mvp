@@ -8,16 +8,20 @@ interface CTABarProps {
   visible?: boolean;
 }
 
+/**
+ * CTABar — occupies the "cta" grid area.
+ * No longer absolute. Background gradient applied to blend with the dark bottom.
+ */
 export function CTABar({ children, visible = true }: CTABarProps) {
   return (
-    <div className="absolute bottom-0 left-0 right-0 z-30 px-4 pb-4 pt-8 bg-gradient-to-t from-dark via-dark/80 to-transparent pointer-events-none">
-      <div className="max-w-[720px] mx-auto flex flex-col items-center gap-2 pointer-events-auto">
+    <div className="h-full px-4 flex items-center justify-center bg-gradient-to-t from-dark to-dark/80">
+      <div className="mx-auto w-full max-w-[720px] flex flex-col items-center gap-2">
         <AnimatePresence>
           {visible && children && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 20 }}
+              exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.3 }}
               className="w-full flex flex-col items-center gap-2"
             >

@@ -3,22 +3,25 @@
 /* ── Garden Theme ──────────────────────────────────────────── */
 
 @theme inline {
-  /* Colors */
+  /* Colors — from DESIGN.md */
   --color-gold: #D4A843;
   --color-gold-light: rgba(212, 168, 67, 0.4);
   --color-gold-dim: rgba(212, 168, 67, 0.15);
-  --color-ivory: #F5F0E8;
-  --color-ivory-muted: rgba(245, 240, 232, 0.6);
+  --color-ivory: #FAF3E0;
+  --color-ivory-muted: rgba(250, 243, 224, 0.6);
 
   --color-dark: #0C0E12;
-  --color-dark-card: rgba(12, 14, 18, 0.75);
-  --color-dark-overlay: rgba(0, 0, 0, 0.6);
   --color-dark-surface: #14171E;
+  --color-dark-overlay: rgba(0, 0, 0, 0.6);
 
-  --color-house-gold: #D4A843;
-  --color-house-crimson: #C41E3A;
-  --color-house-sapphire: #2563EB;
-  --color-house-emerald: #059669;
+  --color-teal: #00D8B9;
+  --color-error: #E85D5D;
+  --color-success: #5DE8A0;
+
+  --color-house-architects: #D4A843;
+  --color-house-vanguards: #C41E3A;
+  --color-house-alchemists: #2853A1;
+  --color-house-pathfinders: #2E8B57;
 
   --color-vine-green: #4ade80;
   --color-vine-amber: #fbbf24;
@@ -37,7 +40,7 @@
 
 :root {
   --background: #0C0E12;
-  --foreground: #F5F0E8;
+  --foreground: #FAF3E0;
 }
 
 body {
@@ -46,26 +49,35 @@ body {
   overflow: hidden;
 }
 
-/* ── Glassmorphism ─────────────────────────────────────────── */
+/* ── Journey Grid Layout ──────────────────────────────────── */
 
-.glass {
-  background: rgba(12, 14, 18, 0.65);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 168, 67, 0.12);
+.journey-grid {
+  grid-template-rows: auto minmax(80px, 15dvh) 1fr auto 56px;
+  grid-template-areas:
+    "header"
+    "dialogue"
+    "activity"
+    "pip"
+    "cta";
 }
 
-.glass-light {
-  background: rgba(245, 240, 232, 0.08);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(245, 240, 232, 0.1);
+@media (min-width: 640px) {
+  .journey-grid {
+    grid-template-rows: auto minmax(100px, 20dvh) 1fr auto 56px;
+  }
+}
+
+/* ── Opaque Surfaces (replaces glass-morphism) ────────────── */
+
+.surface {
+  background: #14171E;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* ── Gold Glow (selection feedback) ────────────────────────── */
 
 .gold-glow {
-  box-shadow: 0 0 12px rgba(212, 168, 67, 0.4);
+  box-shadow: 0 0 8px rgba(212, 168, 67, 0.4);
   border: 2px solid rgba(212, 168, 67, 0.6);
 }
 
@@ -88,5 +100,5 @@ body {
 
 ::selection {
   background: rgba(212, 168, 67, 0.3);
-  color: #F5F0E8;
+  color: #FAF3E0;
 }

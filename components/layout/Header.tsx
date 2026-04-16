@@ -9,12 +9,17 @@ interface HeaderProps {
   completedScreens: ScreenId[];
 }
 
+/**
+ * Header — occupies the "header" grid area.
+ * Full logo on gateway (S00), shrinks to mini after.
+ * Milestone bar appears after gateway.
+ */
 export function Header({ currentScreen, completedScreens }: HeaderProps) {
   const isGateway = currentScreen === 's00';
 
   return (
-    <header className="absolute top-0 left-0 right-0 z-30 px-4 pt-3 pb-2">
-      <div className="max-w-[720px] mx-auto flex items-center justify-between">
+    <header className="h-9 sm:h-12 px-4 flex items-center">
+      <div className="mx-auto w-full max-w-[720px] flex items-center justify-between">
         {/* Logo */}
         <AnimatePresence mode="wait">
           {isGateway ? (
@@ -25,7 +30,7 @@ export function Header({ currentScreen, completedScreens }: HeaderProps) {
               exit={{ opacity: 0, scale: 0.8 }}
               className="text-lg tracking-[0.4em] text-gold/80 font-semibold uppercase"
             >
-              ✦ CATALST ✦
+              CATALST
             </motion.div>
           ) : (
             <motion.div

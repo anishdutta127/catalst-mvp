@@ -7,8 +7,8 @@ import { CedricBubble } from '@/components/characters/CedricBubble';
 import { PipBubble } from '@/components/characters/PipBubble';
 
 /**
- * DialogueStrip — overlay at top of viewport.
- * Renders messages from the UI store's message queue.
+ * DialogueStrip — reserved grid zone for Cedric/Pip messages.
+ * NOT an overlay. Occupies the "dialogue" grid area with guaranteed space.
  * Handles auto-removal of expired dialogue messages.
  */
 export function DialogueStrip() {
@@ -29,18 +29,17 @@ export function DialogueStrip() {
     return () => clearInterval(interval);
   }, [messages, removeMessage]);
 
-  if (messages.length === 0) return null;
-
   return (
-    <div className="absolute top-12 left-0 right-0 z-20 px-4 pointer-events-none">
-      <div className="max-w-[720px] mx-auto flex flex-col gap-2">
+    <div className="h-full px-4 flex flex-col justify-end">
+      <div className="mx-auto w-full max-w-[720px] flex flex-col gap-2 pb-2">
         <AnimatePresence mode="popLayout">
           {messages.map((msg) => (
             <motion.div
               key={msg.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
-              className="pointer-events-auto"
             >
               {msg.speaker === 'cedric' ? (
                 <CedricBubble text={msg.text} />

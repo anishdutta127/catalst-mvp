@@ -41,7 +41,7 @@ export function PipBubble({ text, onComplete, delay = 0 }: PipBubbleProps) {
       initial={{ opacity: 0, y: 6, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.25, type: 'spring', stiffness: 300 }}
-      className="glass-light rounded-2xl px-3 py-2 max-w-[75%]"
+      className="bg-dark-surface/80 border border-white/10 rounded-2xl px-3 py-2 max-w-[75%]"
     >
       <div className="flex items-center gap-1.5 mb-0.5">
         <span className="text-xs font-semibold text-emerald-400">🌱 Pip</span>

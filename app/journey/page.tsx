@@ -50,7 +50,7 @@ function PlaceholderScreen({ screenId }: { screenId: ScreenId }) {
         <input
           type="text"
           placeholder="What should we call you?"
-          className="w-64 px-4 py-3 rounded-lg bg-dark-card border border-gold/20 text-ivory placeholder:text-ivory/30 focus:outline-none focus:border-gold/50 text-center"
+          className="w-64 px-4 py-3 rounded-lg bg-dark-surface border border-gold/20 text-ivory placeholder:text-ivory/30 focus:outline-none focus:border-gold/50 text-center text-base"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               const value = (e.target as HTMLInputElement).value.trim();
