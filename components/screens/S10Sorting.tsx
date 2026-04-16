@@ -8,7 +8,7 @@ import { lines } from '@/content/lines';
 import housesRaw from '@/content/houses.json';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
-interface LineageFigure { name: string; sharedTraitLine: string }
+interface LineageFigure { name: string; sharedTraitLine: string; quantified_impact?: string }
 interface House {
   id: string; name: string; hex: string; tagline: string;
   description: string; strengths: string[]; lineage: LineageFigure[];
@@ -152,7 +152,8 @@ export function S10Sorting() {
                     className="bg-dark-surface border border-white/10 rounded-lg p-3"
                   >
                     <p className="text-sm font-semibold text-ivory">{fig.name}</p>
-                    <p className="text-[10px] text-ivory/40">{fig.sharedTraitLine}</p>
+                    {fig.quantified_impact && <p className="text-gold/70 text-[11px] mt-0.5">{fig.quantified_impact}</p>}
+                    <p className="text-[10px] text-ivory/30 mt-0.5 uppercase tracking-wider">{fig.sharedTraitLine}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

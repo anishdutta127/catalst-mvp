@@ -114,13 +114,6 @@ export default function JourneyPage() {
           </GoldButton>
         ) : undefined
       }
-      footerContent={
-        currentScreen === 's00'
-          ? '5 min · 3 ideas matched to your instincts'
-          : displayName
-            ? `${displayName}'s journey`
-            : undefined
-      }
     >
       <ScreenComponent screenId={currentScreen} />
     </JourneyShell>
