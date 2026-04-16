@@ -5,13 +5,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
+import { analytics } from '@/lib/analytics';
 import type { ScoredIdea } from '@/lib/scoring/types';
 
 /**
- * S09 — Ideas Revealed
+ * S09 — Ideas Revealed (enriched)
  *
- * Mount guard: if matchedIdeas null → redirect to S08.
- * 3 idea cards, accordion deep dive, WhatsApp CTA, crowning.
+ * Staggered card reveal, gradient header, crown mechanic,
+ * accordion deep-dive, SELL ZONE with WhatsApp CTA.
  */
 
 const TIER_META = {
@@ -34,26 +35,18 @@ export function S09Ideas() {
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
   const goToScreen = useJourneyStore((s) => s.goToScreen);
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
-
-  const [expandedSection, setExpandedSection] = useState<string | null>('idea-0');
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const dialogueSent = useRef(false);
 
-  // Mount guard: redirect to S08 if no ideas
   useEffect(() => {
-    if (!matchedIdeas) {
-      console.error('[S09] GUARD: no matchedIdeas, redirecting to S08');
-      goToScreen('s08');
-    }
+    if (!matchedIdeas) { goToScreen('s08'); return; }
   }, [matchedIdeas, goToScreen]);
 
-  // Cedric reveal dialogue
   useEffect(() => {
     if (dialogueSent.current || !matchedIdeas) return;
     dialogueSent.current = true;
     enqueueMessage({ speaker: 'cedric', text: lines.s09.cedric.reveal1, type: 'dialogue' });
-    setTimeout(() => {
-      enqueueMessage({ speaker: 'pip', text: lines.s09.pip.reveal, type: 'dialogue' });
-    }, 2000);
+    setTimeout(() => enqueueMessage({ speaker: 'pip', text: lines.s09.pip.reveal, type: 'dialogue' }), 2000);
   }, [enqueueMessage, matchedIdeas]);
 
   if (!matchedIdeas) return null;
@@ -63,9 +56,7 @@ export function S09Ideas() {
     { scored: matchedIdeas.spark, tier: 'spark' },
     { scored: matchedIdeas.wildvine, tier: 'wildvine' },
   ];
-  if (matchedIdeas.yourIdea) {
-    ideas.unshift({ scored: matchedIdeas.yourIdea, tier: 'your_idea' });
-  }
+  if (matchedIdeas.yourIdea) ideas.unshift({ scored: matchedIdeas.yourIdea, tier: 'your_idea' });
 
   function handleCrown(ideaId: string) {
     crownIdea(ideaId);
@@ -76,90 +67,68 @@ export function S09Ideas() {
     if (whyYouTexts[ideaId]) return;
     const idea = ideas.find((i) => i.scored.idea.idea_id === ideaId);
     if (!idea) return;
-
     setWhyYouText(ideaId, '__loading__');
-
     fetch('/api/narrative', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        type: 'whyYou',
-        sessionId,
-        context: {
-          ideaName: idea.scored.idea.idea_name,
-          ideaOneLiner: idea.scored.idea.one_liner,
-          userWorkStyle: 'analytical',
-          houseId: houseId || 'founder',
-          topStrengths: 'determination and vision',
-        },
+        type: 'whyYou', sessionId,
+        context: { ideaName: idea.scored.idea.idea_name, ideaOneLiner: idea.scored.idea.one_liner, houseId: houseId || 'founder', topStrengths: 'determination and vision' },
       }),
     })
       .then((r) => r.json())
-      .then((data) => setWhyYouText(ideaId, data.text))
-      .catch(() =>
-        setWhyYouText(
-          ideaId,
-          `Your instincts led you here. ${idea.scored.idea.idea_name} fits the way you think. Trust the match.`
-        )
-      );
+      .then((d) => setWhyYouText(ideaId, d.text))
+      .catch(() => setWhyYouText(ideaId, `Your instincts led you here. ${idea.scored.idea.idea_name} fits the way you think.`));
   }
 
-  function toggleSection(key: string) {
-    setExpandedSection((s) => (s === key ? null : key));
-  }
+  function toggleSection(key: string) { setExpandedSection((s) => (s === key ? null : key)); }
 
-  function getWhatsAppUrl(idea: ScoredIdea) {
-    const msg = encodeURIComponent(
-      `Hi Anish! I just found my idea on Catalst. I'm a ${houseId || 'founder'} founder. My top match: ${idea.idea.idea_name} in ${idea.idea.domain_primary}. I want to book a 30-min strategy call (₹500).`
-    );
+  function getWhatsAppUrl(scored: ScoredIdea) {
+    const msg = encodeURIComponent(`Hi Anish! I just found my idea on Catalst. I'm a ${houseId || 'founder'} founder. My top match: ${scored.idea.idea_name} in ${scored.idea.domain_primary}. I want to book a 30-min strategy call (₹500).`);
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
   }
 
+  const crowned = ideas.find((i) => i.scored.idea.idea_id === crownedIdeaId);
+
   return (
-    <div className="flex flex-col gap-4 h-full overflow-y-auto pb-4">
-      {/* Idea cards */}
+    <div className="flex flex-col gap-4 h-full overflow-y-auto pb-4" data-testid="s09-ideas">
+      {/* Idea cards — staggered reveal */}
       <div className="flex flex-col sm:flex-row gap-3">
         {ideas.map(({ scored, tier }, idx) => {
           const isCrowned = crownedIdeaId === scored.idea.idea_id;
           const meta = TIER_META[tier];
-          const isNest = tier === 'nest';
+          const isDimmed = !!crownedIdeaId && !isCrowned;
 
           return (
             <motion.button
               key={scored.idea.idea_id}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.15 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: isDimmed ? 0.5 : 1, y: 0 }}
+              transition={{ delay: idx * 0.15, duration: 0.4 }}
               onClick={() => handleCrown(scored.idea.idea_id)}
               data-testid={`idea-card-${tier}`}
-              className={`flex-1 bg-dark-surface rounded-lg p-4 text-left transition-all ${
-                isCrowned
-                  ? 'border-2 border-gold/70 shadow-[0_0_12px_rgba(212,168,67,0.4)]'
-                  : isNest
-                  ? 'border-2 border-gold/30'
-                  : 'border border-white/10 hover:border-white/20'
+              className={`flex-1 rounded-xl overflow-hidden text-left transition-all ${
+                isCrowned ? 'ring-2 ring-gold shadow-[0_0_16px_rgba(212,168,67,0.3)] scale-[1.02]' :
+                'hover:ring-1 hover:ring-white/20'
               } cursor-pointer`}
             >
-              {/* Tier badge */}
-              <div className="flex items-center gap-1.5 mb-2">
-                <span className="text-sm">{meta.emoji}</span>
-                <span className="text-[10px] font-mono text-gold/60 uppercase tracking-wider">{meta.label}</span>
-                <span className="ml-auto text-[10px] font-mono text-ivory/30">{scored.displayScore}%</span>
-              </div>
+              {/* Gradient header bar */}
+              <div className="h-1" style={{ background: `linear-gradient(90deg, #D4A843, ${tier === 'wildvine' ? '#059669' : '#F59E0B'})` }} />
 
-              {/* Idea name */}
-              <h3 className="text-base font-serif text-ivory leading-snug mb-1">
-                {scored.idea.idea_name}
-              </h3>
-              <p className="text-xs text-ivory-muted leading-relaxed line-clamp-2">
-                {scored.idea.one_liner}
-              </p>
-
-              {/* Domain pill */}
-              <div className="mt-2">
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold/70 border border-gold/20">
-                  {scored.idea.domain_primary.replace(/_/g, ' ')}
-                </span>
+              <div className="bg-dark-surface p-4">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <span className="text-sm">{meta.emoji}</span>
+                  <span className="text-[10px] font-mono text-gold/60 uppercase tracking-wider">{meta.label}</span>
+                  {isCrowned && <span className="ml-1">👑</span>}
+                  <span className="ml-auto text-xs font-mono text-gold">{scored.displayScore}%</span>
+                </div>
+                <h3 className="text-base font-serif text-ivory mb-1">{scored.idea.idea_name}</h3>
+                <p className="text-xs text-ivory/50 leading-relaxed line-clamp-2">{scored.idea.one_liner}</p>
+                <div className="mt-2 flex gap-1.5">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold/70 border border-gold/20">
+                    {scored.idea.domain_primary.replace(/_/g, ' ')}
+                  </span>
+                </div>
               </div>
             </motion.button>
           );
@@ -167,41 +136,28 @@ export function S09Ideas() {
       </div>
 
       {/* Crowned idea deep dive */}
-      {crownedIdeaId && (() => {
-        const crowned = ideas.find((i) => i.scored.idea.idea_id === crownedIdeaId);
-        if (!crowned) return null;
+      {crowned && (() => {
         const idea = crowned.scored.idea;
-        const whyYou = whyYouTexts[crownedIdeaId];
-
+        const whyYou = whyYouTexts[crownedIdeaId!];
         const sections = [
-          { key: `idea-${crownedIdeaId}`, title: 'The Idea', content: idea.pain_to_promise },
-          { key: `why-${crownedIdeaId}`, title: 'Why You', content: whyYou || '' },
-          { key: `market-${crownedIdeaId}`, title: 'The Market', content: `${idea.domain_primary.replace(/_/g, ' ')} — ${idea.why_now}` },
-          { key: `steps-${crownedIdeaId}`, title: 'First Steps', content: `Week 1: ${idea.quickStart.week1}\nMVP: ${idea.quickStart.mvp}\nFirst customers: ${idea.quickStart.firstCustomers}` },
-          { key: `risk-${crownedIdeaId}`, title: 'The Risk', content: idea.proof.gap },
+          { key: 'idea', title: 'The Idea', content: idea.pain_to_promise },
+          { key: 'why', title: 'Why You', content: whyYou || '' },
+          { key: 'market', title: 'The Market', content: `${idea.domain_primary.replace(/_/g, ' ')} — ${idea.why_now}` },
+          { key: 'steps', title: 'First Steps', content: `Week 1: ${idea.quickStart.week1}\nMVP: ${idea.quickStart.mvp}\nFirst customers: ${idea.quickStart.firstCustomers}` },
+          { key: 'risk', title: 'The Risk', content: idea.proof.gap },
         ];
 
         return (
-          <div className="flex flex-col gap-1 mt-2">
-            {sections.map((sec, i) => (
-              <div key={sec.key} className="bg-dark-surface border border-white/10 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => toggleSection(sec.key)}
-                  data-testid={`accordion-${sec.title}`}
-                  className="w-full flex items-center justify-between px-4 py-3 text-left cursor-pointer"
-                >
+          <div className="flex flex-col gap-1">
+            {sections.map((sec) => (
+              <div key={sec.key} className="bg-dark-surface border border-white/10 rounded-lg overflow-hidden" data-testid={`accordion-${sec.title}`}>
+                <button onClick={() => toggleSection(sec.key)} className="w-full flex items-center justify-between px-4 py-3 text-left cursor-pointer">
                   <span className="text-xs font-semibold text-ivory/70">{sec.title}</span>
                   <span className="text-ivory/30 text-xs">{expandedSection === sec.key ? '−' : '+'}</span>
                 </button>
                 <AnimatePresence>
-                  {(expandedSection === sec.key || (i === 0 && !expandedSection)) && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
-                    >
+                  {expandedSection === sec.key && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
                       <div className="px-4 pb-3">
                         {sec.content === '__loading__' ? (
                           <div className="animate-pulse space-y-2">
@@ -209,9 +165,7 @@ export function S09Ideas() {
                             <div className="h-3 bg-white/10 rounded w-1/2" />
                           </div>
                         ) : (
-                          <p className="text-xs text-ivory/50 leading-relaxed whitespace-pre-line">
-                            {sec.content}
-                          </p>
+                          <p className="text-xs text-ivory/50 leading-relaxed whitespace-pre-line">{sec.content}</p>
                         )}
                       </div>
                     </motion.div>
@@ -219,45 +173,45 @@ export function S09Ideas() {
                 </AnimatePresence>
               </div>
             ))}
-
-            {/* WhatsApp CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="bg-dark-surface border border-gold/20 rounded-lg p-4 mt-2"
-            >
-              <p className="text-xs text-ivory/60 mb-2">Want to build this?</p>
-              <a
-                href={getWhatsAppUrl(crowned.scored)}
-                target="_blank"
-                rel="noopener noreferrer"
-                data-testid="whatsapp-cta"
-                className="inline-block px-4 py-2 rounded-full border border-gold/40 text-gold text-xs font-medium hover:bg-gold/10 transition-all"
-              >
-                Message Anish on WhatsApp
-              </a>
-            </motion.div>
           </div>
         );
       })()}
 
-      {/* Advance CTA — appears after crowning */}
+      {/* SELL ZONE */}
+      {crowned && (
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
+          className="bg-dark-surface border-2 border-gold/30 rounded-2xl p-6 text-center space-y-3">
+          <h4 className="text-[22px] font-serif text-ivory">YOUR IDEA. BUILT. SHIPPED. IN 7 DAYS.</h4>
+          <div className="flex gap-2 justify-center flex-wrap">
+            {['⚡ Claude Code experts', '🏗️ Full MVP', '📱 Real product'].map((p) => (
+              <span key={p} className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold/70">{p}</span>
+            ))}
+          </div>
+          <p className="text-gold font-semibold">Strategy call from ₹500</p>
+          <a
+            href={getWhatsAppUrl(crowned.scored)}
+            target="_blank" rel="noopener noreferrer"
+            data-testid="whatsapp-cta"
+            onClick={() => analytics.cta('whatsapp')}
+            className="block w-full py-3.5 rounded-full bg-gold text-dark font-semibold text-sm hover:bg-gold/90 transition-all"
+          >
+            💬 Start the Conversation →
+          </a>
+          <p className="text-[10px] text-ivory/30">30 min · No commitment · Real builder talk</p>
+        </motion.div>
+      )}
+
+      {/* Crown CTA */}
       {crownedIdeaId && (
-        <motion.div
+        <motion.button
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="flex justify-center pt-2"
+          onClick={() => advanceScreen()}
+          data-testid="crown-cta"
+          className="w-full py-3 rounded-full bg-gold text-dark font-semibold hover:bg-gold/90 transition-all"
         >
-          <button
-            onClick={() => advanceScreen()}
-            data-testid="crown-cta"
-            className="px-8 py-3 rounded-full bg-gold text-dark font-semibold hover:bg-gold/90 hover:shadow-[0_0_8px_rgba(212,168,67,0.3)] transition-all"
-          >
-            This is my idea →
-          </button>
-        </motion.div>
+          This is my idea →
+        </motion.button>
       )}
     </div>
   );
