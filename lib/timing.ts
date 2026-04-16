@@ -1,30 +1,40 @@
 /**
  * Implicit Response Time Tracking
  *
+ * Factory-based: each createTimer() call returns an independent instance.
+ * No module-level state — safe for concurrent use across screens.
+ *
  * Tracks how long users spend on each interaction without them knowing.
  * Faster responses = more instinctive/authentic preferences.
  * Slower responses = more deliberate/uncertain preferences.
  */
 
-let _startTime: number | null = null;
+export type ResponseSpeed = 'fast' | 'medium' | 'slow';
 
-/** Call when a stimulus is first shown to the user */
-export function startTimer(): void {
-  _startTime = performance.now();
+export interface Timer {
+  start(): void;
+  stop(): number;
+  peek(): number;
 }
 
-/** Call when the user responds. Returns elapsed ms since startTimer(). */
-export function stopTimer(): number {
-  if (_startTime === null) return 0;
-  const elapsed = performance.now() - _startTime;
-  _startTime = null;
-  return Math.round(elapsed);
-}
-
-/** Returns ms elapsed since startTimer() without stopping it */
-export function peekTimer(): number {
-  if (_startTime === null) return 0;
-  return Math.round(performance.now() - _startTime);
+/** Create an independent timer instance. */
+export function createTimer(): Timer {
+  let _startTime: number | null = null;
+  return {
+    start() {
+      _startTime = performance.now();
+    },
+    stop(): number {
+      if (_startTime === null) return 0;
+      const elapsed = Math.round(performance.now() - _startTime);
+      _startTime = null;
+      return elapsed;
+    },
+    peek(): number {
+      if (_startTime === null) return 0;
+      return Math.round(performance.now() - _startTime);
+    },
+  };
 }
 
 /**
@@ -34,8 +44,6 @@ export function peekTimer(): number {
  *   - medium: 1500-4000ms (considered but comfortable)
  *   - slow: > 4000ms (deliberate, uncertain, or conflicted)
  */
-export type ResponseSpeed = 'fast' | 'medium' | 'slow';
-
 export function categorizeSpeed(ms: number): ResponseSpeed {
   if (ms < 1500) return 'fast';
   if (ms < 4000) return 'medium';

@@ -67,6 +67,8 @@ export interface Idea {
 
 // ── ForgeProfile (all user inputs for scoring) ────────────────
 
+export type ScenarioSource = 'direct' | 'parsed' | 'none';
+
 export interface ForgeProfile {
   display_name: string;
   idea_mode: 'open' | 'directed' | 'shortcut';
@@ -80,8 +82,11 @@ export interface ForgeProfile {
   industries_edged: string[];
   industry_dwell_times: number[];
   scroll_depth_per_card: number[];
+  /** S05 killed — retained for schema compat, always empty for Path A/B */
   scenario_responses?: [string, string, string];
   scenario_response_times?: [number, number, number];
+  /** How scenarios were sourced: 'none' (Path A/B), 'parsed' (Path C LLM), 'direct' (future) */
+  scenarioSource: ScenarioSource;
   crystal_orbs: [string, string, string];
   crystal_selection_order: [number, number, number];
   crystal_selection_times: [number, number, number];

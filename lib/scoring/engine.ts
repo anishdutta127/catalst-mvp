@@ -4,10 +4,14 @@
  * Adapted from handoff/scoring-reference.ts (v7).
  * Matches user journey data (personality signals from screens)
  * against the 260-idea library using multi-framework scoring
- * across 9 weighted dimensions totaling 100 points.
+ * across 8 weighted dimensions totaling 100 points.
+ *
+ * R2-FIX-3: S05 killed, Problem Orientation removed, points redistributed.
+ * Dimensions: Domain(25) McClelland(15) Temperament(15) Execution(12)
+ *             BigFive(13) Feasibility(8) Boldness(7) Wildcard(5)
  *
  * Frameworks: McClelland Need Theory, DISC, Big Five (OCEAN),
- * Holland RIASEC, Rorschach projective, TAT scenarios, Jung timing
+ * Holland RIASEC, Rorschach projective, Jung timing
  */
 
 import ideasRaw from '@/content/ideas.json';
@@ -52,8 +56,6 @@ interface Signals {
   workStyle: WorkStyleVector;
   bigFive: BigFiveVector;
   boldness: number;
-  customerType: string;
-  competitiveStyle: string;
   timingConsistency: number;
   isEffectuation: boolean;
   isInnovation: boolean;
@@ -179,22 +181,6 @@ const BLOT3: Record<string, ND> = {
   '☁️': { nAch: 1, nAff: 0, nPow: 0 },
 };
 
-// ── McClelland: Scenario → Need Deltas ─────────────────────
-
-const S1_NEED: Record<string, ND> = {
-  '📊': { nAch: 1, nAff: 0, nPow: 0 },
-  '📞': { nAch: 0, nAff: 1, nPow: 0 },
-  '📢': { nAch: 0, nAff: 0, nPow: 1 },
-  '🔧': { nAch: 1, nAff: 0, nPow: 0 },
-};
-
-const S2_NEED: Record<string, ND> = {
-  '🎯': { nAch: 1, nAff: 0, nPow: 0 },
-  '🔍': { nAch: 1, nAff: 0, nPow: 0 },
-  '🤝': { nAch: 0, nAff: 2, nPow: 0 },
-  '⚡': { nAch: 0, nAff: 0, nPow: 1 },
-};
-
 // ── McClelland: Headline → Need Deltas ─────────────────────
 
 const HEADLINE_MAP: { pat: string; d: ND; need: 'nAch' | 'nAff' | 'nPow' }[] = [
@@ -221,22 +207,6 @@ const CRYSTAL_WORK: Record<string, (keyof WorkStyleVector)[]> = {
   Craft: ['builder'],
   Freedom: ['creator'],
   Stability: ['researcher'],
-};
-
-// ── Scenario → Customer Type / Competitive Style ────────────
-
-const S1_CUST: Record<string, string> = {
-  '📊': 'analytical',
-  '📞': 'relationship',
-  '📢': 'growth',
-  '🔧': 'craft',
-};
-
-const S2_COMP: Record<string, string> = {
-  '🎯': 'follower',
-  '🔍': 'differentiator',
-  '🤝': 'loyalty',
-  '⚡': 'product',
 };
 
 // ════════════════════════════════════════════════════════════
@@ -316,10 +286,6 @@ function buildUnconsciousNeeds(p: ForgeProfile): NeedVector {
   addNeed(v, BLOT1[p.blot_responses[0]]);
   addNeed(v, BLOT2[p.blot_responses[1]]);
   addNeed(v, BLOT3[p.blot_responses[2]]);
-  if (p.scenario_responses?.some(r => r !== '')) {
-    addNeed(v, S1_NEED[p.scenario_responses![0]]);
-    addNeed(v, S2_NEED[p.scenario_responses![1]]);
-  }
   return v;
 }
 
@@ -396,8 +362,6 @@ function buildSignals(p: ForgeProfile): Signals {
     workStyle: buildWorkStyle(p.crystal_orbs),
     bigFive: buildBigFive(p),
     boldness: computeBoldness(p),
-    customerType: p.scenario_responses?.some(r => r !== '') ? (S1_CUST[p.scenario_responses![0]] ?? 'analytical') : 'analytical',
-    competitiveStyle: p.scenario_responses?.some(r => r !== '') ? (S2_COMP[p.scenario_responses![1]] ?? 'differentiator') : 'differentiator',
     timingConsistency: times.length > 0 ? clamp(1 - stdDev(times) / 2000, 0, 1) : 0.5,
     isEffectuation: p.idea_mode !== 'directed',
     isInnovation: p.word_responses[2] === 'New',
@@ -425,19 +389,19 @@ export function eliminateIdeas(ideas: Idea[], p: ForgeProfile): Idea[] {
 }
 
 // ════════════════════════════════════════════════════════════
-// CORE SCORING (9 dimensions → 100 pts)
+// CORE SCORING (8 dimensions → 100 pts, R2-FIX-3)
 // ════════════════════════════════════════════════════════════
 
 function scoreDomain(idea: Idea, p: ForgeProfile): number {
   const domain = idea.domain_primary;
-  if (p.industries_edged.includes(domain)) return 20;
-  if (p.industries_kept.includes(domain)) return 14;
+  if (p.industries_edged.includes(domain)) return 25;
+  if (p.industries_kept.includes(domain)) return 17.5;
   const mapped = DOMAIN_TO_INDUSTRY[domain];
   if (mapped) {
-    if (p.industries_edged.includes(mapped)) return 20;
-    if (p.industries_kept.includes(mapped)) return 8;
+    if (p.industries_edged.includes(mapped)) return 25;
+    if (p.industries_kept.includes(mapped)) return 10;
   }
-  return 2;
+  return 2.5;
 }
 
 function scoreMcClelland(userNeeds: NeedVector, idea: Idea): number {
@@ -452,71 +416,23 @@ function scoreTemperament(ws: WorkStyleVector, idea: Idea): number {
   return wsSum === 0 ? 7.5 : (dot / wsSum) * 15;
 }
 
-function scoreProblem(sig: Signals, idea: Idea): number {
-  let custScore = 0;
-  switch (sig.customerType) {
-    case 'analytical':
-      if (idea.is_enterprise_sales) custScore += 3;
-      if (idea.problem_type_primary === 'efficiency') custScore += 2;
-      if (idea.researcher_fit > 0.6) custScore += 1;
-      break;
-    case 'relationship':
-      if (idea.host_fit > 0.5) custScore += 3;
-      if (idea.is_local_offline) custScore += 2;
-      if (idea.motive_belonging > 0.5) custScore += 1;
-      break;
-    case 'growth':
-      if (idea.seller_fit > 0.5) custScore += 3;
-      if (idea.is_marketplace) custScore += 2;
-      if (idea.is_ad_dependent) custScore += 1;
-      break;
-    case 'craft':
-      if (idea.builder_fit > 0.6) custScore += 3;
-      if (idea.problem_type_primary === 'experience') custScore += 2;
-      if (idea.is_hardware_heavy) custScore += 1;
-      break;
-  }
-
-  let compScore = 0;
-  switch (sig.competitiveStyle) {
-    case 'follower':
-      if (idea.novelty_score <= 5) compScore += 4;
-      if (idea.maturity === 'proven') compScore += 2;
-      break;
-    case 'differentiator':
-      if (idea.novelty_score >= 5 && idea.novelty_score <= 7) compScore += 3;
-      if (idea.sub_domain.length > 1) compScore += 3;
-      break;
-    case 'loyalty':
-      if (idea.motive_belonging > 0.5) compScore += 3;
-      if (idea.host_fit > 0.4) compScore += 3;
-      break;
-    case 'product':
-      if (idea.builder_fit > 0.5) compScore += 3;
-      if (idea.execution_rhythm_fit > 0.5) compScore += 3;
-      break;
-  }
-
-  return Math.min(custScore, 6) + Math.min(compScore, 6);
-}
-
 function scoreExecution(sig: Signals, idea: Idea): number {
   const userRhythm = sig.isEffectuation ? 0.3 : 0.7;
-  const rhythmScore = (1 - Math.abs(userRhythm - idea.execution_rhythm_fit)) * 4;
+  const rhythmScore = (1 - Math.abs(userRhythm - idea.execution_rhythm_fit)) * 4.8;
   const normNovelty = idea.novelty_score / 10;
-  const innovScore = (sig.isInnovation ? normNovelty : 1 - normNovelty) * 3;
-  const consistencyScore = (sig.timingConsistency > 0.5 ? idea.execution_rhythm_fit : 1 - idea.execution_rhythm_fit) * 3;
+  const innovScore = (sig.isInnovation ? normNovelty : 1 - normNovelty) * 3.6;
+  const consistencyScore = (sig.timingConsistency > 0.5 ? idea.execution_rhythm_fit : 1 - idea.execution_rhythm_fit) * 3.6;
   return rhythmScore + innovScore + consistencyScore;
 }
 
 function scoreBigFive(bf: BigFiveVector, idea: Idea): number {
   const nn = idea.novelty_score / 10;
   return (
-    2 * (1 - Math.abs(bf.O - nn)) +
-    2 * (1 - Math.abs(bf.C - idea.execution_rhythm_fit)) +
-    2 * (1 - Math.abs(bf.E - idea.seller_fit)) +
-    2 * (1 - Math.abs(bf.A - idea.host_fit)) +
-    2 * (1 - Math.abs(bf.N - (1 - nn)))
+    2.6 * (1 - Math.abs(bf.O - nn)) +
+    2.6 * (1 - Math.abs(bf.C - idea.execution_rhythm_fit)) +
+    2.6 * (1 - Math.abs(bf.E - idea.seller_fit)) +
+    2.6 * (1 - Math.abs(bf.A - idea.host_fit)) +
+    2.6 * (1 - Math.abs(bf.N - (1 - nn)))
   );
 }
 
@@ -533,7 +449,7 @@ function scoreFeasibility(p: ForgeProfile, idea: Idea): number {
 function scoreBoldness(boldness: number, idea: Idea): number {
   const normBold = boldness / 7;
   const normNovelty = idea.novelty_score / 10;
-  return (1 - Math.abs(normBold - normNovelty)) * 5;
+  return (1 - Math.abs(normBold - normNovelty)) * 7;
 }
 
 function scoreWildcard(p: ForgeProfile, idea: Idea): number {
@@ -557,26 +473,12 @@ function scoreWildcard(p: ForgeProfile, idea: Idea): number {
 }
 
 function scoreOneIdea(idea: Idea, p: ForgeProfile, sig: Signals): { total: number; mc: number } {
-  const hasScenarios = p.scenario_responses?.some(r => r !== '') ?? false;
   const mcRaw = scoreMcClelland(sig.userNeeds, idea);
-  const bfRaw = scoreBigFive(sig.bigFive, idea);
-
-  if (hasScenarios) {
-    return {
-      total: scoreDomain(idea, p) + mcRaw + scoreTemperament(sig.workStyle, idea) +
-        scoreProblem(sig, idea) + scoreExecution(sig, idea) + bfRaw +
-        scoreFeasibility(p, idea) + scoreBoldness(sig.boldness, idea) + scoreWildcard(p, idea),
-      mc: mcRaw,
-    };
-  }
-
-  const mc = mcRaw * (21 / 15);
-  const bf = bfRaw * (16 / 10);
   return {
-    total: scoreDomain(idea, p) + mc + scoreTemperament(sig.workStyle, idea) +
-      scoreExecution(sig, idea) + bf + scoreFeasibility(p, idea) +
-      scoreBoldness(sig.boldness, idea) + scoreWildcard(p, idea),
-    mc,
+    total: scoreDomain(idea, p) + mcRaw + scoreTemperament(sig.workStyle, idea) +
+      scoreExecution(sig, idea) + scoreBigFive(sig.bigFive, idea) +
+      scoreFeasibility(p, idea) + scoreBoldness(sig.boldness, idea) + scoreWildcard(p, idea),
+    mc: mcRaw,
   };
 }
 
@@ -608,10 +510,8 @@ function applyOverride(
     nPow: unc.nPow * 0.6 + con.nPow * 0.4,
   };
 
-  const hasScenarios = p.scenario_responses?.some(r => r !== '') ?? false;
-  const mcScale = hasScenarios ? 1 : (21 / 15);
   const reScored = scored.map(s => {
-    const newMc = scoreMcClelland(adjusted, s.idea) * mcScale;
+    const newMc = scoreMcClelland(adjusted, s.idea);
     return { idea: s.idea, rawScore: s.rawScore + (newMc - s.mcClellandScore), mcClellandScore: newMc };
   });
 
@@ -751,6 +651,24 @@ function computeConfidence(scored: RawScoredIdea[]): number {
  *
  * Pipeline: filter → score → override → select → calibrate
  */
+/**
+ * Extract personality scores needed for house assignment.
+ * All values normalized to 0.0-1.0 for the house formula.
+ */
+export function extractPersonality(profile: ForgeProfile) {
+  const unc = buildUnconsciousNeeds(profile);
+  const con = buildConsciousNeeds(profile);
+  const userNeeds = { nAch: unc.nAch + con.nAch, nAff: unc.nAff + con.nAff, nPow: unc.nPow + con.nPow };
+  const total = userNeeds.nAch + userNeeds.nAff + userNeeds.nPow;
+  return {
+    bigFive: buildBigFive(profile),
+    mcClelland: total > 0
+      ? { nAch: clamp(userNeeds.nAch / total, 0, 1), nAff: clamp(userNeeds.nAff / total, 0, 1), nPow: clamp(userNeeds.nPow / total, 0, 1) }
+      : { nAch: 0.33, nAff: 0.33, nPow: 0.33 },
+    boldness: clamp(computeBoldness(profile) / 7, 0, 1),
+  };
+}
+
 export function runMatchingPipeline(profile: ForgeProfile): PipelineResult {
   const sig = buildSignals(profile);
 
