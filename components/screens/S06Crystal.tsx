@@ -6,6 +6,7 @@ import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
 import { createTimer } from '@/lib/timing';
+import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
 const ORBS = lines.s06.orbs;
 
@@ -159,6 +160,8 @@ export function S06Crystal() {
           })}
         </div>
       )}
+
+      <ScreenQuote screen="s06" />
 
       {/* Confirm */}
       {crystalOrbs.length === 3 && (

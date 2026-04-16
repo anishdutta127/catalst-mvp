@@ -316,3 +316,17 @@ export const lines = {
     journeyComplete: (house: string) => `Ideation Journey Complete \u00b7 ${house}`,
   },
 } as const;
+
+/** Philosophy quotes — one per screen, reinforcing the emotional arc. */
+export const QUOTES: Record<string, { text: string; author: string }> = {
+  s00: { text: 'Knowing yourself is the beginning of all wisdom.', author: 'Aristotle' },
+  s02: { text: 'The eye sees only what the mind is prepared to comprehend.', author: 'Robertson Davies' },
+  s03: { text: 'Your first instinct is usually right. Your second instinct is fear.', author: 'Unknown' },
+  s04: { text: 'You can tell a lot about a person by what they\'re excited about.', author: 'Unknown' },
+  s06: { text: 'What you choose to carry reveals what you believe you\'ll need.', author: 'Unknown' },
+  s07: { text: 'Constraints are the birthplace of creativity.', author: 'T.S. Eliot' },
+  s08: { text: 'The garden does not judge. It only reveals.', author: 'Verdania Chronicle' },
+  s09: { text: 'An idea that fits is not found. It is recognized.', author: 'Cedric' },
+  s10: { text: 'You were always this. Now you have a name for it.', author: 'Verdania Chronicle' },
+  s11: { text: 'The seed has become something worth planting.', author: 'Cedric' },
+};

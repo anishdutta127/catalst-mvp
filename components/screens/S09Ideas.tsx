@@ -7,6 +7,7 @@ import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
 import { analytics } from '@/lib/analytics';
 import type { ScoredIdea } from '@/lib/scoring/types';
+import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
 /**
  * S09 — Ideas Revealed (enriched)
@@ -200,6 +201,8 @@ export function S09Ideas() {
           <p className="text-[10px] text-ivory/30">30 min · No commitment · Real builder talk</p>
         </motion.div>
       )}
+
+      <ScreenQuote screen="s09" />
 
       {/* Crown CTA */}
       {crownedIdeaId && (

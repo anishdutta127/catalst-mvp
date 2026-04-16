@@ -7,6 +7,7 @@ import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
 import { finalRun } from '@/lib/scoring/orchestrator';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
+import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
 /**
  * S08 — The Forge (enriched)
@@ -204,6 +205,8 @@ export function S08Forge() {
           background: 'radial-gradient(ellipse at center, #D4A84340 0%, transparent 70%)',
         }}
       />
+
+      <ScreenQuote screen="s08" />
 
       {/* Phase label */}
       <div data-testid="forge-phase" className="absolute bottom-8 text-center">

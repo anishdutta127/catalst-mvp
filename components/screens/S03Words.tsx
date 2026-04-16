@@ -8,6 +8,7 @@ import { lines } from '@/content/lines';
 import { createTimer } from '@/lib/timing';
 import { TIMER_DEFAULTS } from '@/lib/constants';
 import { ActivityTimer } from '@/components/ui/ActivityTimer';
+import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
 /**
  * S03 — Word Association (enriched)
@@ -131,6 +132,8 @@ export function S03Words() {
 
       {/* Counter */}
       <p className="text-[10px] font-mono text-ivory/30">{step + 1} / 3</p>
+
+      <ScreenQuote screen="s03" />
     </div>
   );
 }

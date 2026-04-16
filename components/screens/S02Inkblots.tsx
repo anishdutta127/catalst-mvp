@@ -8,6 +8,7 @@ import { lines } from '@/content/lines';
 import { createTimer } from '@/lib/timing';
 import { TIMER_DEFAULTS } from '@/lib/constants';
 import { ActivityTimer } from '@/components/ui/ActivityTimer';
+import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import Image from 'next/image';
 
 /**
@@ -125,6 +126,8 @@ export function S02Inkblots() {
           );
         })}
       </div>
+
+      <ScreenQuote screen="s02" />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
 import housesRaw from '@/content/houses.json';
+import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
 interface LineageFigure { name: string; sharedTraitLine: string }
 interface House {
@@ -153,6 +154,8 @@ export function S10Sorting() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <ScreenQuote screen="s10" />
 
       {/* CTA */}
       {phase === 'complete' && (

@@ -8,6 +8,7 @@ import { lines } from '@/content/lines';
 import industriesRaw from '@/content/industries.json';
 import { filterByIndustryOnly } from '@/lib/scoring/orchestrator';
 import { IDEAS } from '@/lib/scoring/engine';
+import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
 interface Industry {
   id: string; name: string; icon: string; hookLine: string;
@@ -162,6 +163,8 @@ export function S04Industries() {
           );
         })}
       </div>
+
+      <ScreenQuote screen="s04" />
 
       {/* Bottom sheet */}
       <AnimatePresence>

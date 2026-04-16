@@ -8,6 +8,7 @@ import { lines } from '@/content/lines';
 import { finalRun } from '@/lib/scoring/orchestrator';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
 import type { ScenarioSource } from '@/lib/scoring/types';
+import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
 /**
  * S07 — Verdania Chronicle + Constraints (enriched)
@@ -190,6 +191,8 @@ export function S07Chronicle() {
                 ))}
               </div>
             </div>
+
+            <ScreenQuote screen="s07" />
 
             {/* CTA */}
             <AnimatePresence>

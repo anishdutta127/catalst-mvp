@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
+import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
 /**
  * S00 — Gateway (enriched)
@@ -113,6 +114,8 @@ export function S00Gateway() {
           </motion.p>
         )}
       </motion.div>
+
+      <ScreenQuote screen="s00" />
 
       {/* Bottom: Quote (fades in after 2s) */}
       <div className="px-8">
