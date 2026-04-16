@@ -85,7 +85,7 @@ export const lines = {
       },
       blot3: {
         options: [
-          { position: 'top-left', emoji: '\ud83d\udd25', label: 'Fire and smoke \ . something burning' },
+          { position: 'top-left', emoji: '\ud83c\udf0b', label: 'Fire and smoke \ . something burning' },
           { position: 'top-right', emoji: '\ud83c\udf3a', label: 'Flowers blooming \ . an explosion of life' },
           { position: 'bottom-left', emoji: '\ud83d\udc41\ufe0f', label: 'A face \ . something looking back at me' },
           { position: 'bottom-right', emoji: '\u2601\ufe0f', label: 'Honestly? Chaos. Beautiful chaos.' },

@@ -3,29 +3,29 @@
 /**
  * Journey Page — single-page state machine for the entire Catalst flow.
  * Renders the current screen inside JourneyShell based on Zustand state.
+ *
+ * Gate 4: S00-S04, S06-S07 are real screens.
+ * Remaining screens (S08-S11, S01_LLM) use placeholder.
  */
 
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { JourneyShell } from '@/components/layout/JourneyShell';
 import { GoldButton } from '@/components/ui/GoldButton';
+import { S00Gateway } from '@/components/screens/S00Gateway';
+import { S01Fork } from '@/components/screens/S01Fork';
+import { S02Inkblots } from '@/components/screens/S02Inkblots';
+import { S03Words } from '@/components/screens/S03Words';
+import { S04Industries } from '@/components/screens/S04Industries';
+import { S06Crystal } from '@/components/screens/S06Crystal';
+import { S07Chronicle } from '@/components/screens/S07Chronicle';
 import type { ScreenId } from '@/lib/constants';
 
-// ── Placeholder screen — replaced per-screen in Phase 2 ──
+// ── Placeholder for unbuilt screens ──
 
 function PlaceholderScreen({ screenId }: { screenId: ScreenId }) {
-  const setDisplayName = useJourneyStore((s) => s.setDisplayName);
-  const displayName = useJourneyStore((s) => s.displayName);
-
   const screenLabels: Partial<Record<ScreenId, string>> = {
-    s00: 'The Gateway',
-    s01: 'The Fork',
     s01_llm: 'LLM Shortcut',
-    s02: 'Inkblots',
-    s03: 'Word Association',
-    s04: 'Industry Discovery',
-    s05: 'Founder Scenarios',
-    s06: 'Crystal Formation',
-    s07: 'Verdania Chronicle',
+    s05: 'Founder Scenarios (Killed)',
     s08: 'The Forge',
     s09: 'Ideas Revealed',
     s09b: 'Idea Deep Dive',
@@ -42,45 +42,45 @@ function PlaceholderScreen({ screenId }: { screenId: ScreenId }) {
         {screenLabels[screenId] ?? screenId}
       </h1>
       <p className="text-sm text-ivory/50 max-w-sm">
-        This screen will be built in Phase 2.
+        Coming in a later gate.
       </p>
-
-      {/* Name input for S00 */}
-      {screenId === 's00' && !displayName && (
-        <input
-          type="text"
-          placeholder="What should we call you?"
-          className="w-64 px-4 py-3 rounded-lg bg-dark-surface border border-gold/20 text-ivory placeholder:text-ivory/30 focus:outline-none focus:border-gold/50 text-center text-base"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              const value = (e.target as HTMLInputElement).value.trim();
-              if (value) setDisplayName(value);
-            }
-          }}
-        />
-      )}
     </div>
   );
 }
 
+// ── Screen wrappers (ignore screenId prop for real screens) ──
+
+function S00Wrapper() { return <S00Gateway />; }
+function S01Wrapper() { return <S01Fork />; }
+function S02Wrapper() { return <S02Inkblots />; }
+function S03Wrapper() { return <S03Words />; }
+function S04Wrapper() { return <S04Industries />; }
+function S06Wrapper() { return <S06Crystal />; }
+function S07Wrapper() { return <S07Chronicle />; }
+
 // ── Screen registry ──
 
 const SCREEN_COMPONENTS: Record<ScreenId, React.ComponentType<{ screenId: ScreenId }>> = {
-  s00: PlaceholderScreen,
-  s01: PlaceholderScreen,
+  s00: S00Wrapper,
+  s01: S01Wrapper,
   s01_llm: PlaceholderScreen,
-  s02: PlaceholderScreen,
-  s03: PlaceholderScreen,
-  s04: PlaceholderScreen,
+  s02: S02Wrapper,
+  s03: S03Wrapper,
+  s04: S04Wrapper,
   s05: PlaceholderScreen,
-  s06: PlaceholderScreen,
-  s07: PlaceholderScreen,
+  s06: S06Wrapper,
+  s07: S07Wrapper,
   s08: PlaceholderScreen,
   s09: PlaceholderScreen,
   s09b: PlaceholderScreen,
   s10: PlaceholderScreen,
   s11: PlaceholderScreen,
 };
+
+// ── Screens that manage their own CTA (no global CTA bar) ──
+const SELF_MANAGED_SCREENS = new Set<ScreenId>([
+  's00', 's01', 's02', 's03', 's04', 's06', 's07',
+]);
 
 // ── Page ──
 
@@ -91,19 +91,23 @@ export default function JourneyPage() {
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
 
   const ScreenComponent = SCREEN_COMPONENTS[currentScreen];
-  const canAdvance = currentScreen !== 's11' && (currentScreen !== 's00' || !!displayName);
+  const isSelfManaged = SELF_MANAGED_SCREENS.has(currentScreen);
+
+  // S00: show CTA only when name entered (managed by S00Gateway component)
+  // All Gate 4 screens manage their own advancement
+  const showGlobalCta = !isSelfManaged && currentScreen !== 's11';
 
   return (
     <JourneyShell
       currentScreen={currentScreen}
       completedScreens={completedScreens}
-      ctaVisible={canAdvance}
+      ctaVisible={showGlobalCta}
       ctaContent={
-        <GoldButton onClick={advanceScreen}>
-          {currentScreen === 's00' && displayName
-            ? 'Begin Your Journey'
-            : 'Continue →'}
-        </GoldButton>
+        showGlobalCta ? (
+          <GoldButton onClick={advanceScreen}>
+            Continue
+          </GoldButton>
+        ) : undefined
       }
       footerContent={
         currentScreen === 's00'
