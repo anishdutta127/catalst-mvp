@@ -1,0 +1,702 @@
+[
+  {
+    "id": "ai_ml",
+    "name": "AI & Machine Learning",
+    "icon": "🤖",
+    "riasec": ["I", "E"],
+    "hookLine": "Companies using AI have seen up to 40% revenue acceleration , and we're still in the first inning.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I literally rewrote the rules of every industry on this app. Healthcare? I'm there. Finance? Running it. That cute little creator economy? Built on my backbone. I'm not a vertical , I'm the cheat code."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "90% of AI startups will fail not because the tech doesn't work, but because founders build solutions looking for problems. Compute costs will eat you alive if you don't find unit economics fast. And regulators are circling , the compliance burden is about to get very real."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Build the picks-and-shovels layer that every company on earth will need in 3 years. I'm not asking you to build another chatbot. I'm asking you to find the boring, high-value workflow nobody's automated yet and own it completely."
+      }
+    ],
+    "stats": {
+      "marketSize": "$200B global market",
+      "growth": "36% CAGR",
+      "whatsHot": ["Agentic AI workflows", "Small language models for edge", "AI-native developer tools"]
+    },
+    "trendingIdeas": ["AI agents for enterprise workflows", "Vertical SaaS with embedded AI", "Open-source model wrappers"],
+    "hotRegions": ["US", "India", "UK"]
+  },
+  {
+    "id": "health_wellness",
+    "name": "Health & Wellness",
+    "icon": "💚",
+    "riasec": ["S", "I"],
+    "hookLine": "Global digital health hit $330B in 2025 , and 70% of people still can't get a same-week appointment.",
+    "prompts": [
+      {
+        "question": "I'm looking for someone who...",
+        "answer": "Genuinely cares about outcomes, not just engagement metrics. Someone who's sat in a waiting room and thought 'this is broken' instead of 'this is an opportunity.' The opportunity comes after the empathy."
+      },
+      {
+        "question": "A fun fact about me...",
+        "answer": "The average person spends $5,000 a year on health but less than $200 on prevention. Every founder who's ever pitched me a 'wellness platform' eventually realizes: the real money is in keeping people out of the hospital, not in."
+      },
+      {
+        "question": "Green flag:",
+        "answer": "You've worked in or around healthcare and seen the inefficiency firsthand. You understand that trust takes years to build and seconds to lose. You won't move fast and break things , you'll move deliberately and heal things."
+      }
+    ],
+    "stats": {
+      "marketSize": "$330B global market",
+      "growth": "18% CAGR",
+      "whatsHot": ["GLP-1 companion platforms", "Remote patient monitoring", "Mental health AI triage"]
+    },
+    "trendingIdeas": ["GLP-1 companion apps", "AI triage chatbots", "Remote monitoring wearables"],
+    "hotRegions": ["US", "India", "Singapore"]
+  },
+  {
+    "id": "creator_media",
+    "name": "Creator & Media",
+    "icon": "🎬",
+    "riasec": ["A", "E"],
+    "hookLine": "The creator economy crossed $250B, yet the average creator earns less than $500/month. Someone fix the middle.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I turned 'posting online' into a $250 billion economy. Your parents still don't understand what I am, but Fortune 500 CMOs are restructuring their entire budget around me. I make culture now. Advertising just rents it."
+      },
+      {
+        "question": "My most controversial take...",
+        "answer": "Most creator tools are built for creators who don't need them. The top 1% already have teams. The real unlock is the 'messy middle' , creators with 10K-100K followers who are one good tool away from quitting their day job."
+      },
+      {
+        "question": "I'll win you over when...",
+        "answer": "You realize that every new content format creates a 2-year gold rush for tooling. Short video spawned a $4B editing tool market. AI-generated content is next , and nobody owns the workflow yet."
+      }
+    ],
+    "stats": {
+      "marketSize": "$250B global market",
+      "growth": "22% CAGR",
+      "whatsHot": ["AI video production tools", "Creator-led commerce", "Decentralized content monetization"]
+    },
+    "trendingIdeas": ["AI-native video editors", "Creator CRM and audience analytics", "Micro-brand storefronts"],
+    "hotRegions": ["US", "Brazil", "South Korea"]
+  },
+  {
+    "id": "finance_payments",
+    "name": "Finance & Payments",
+    "icon": "💳",
+    "riasec": ["E", "C"],
+    "hookLine": "Global fintech revenue will cross $1.5T by 2030 , and embedded finance is barely getting started.",
+    "prompts": [
+      {
+        "question": "The honest truth is...",
+        "answer": "Regulation will eat 30% of your engineering bandwidth. Compliance isn't a feature , it's the product. Margins look incredible until you account for fraud losses, chargebacks, and the bank partnership that takes 14 months to close. I'm not for the impatient."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Embed financial services into the places people already make decisions. Nobody wakes up wanting to 'do banking.' They want to buy something, get paid, or move money. Put me where the intent already exists and I'll print revenue."
+      },
+      {
+        "question": "Green flag:",
+        "answer": "You understand that in finance, trust isn't a brand exercise , it's an architecture decision. You've read a compliance document voluntarily. You find interest rate spreads genuinely interesting. Precision turns you on."
+      }
+    ],
+    "stats": {
+      "marketSize": "$340B global market",
+      "growth": "14% CAGR",
+      "whatsHot": ["Embedded finance APIs", "Real-time cross-border payments", "AI-powered underwriting"]
+    },
+    "trendingIdeas": ["Stablecoin payment rails", "AI fraud detection", "Banking-as-a-service for vertical SaaS"],
+    "hotRegions": ["US", "UK", "Nigeria"]
+  },
+  {
+    "id": "education_learning",
+    "name": "Education & Learning",
+    "icon": "📚",
+    "riasec": ["S", "A"],
+    "hookLine": "Global edtech is a $400B market, but 250 million kids worldwide still don't have access to basic schooling.",
+    "prompts": [
+      {
+        "question": "I'm looking for someone who...",
+        "answer": "Believes that learning can be genuinely fun without being dumbed down. Someone who understands that the best education feels like play, not punishment. If you've ever watched a kid's eyes light up when something clicks , that's the KPI."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Make world-class learning feel as addictive as a great video game. I'm talking adaptive paths, AI tutors that actually understand where a student is stuck, credentialing that employers trust. The school system won't reinvent itself , someone from outside has to."
+      },
+      {
+        "question": "I'll win you over when...",
+        "answer": "You see that the $400B number isn't theoretical. Corporate L&D alone is $380B, and 74% of employees say they're not reaching their full potential. K-12, higher ed, upskilling , pick a lane, any lane, and there's a massive gap between what exists and what should."
+      }
+    ],
+    "stats": {
+      "marketSize": "$400B global market",
+      "growth": "16% CAGR",
+      "whatsHot": ["AI tutoring agents", "Skills-based credentialing", "Cohort-based learning platforms"]
+    },
+    "trendingIdeas": ["AI tutoring with real-time feedback", "Micro-credentialing marketplaces", "Workforce upskilling platforms"],
+    "hotRegions": ["US", "India", "Kenya"]
+  },
+  {
+    "id": "food_agriculture",
+    "name": "Food & Agriculture",
+    "icon": "🌾",
+    "riasec": ["R", "E"],
+    "hookLine": "We feed 8 billion people daily , and waste a third of it. That's a $1.2 trillion inefficiency, annually.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I'm literally essential. Skip your AI subscription, cancel your streaming , but you'll eat three times today. I'm a $9 trillion global industry and the only one on this app where demand is biologically guaranteed."
+      },
+      {
+        "question": "A fun fact about me...",
+        "answer": "The average meal travels 1,500 miles to reach your plate, passes through 7 intermediaries, and loses 35% of its value to waste. Meanwhile, the farmer who grew it captured less than 15 cents on every dollar you paid. I'm basically a logistics problem dressed up as a food problem."
+      },
+      {
+        "question": "My most controversial take...",
+        "answer": "Vertical farms and lab-grown meat won't save the world , better supply chains and less waste will. The unsexy, operational stuff is where the real impact lives. The founder who figures out last-mile cold chain in Southeast Asia will matter more than every plant-based burger combined."
+      }
+    ],
+    "stats": {
+      "marketSize": "$9T global market",
+      "growth": "9% CAGR",
+      "whatsHot": ["Precision agriculture AI", "Alternative proteins at scale", "Farm-to-fork traceability platforms"]
+    },
+    "trendingIdeas": ["Precision fermentation startups", "AI crop disease detection", "Dark kitchen infrastructure"],
+    "hotRegions": ["India", "Brazil", "Netherlands"]
+  },
+  {
+    "id": "climate_energy",
+    "name": "Climate & Energy",
+    "icon": "🌍",
+    "riasec": ["I", "R"],
+    "hookLine": "Clean energy investment hit $1.8 trillion in 2024 , officially surpassing fossil fuels for the first time.",
+    "prompts": [
+      {
+        "question": "I'm looking for someone who...",
+        "answer": "Sees the climate crisis as the largest wealth transfer in human history, not just a cause. Someone who can hold urgency and patience simultaneously , because the physics doesn't wait, but the sales cycles are 18 months."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "Hardware is hard, regulation is slow, and your unit economics won't work for 3-5 years. Cleantech 1.0 burned through $25B in VC money with little to show. The difference now is that renewables are genuinely cheaper , but 'cheaper' doesn't mean 'easy to sell into utilities that move at geological speed.'"
+      },
+      {
+        "question": "I'll win you over when...",
+        "answer": "You realize that every data center, EV, and heat pump being deployed right now needs grid management, energy storage, and carbon accounting software. The electrification wave is a 30-year tailwind, and the software layer is still mostly spreadsheets."
+      }
+    ],
+    "stats": {
+      "marketSize": "$1.8T global investment",
+      "growth": "12% CAGR",
+      "whatsHot": ["Grid-scale battery software", "Carbon credit marketplaces", "Industrial decarbonization SaaS"]
+    },
+    "trendingIdeas": ["Virtual power plant software", "Carbon accounting for SMBs", "EV charging network optimization"],
+    "hotRegions": ["US", "Germany", "China"]
+  },
+  {
+    "id": "gaming_entertainment",
+    "name": "Gaming & Entertainment",
+    "icon": "🎮",
+    "riasec": ["A", "I"],
+    "hookLine": "3.4 billion gamers worldwide spend more on games than movies and music combined.",
+    "prompts": [
+      {
+        "question": "A fun fact about me...",
+        "answer": "The Fortnite economy is larger than the GDP of some small nations. Roblox has more monthly active users than Twitter. A Minecraft server taught more kids to code than any bootcamp. I'm not entertainment , I'm infrastructure for the next generation's social life."
+      },
+      {
+        "question": "My most controversial take...",
+        "answer": "AAA games are a terrible startup bet. The real money is in the boring stuff: game backend services, anti-cheat, matchmaking APIs, creator monetization tools, and analytics. Let studios burn $200M on a title , then sell them the plumbing."
+      },
+      {
+        "question": "Green flag:",
+        "answer": "You don't pitch me as 'the next big game.' You pitch the tooling, the infrastructure, the platform play. You understand that hit-driven businesses are for publishers, not startups. You find retention curves more exciting than launch trailers."
+      }
+    ],
+    "stats": {
+      "marketSize": "$220B global market",
+      "growth": "10% CAGR",
+      "whatsHot": ["AI-generated game assets", "User-generated content platforms", "Cloud gaming infrastructure"]
+    },
+    "trendingIdeas": ["AI NPC dialogue engines", "UGC monetization platforms", "Cross-platform game backend APIs"],
+    "hotRegions": ["US", "Japan", "South Korea"]
+  },
+  {
+    "id": "fashion_beauty",
+    "name": "Fashion & Beauty",
+    "icon": "👗",
+    "riasec": ["A", "E"],
+    "hookLine": "The global fashion industry is worth $1.7 trillion , and returns alone cost $800 billion a year.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I turn feelings into purchases faster than any other industry. Nobody needs a new dress. Everybody wants one. I run on desire, aspiration, and identity , and I've been doing it for centuries. Try building that kind of brand loyalty with a SaaS product."
+      },
+      {
+        "question": "I'm looking for someone who...",
+        "answer": "Has taste , real taste, not just opinions. Someone who understands that fashion isn't frivolous; it's a $1.7 trillion expression of identity. If you think 'it's just clothes,' swipe left immediately. I need a founder who respects the craft."
+      },
+      {
+        "question": "My most controversial take...",
+        "answer": "Sustainability in fashion is mostly marketing theater. The industry produces 100 billion garments a year for 8 billion people. The math doesn't work. The real opportunity isn't 'sustainable brands' , it's resale infrastructure, on-demand manufacturing, and killing overproduction at the source."
+      }
+    ],
+    "stats": {
+      "marketSize": "$1.7T global market",
+      "growth": "8% CAGR",
+      "whatsHot": ["AI-powered virtual try-on", "On-demand micro-manufacturing", "Resale and circular fashion platforms"]
+    },
+    "trendingIdeas": ["AI styling assistants", "Digital fashion and virtual wearables", "Returns reduction tech"],
+    "hotRegions": ["US", "France", "UAE"]
+  },
+  {
+    "id": "sports_fitness",
+    "name": "Sports & Fitness",
+    "icon": "⚡",
+    "riasec": ["R", "E"],
+    "hookLine": "Global sports tech hit $40B, but 80% of gym memberships go unused after February. Someone crack retention.",
+    "prompts": [
+      {
+        "question": "The honest truth is...",
+        "answer": "Fitness apps have a 96% churn rate within 12 months. The graveyard of 'Peloton for X' startups stretches to the horizon. Hardware margins are brutal, and consumers are notoriously fickle. If you can't crack retention, you're just selling January motivation to people who quit by March."
+      },
+      {
+        "question": "A fun fact about me...",
+        "answer": "The global sports betting market alone is worth $85B , more than the entire fitness app industry. Meanwhile, youth sports parents spend an average of $1,200/year per kid in the US. I'm not one market; I'm a dozen overlapping obsessions masquerading as a single category."
+      },
+      {
+        "question": "I'll win you over when...",
+        "answer": "You see that the real money isn't in another workout app , it's in the data layer. Performance analytics for semi-pro athletes, injury prediction, coaching tools, and the operational backbone of leagues and facilities. Less sexy, way more sticky."
+      }
+    ],
+    "stats": {
+      "marketSize": "$40B global market",
+      "growth": "17% CAGR",
+      "whatsHot": ["Wearable-integrated coaching AI", "Sports betting analytics", "Recovery and longevity tech"]
+    },
+    "trendingIdeas": ["Longevity-focused fitness platforms", "Youth athlete performance tracking", "AI personal training"],
+    "hotRegions": ["US", "UK", "Australia"]
+  },
+  {
+    "id": "community_social",
+    "name": "Community & Social Impact",
+    "icon": "🤝",
+    "riasec": ["S", "E"],
+    "hookLine": "Impact investing crossed $1.1 trillion in AUM , proof that doing good and making money finally stopped being mutually exclusive.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I'm the only one on this app where your success metric is the world getting measurably better. Impact investing hit $1.1T because people finally realized that solving real problems builds durable companies. Every other industry optimizes for engagement , I optimize for outcomes."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Build the infrastructure that turns goodwill into measurable impact. Nonprofits sit on $2.5T in global funding but most can't tell you their cost per outcome. Governments spend $10T+ on public services with shockingly little accountability. The data layer for social impact barely exists."
+      },
+      {
+        "question": "Green flag:",
+        "answer": "You've done the hard work of talking to the people you want to help. You know that 'community' isn't a growth hack , it's a commitment. Your business model doesn't depend on guilt. You can explain your impact in one number, not a manifesto."
+      }
+    ],
+    "stats": {
+      "marketSize": "$1.1T impact investing AUM",
+      "growth": "15% CAGR",
+      "whatsHot": ["Outcome-based financing platforms", "Civic tech and govtech", "Impact measurement infrastructure"]
+    },
+    "trendingIdeas": ["Govtech procurement platforms", "Impact verification via satellite data", "Community-owned cooperatives tech"],
+    "hotRegions": ["US", "India", "Rwanda"]
+  },
+  {
+    "id": "real_estate_home",
+    "name": "Real Estate & Home",
+    "icon": "🏠",
+    "riasec": ["R", "C"],
+    "hookLine": "Global real estate is worth $380 trillion , the single largest asset class on the planet, and still mostly run on handshakes.",
+    "prompts": [
+      {
+        "question": "I'm looking for someone who...",
+        "answer": "Has the patience for 12-month sales cycles and the stomach for capital-intensive plays. I don't reward hustle culture , I reward persistence. If you need dopamine hits from daily user growth, we're not compatible. But if you can wait, I'll make you very, very comfortable."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "I'm the most relationship-driven industry on this list. Your product can be 10x better and still lose to the agent who plays golf with the building owner. Technology adoption is glacially slow. Zillow tried to disrupt me with $1B+ and retreated. I don't get disrupted easily , I get digitized slowly."
+      },
+      {
+        "question": "My most controversial take...",
+        "answer": "Proptech shouldn't try to replace real estate agents. There are 3 million of them and they control the transaction. Build for them, not against them. The founder who makes an agent 3x more productive will capture more value than the one trying to eliminate them."
+      }
+    ],
+    "stats": {
+      "marketSize": "$380T global asset value",
+      "growth": "5% CAGR",
+      "whatsHot": ["AI property valuation models", "Fractional real estate investing", "Smart building operating systems"]
+    },
+    "trendingIdeas": ["Fractional ownership platforms", "AI-powered property management", "Construction tech for modular housing"],
+    "hotRegions": ["US", "UAE", "India"]
+  },
+  {
+    "id": "logistics_mobility",
+    "name": "Logistics & Mobility",
+    "icon": "🚀",
+    "riasec": ["R", "C"],
+    "hookLine": "Global logistics is an $11 trillion industry where 40% of trucks still drive empty on return trips.",
+    "prompts": [
+      {
+        "question": "A fun fact about me...",
+        "answer": "40% of truck miles in the US are driven completely empty , deadhead trips with zero cargo. Global trade paperwork alone costs $1.8 trillion annually. I'm an $11 trillion industry held together by phone calls, spreadsheets, and a prayer. The inefficiency isn't a bug , it's the entire opportunity."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Shave $3 trillion in waste out of global supply chains. I don't need another 'Uber for freight' , I need better demand forecasting, warehouse automation, last-mile route optimization, and someone who can finally digitize the 4 billion paper documents that cross borders annually."
+      },
+      {
+        "question": "I'll win you over when...",
+        "answer": "You realize that boring logistics software has better margins than most SaaS. My customers don't churn because switching costs are enormous. A warehouse that runs on your system doesn't casually migrate. Unglamorous? Sure. But my retention rates would make your favorite consumer app weep."
+      }
+    ],
+    "stats": {
+      "marketSize": "$11T global market",
+      "growth": "7% CAGR",
+      "whatsHot": ["Autonomous last-mile delivery", "AI demand forecasting", "Digital freight brokerage"]
+    },
+    "trendingIdeas": ["Autonomous trucking corridors", "Drone delivery networks", "Real-time supply chain visibility"],
+    "hotRegions": ["US", "China", "Germany"]
+  },
+  {
+    "id": "legal_compliance",
+    "name": "Legal & Compliance",
+    "icon": "⚖️",
+    "riasec": ["I", "C"],
+    "hookLine": "Global legal services crossed $1 trillion , and lawyers still bill $500/hour to review documents a machine could parse in seconds.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "Every single company on this app needs me, whether they admit it or not. I'm the $1 trillion industry that makes every other industry possible. Try launching a fintech without compliance. Try scaling a health startup without regulatory counsel. I'm not optional , I'm the foundation."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "Lawyers are the most change-resistant professionals on the planet, and they're my primary buyer. Enterprise sales cycles are 9-18 months. Your free trial means nothing when a $900/hour partner's reputation is on the line. And the moment you touch anything regulated, your liability insurance bill will make you cry."
+      },
+      {
+        "question": "Green flag:",
+        "answer": "You don't describe yourself as 'disrupting law.' You say 'augmenting legal workflows.' You understand that accuracy isn't 95% , it's 99.9% or useless. You've actually read a contract and found it interesting. You have the patience to sell to people who bill by the six-minute increment."
+      }
+    ],
+    "stats": {
+      "marketSize": "$1T global market",
+      "growth": "9% CAGR",
+      "whatsHot": ["AI contract review and drafting", "Regulatory change management", "Compliance automation platforms"]
+    },
+    "trendingIdeas": ["AI-powered due diligence", "Regulatory intelligence feeds", "Self-service legal for SMBs"],
+    "hotRegions": ["US", "UK", "Singapore"]
+  },
+  {
+    "id": "hardware_robotics",
+    "name": "Hardware & Robotics",
+    "icon": "🔧",
+    "riasec": ["R", "I"],
+    "hookLine": "The robotics market will hit $275B by 2030 , because software finally met the physical world and realized it needs hands.",
+    "prompts": [
+      {
+        "question": "I'm looking for someone who...",
+        "answer": "Finds joy in atoms, not just bits. Someone who's built something with their hands and understands that hardware isn't 'software but harder' , it's a fundamentally different discipline. I need patience, mechanical intuition, and the ability to survive 18-month development cycles without losing your mind."
+      },
+      {
+        "question": "A fun fact about me...",
+        "answer": "A single modern semiconductor fab costs $20 billion to build. The iPhone contains components from 43 countries. The robotics industry has more PhD founders than any other category. I'm the ultimate team sport , nobody builds hardware alone, and the founders who try usually fail."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Build the physical infrastructure that AI needs to actually touch the real world. Software ate the world, but it still can't fold laundry, stock a shelf, or inspect a bridge. Humanoid robots, surgical systems, agricultural drones , the next trillion-dollar companies will have moving parts."
+      }
+    ],
+    "stats": {
+      "marketSize": "$275B global market",
+      "growth": "25% CAGR",
+      "whatsHot": ["Humanoid robots for warehouses", "Surgical robotics", "Edge AI chips for embedded systems"]
+    },
+    "trendingIdeas": ["Humanoid general-purpose robots", "Collaborative cobots for SMB factories", "RISC-V custom silicon"],
+    "hotRegions": ["US", "China", "Japan"]
+  },
+  {
+    "id": "pet_care",
+    "name": "Pet Care & Animal Tech",
+    "icon": "🐾",
+    "riasec": ["S", "R"],
+    "hookLine": "Pet parents spend more on their pets than on themselves.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I'm recession-proof. In 2008, the economy collapsed and pet spending went up. In 2020, the world shut down and pet adoption broke records. Americans spent $147 billion on their pets last year , more than they spent on childcare. My customer doesn't comparison shop. They just buy."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "The pet industry looks like an easy market until you try to sell into it. Vet clinics are consolidating fast , Mars and JAB Holdings own thousands of them. Pet food is dominated by legacy brands with ironclad shelf space. And pet parents are weirdly loyal to what works. Your clever D2C brand is fighting Chewy's $10B logistics machine."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Build the healthcare infrastructure for 900 million pet dogs worldwide. Vet care is where human healthcare was 20 years ago , paper records, phone scheduling, no data interoperability. Telemedicine, preventive diagnostics, pet insurance that actually pays out. The whole stack needs rebuilding."
+      }
+    ],
+    "stats": {
+      "marketSize": "$320B global market",
+      "growth": "7% CAGR",
+      "whatsHot": ["Pet telehealth platforms", "AI-powered pet health diagnostics", "Premium D2C pet nutrition"]
+    },
+    "trendingIdeas": ["Pet insurance tech", "GPS and health wearables for pets", "Fresh-food subscription services"],
+    "hotRegions": ["US", "UK", "China"]
+  },
+  {
+    "id": "spirituality",
+    "name": "Spirituality & Mindfulness",
+    "icon": "🧘",
+    "riasec": ["S", "A"],
+    "hookLine": "The meditation app market alone crossed $5B. The soul economy is real.",
+    "prompts": [
+      {
+        "question": "A fun fact about me...",
+        "answer": "Headspace and Calm are worth over $3B combined, and they basically sell you silence with a nice voice on top. The 'wellness' market is $6.3 trillion globally. Yoga alone is a $107B industry. I'm proof that when people are anxious enough, they'll pay for peace , and everyone is anxious enough right now."
+      },
+      {
+        "question": "My most controversial take...",
+        "answer": "Most mindfulness apps are just anxiety monetization engines that never actually fix the problem. A 10-minute daily meditation won't undo a 14-hour doomscroll habit. The founders who will win aren't building better meditation timers , they're building tools that change behavior at the environmental level."
+      },
+      {
+        "question": "I'll win you over when...",
+        "answer": "You see that this isn't about crystals and incense. Corporate wellness budgets hit $66B last year. Burnout costs employers $322B annually. The companies buying mindfulness solutions are Fortune 500 HR departments, not yoga studios. Sell the ROI, not the vibe."
+      }
+    ],
+    "stats": {
+      "marketSize": "$6.3T global wellness market",
+      "growth": "10% CAGR",
+      "whatsHot": ["AI-guided breathwork and meditation", "Corporate burnout prevention platforms", "Psychedelic-assisted therapy tech"]
+    },
+    "trendingIdeas": ["Psychedelic therapy clinical platforms", "AI spiritual coaching", "Retreat and experience marketplaces"],
+    "hotRegions": ["US", "India", "Netherlands"]
+  },
+  {
+    "id": "space_tech",
+    "name": "Space Tech & Aerospace",
+    "icon": "🚀",
+    "riasec": ["I", "R"],
+    "hookLine": "Private space industry hit $470B. The new frontier is hiring.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I went from a government monopoly to a startup playground in 15 years. SpaceX made rockets reusable and the entire economics of space collapsed in the best possible way. Launch costs dropped 95%. Satellite constellations went from science fiction to VC pitch decks. I'm the only industry where your TAM is literally infinite."
+      },
+      {
+        "question": "I'm looking for someone who...",
+        "answer": "Has the patience for a 5-year development cycle and the audacity to think it's worth it. Someone who understands that 'move fast and break things' doesn't work when the thing costs $50M and is travelling at 17,000 mph. I need precision obsessives who dream at planetary scale."
+      },
+      {
+        "question": "Green flag:",
+        "answer": "You don't pitch 'the next SpaceX.' You build the supply chain, the ground station software, the satellite data analytics, or the debris tracking system. You understand that 95% of the value in space will be captured by companies that never leave Earth's surface."
+      }
+    ],
+    "stats": {
+      "marketSize": "$470B global market",
+      "growth": "9% CAGR",
+      "whatsHot": ["Satellite data analytics", "Space debris management", "In-orbit servicing and manufacturing"]
+    },
+    "trendingIdeas": ["Smallsat constellation operators", "Earth observation data platforms", "Space-as-a-service infrastructure"],
+    "hotRegions": ["US", "India", "Luxembourg"]
+  },
+  {
+    "id": "cybersecurity",
+    "name": "Cybersecurity",
+    "icon": "🔒",
+    "riasec": ["I", "C"],
+    "hookLine": "Cybercrime costs $10T per year. Defence is the growth story.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I'm the only industry where my total addressable market grows every time something goes wrong , and something goes wrong every 39 seconds. Ransomware payments alone hit $1.1B last year. Every company, government, and hospital on the planet needs me, and most of them know it because they've already been breached."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "There are 3,500+ cybersecurity vendors and CISOs are drowning in tool fatigue. The average enterprise runs 76 security tools. Your product isn't competing with another startup , it's competing for attention in a stack that's already overflowing. If you can't prove ROI in a 30-day POC, you're dead on arrival."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Consolidate the chaos. The companies that will win the next decade of security aren't building another point solution , they're building platforms that replace 10 tools with one. AI-powered threat detection that actually reduces alert fatigue instead of adding to it. Fewer dashboards, better outcomes."
+      }
+    ],
+    "stats": {
+      "marketSize": "$200B global market",
+      "growth": "12% CAGR",
+      "whatsHot": ["AI-powered threat detection", "Identity and access management", "Cloud security posture management"]
+    },
+    "trendingIdeas": ["AI SOC automation", "Supply chain security platforms", "Post-quantum cryptography readiness"],
+    "hotRegions": ["US", "Israel", "UK"]
+  },
+  {
+    "id": "dating",
+    "name": "Dating & Relationships",
+    "icon": "💕",
+    "riasec": ["S", "E"],
+    "hookLine": "Dating app revenue topped $6B but satisfaction is at an all-time low.",
+    "prompts": [
+      {
+        "question": "A fun fact about me...",
+        "answer": "Tinder processes 2 billion swipes per day. Hinge's valuation hit $10B. And yet, loneliness is at epidemic levels , the US Surgeon General literally declared it a public health crisis. The more tools people have to connect, the lonelier they feel. That paradox is the entire opportunity."
+      },
+      {
+        "question": "My most controversial take...",
+        "answer": "The current dating app model is broken by design. These companies make money when you keep swiping, not when you find someone. A dating app that actually works would lose its best users. The next billion-dollar company in this space will have a business model that profits from successful matches, not failed ones."
+      },
+      {
+        "question": "I'll win you over when...",
+        "answer": "You realize that 'dating' is just the tip. Relationship maintenance, couples therapy platforms, friendship apps for adults, loneliness solutions for seniors , the human connection market is massive and barely touched by technology that actually helps."
+      }
+    ],
+    "stats": {
+      "marketSize": "$12B global market",
+      "growth": "8% CAGR",
+      "whatsHot": ["AI matchmaking with personality modeling", "Video-first and voice-first dating", "Adult friendship and platonic connection apps"]
+    },
+    "trendingIdeas": ["AI-powered compatibility matching", "Relationship coaching platforms", "Niche community-first dating"],
+    "hotRegions": ["US", "India", "Japan"]
+  },
+  {
+    "id": "travel",
+    "name": "Travel & Hospitality",
+    "icon": "✈️",
+    "riasec": ["E", "A"],
+    "hookLine": "Travel tech recovered past pre-pandemic levels and is still accelerating.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I survived a 95% revenue drop in 2020 and came back bigger than ever. Global travel spending hit $9.5 trillion in 2025. I'm the ultimate revenge story. People will cut every other expense before they stop travelling , it's identity, not a line item."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "Booking.com and Airbnb own the top of the funnel so completely that competing head-on is financial suicide. OTA commissions eat 15-25% of hotel revenue. The industry is addicted to discounting. And travel planning is still somehow a 47-tab-open-in-Chrome experience. If you're building here, you need a wedge that bypasses the incumbents entirely."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Kill the 47-tab trip planning experience. AI can finally turn 'I want a week in Japan in April with two kids under budget' into a complete, bookable itinerary. The planning layer, the in-trip experience layer, and the post-trip content layer are all still wide open."
+      }
+    ],
+    "stats": {
+      "marketSize": "$9.5T global market",
+      "growth": "11% CAGR",
+      "whatsHot": ["AI trip planning assistants", "Experience-first booking platforms", "Sustainable travel certification"]
+    },
+    "trendingIdeas": ["AI concierge and itinerary planners", "Digital nomad infrastructure", "Experiential travel marketplaces"],
+    "hotRegions": ["US", "UAE", "Thailand"]
+  },
+  {
+    "id": "senior_care",
+    "name": "Senior Care & Aging",
+    "icon": "👴",
+    "riasec": ["S", "R"],
+    "hookLine": "10,000 people turn 65 every day in the US alone.",
+    "prompts": [
+      {
+        "question": "I'm looking for someone who...",
+        "answer": "Actually talks to elderly people, not just about them. Someone who's spent time in a care facility and noticed that the technology is from 2005, the workflows are from 1995, and the dignity standards are from never. The bar is underground, which means the opportunity is enormous."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "Selling to seniors is hard , they're not on Product Hunt. Selling to their children is easier but the buyer and user are different people with different priorities. Selling to care facilities means navigating Medicaid reimbursement, union labor rules, and administrators who've seen 50 startups come and go. This market rewards patience and trust above all."
+      },
+      {
+        "question": "Green flag:",
+        "answer": "You understand that 'aging in place' isn't a feature , it's a $500B market. You build for people with arthritis, poor eyesight, and limited tech literacy without making it feel condescending. You know that the best senior tech doesn't feel like 'senior tech' at all."
+      }
+    ],
+    "stats": {
+      "marketSize": "$1.2T global market",
+      "growth": "8% CAGR",
+      "whatsHot": ["Aging-in-place smart home tech", "Caregiver coordination platforms", "AI fall detection and health monitoring"]
+    },
+    "trendingIdeas": ["Companion robots for elderly", "Caregiver marketplace platforms", "Cognitive health monitoring AI"],
+    "hotRegions": ["US", "Japan", "Germany"]
+  },
+  {
+    "id": "parenting",
+    "name": "Parenting & Family",
+    "icon": "👶",
+    "riasec": ["S", "E"],
+    "hookLine": "Parents spend $18K per year per child. Most solutions are terrible.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I create the most irrational, emotionally driven buyers on the planet. A parent will spend $400 on an organic crib mattress but argue about a $4 app subscription. Logic doesn't apply here , fear, guilt, and love drive every purchase. If you understand that psychology, you understand my market."
+      },
+      {
+        "question": "A fun fact about me...",
+        "answer": "The average American parent spends $310,605 raising a child to 18 , and that's before college. Childcare alone costs more than rent in most US cities. The parenting app market is $3B and growing, but the real money isn't in apps. It's in services, education, and the logistical nightmare of keeping small humans alive and thriving."
+      },
+      {
+        "question": "Together we could...",
+        "answer": "Fix the operational chaos of modern parenting. Childcare search is broken. Pediatric telehealth is underdeveloped. School communication is fragmented across 6 different apps. Co-parenting after divorce has zero good tools. Pick any pain point in a parent's day and the existing solution is probably 'ask the Facebook group.'"
+      }
+    ],
+    "stats": {
+      "marketSize": "$26B global parenting app market",
+      "growth": "9% CAGR",
+      "whatsHot": ["AI-powered child development tracking", "Childcare marketplace platforms", "Family finance and planning tools"]
+    },
+    "trendingIdeas": ["AI developmental milestone tracking", "Childcare matching platforms", "Co-parenting coordination tools"],
+    "hotRegions": ["US", "India", "Australia"]
+  },
+  {
+    "id": "cannabis",
+    "name": "Cannabis & Alt Wellness",
+    "icon": "🌿",
+    "riasec": ["R", "E"],
+    "hookLine": "Legal cannabis projected $70B+ by 2028.",
+    "prompts": [
+      {
+        "question": "My biggest flex is...",
+        "answer": "I'm the fastest-growing CPG category in history. Legal cannabis went from $0 to $40B in under a decade , and we're not even federally legal in the US yet. Imagine what happens when banking, interstate commerce, and advertising restrictions lift. I'm a coiled spring."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "Regulatory whiplash is real. What's legal in one state is a felony in the next. Banking is still a nightmare , most operators run on cash. Tax code 280E means you can't deduct normal business expenses. And every six months, a new state legalizes and the competitive landscape reshuffles completely. This industry is not for people who need stability."
+      },
+      {
+        "question": "I'll win you over when...",
+        "answer": "You stop thinking of me as 'weed' and start thinking of me as 'the most regulated CPG supply chain in existence.' Seed-to-sale tracking, compliance software, lab testing infrastructure, delivery logistics , the boring operational layer is where the durable value lives. Let brands fight over shelf space. You build the shelf."
+      }
+    ],
+    "stats": {
+      "marketSize": "$40B legal global market",
+      "growth": "14% CAGR",
+      "whatsHot": ["Seed-to-sale compliance platforms", "Cannabis delivery and logistics", "Minor cannabinoid research and products"]
+    },
+    "trendingIdeas": ["Cannabis compliance automation", "THC beverage brands", "Psychedelic-adjacent wellness"],
+    "hotRegions": ["US", "Canada", "Germany"]
+  },
+  {
+    "id": "web3",
+    "name": "Web3 & Blockchain",
+    "icon": "⛓️",
+    "riasec": ["I", "E"],
+    "hookLine": "Beyond crypto. Infrastructure, identity, ownership.",
+    "prompts": [
+      {
+        "question": "My most controversial take...",
+        "answer": "95% of crypto tokens are worthless, and the people who built them know it. But the underlying technology , immutable ledgers, programmable money, self-sovereign identity , is genuinely transformative. The founders who will win are the ones building infrastructure so good that users never know they're using a blockchain."
+      },
+      {
+        "question": "The honest truth is...",
+        "answer": "The industry burned through $50B in VC funding and most of the consumer products are worse than their Web2 equivalents. The UX is still terrible. Gas fees are confusing. Wallet management is a liability nightmare. And every 18 months there's a spectacular blowup that sets trust back by years. But stablecoins process $10T annually. The signal is real , it's just buried under noise."
+      },
+      {
+        "question": "I'm looking for someone who...",
+        "answer": "Doesn't say 'blockchain' in their pitch unless absolutely necessary. Someone who builds products where the crypto rails are invisible , the way Visa users don't think about the SWIFT network. If your value prop requires the user to understand gas fees, you've already lost."
+      }
+    ],
+    "stats": {
+      "marketSize": "$70B blockchain market",
+      "growth": "56% CAGR",
+      "whatsHot": ["Stablecoin payment infrastructure", "Decentralized identity (DID)", "Real-world asset tokenization"]
+    },
+    "trendingIdeas": ["Real-world asset tokenization", "Decentralized identity protocols", "Stablecoin-native fintech"],
+    "hotRegions": ["US", "Singapore", "UAE"]
+  }
+]

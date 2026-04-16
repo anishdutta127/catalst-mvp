@@ -1,0 +1,182 @@
+[
+  {
+    "id": "architects",
+    "name": "House of Architects",
+    "colour": "gold",
+    "hex": "#D4A843",
+    "tagline": "You see the blueprint before anyone else.",
+    "description": "Systems thinkers and long-term builders. Architects see the structure underneath everything and design from first principles. They don't rush to market , they engineer foundations that outlast trends, building cathedrals while others build tents.",
+    "strengths": [
+      "Systems thinking",
+      "Long-term vision",
+      "Technical depth",
+      "First-principles design"
+    ],
+    "warning": "Can over-engineer. Perfectionism delays shipping. Sometimes the blueprint matters more to them than the building.",
+    "lineage": [
+      {
+        "name": "Leonardo da Vinci",
+        "achievement": "Renaissance polymath who designed flying machines 400 years before flight, mapped human anatomy, and painted the most famous artwork in history.",
+        "quote": "I have been impressed with the urgency of doing. Knowing is not enough; we must apply. Being willing is not enough; we must do.",
+        "sharedTraitLine": "Like you, they led with Vision + Analysis.",
+        "connectionLine": "You both see the blueprint before anyone else can , and you both refuse to separate art from engineering."
+      },
+      {
+        "name": "Nikola Tesla",
+        "achievement": "Invented AC power, laid the foundations of radio, and envisioned wireless energy transfer , powering the modern world from a notebook.",
+        "quote": "The present is theirs; the future, for which I really worked, is mine.",
+        "sharedTraitLine": "Like you, they led with Vision + Craft.",
+        "connectionLine": "You both build for a future that hasn't arrived yet, trusting that the world will catch up to what you already see."
+      },
+      {
+        "name": "A.R. Rahman",
+        "achievement": "Composed music that bridged Indian classical ragas and Western electronic production, winning two Oscars, two Grammys, and a nation's devotion.",
+        "quote": "I think music is the greatest art form that exists, and I think people listen to music for different reasons, and it serves different purposes.",
+        "sharedTraitLine": "Like you, they led with Craft + Analysis.",
+        "connectionLine": "You both obsess over invisible architecture , the structure beneath the surface that most people only feel but never see."
+      },
+      {
+        "name": "Jensen Huang",
+        "achievement": "Built NVIDIA from a gaming chip company into the $2 trillion backbone of the AI revolution, betting on parallel computing before anyone understood why it mattered.",
+        "quote": "Our company has only thirty days to live. The difference between a company with thirty days to live and one that lasts thirty years is just perception.",
+        "sharedTraitLine": "Like you, they led with Vision + Analysis.",
+        "connectionLine": "You both have the patience to build infrastructure the world doesn't know it needs yet , and the conviction to keep building until it does."
+      }
+    ]
+  },
+  {
+    "id": "vanguards",
+    "name": "House of Vanguards",
+    "colour": "crimson",
+    "hex": "#C41E3A",
+    "tagline": "You don't wait for permission.",
+    "description": "Natural leaders who move first, move fast, and bring people with them. Vanguards don't just see what needs to change , they change it. Force of will is their superpower, and hesitation is the only enemy they respect.",
+    "strengths": [
+      "Decisive action",
+      "Magnetic leadership",
+      "Strategic courage",
+      "Competitive instinct"
+    ],
+    "warning": "Can steamroll. Impatience looks like vision when things are going well and recklessness when they're not. Not everyone moves at your speed.",
+    "lineage": [
+      {
+        "name": "Sun Tzu",
+        "achievement": "Wrote the definitive text on strategy that still guides military commanders, CEOs, and founders 2,500 years after his death.",
+        "quote": "In the midst of chaos, there is also opportunity. Victorious warriors win first and then go to war, while defeated warriors go to war first and then seek to win.",
+        "sharedTraitLine": "Like you, they led with Grit + Influence.",
+        "connectionLine": "You both understand that the battle is won before it begins , through preparation, positioning, and the will to act when others deliberate."
+      },
+      {
+        "name": "Nelson Mandela",
+        "achievement": "Spent 27 years in prison, emerged unbroken, and united a nation , dismantling apartheid without civil war through sheer moral authority.",
+        "quote": "It always seems impossible until it's done.",
+        "sharedTraitLine": "Like you, they led with Influence + Grit.",
+        "connectionLine": "You both know that real leadership isn't about speed , it's about the unshakeable conviction that keeps you moving when everyone else has stopped."
+      },
+      {
+        "name": "Rihanna",
+        "achievement": "Built Fenty into a $2.8 billion beauty empire by seeing the massive market gap that the entire industry had ignored for decades.",
+        "quote": "There's something so special about a woman who dominates in a man's world. It takes a certain grace, strength, intelligence, fearlessness, and the nerve to never take no for an answer.",
+        "sharedTraitLine": "Like you, they led with Grit + Vision.",
+        "connectionLine": "You both saw what the incumbents refused to see, moved before you had permission, and built something the market didn't know it was starving for."
+      },
+      {
+        "name": "Satya Nadella",
+        "achievement": "Transformed Microsoft from a stagnating giant into the world's most valuable company by betting everything on cloud, culture, and a growth mindset.",
+        "quote": "Our industry does not respect tradition , it only respects innovation.",
+        "sharedTraitLine": "Like you, they led with Influence + Grit.",
+        "connectionLine": "You both know that the hardest transformation isn't technological , it's getting a hundred thousand people to believe the future you see is worth fighting for."
+      }
+    ]
+  },
+  {
+    "id": "alchemists",
+    "name": "House of Alchemists",
+    "colour": "sapphire",
+    "hex": "#2853A1",
+    "tagline": "You see connections no one else can.",
+    "description": "Pattern-matchers and synthesizers. Alchemists see the invisible thread between unrelated domains and weave them into something entirely new. Their genius is combination , they don't invent from nothing, they transmute the ordinary into the extraordinary.",
+    "strengths": [
+      "Cross-domain synthesis",
+      "Creative insight",
+      "Paradigm shifts",
+      "Unconventional thinking"
+    ],
+    "warning": "Can get lost in abstraction. The connections are real to you but invisible to your team. Brilliance without execution is just daydreaming.",
+    "lineage": [
+      {
+        "name": "Rumi",
+        "achievement": "A 13th-century poet whose writings on love, loss, and human connection transcended centuries , selling millions of copies in 2024, eight hundred years after his death.",
+        "quote": "Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.",
+        "sharedTraitLine": "Like you, they led with Vision + Empathy.",
+        "connectionLine": "You both understand that the deepest truths are felt before they are understood , and that the right words can reshape how an entire civilization sees itself."
+      },
+      {
+        "name": "Albert Einstein",
+        "achievement": "Reimagined the fabric of space and time while working as a patent clerk, producing four papers in one year that rewrote the laws of physics.",
+        "quote": "Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.",
+        "sharedTraitLine": "Like you, they led with Analysis + Vision.",
+        "connectionLine": "You both ask the questions nobody thinks to ask , and then sit with them long enough to hear answers that change everything."
+      },
+      {
+        "name": "Steve Jobs",
+        "achievement": "Combined calligraphy, Zen Buddhism, and computing into products that redefined personal technology , creating not just devices, but an entirely new relationship between humans and machines.",
+        "quote": "Creativity is just connecting things. When you ask creative people how they did something, they feel a little guilty because they didn't really do it, they just saw something.",
+        "sharedTraitLine": "Like you, they led with Vision + Influence.",
+        "connectionLine": "You both see connections that are invisible to everyone else , and you both have the stubbornness to keep building until the world sees them too."
+      },
+      {
+        "name": "Sam Altman",
+        "achievement": "Guided Y Combinator's golden era, then steered OpenAI through the most consequential technology launch since the internet , surviving a boardroom coup along the way.",
+        "quote": "The most counterintuitive secret about startups is that it's often easier to succeed with a hard startup than an easy one.",
+        "sharedTraitLine": "Like you, they led with Vision + Empathy.",
+        "connectionLine": "You both operate at the intersection of technology and human nature , understanding that the hardest problems aren't technical, they're about what people actually need."
+      }
+    ]
+  },
+  {
+    "id": "pathfinders",
+    "name": "House of Pathfinders",
+    "colour": "emerald",
+    "hex": "#2E8B57",
+    "tagline": "You find roads that don't exist yet.",
+    "description": "Explorers and pioneers. Pathfinders go where nobody has gone and make it look inevitable in hindsight. They are comfortable with uncertainty because that's where all the alpha is , the frontier is not a risk to them, it's home.",
+    "strengths": [
+      "Ambiguity tolerance",
+      "Frontier exploration",
+      "Bold conviction",
+      "Trail-blazing"
+    ],
+    "warning": "Can confuse novelty with progress. Not every uncharted path leads somewhere. Sometimes the road doesn't exist because nobody needs it.",
+    "lineage": [
+      {
+        "name": "Amelia Earhart",
+        "achievement": "First woman to fly solo across the Atlantic, shattering the boundaries of what was considered possible and redefining courage for an entire generation.",
+        "quote": "The most difficult thing is the decision to act, the rest is merely tenacity. The fears are paper tigers. You can do anything you decide to do.",
+        "sharedTraitLine": "Like you, they led with Grit + Vision.",
+        "connectionLine": "You both know that the only way to prove a path exists is to walk it , and you both chose to fly instead."
+      },
+      {
+        "name": "Charles Darwin",
+        "achievement": "Spent 20 years patiently developing the theory of evolution, building an airtight case that would fundamentally reshape how humanity understands life itself.",
+        "quote": "It is not the strongest of the species that survives, nor the most intelligent that survives. It is the one that is most adaptable to change.",
+        "sharedTraitLine": "Like you, they led with Vision + Grit.",
+        "connectionLine": "You both have the rare patience to sit with a world-changing idea until the evidence is undeniable , and the courage to publish it when it is."
+      },
+      {
+        "name": "Christopher Nolan",
+        "achievement": "Bent the rules of cinema with non-linear storytelling, turning art-house concepts into billion-dollar blockbusters and proving mass audiences crave complexity.",
+        "quote": "Every film should have its own world, a logic and feel to it that expands beyond the exact narrative.",
+        "sharedTraitLine": "Like you, they led with Grit + Freedom.",
+        "connectionLine": "You both refuse to choose between ambition and originality , proving that the most rewarding path is the one no one believed an audience existed for."
+      },
+      {
+        "name": "Elon Musk",
+        "achievement": "Simultaneously disrupted automotive, aerospace, and energy , turning science fiction into manufacturing lines and making Mars colonization a serious engineering project.",
+        "quote": "When something is important enough, you do it even if the odds are not in your favour.",
+        "sharedTraitLine": "Like you, they led with Grit + Vision.",
+        "connectionLine": "You both look at the frontier and see not risk but inevitability , and you both have the audacity to build the road while everyone else debates whether to take it."
+      }
+    ]
+  }
+]
