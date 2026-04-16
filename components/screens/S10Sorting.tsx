@@ -39,23 +39,29 @@ export function S10Sorting() {
     dialogueSent.current = true;
 
     enqueueMessage({ speaker: 'cedric', text: lines.s10.cedric.intro2, type: 'instruction' });
+    // Slower dissolution: 800ms per crest, 600ms stagger
     setTimeout(() => setPhase('eliminating'), 2000);
     setTimeout(() => {
       setPhase('winner');
       enqueueMessage({ speaker: 'cedric', text: lines.s10.cedric.claim, type: 'dialogue' });
-    }, 3500);
+    }, 4500); // after ~2.5s of elimination
     setTimeout(() => {
       setPhase('lineage');
       enqueueMessage({ speaker: 'cedric', text: lines.s10.cedric.lineageIntro, type: 'dialogue' });
       for (let i = 0; i < winningHouse.lineage.length; i++) {
         setTimeout(() => setLineageIdx(i), i * 600);
       }
-    }, 5500);
+    }, 7000);
+    // After all lineage + 2s pause: auto-advance (no CTA button)
+    const lineageDuration = winningHouse.lineage.length * 600;
     setTimeout(() => {
       setPhase('complete');
       enqueueMessage({ speaker: 'pip', text: lines.s10.pip.claim, type: 'dialogue' });
-    }, 5500 + winningHouse.lineage.length * 600 + 800);
-  }, [enqueueMessage, winningHouse]);
+    }, 7000 + lineageDuration + 1000);
+    setTimeout(() => {
+      advanceScreen(); // Auto-advance after "Welcome home" lands
+    }, 7000 + lineageDuration + 3000);
+  }, [enqueueMessage, winningHouse, advanceScreen]);
 
   return (
     <div className="flex flex-col items-center gap-4 h-full overflow-y-auto pb-4 relative">
@@ -64,7 +70,7 @@ export function S10Sorting() {
         {(phase === 'winner' || phase === 'lineage' || phase === 'complete') && (
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.15 }}
+            animate={{ opacity: 0.25 }}
             className="absolute inset-0 pointer-events-none"
             style={{ background: `radial-gradient(circle at 50% 40%, ${winningHouse.hex}40, transparent 70%)` }}
           />
@@ -84,13 +90,13 @@ export function S10Sorting() {
               data-testid={isRevealed ? 'house-winner' : `house-crest-${house.id}`}
               animate={{
                 opacity: isEliminated ? 0 : 1,
-                scale: isRevealed ? 1.5 : isEliminated ? 0.7 : 1,
+                scale: isRevealed ? 1.8 : isEliminated ? 0.7 : 1,
               }}
               transition={{
-                duration: 0.6,
-                delay: isEliminated ? HOUSES.filter((h) => h.id !== winningHouse.id).indexOf(house) * 0.4 : 0,
+                duration: 0.8,
+                delay: isEliminated ? HOUSES.filter((h) => h.id !== winningHouse.id).indexOf(house) * 0.6 : 0,
                 type: isRevealed ? 'spring' : 'tween',
-                stiffness: 200,
+                stiffness: 180,
               }}
               className="flex flex-col items-center gap-2"
             >
@@ -124,7 +130,7 @@ export function S10Sorting() {
             transition={{ delay: 0.3, type: 'spring' }}
             className="text-center z-10"
           >
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold" style={{ color: winningHouse.hex }}>
+            <h2 className="text-4xl sm:text-5xl font-serif font-bold" style={{ color: winningHouse.hex }}>
               {winningHouse.name}
             </h2>
             <p className="text-sm text-ivory/50 mt-1 italic">{winningHouse.tagline}</p>
@@ -157,18 +163,7 @@ export function S10Sorting() {
 
       <ScreenQuote screen="s10" />
 
-      {/* CTA */}
-      {phase === 'complete' && (
-        <motion.button
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          onClick={() => advanceScreen()}
-          data-testid="claim-profile-btn"
-          className="px-8 py-3 rounded-full bg-gold text-dark font-semibold hover:bg-gold/90 transition-all z-10"
-        >
-          Claim Your Profile →
-        </motion.button>
-      )}
+      {/* No CTA button — S10 auto-advances after ceremony completes */}
     </div>
   );
 }

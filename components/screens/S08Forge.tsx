@@ -9,6 +9,11 @@ import { finalRun } from '@/lib/scoring/orchestrator';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 
+const ORB_COLORS: Record<string, string> = {
+  Grit: '#F59E0B', Vision: '#F0D060', Craft: '#CD7F32', Influence: '#9B59B6',
+  Empathy: '#00D8B9', Analysis: '#5DADE2', Freedom: '#BDC3C7', Stability: '#27AE60',
+};
+
 /**
  * S08 — The Forge (enriched)
  *
@@ -30,6 +35,7 @@ type ForgePhase = 'float' | 'descend' | 'burst' | 'settle' | 'waiting' | 'comple
 export function S08Forge() {
   const matchedIdeas = useJourneyStore((s) => s.matchedIdeas);
   const ideaMode = useJourneyStore((s) => s.ideaMode);
+  const crystalOrbs = useJourneyStore((s) => s.crystalOrbs);
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
 
@@ -135,59 +141,67 @@ export function S08Forge() {
     setTimeout(() => advanceScreen(), 1500);
   }
 
-  // Crystal Y position based on phase
-  const crystalY = phase === 'descend' ? 60 : phase === 'burst' || phase === 'settle' ? 80 : 0;
-  const crystalScale = phase === 'burst' ? 0.3 : phase === 'settle' || phase === 'complete' ? 0 : 1;
-  const crystalOpacity = phase === 'burst' || phase === 'settle' || phase === 'complete' ? 0 : 1;
+  const orbColors = crystalOrbs.slice(0, 3).map((o) => ORB_COLORS[o] || '#D4A843');
+  const constellationScale = phase === 'burst' || phase === 'settle' || phase === 'complete' ? 0.3 : 1;
+  const constellationOpacity = phase === 'complete' ? 0 : 1;
 
   return (
     <div className="flex flex-col items-center justify-center h-full relative" style={{ perspective: '600px' }}>
-      {/* Crystal — CSS 3D transform */}
+      {/* Constellation — user's 3 crystal orbs as glowing dots in triangle */}
       <motion.div
         data-testid="forge-crystal"
         animate={{
-          y: crystalY,
-          scale: crystalScale,
-          opacity: crystalOpacity,
-          rotateY: phase === 'float' ? 360 : 0,
+          scale: constellationScale,
+          opacity: constellationOpacity,
+          rotateY: phase === 'float' || phase === 'descend' ? 360 : 0,
         }}
         transition={{
-          y: { duration: 2, ease: 'easeInOut' },
-          scale: { duration: 0.5 },
-          opacity: { duration: 0.3 },
-          rotateY: { duration: 4, repeat: phase === 'float' ? Infinity : 0, ease: 'linear' },
+          scale: { duration: 0.8 },
+          opacity: { duration: 0.5 },
+          rotateY: { duration: 8, repeat: phase === 'float' || phase === 'descend' ? Infinity : 0, ease: 'linear' },
         }}
-        className="w-20 h-20 relative"
         style={{ transformStyle: 'preserve-3d' }}
       >
-        <div
-          className="absolute inset-0 border-2 border-gold/60"
-          style={{
-            clipPath: 'polygon(50% 0%, 90% 35%, 75% 90%, 25% 90%, 10% 35%)',
-            background: 'linear-gradient(135deg, #D4A84340, #F59E0B20)',
-            boxShadow: '0 0 30px #D4A84340',
-          }}
-        />
+        <svg viewBox="0 0 120 110" width="160" height="145">
+          {/* Connecting lines */}
+          <motion.line x1="60" y1="15" x2="20" y2="90" stroke={orbColors[0] || '#D4A843'} strokeWidth="1.5"
+            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 0.5 }} opacity="0.5" />
+          <motion.line x1="60" y1="15" x2="100" y2="90" stroke={orbColors[1] || '#D4A843'} strokeWidth="1.5"
+            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 1 }} opacity="0.5" />
+          <motion.line x1="20" y1="90" x2="100" y2="90" stroke={orbColors[2] || '#D4A843'} strokeWidth="1.5"
+            initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 1, delay: 1.5 }} opacity="0.5" />
+          {/* Orb dots — appear one by one */}
+          {orbColors.map((color, i) => {
+            const positions = [{ cx: 60, cy: 15 }, { cx: 20, cy: 90 }, { cx: 100, cy: 90 }];
+            const pos = positions[i] || positions[0];
+            return (
+              <motion.circle key={i} cx={pos.cx} cy={pos.cy} r="10" fill={color}
+                initial={{ opacity: 0, scale: 0 }} animate={{ opacity: 0.8, scale: 1 }}
+                transition={{ delay: i * 0.8, duration: 0.5 }}>
+                <animate attributeName="r" values="9;11;9" dur="2s" repeatCount="indefinite" />
+              </motion.circle>
+            );
+          })}
+          {/* Center glow */}
+          <circle cx="60" cy="65" r="5" fill="#D4A843" opacity="0.4">
+            <animate attributeName="r" values="4;7;4" dur="3s" repeatCount="indefinite" />
+          </circle>
+        </svg>
       </motion.div>
 
-      {/* Gold particle burst */}
-      {(phase === 'burst' || phase === 'settle') && (
+      {/* Particle stars around constellation */}
+      {(phase === 'descend' || phase === 'burst') && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          {Array.from({ length: 12 }).map((_, i) => {
-            const angle = (i / 12) * 360;
+          {Array.from({ length: 16 }).map((_, i) => {
+            const angle = (i / 16) * 360;
             const rad = (angle * Math.PI) / 180;
+            const dist = 60 + Math.random() * 60;
             return (
-              <motion.div
-                key={i}
-                initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-                animate={{
-                  x: Math.cos(rad) * 120,
-                  y: Math.sin(rad) * 120 + 40,
-                  opacity: 0,
-                  scale: 0.3,
-                }}
-                transition={{ duration: 1.5, ease: 'easeOut', delay: i * 0.03 }}
-                className="absolute w-2 h-2 rounded-full bg-gold"
+              <motion.div key={i}
+                initial={{ x: 0, y: 0, opacity: 0 }}
+                animate={{ x: Math.cos(rad) * dist, y: Math.sin(rad) * dist, opacity: [0, 0.8, 0] }}
+                transition={{ duration: 2, delay: i * 0.1, repeat: Infinity }}
+                className="absolute w-1 h-1 rounded-full bg-gold"
               />
             );
           })}
@@ -196,14 +210,9 @@ export function S08Forge() {
 
       {/* Forge glow (bottom) */}
       <motion.div
-        animate={{
-          opacity: phase === 'descend' || phase === 'burst' ? 0.6 : 0.2,
-          scale: phase === 'burst' ? 1.3 : 1,
-        }}
+        animate={{ opacity: phase === 'descend' || phase === 'burst' ? 0.5 : 0.15 }}
         className="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-32 rounded-full pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse at center, #D4A84340 0%, transparent 70%)',
-        }}
+        style={{ background: 'radial-gradient(ellipse at center, #D4A84340 0%, transparent 70%)' }}
       />
 
       <ScreenQuote screen="s08" />

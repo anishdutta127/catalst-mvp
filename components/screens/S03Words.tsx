@@ -100,12 +100,12 @@ export function S03Words() {
         </motion.div>
       </AnimatePresence>
 
-      {/* Resonates / Pass buttons */}
+      {/* Two contrasting concept buttons (v7 mechanic) */}
       <div className="flex gap-4">
         {[
-          { label: 'Resonates', choice: word.left, testId: 'word-left' },
-          { label: 'Pass', choice: word.right, testId: 'word-right' },
-        ].map(({ label, choice, testId }) => {
+          { label: word.left, choice: word.left, testId: 'word-left', border: 'border-l-2 border-l-gold' },
+          { label: word.right, choice: word.right, testId: 'word-right', border: 'border-r-2 border-r-gold' },
+        ].map(({ label, choice, testId, border }) => {
           const isSelected = selected === choice;
           const isDissolved = selected !== null && !isSelected;
           return (
@@ -116,12 +116,12 @@ export function S03Words() {
               data-testid={testId}
               animate={{
                 opacity: isDissolved ? 0.3 : 1,
-                scale: isSelected ? 1.05 : isDissolved ? 0.95 : 1,
+                scale: isSelected ? 1.02 : isDissolved ? 0.95 : 1,
               }}
-              className={`w-40 h-12 rounded-lg text-sm font-semibold transition-all ${
+              className={`flex-1 h-12 rounded-lg text-sm font-semibold transition-all ${
                 isSelected
-                  ? 'bg-gold text-dark border-transparent'
-                  : 'bg-transparent border border-white/20 text-ivory hover:border-gold/60 cursor-pointer'
+                  ? 'bg-gold text-dark'
+                  : `bg-transparent ${border} text-ivory hover:bg-gold/10 cursor-pointer`
               }`}
             >
               {label}

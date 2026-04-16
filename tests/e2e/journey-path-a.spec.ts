@@ -116,19 +116,14 @@ test('complete Path A journey', async ({ page }) => {
   await crownCta.click();
   await page.waitForTimeout(1500);
 
-  // S10: Wait for sorting ceremony
+  // S10: Wait for sorting ceremony → auto-advances to S11 (no CTA button)
   const houseWinner = page.locator('[data-testid="house-winner"]');
   await expect(houseWinner).toBeVisible({ timeout: 10000 });
 
-  // Wait for CTA
-  const claimBtn = page.locator('[data-testid="claim-profile-btn"]');
-  await expect(claimBtn).toBeVisible({ timeout: 10000 });
-  await claimBtn.click();
-  await page.waitForTimeout(1000);
-
-  // S11: Verify profile loaded
+  // S10 auto-advances after ceremony completes (~12s total)
+  // Wait for S11 founder card to appear
   const founderCard = page.locator('[data-testid="founder-card"]');
-  await expect(founderCard).toBeVisible({ timeout: 5000 });
+  await expect(founderCard).toBeVisible({ timeout: 20000 });
 
   const downloadBtn = page.locator('[data-testid="download-btn"]');
   await expect(downloadBtn).toBeVisible();

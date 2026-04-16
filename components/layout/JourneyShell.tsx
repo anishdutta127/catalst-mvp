@@ -16,14 +16,11 @@ interface JourneyShellProps {
 }
 
 /**
- * JourneyShell — three-zone layout enforced by CSS Grid.
+ * JourneyShell — three-zone layout.
  *
- * ZONE 1: header (48px) + chat (140px) — fixed, dark overlay
- * ZONE 2: activity (1fr) — TRANSPARENT, background shows through
- * ZONE 3: cta (64px) — fixed, dark overlay
- *
- * Background: full-bleed Midjourney image with dark vignette.
- * The background IS the design. Activity zone is transparent.
+ * Background: full-bleed viewport.
+ * Content: single max-w-[720px] centered column.
+ * Chat zone dark bg is column-width, NOT viewport-width.
  */
 export function JourneyShell({
   currentScreen,
@@ -36,8 +33,8 @@ export function JourneyShell({
   const bgImage = SCREEN_BACKGROUNDS[currentScreen];
 
   return (
-    <div className="journey-shell relative h-dvh w-full overflow-hidden bg-dark">
-      {/* Background layer */}
+    <div className="relative h-dvh w-full overflow-hidden bg-dark">
+      {/* Background — full bleed viewport */}
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -54,47 +51,57 @@ export function JourneyShell({
                 style={{ backgroundImage: `url(${bgImage})` }}
               />
             )}
-            {/* Vignette — lighter in center for readability */}
-            <div className="absolute inset-0 bg-gradient-to-b from-dark/60 via-dark/30 to-dark/70" />
+            <div className="absolute inset-0 bg-gradient-to-b from-dark/50 via-dark/20 to-dark/60" />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Grid container */}
-      <div className="relative z-10 grid h-dvh journey-grid">
+      {/* Content column — centered, max-w-[720px] */}
+      <div className="relative z-10 h-dvh mx-auto w-full max-w-[720px] flex flex-col">
         {/* ZONE 1a: Header (48px) */}
-        <div className="[grid-area:header]">
+        <div className="shrink-0 h-12">
           <Header currentScreen={currentScreen} completedScreens={completedScreens} />
         </div>
 
-        {/* ZONE 1b: Chat zone (140px, dark overlay) */}
-        <div className="[grid-area:chat] overflow-hidden">
+        {/* ZONE 1b: Chat zone (column-width dark bg, rounded bottom) */}
+        <div
+          className="shrink-0 overflow-hidden"
+          style={{
+            height: 120,
+            background: 'rgba(0,0,0,0.55)',
+            borderRadius: '0 0 12px 12px',
+            backdropFilter: 'blur(4px)',
+          }}
+        >
           <ChatZone />
         </div>
 
-        {/* ZONE 2: Activity (transparent — background shows through) */}
-        <div className="[grid-area:activity] overflow-y-auto relative">
-          <div className="mx-auto w-full max-w-[720px] h-full px-4">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentScreen}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0, transition: { duration: 0.4, delay: 0.1 } }}
-                exit={{ opacity: 0, transition: { duration: 0.3 } }}
-                className="w-full h-full"
-              >
-                {children}
-              </motion.div>
-            </AnimatePresence>
-          </div>
+        {/* ZONE 2: Activity (transparent, flex-1, background shows through) */}
+        <div className="flex-1 overflow-y-auto relative px-4">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentScreen}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0, transition: { duration: 0.4, delay: 0.1 } }}
+              exit={{ opacity: 0, transition: { duration: 0.3 } }}
+              className="w-full h-full"
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* ZONE 3: CTA (64px, dark overlay) */}
+        {/* ZONE 3: CTA (64px, dark overlay, column-width) */}
         <div
-          className="[grid-area:cta] flex items-center justify-center px-4"
-          style={{ background: 'rgba(0,0,0,0.7)', borderTop: '1px solid rgba(255,255,255,0.05)' }}
+          className="shrink-0 flex items-center justify-center px-4"
+          style={{
+            height: 64,
+            background: 'rgba(0,0,0,0.7)',
+            borderTop: '1px solid rgba(255,255,255,0.05)',
+            borderRadius: '12px 12px 0 0',
+          }}
         >
-          <div className="mx-auto w-full max-w-[720px] flex flex-col items-center">
+          <div className="w-full flex flex-col items-center">
             <AnimatePresence>
               {ctaVisible && ctaContent && (
                 <motion.div
