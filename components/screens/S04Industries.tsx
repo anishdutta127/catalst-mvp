@@ -160,8 +160,9 @@ export function S04Industries() {
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-ivory truncate">{ind.name}</p>
                 <p className="text-[10px] text-ivory/40 truncate">
-                  💰 {ind.stats.marketSize} · 📊 {ind.stats.growth}
-                  {ind.trendingIdeas[0] ? ` · 🔥 ${ind.trendingIdeas[0]}` : ''}
+                  {ind.market_size_b ? `💰 $${ind.market_size_b}B` : ind.stats?.marketSize ? `💰 ${ind.stats.marketSize}` : ''}
+                  {ind.cagr_pct ? ` · 📊 ${ind.cagr_pct}% CAGR` : ind.stats?.growth ? ` · 📊 ${ind.stats.growth}` : ''}
+                  {ind.trendingIdeas?.[0] ? ` · 🔥 ${ind.trendingIdeas[0]}` : ''}
                 </p>
               </div>
               {status === 'kept' && <span className="text-success text-xs">✓</span>}
