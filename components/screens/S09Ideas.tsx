@@ -77,7 +77,7 @@ export function S09Ideas() {
     const idea = ideas.find((i) => i.scored.idea.idea_id === ideaId);
     if (!idea) return;
 
-    setWhyYouText(ideaId, '...');
+    setWhyYouText(ideaId, '__loading__');
 
     fetch('/api/narrative', {
       method: 'POST',
@@ -174,7 +174,7 @@ export function S09Ideas() {
 
         const sections = [
           { key: `idea-${crownedIdeaId}`, title: 'The Idea', content: idea.pain_to_promise },
-          { key: `why-${crownedIdeaId}`, title: 'Why You', content: whyYou || 'Loading...' },
+          { key: `why-${crownedIdeaId}`, title: 'Why You', content: whyYou || '' },
           { key: `market-${crownedIdeaId}`, title: 'The Market', content: `${idea.domain_primary.replace(/_/g, ' ')} — ${idea.why_now}` },
           { key: `steps-${crownedIdeaId}`, title: 'First Steps', content: `Week 1: ${idea.quickStart.week1}\nMVP: ${idea.quickStart.mvp}\nFirst customers: ${idea.quickStart.firstCustomers}` },
           { key: `risk-${crownedIdeaId}`, title: 'The Risk', content: idea.proof.gap },
@@ -200,9 +200,18 @@ export function S09Ideas() {
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <p className="px-4 pb-3 text-xs text-ivory/50 leading-relaxed whitespace-pre-line">
-                        {sec.content}
-                      </p>
+                      <div className="px-4 pb-3">
+                        {sec.content === '__loading__' ? (
+                          <div className="animate-pulse space-y-2">
+                            <div className="h-3 bg-white/10 rounded w-3/4" />
+                            <div className="h-3 bg-white/10 rounded w-1/2" />
+                          </div>
+                        ) : (
+                          <p className="text-xs text-ivory/50 leading-relaxed whitespace-pre-line">
+                            {sec.content}
+                          </p>
+                        )}
+                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>

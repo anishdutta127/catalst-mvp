@@ -21,6 +21,7 @@ import { S07Chronicle } from '@/components/screens/S07Chronicle';
 import { S08Forge } from '@/components/screens/S08Forge';
 import { S09Ideas } from '@/components/screens/S09Ideas';
 import { S10Sorting } from '@/components/screens/S10Sorting';
+import { S11Profile } from '@/components/screens/S11Profile';
 import type { ScreenId } from '@/lib/constants';
 
 // ── Placeholder for unbuilt screens ──
@@ -30,7 +31,6 @@ function PlaceholderScreen({ screenId }: { screenId: ScreenId }) {
     s01_llm: 'LLM Shortcut',
     s05: 'Founder Scenarios (Killed)',
     s09b: 'Idea Deep Dive',
-    s11: 'Founder Profile',
   };
 
   return (
@@ -60,6 +60,7 @@ function S07Wrapper() { return <S07Chronicle />; }
 function S08Wrapper() { return <S08Forge />; }
 function S09Wrapper() { return <S09Ideas />; }
 function S10Wrapper() { return <S10Sorting />; }
+function S11Wrapper() { return <S11Profile />; }
 
 // ── Screen registry ──
 
@@ -77,13 +78,13 @@ const SCREEN_COMPONENTS: Record<ScreenId, React.ComponentType<{ screenId: Screen
   s09: S09Wrapper,
   s09b: PlaceholderScreen,
   s10: S10Wrapper,
-  s11: PlaceholderScreen,
+  s11: S11Wrapper,
 };
 
 // ── Screens that manage their own CTA (no global CTA bar) ──
 const SELF_MANAGED_SCREENS = new Set<ScreenId>([
   's00', 's01', 's02', 's03', 's04', 's06', 's07',
-  's08', 's09', 's10',
+  's08', 's09', 's10', 's11',
 ]);
 
 // ── Page ──
