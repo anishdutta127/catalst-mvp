@@ -6,14 +6,14 @@ import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
 import { finalRun } from '@/lib/scoring/orchestrator';
-import type { ForgeProfile, ScenarioSource } from '@/lib/scoring/types';
+import { buildForgeProfile } from '@/lib/scoring/buildProfile';
+import type { ScenarioSource } from '@/lib/scoring/types';
 
 /**
- * S07 — Verdania Chronicle + Constraints
+ * S07 — Verdania Chronicle + Constraints (enriched)
  *
- * Path A/B: 3 headline cards (tap to select one), then constraint pills.
- * Path C: skip headlines, show constraints only.
- * After constraints: trigger orchestrator.finalRun() async.
+ * Inshorts-style headline cards with swipe dots, metadata pills,
+ * founder quote. Constraints: time/budget/competitive advantage.
  */
 export function S07Chronicle() {
   const state = useJourneyStore();
@@ -22,104 +22,49 @@ export function S07Chronicle() {
   const [phase, setPhase] = useState<'headlines' | 'constraints'>(
     state.ideaMode === 'shortcut' ? 'constraints' : 'headlines'
   );
+  const [headlineIdx, setHeadlineIdx] = useState(0);
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedResource, setSelectedResource] = useState('');
+  const [selectedAdvantage, setSelectedAdvantage] = useState('');
   const dialogueSent = useRef(false);
-
   const displayName = state.displayName || 'Traveler';
 
-  // Cedric intro
   useEffect(() => {
     if (dialogueSent.current) return;
     dialogueSent.current = true;
+    enqueueMessage({
+      speaker: phase === 'headlines' ? 'cedric' : 'cedric',
+      text: phase === 'headlines' ? lines.s07.cedric.headlineIntro : lines.s07.cedric.constraintsIntro,
+      type: 'instruction',
+    });
     if (phase === 'headlines') {
-      enqueueMessage({
-        speaker: 'cedric',
-        text: lines.s07.cedric.headlineIntro,
-        type: 'dialogue',
-      });
-    } else {
-      enqueueMessage({
-        speaker: 'cedric',
-        text: lines.s07.cedric.constraintsIntro,
-        type: 'dialogue',
-      });
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'pip', text: lines.s07.pip.headlineIntro, type: 'dialogue' });
+      }, 2000);
     }
   }, [enqueueMessage, phase]);
 
-  function handleHeadlineSelect(id: string) {
-    state.setHeadlineChoice(id);
+  function handleHeadlineSelect() {
+    const hl = lines.s07.headlines[headlineIdx];
+    state.setHeadlineChoice(hl.id);
     setTimeout(() => {
       setPhase('constraints');
-      enqueueMessage({
-        speaker: 'cedric',
-        text: lines.s07.cedric.constraintsIntro,
-        type: 'dialogue',
-      });
+      enqueueMessage({ speaker: 'cedric', text: lines.s07.cedric.constraintsIntro, type: 'instruction' });
     }, 400);
-  }
-
-  function handleTimeBudget(budget: string) {
-    setSelectedTime(budget);
-    state.setTimeBudget(budget);
-  }
-
-  function handleResourceLevel(level: string) {
-    setSelectedResource(level);
-    state.setResourceLevel(level);
   }
 
   function handleComplete() {
     if (!selectedTime || !selectedResource) return;
+    state.setTimeBudget(selectedTime);
+    state.setResourceLevel(selectedResource);
+    if (selectedAdvantage) state.setCompetitiveAdvantage(selectedAdvantage);
 
-    enqueueMessage({
-      speaker: 'cedric',
-      text: lines.s07.cedric.afterAll,
-      type: 'dialogue',
-    });
+    enqueueMessage({ speaker: 'cedric', text: lines.s07.cedric.afterAll, type: 'dialogue' });
 
-    // Trigger finalRun async — don't await, S08 Forge handles the wait
-    const profile: ForgeProfile = {
-      display_name: state.displayName,
-      idea_mode: state.ideaMode === 'shortcut' ? 'shortcut' : state.ideaMode === 'directed' ? 'directed' : 'open',
-      user_idea_text: state.userIdeaText,
-      blot_responses: (state.blotResponses.length >= 3
-        ? state.blotResponses.slice(0, 3)
-        : [...state.blotResponses, '', '', ''].slice(0, 3)) as [string, string, string],
-      blot_response_times: (state.blotResponseTimes.length >= 3
-        ? state.blotResponseTimes.slice(0, 3)
-        : [...state.blotResponseTimes, 0, 0, 0].slice(0, 3)) as [number, number, number],
-      word_responses: (state.wordResponses.length >= 4
-        ? state.wordResponses.slice(0, 4)
-        : [...state.wordResponses, '', '', '', ''].slice(0, 4)) as [string, string, string, string],
-      word_response_times: (state.wordResponseTimes.length >= 4
-        ? state.wordResponseTimes.slice(0, 4)
-        : [...state.wordResponseTimes, 0, 0, 0, 0].slice(0, 4)) as [number, number, number, number],
-      industries_kept: state.industriesKept,
-      industries_passed: state.industriesPassed,
-      industries_edged: state.industriesEdged,
-      industry_dwell_times: state.industryDwellTimes,
-      scroll_depth_per_card: state.scrollDepthPerCard,
-      scenarioSource: (state.ideaMode === 'shortcut' ? 'parsed' : 'none') as ScenarioSource,
-      crystal_orbs: (state.crystalOrbs.length >= 3
-        ? state.crystalOrbs.slice(0, 3)
-        : [...state.crystalOrbs, '', '', ''].slice(0, 3)) as [string, string, string],
-      crystal_selection_order: (state.crystalSelectionOrder.length >= 3
-        ? state.crystalSelectionOrder.slice(0, 3)
-        : [...state.crystalSelectionOrder, 0, 0, 0].slice(0, 3)) as [number, number, number],
-      crystal_selection_times: (state.crystalSelectionTimes.length >= 3
-        ? state.crystalSelectionTimes.slice(0, 3)
-        : [...state.crystalSelectionTimes, 0, 0, 0].slice(0, 3)) as [number, number, number],
-      unchosen_orbs: state.unchosenOrbs,
-      headline_choice: state.headlineChoice,
-      time_budget: selectedTime,
-      resource_level: selectedResource,
-      competitive_advantage: state.competitiveAdvantage,
-    };
-
-    // Fire async — store results when done
+    // Fire finalRun async
     setTimeout(() => {
       try {
+        const profile = buildForgeProfile({ ...state, timeBudget: selectedTime, resourceLevel: selectedResource, competitiveAdvantage: selectedAdvantage } as unknown as import('@/lib/store/journeyStore').JourneyState);
         const result = finalRun(profile);
         state.setMatchedIdeas(result.pipeline);
         state.setHouseId(result.house);
@@ -132,110 +77,132 @@ export function S07Chronicle() {
   }
 
   const canComplete = !!selectedTime && !!selectedResource;
+  const currentHl = lines.s07.headlines[headlineIdx];
+  const ADVANTAGES = ['Technical skill', 'Industry network', 'Distribution', 'Brand/Content', 'Capital'];
 
   return (
-    <div className="flex flex-col gap-6 h-full overflow-y-auto">
-      {/* Headlines phase */}
+    <div className="flex flex-col gap-4 h-full overflow-y-auto pb-2">
       <AnimatePresence mode="wait">
         {phase === 'headlines' && (
           <motion.div
             key="headlines"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="flex flex-col gap-3"
           >
-            {lines.s07.headlines.map((hl) => (
-              <motion.button
-                key={hl.id}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => handleHeadlineSelect(hl.id)}
-                data-testid={`headline-card-${lines.s07.headlines.indexOf(hl)}`}
-                className={`w-full bg-dark-surface border border-white/10 rounded-lg p-4 text-left hover:border-gold/30 transition-colors ${
-                  state.headlineChoice === hl.id ? 'border-gold/50' : ''
-                }`}
-              >
-                <p className="text-sm font-semibold text-ivory leading-snug">
-                  {hl.headline(displayName)}
+            {/* Inshorts-style card */}
+            <div className="bg-dark-surface border border-white/10 rounded-xl overflow-hidden">
+              {/* Gold gradient header */}
+              <div className="h-24 bg-gradient-to-b from-gold/20 to-transparent" />
+
+              <div className="p-4 space-y-3">
+                <h3 className="text-lg font-serif font-bold text-ivory leading-snug">
+                  {currentHl.headline(displayName)}
+                </h3>
+
+                {/* Stats pills */}
+                <p className="text-[11px] text-gold/70">
+                  {currentHl.stats.replace(/\\u[0-9a-fA-F]{4}/g, '').replace(/\s*\\\s*\.\s*/g, ' ')}
                 </p>
-                <p className="text-xs text-ivory/40 mt-1">
-                  {hl.story.replace(/\s*\\\s*\.\s*/g, ' ')}
+
+                <p className="text-sm text-ivory/60 leading-relaxed">
+                  {currentHl.story.replace(/\s*\\\s*\.\s*/g, ' ')}
                 </p>
-              </motion.button>
-            ))}
+
+                {/* Quote */}
+                <div className="border-l-2 border-gold/40 pl-3">
+                  <p className="text-[13px] text-ivory/50 italic">
+                    {currentHl.quote(displayName).replace(/\s*\\\s*\.\s*/g, ' ')}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Dot navigation */}
+            <div className="flex items-center justify-center gap-3">
+              <button onClick={() => setHeadlineIdx(Math.max(0, headlineIdx - 1))} className="text-ivory/30 text-lg">‹</button>
+              <div className="flex gap-1.5">
+                {lines.s07.headlines.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setHeadlineIdx(i)}
+                    className={`w-2 h-2 rounded-full transition-all ${i === headlineIdx ? 'bg-gold' : 'bg-white/20'}`}
+                  />
+                ))}
+              </div>
+              <button onClick={() => setHeadlineIdx(Math.min(3, headlineIdx + 1))} className="text-ivory/30 text-lg">›</button>
+            </div>
+
+            {/* CTA */}
+            <button
+              onClick={handleHeadlineSelect}
+              data-testid={`headline-card-${headlineIdx}`}
+              className="w-full py-3 rounded-full bg-gold text-dark font-semibold text-sm hover:bg-gold/90 transition-all"
+            >
+              This Is My Future ⭐
+            </button>
           </motion.div>
         )}
 
-        {/* Constraints phase */}
         {phase === 'constraints' && (
           <motion.div
             key="constraints"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col gap-6"
+            className="flex flex-col gap-5"
           >
-            {/* Time budget */}
+            {/* Time */}
             <div>
-              <p className="text-xs text-ivory/40 uppercase tracking-wider mb-2">
-                Weekly time commitment
-              </p>
+              <p className="text-xs text-ivory/40 uppercase tracking-wider mb-2">⏱ Time to launch</p>
               <div className="flex flex-wrap gap-2">
-                {lines.s07.timeBudgets.map((budget) => (
-                  <button
-                    key={budget}
-                    onClick={() => handleTimeBudget(budget)}
-                    data-testid={`time-${budget}`}
+                {lines.s07.timeBudgets.map((b) => (
+                  <button key={b} onClick={() => setSelectedTime(b)} data-testid={`time-${b}`}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      selectedTime === budget
-                        ? 'bg-gold/20 text-gold border border-gold/40'
-                        : 'bg-dark-surface border border-white/10 text-ivory/50 hover:border-white/20'
-                    }`}
-                  >
-                    {budget}
-                  </button>
+                      selectedTime === b ? 'bg-gold text-dark' : 'bg-white/5 text-ivory/50 hover:text-ivory/70'
+                    }`}>{b}</button>
                 ))}
               </div>
             </div>
 
-            {/* Resource level */}
+            {/* Budget */}
             <div>
-              <p className="text-xs text-ivory/40 uppercase tracking-wider mb-2">
-                Budget range
-              </p>
+              <p className="text-xs text-ivory/40 uppercase tracking-wider mb-2">💰 Budget range</p>
               <div className="flex flex-wrap gap-2">
-                {lines.s07.resourceLevels.map((level) => (
-                  <button
-                    key={level}
-                    onClick={() => handleResourceLevel(level)}
-                    data-testid={`resource-${level}`}
+                {lines.s07.resourceLevels.map((l) => (
+                  <button key={l} onClick={() => setSelectedResource(l)} data-testid={`resource-${l}`}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      selectedResource === level
-                        ? 'bg-gold/20 text-gold border border-gold/40'
-                        : 'bg-dark-surface border border-white/10 text-ivory/50 hover:border-white/20'
-                    }`}
-                  >
-                    {level}
-                  </button>
+                      selectedResource === l ? 'bg-gold text-dark' : 'bg-white/5 text-ivory/50 hover:text-ivory/70'
+                    }`}>{l}</button>
                 ))}
               </div>
             </div>
 
-            {/* Complete CTA */}
+            {/* Competitive advantage */}
+            <div>
+              <p className="text-xs text-ivory/40 uppercase tracking-wider mb-2">⚔️ Your edge</p>
+              <div className="flex flex-wrap gap-2">
+                {ADVANTAGES.map((a) => (
+                  <button key={a} onClick={() => setSelectedAdvantage(a)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                      selectedAdvantage === a ? 'bg-gold text-dark' : 'bg-white/5 text-ivory/50 hover:text-ivory/70'
+                    }`}>{a}</button>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA */}
             <AnimatePresence>
               {canComplete && (
-                <motion.div
+                <motion.button
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex justify-center pt-2"
+                  onClick={handleComplete}
+                  data-testid="reveal-btn"
+                  className="w-full py-3 rounded-full bg-gold text-dark font-semibold text-sm hover:bg-gold/90 transition-all"
                 >
-                  <button
-                    onClick={handleComplete}
-                    data-testid="reveal-btn"
-                    className="px-6 py-2.5 rounded-full bg-gold text-dark font-semibold text-sm hover:bg-gold/90 transition-all"
-                  >
-                    Reveal My Ideas
-                  </button>
-                </motion.div>
+                  Seal My Path →
+                </motion.button>
               )}
             </AnimatePresence>
           </motion.div>
