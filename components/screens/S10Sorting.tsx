@@ -7,33 +7,20 @@ import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
 import housesRaw from '@/content/houses.json';
 
-interface LineageFigure {
-  name: string;
-  achievement: string;
-  quote: string;
-  sharedTraitLine: string;
-  connectionLine: string;
-}
-
+interface LineageFigure { name: string; sharedTraitLine: string }
 interface House {
-  id: string;
-  name: string;
-  hex: string;
-  tagline: string;
-  description: string;
-  strengths: string[];
-  lineage: LineageFigure[];
+  id: string; name: string; hex: string; tagline: string;
+  description: string; strengths: string[]; lineage: LineageFigure[];
 }
 
 const HOUSES = housesRaw as unknown as House[];
-
 type Phase = 'crests' | 'eliminating' | 'winner' | 'lineage' | 'complete';
 
 /**
- * S10 — Sorting Ceremony
+ * S10 — Sorting Ceremony (enriched)
  *
- * Animation: 4 crests → 3 fade out → winner reveals → lineage slides in.
- * Pure Framer Motion, no WebGL.
+ * Full screen takeover. 4 crests → crack + fade → winner floods screen.
+ * Lineage slides in. Cedric: "Welcome home." (no joke — let it land)
  */
 export function S10Sorting() {
   const houseId = useJourneyStore((s) => s.houseId);
@@ -45,104 +32,86 @@ export function S10Sorting() {
   const dialogueSent = useRef(false);
 
   const winningHouse = HOUSES.find((h) => h.id === houseId) || HOUSES[0];
-  const losingHouses = HOUSES.filter((h) => h.id !== winningHouse.id);
 
-  // Animation sequence
   useEffect(() => {
     if (dialogueSent.current) return;
     dialogueSent.current = true;
 
-    // Phase 1: show all crests (1.5s)
-    enqueueMessage({
-      speaker: 'cedric',
-      text: lines.s10.cedric.intro2,
-      type: 'dialogue',
-    });
-
-    // Phase 2: eliminate losers (1.5s + 300ms stagger)
-    setTimeout(() => setPhase('eliminating'), 1500);
-
-    // Phase 3: winner reveal (after elimination)
+    enqueueMessage({ speaker: 'cedric', text: lines.s10.cedric.intro2, type: 'instruction' });
+    setTimeout(() => setPhase('eliminating'), 2000);
     setTimeout(() => {
       setPhase('winner');
-      enqueueMessage({
-        speaker: 'cedric',
-        text: lines.s10.cedric.claim,
-        type: 'dialogue',
-      });
-    }, 3000);
-
-    // Phase 4: lineage slides in
+      enqueueMessage({ speaker: 'cedric', text: lines.s10.cedric.claim, type: 'dialogue' });
+    }, 3500);
     setTimeout(() => {
       setPhase('lineage');
-      enqueueMessage({
-        speaker: 'cedric',
-        text: lines.s10.cedric.lineageIntro,
-        type: 'dialogue',
-      });
-      // Stagger lineage reveals
+      enqueueMessage({ speaker: 'cedric', text: lines.s10.cedric.lineageIntro, type: 'dialogue' });
       for (let i = 0; i < winningHouse.lineage.length; i++) {
-        setTimeout(() => setLineageIdx(i), i * 800);
+        setTimeout(() => setLineageIdx(i), i * 600);
       }
-    }, 5000);
-
-    // Phase 5: complete — show CTA
+    }, 5500);
     setTimeout(() => {
       setPhase('complete');
-      enqueueMessage({
-        speaker: 'pip',
-        text: lines.s10.pip.claim,
-        type: 'dialogue',
-      });
-    }, 5000 + winningHouse.lineage.length * 800 + 500);
+      enqueueMessage({ speaker: 'pip', text: lines.s10.pip.claim, type: 'dialogue' });
+    }, 5500 + winningHouse.lineage.length * 600 + 800);
   }, [enqueueMessage, winningHouse]);
 
-  const showCrestFor = (house: House) => {
-    const isWinner = house.id === winningHouse.id;
-    const isEliminated = !isWinner && (phase === 'eliminating' || phase === 'winner' || phase === 'lineage' || phase === 'complete');
-    const isRevealed = isWinner && (phase === 'winner' || phase === 'lineage' || phase === 'complete');
-
-    return (
-      <motion.div
-        key={house.id}
-        animate={{
-          opacity: isEliminated ? 0 : 1,
-          scale: isRevealed ? 1.2 : isEliminated ? 0.8 : 1,
-        }}
-        transition={{
-          duration: 0.5,
-          delay: isEliminated ? losingHouses.indexOf(house) * 0.3 : 0,
-        }}
-        data-testid={isRevealed ? `house-winner` : `house-crest-${house.id}`}
-        className="flex flex-col items-center gap-2"
-      >
-        {/* Crest circle */}
-        <div
-          className={`w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center text-2xl font-serif font-bold border-2 transition-all ${
-            isRevealed ? 'shadow-[0_0_20px_var(--glow)]' : ''
-          }`}
-          style={{
-            borderColor: house.hex,
-            background: `radial-gradient(circle at 40% 35%, ${house.hex}30, ${house.hex}08)`,
-            color: house.hex,
-            // @ts-expect-error CSS custom property
-            '--glow': `${house.hex}60`,
-          }}
-        >
-          {house.name.charAt(house.name.lastIndexOf(' ') + 1)}
-        </div>
-        <p className="text-[10px] font-mono text-ivory/40 uppercase tracking-wider">
-          {house.name.replace('House of ', '')}
-        </p>
-      </motion.div>
-    );
-  };
-
   return (
-    <div className="flex flex-col items-center gap-6 h-full overflow-y-auto pb-4">
+    <div className="flex flex-col items-center gap-4 h-full overflow-y-auto pb-4 relative">
+      {/* House color flood (background) */}
+      <AnimatePresence>
+        {(phase === 'winner' || phase === 'lineage' || phase === 'complete') && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+            className="absolute inset-0 pointer-events-none"
+            style={{ background: `radial-gradient(circle at 50% 40%, ${winningHouse.hex}40, transparent 70%)` }}
+          />
+        )}
+      </AnimatePresence>
+
       {/* 2x2 crest grid */}
-      <div className="grid grid-cols-2 gap-6 sm:gap-8">
-        {HOUSES.map(showCrestFor)}
+      <div className="grid grid-cols-2 gap-6 pt-4 z-10">
+        {HOUSES.map((house) => {
+          const isWinner = house.id === winningHouse.id;
+          const isEliminated = !isWinner && phase !== 'crests';
+          const isRevealed = isWinner && (phase === 'winner' || phase === 'lineage' || phase === 'complete');
+
+          return (
+            <motion.div
+              key={house.id}
+              data-testid={isRevealed ? 'house-winner' : `house-crest-${house.id}`}
+              animate={{
+                opacity: isEliminated ? 0 : 1,
+                scale: isRevealed ? 1.5 : isEliminated ? 0.7 : 1,
+              }}
+              transition={{
+                duration: 0.6,
+                delay: isEliminated ? HOUSES.filter((h) => h.id !== winningHouse.id).indexOf(house) * 0.4 : 0,
+                type: isRevealed ? 'spring' : 'tween',
+                stiffness: 200,
+              }}
+              className="flex flex-col items-center gap-2"
+            >
+              <div
+                className={`w-24 h-24 rounded-full flex items-center justify-center text-3xl font-serif font-bold border-2 transition-all ${
+                  isRevealed ? 'shadow-[0_0_30px_var(--glow)]' : ''
+                }`}
+                style={{
+                  borderColor: house.hex,
+                  background: `radial-gradient(circle at 40% 35%, ${house.hex}40, ${house.hex}10)`,
+                  color: house.hex,
+                  ['--glow' as string]: `${house.hex}60`,
+                } as React.CSSProperties}
+              >
+                {house.name.charAt(house.name.lastIndexOf(' ') + 1)}
+              </div>
+              <p className="text-[10px] font-mono text-ivory/40 uppercase tracking-wider">
+                {house.name.replace('House of ', '')}
+              </p>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Winner details */}
@@ -151,37 +120,32 @@ export function S10Sorting() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-center max-w-sm"
+            transition={{ delay: 0.3, type: 'spring' }}
+            className="text-center z-10"
           >
-            <h2 className="text-2xl sm:text-3xl font-serif font-bold" style={{ color: winningHouse.hex }}>
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold" style={{ color: winningHouse.hex }}>
               {winningHouse.name}
             </h2>
-            <p className="text-sm text-ivory/60 mt-1 italic">{winningHouse.tagline}</p>
+            <p className="text-sm text-ivory/50 mt-1 italic">{winningHouse.tagline}</p>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Lineage gallery */}
+      {/* Lineage */}
       <AnimatePresence>
         {(phase === 'lineage' || phase === 'complete') && (
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="w-full max-w-sm space-y-2"
-          >
-            {winningHouse.lineage.map((figure, i) => (
-              <AnimatePresence key={figure.name}>
+          <motion.div initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} className="w-full max-w-sm space-y-2 z-10">
+            {winningHouse.lineage.map((fig, i) => (
+              <AnimatePresence key={fig.name}>
                 {i <= lineageIdx && (
                   <motion.div
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.1 }}
-                    data-testid={`lineage-${figure.name}`}
+                    data-testid={`lineage-${fig.name}`}
                     className="bg-dark-surface border border-white/10 rounded-lg p-3"
                   >
-                    <p className="text-sm font-semibold text-ivory">{figure.name}</p>
-                    <p className="text-[10px] text-ivory/40 mt-0.5">{figure.sharedTraitLine}</p>
+                    <p className="text-sm font-semibold text-ivory">{fig.name}</p>
+                    <p className="text-[10px] text-ivory/40">{fig.sharedTraitLine}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -190,16 +154,16 @@ export function S10Sorting() {
         )}
       </AnimatePresence>
 
-      {/* Advance CTA */}
+      {/* CTA */}
       {phase === 'complete' && (
         <motion.button
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           onClick={() => advanceScreen()}
           data-testid="claim-profile-btn"
-          className="px-8 py-3 rounded-full bg-gold text-dark font-semibold hover:bg-gold/90 hover:shadow-[0_0_8px_rgba(212,168,67,0.3)] transition-all"
+          className="px-8 py-3 rounded-full bg-gold text-dark font-semibold hover:bg-gold/90 transition-all z-10"
         >
-          {lines.s10.continueButton}
+          Claim Your Profile →
         </motion.button>
       )}
     </div>
