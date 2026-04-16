@@ -1,0 +1,553 @@
+{
+  "_readme": "This file contains deep_content templates keyed by domain. Claude Code should merge these into ideas.json by matching idea.domain_primary to the domain key. Each idea gets the domain template as its deep_content base, then overrides name-specific fields.",
+  
+  "ai_automation": {
+    "consumer_psychology": {
+      "level1_want": "A tool that does repetitive tasks faster",
+      "level2_need": "Freedom from cognitive load and context-switching",
+      "level3_desire": "To feel like the most capable, leveraged person in the room",
+      "motivational_conflict": "Wants to automate everything but fears losing the skills that define them professionally",
+      "jobs_to_be_done": "When I'm buried in low-value work, I want to eliminate it entirely, so I can spend all my time on the 20% that actually matters"
+    },
+    "pestle": {
+      "political": "AI regulation (EU AI Act, India AI Policy) creating compliance requirements — also creating moats for early compliant players",
+      "economic": "Labour costs rising globally while AI capability costs falling 10x per year — automation ROI improving every quarter",
+      "social": "Knowledge workers anxious about replacement but eager to be early adopters — tension creates buying urgency",
+      "technological": "GPT-4 class models now API-accessible at $0.01/1000 tokens — AI that was $10M/year 5 years ago now costs $500/month",
+      "legal": "Liability for AI decisions unclear — creates opportunity for 'AI with human oversight' positioning",
+      "environmental": "AI inference energy costs becoming material — green AI positioning becoming a differentiator"
+    },
+    "why_now": "The 2024-2025 window is unique: AI models crossed the capability threshold for complex reasoning while API costs dropped below SMB budget thresholds. Early movers are capturing market share before enterprise incumbents react.",
+    "ai_layers": [
+      "LLMs process unstructured inputs (emails, documents, voice) that rule-based automation could never handle — unlocking 80% of workflows that were previously impossible to automate",
+      "Agentic AI (tool use + memory + planning) means the system gets smarter with every interaction — compounding value that traditional SaaS can't match"
+    ],
+    "market_data": {
+      "tam_b": 200,
+      "sam_b": 45,
+      "som_m": 900,
+      "growth_cagr": 36,
+      "growth_chart": [
+        {"year":"2022","value":35},{"year":"2023","value":58},{"year":"2024","value":95},
+        {"year":"2025","value":145,"projected":true},{"year":"2026","value":200,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "Zapier", "weakness": "Rule-based, can't handle unstructured data or complex reasoning", "market_share_pct": 22},
+      {"name": "Make.com", "weakness": "Technical complexity excludes non-developers", "market_share_pct": 12},
+      {"name": "UiPath", "weakness": "Enterprise-only pricing, slow implementation cycles", "market_share_pct": 18}
+    ],
+    "positioning": "The AI automation platform that non-technical teams can deploy in an afternoon, not an IT quarter",
+    "revenue_model": {
+      "primary": "SaaS subscription per seat or per workflow run",
+      "secondary": "Professional services for enterprise custom implementations",
+      "unit_economics": "CAC ~₹8,000, LTV ~₹85,000, payback 2.8 months"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Interview 20 potential users about their most painful repetitive task (don't pitch, just listen)", "timeline": "Week 1"},
+      {"step": 2, "action": "Build one automation that solves the top pain point — even if it's manual behind the scenes (Wizard of Oz MVP)", "timeline": "Week 2-3"},
+      {"step": 3, "action": "Get 5 paying customers at ₹5,000/month before writing a line of scalable code", "timeline": "Month 2"}
+    ],
+    "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
+  },
+
+  "saas_productivity": {
+    "consumer_psychology": {
+      "level1_want": "Software that helps me get more done",
+      "level2_need": "A feeling of being organised and in control",
+      "level3_desire": "To be seen as someone who has their professional life figured out — the person others come to for recommendations",
+      "motivational_conflict": "Wants a tool that works immediately but fears spending weeks learning yet another platform that gets abandoned like the last three",
+      "jobs_to_be_done": "When I'm overwhelmed by my workflow, I want a system that adapts to how I think, so I can feel like I'm working at my full potential"
+    },
+    "pestle": {
+      "political": "Remote work normalisation creating global addressable market for productivity tools regardless of geography",
+      "economic": "Every SMB now evaluates tools on ROI not just features — cost-per-hour-saved becoming the sales metric",
+      "social": "The 'personal operating system' trend: knowledge workers treating their tools as identity markers",
+      "technological": "AI copilots becoming table stakes — any SaaS without AI feels obsolete within 12 months of launch",
+      "legal": "GDPR and DPDP data residency requirements creating regional SaaS opportunities",
+      "environmental": "Digital-first workflows replacing paper — ESG narrative available for enterprise sales"
+    },
+    "why_now": "The productivity tool stack is in a rare replacement cycle: AI capability has reset user expectations, making every tool from 2020 feel outdated. Users are actively shopping.",
+    "ai_layers": [
+      "AI that learns your workflow patterns and proactively surfaces the right context before you ask — eliminating the search tax that costs knowledge workers 2 hours/day",
+      "Natural language interfaces replacing complex UI — any workflow configurable by description rather than drag-and-drop"
+    ],
+    "market_data": {
+      "tam_b": 310,
+      "sam_b": 58,
+      "som_m": 1200,
+      "growth_cagr": 19,
+      "growth_chart": [
+        {"year":"2022","value":185},{"year":"2023","value":224},{"year":"2024","value":268},
+        {"year":"2025","value":310,"projected":true},{"year":"2026","value":369,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "Notion", "weakness": "Infinite flexibility creates decision paralysis for most teams", "market_share_pct": 18},
+      {"name": "Monday.com", "weakness": "Project management focus misses personal productivity layer", "market_share_pct": 14},
+      {"name": "Asana", "weakness": "Rigid structure doesn't adapt to how individuals actually think", "market_share_pct": 16}
+    ],
+    "positioning": "The first productivity platform that adapts to you instead of training you to adapt to it",
+    "revenue_model": {
+      "primary": "Freemium to paid (₹499-1,999/month per user) with team features gating",
+      "secondary": "Enterprise annual contracts with custom integrations",
+      "unit_economics": "CAC ~₹3,500, LTV ~₹28,000, payback 4 months"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Pick one workflow (meeting notes, project tracking, or knowledge management) — not all three", "timeline": "Week 1"},
+      {"step": 2, "action": "Build a 10-minute demo that solves this one workflow better than Notion — and get 3 friends to test it", "timeline": "Week 2-4"},
+      {"step": 3, "action": "Launch on Product Hunt and build a waitlist of 500 before your first paying customer", "timeline": "Month 2"}
+    ],
+    "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
+  },
+
+  "health_tech": {
+    "consumer_psychology": {
+      "level1_want": "To be healthier / lose weight / sleep better",
+      "level2_need": "To feel in control of my body and energy",
+      "level3_desire": "To become the kind of person who is disciplined, vital, and in their prime — a physical identity upgrade",
+      "motivational_conflict": "Deeply wants to change health habits but has failed before and fears the shame of failing again with yet another app",
+      "jobs_to_be_done": "When I feel sluggish and out of control, I want personalised guidance that actually fits my life, so I can feel like my best self"
+    },
+    "pestle": {
+      "political": "Ayushman Bharat digital health mission creating ₹30,000 Cr in digital health infrastructure spending",
+      "economic": "Healthcare consumerisation: Indians spending ₹3.5 trillion out-of-pocket, most willing to pay for tools that reduce this",
+      "social": "Wellness becoming a status symbol for urban professionals — gym selfies, CGM wearables, fasting apps all social signals",
+      "technological": "Wearables, continuous glucose monitors, and smartphone sensors generating unprecedented personal health data",
+      "legal": "CDSCO SaMD regulations: digital health tools that make clinical claims need software as medical device approval",
+      "environmental": "Clean living movement: consumers connecting environmental health to personal health creating dual narrative"
+    },
+    "why_now": "India now has the data infrastructure (Aadhaar-linked health IDs, ABDM) and the consumer willingness (post-COVID health anxiety) that didn't exist 3 years ago.",
+    "ai_layers": [
+      "Multi-modal AI integrating wearable data, food photos, symptom descriptions, and lab reports to give personalised recommendations impossible with traditional apps",
+      "Predictive health AI that identifies patterns 30-90 days before symptoms appear — shifting from reactive to preventive care"
+    ],
+    "market_data": {
+      "tam_b": 330,
+      "sam_b": 48,
+      "som_m": 850,
+      "growth_cagr": 18,
+      "growth_chart": [
+        {"year":"2022","value":185},{"year":"2023","value":224},{"year":"2024","value":272},
+        {"year":"2025","value":330,"projected":true},{"year":"2026","value":389,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "HealthifyMe", "weakness": "Calorie counting model creates obsession not health", "market_share_pct": 20},
+      {"name": "Noom", "weakness": "Coaching quality inconsistent at scale", "market_share_pct": 15},
+      {"name": "Apollo 247", "weakness": "Reactive (consultation) not proactive (prevention)", "market_share_pct": 18}
+    ],
+    "positioning": "The health platform that actually changes behaviour, not just tracks it",
+    "revenue_model": {
+      "primary": "Monthly subscription (₹299-999/month) with premium coaching tier",
+      "secondary": "B2B wellness benefits sold to employers (₹200/employee/month)",
+      "unit_economics": "CAC ~₹1,200, LTV ~₹14,000, payback 3 months"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Pick one condition (diabetes, PCOS, sleep, or weight) and one user segment — don't try to serve everyone", "timeline": "Week 1"},
+      {"step": 2, "action": "Run 20 user interviews asking about their last 3 failed health attempts — build the product around removing those specific barriers", "timeline": "Week 2-3"},
+      {"step": 3, "action": "Launch a WhatsApp-based MVP with human coaching (no app yet) — validate willingness to pay before building", "timeline": "Month 2"}
+    ],
+    "honest_risk": "Health habit change is brutally hard. Most users stop after 2 weeks. Your product must create results in the first 7 days or you'll never hit retention numbers that make unit economics work."
+  },
+
+  "creator_tools": {
+    "consumer_psychology": {
+      "level1_want": "Tools to make better content faster",
+      "level2_need": "To feel like a professional creator, not an amateur trying too hard",
+      "level3_desire": "To build an audience that values what they uniquely see and say — to matter in their corner of the internet",
+      "motivational_conflict": "Has a unique perspective but fears putting it out there because what if no one cares — or worse, they do and they can't keep up with demand",
+      "jobs_to_be_done": "When I have an idea worth sharing, I want to turn it into polished content in under 30 minutes, so I can publish consistently without burnout"
+    },
+    "pestle": {
+      "political": "IT Ministry's push for Digital India creating institutional demand for content about government schemes",
+      "economic": "India's creator economy projected to reach $300B by 2030. Top 1% creators earning ₹1Cr+/month. Long tail 90M+ aspiring creators.",
+      "social": "Video-first communication becoming default: WhatsApp status, Instagram Reels, YouTube Shorts all prioritising creator content",
+      "technological": "AI generation (text, image, video, voice) making professional-quality production accessible to anyone with a phone",
+      "legal": "Creator rights unclear on AI-generated content. Platform algorithm changes creating constant distribution instability.",
+      "environmental": "Digital content replacing physical media — sustainability narrative available"
+    },
+    "why_now": "Sora and similar video AI models make 2025 the year professional-quality video production becomes accessible to solo creators. The production quality moat disappears.",
+    "ai_layers": [
+      "AI repurposing: one piece of long-form content automatically converted to 8 formats (short video, thread, newsletter, carousel) — 10x content without 10x work",
+      "AI personalisation: content dynamically adapted for different audience segments in different languages — unlocking distribution at scale"
+    ],
+    "market_data": {
+      "tam_b": 250,
+      "sam_b": 35,
+      "som_m": 620,
+      "growth_cagr": 22,
+      "growth_chart": [
+        {"year":"2022","value":130},{"year":"2023","value":162},{"year":"2024","value":200},
+        {"year":"2025","value":250,"projected":true},{"year":"2026","value":305,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "Canva", "weakness": "Design-only, doesn't help with content strategy or distribution", "market_share_pct": 28},
+      {"name": "Buffer", "weakness": "Scheduling without content creation intelligence", "market_share_pct": 12},
+      {"name": "Opus Clip", "weakness": "Video clips only, no end-to-end content workflow", "market_share_pct": 8}
+    ],
+    "positioning": "The content operating system for creators who want to grow without burning out",
+    "revenue_model": {
+      "primary": "Freemium to paid (₹999-2,999/month) with AI generation credits model",
+      "secondary": "Agency tier for creators managing multiple brands/clients",
+      "unit_economics": "CAC ~₹2,200, LTV ~₹22,000, payback 3.5 months"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Identify 50 creators in one niche (cooking, finance, fitness) who post 3+ times/week and interview them about their production process", "timeline": "Week 1"},
+      {"step": 2, "action": "Build a single feature that eliminates 1 hour of their workflow — nothing more", "timeline": "Week 2-4"},
+      {"step": 3, "action": "Get 10 creators using it daily for free, then convert 5 to paid at ₹999/month before building more features", "timeline": "Month 2"}
+    ],
+    "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
+  },
+
+  "fintech": {
+    "consumer_psychology": {
+      "level1_want": "To make more money or save more money",
+      "level2_need": "Financial security and the freedom it creates",
+      "level3_desire": "To feel financially intelligent — the kind of person who makes smart money moves others don't think of",
+      "motivational_conflict": "Knows they should invest/save but the cognitive load of financial decisions creates paralysis — 'I'll do it next month' syndrome",
+      "jobs_to_be_done": "When I'm unsure what to do with my money, I want clear personalised guidance, so I can feel confident I'm making the right moves for my future"
+    },
+    "pestle": {
+      "political": "SEBI's investment adviser regulations creating compliance complexity — also creating moats for licensed players",
+      "economic": "India's household savings rate at 19.6% but only 3% invested in equities — massive activation opportunity",
+      "social": "Gen Z 'financial influencer' culture normalising investment conversations — reducing shame around money discussions",
+      "technological": "Account Aggregator + ONDC enabling data portability that allows personalised financial products at the consumer level",
+      "legal": "RBI digital lending guidelines 2022 raising the bar — incumbent neobanks scrambling to comply creating acqui-hire opportunities",
+      "environmental": "Green bonds and ESG investing creating new product categories for ethical investor segment"
+    },
+    "why_now": "SEBI's investment adviser sandbox and Account Aggregator framework (live since 2021) create the regulatory infrastructure for a new wave of personalised fintech — the pipes are ready.",
+    "ai_layers": [
+      "LLMs that explain complex financial decisions in vernacular languages with analogies relevant to each user's context — democratising financial literacy at zero marginal cost",
+      "AI credit scoring using alternative data (rent payments, utility bills, business transactions) to serve 450M Indians with no formal credit history"
+    ],
+    "market_data": {
+      "tam_b": 340,
+      "sam_b": 42,
+      "som_m": 750,
+      "growth_cagr": 14,
+      "growth_chart": [
+        {"year":"2022","value":235},{"year":"2023","value":268},{"year":"2024","value":304},
+        {"year":"2025","value":340,"projected":true},{"year":"2026","value":388,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "Zerodha", "weakness": "Execution platform, no advice or planning tools", "market_share_pct": 25},
+      {"name": "Groww", "weakness": "Simple UX but no personalised financial planning", "market_share_pct": 20},
+      {"name": "ET Money", "weakness": "Content-driven, not action-driven", "market_share_pct": 10}
+    ],
+    "positioning": "The financial co-pilot that makes every middle-class Indian as financially intelligent as a private bank client",
+    "revenue_model": {
+      "primary": "Subscription ₹199-499/month for premium advice features",
+      "secondary": "Trail commission on investment products placed through the platform",
+      "unit_economics": "CAC ~₹800, LTV ~₹12,000, payback 2.5 months"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Get a SEBI investment adviser registration or partner with one — the regulatory moat is worth the 3-month process", "timeline": "Month 1-3"},
+      {"step": 2, "action": "Build a WhatsApp-first MVP: user sends their bank statement, AI returns 3 specific money moves they should make this month", "timeline": "Month 2"},
+      {"step": 3, "action": "Target young professionals (25-35) in one city (Bangalore) and get 100 paying users before expanding", "timeline": "Month 3-4"}
+    ],
+    "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
+  },
+
+  "edtech": {
+    "consumer_psychology": {
+      "level1_want": "To learn a skill that gets them a better job or income",
+      "level2_need": "Competence and the confidence that comes from real capability",
+      "level3_desire": "To become the person they see themselves as — the successful professional, the thought leader, the person who made it",
+      "motivational_conflict": "Deeply wants to upskill but has signed up for 12 courses and finished 2 — completion guilt now precedes every new course purchase",
+      "jobs_to_be_done": "When I feel stuck in my career, I want guaranteed outcomes from my learning time, so I can finally feel like my effort is paying off"
+    },
+    "pestle": {
+      "political": "NEP 2020 mandating outcome-based education creating institutional procurement opportunity for measurable skill platforms",
+      "economic": "Skill gap costing Indian economy ₹15 lakh crore annually in lost productivity — government and corporates both willing to pay for solutions",
+      "social": "Reskilling anxiety post-AI: 65% of Indian professionals worried about AI replacing their job — massive demand for future-proof skills",
+      "technological": "AI tutors achieving 2x learning speed vs traditional courses — Bloom's 2-sigma problem being solved at scale",
+      "legal": "UGC online degree recognition creating new market for accredited online programmes",
+      "environmental": "Digital learning replacing physical classroom carbon footprint — ESG narrative for B2B sales"
+    },
+    "why_now": "The BYJU's collapse created a trust vacuum but also a credibility opportunity. Founders who can demonstrate real learner outcomes (not just revenue) will capture the institutional market that BYJU's wasted.",
+    "ai_layers": [
+      "Personalised learning paths that adapt in real-time to where each learner struggles — eliminating the one-size-fits-all problem of MOOCs",
+      "AI practice partners that give Socratic questioning instead of answers — producing 2x better skill retention than watching video lectures"
+    ],
+    "market_data": {
+      "tam_b": 142,
+      "sam_b": 26,
+      "som_m": 480,
+      "growth_cagr": 16,
+      "growth_chart": [
+        {"year":"2022","value":82},{"year":"2023","value":96},{"year":"2024","value":112},
+        {"year":"2025","value":142,"projected":true},{"year":"2026","value":165,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "Coursera", "weakness": "Completion rates under 10% — content without accountability", "market_share_pct": 18},
+      {"name": "upGrad", "weakness": "High ticket price makes ROI hard to justify pre-outcome", "market_share_pct": 14},
+      {"name": "Unacademy", "weakness": "Live class model doesn't personalise to learner pace", "market_share_pct": 20}
+    ],
+    "positioning": "The only learning platform that guarantees skill outcomes, not just course completion",
+    "revenue_model": {
+      "primary": "Outcome-based: payment only after placement/salary increase (Income Share Agreement)",
+      "secondary": "B2B corporate learning licenses ₹5,000-15,000 per employee per year",
+      "unit_economics": "CAC ~₹4,500, LTV ~₹45,000, payback 4 months (ISA model — back-loaded)"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Pick ONE skill in ONE domain where you can measure a clear outcome (landed job, salary increase, specific certification)", "timeline": "Week 1"},
+      {"step": 2, "action": "Run a cohort of 20 learners with WhatsApp-based human coaching before building any tech — validate the learning model works", "timeline": "Month 1"},
+      {"step": 3, "action": "Get 3 placement success stories with names and photos before spending on paid acquisition", "timeline": "Month 2-3"}
+    ],
+    "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
+  },
+
+  "community_social": {
+    "consumer_psychology": {
+      "level1_want": "To connect with people who share their interests",
+      "level2_need": "Belonging — to be part of something that matters",
+      "level3_desire": "To find their people — the tribe that sees the world the way they do and values what they value",
+      "motivational_conflict": "Craves genuine connection but large social platforms feel performative and hollow — too visible, too judged, too curated",
+      "jobs_to_be_done": "When I feel like no one around me gets what I care about, I want to find my specific people and actually do things together"
+    },
+    "pestle": {
+      "political": "Digital India push creating community infrastructure demand at district and city level",
+      "economic": "Community-led growth cuts CAC by 60-80% — communities become acquisition channels not just engagement features",
+      "social": "Post-pandemic loneliness epidemic: 61% of Indian urban millennials report feeling lonely despite heavy social media use",
+      "technological": "Web3 community tools (token-gated access, community ownership) maturing — creating new community engagement models",
+      "legal": "IT Rules intermediary guidelines applying to community platforms at scale — moderation infrastructure compliance required",
+      "environmental": "Physical community events replacing solo digital consumption — sustainability narrative for in-person community model"
+    },
+    "why_now": "The great fragmentation of large social platforms (X/Twitter decline, Facebook aging, Instagram going full entertainment) is sending people searching for smaller, higher-trust environments. 2024-2026 is the community platform wave.",
+    "ai_layers": [
+      "AI member matching that connects people based on goals and working style (not just interests) — turning passive community members into active collaborators",
+      "AI moderation that maintains community quality at scale without the human moderator burnout that kills most community businesses"
+    ],
+    "market_data": {
+      "tam_b": 62,
+      "sam_b": 9,
+      "som_m": 160,
+      "growth_cagr": 15,
+      "growth_chart": [
+        {"year":"2022","value":37},{"year":"2023","value":43},{"year":"2024","value":51},
+        {"year":"2025","value":62,"projected":true},{"year":"2026","value":71,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "Discord", "weakness": "Gaming brand association and complexity barrier for non-tech communities", "market_share_pct": 22},
+      {"name": "Mighty Networks", "weakness": "US-centric, poor mobile experience, high price for Indian market", "market_share_pct": 12},
+      {"name": "WhatsApp Groups", "weakness": "No structure, no discovery, no moderation tools", "market_share_pct": 35}
+    ],
+    "positioning": "The community platform where members transform, not just connect",
+    "revenue_model": {
+      "primary": "Platform fee: ₹999-4,999/month for community creators (not members)",
+      "secondary": "Transaction fee on paid events, courses, and member-to-member services within the community",
+      "unit_economics": "CAC ~₹1,800 (for community creators), LTV ~₹24,000, payback 3 months"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Don't build software yet — manually run a community of 50 people in WhatsApp and understand exactly what makes it thrive or die", "timeline": "Month 1"},
+      {"step": 2, "action": "Identify the 3 things you do as organiser that can't scale (introductions, content curation, conflict resolution) — these become your product features", "timeline": "Month 2"},
+      {"step": 3, "action": "Find 5 community builders who will pay ₹2,000/month to run their community on your platform — before you've built the platform", "timeline": "Month 3"}
+    ],
+    "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
+  },
+
+  "gaming_esports": {
+    "consumer_psychology": {
+      "level1_want": "Entertainment and the thrill of winning",
+      "level2_need": "Mastery — the feeling of getting better at something difficult",
+      "level3_desire": "Status within their peer group — to be recognised as someone who is genuinely good at something",
+      "motivational_conflict": "Loves gaming but feels guilty about time spent — constantly justifies it as 'developing skills' or 'stress relief'",
+      "jobs_to_be_done": "When I have free time, I want an experience that's more satisfying than scrolling — one where I feel genuinely engaged and alive"
+    },
+    "pestle": {
+      "political": "MeitY online gaming regulations 2023 creating compliance requirements and regulatory clarity simultaneously",
+      "economic": "India's gaming revenue $3.1B in 2024, projected $8.6B by 2027. Mobile-first market with average spending $2/user — 40x below US",
+      "social": "Gaming destigmatising rapidly: parents seeing esports as viable career path after Indian teams win international titles",
+      "technological": "5G rollout enabling cloud gaming — high-quality gaming on any Android phone without expensive hardware",
+      "legal": "Fantasy sports skill game vs gambling distinction being litigated in multiple High Courts — regulatory arbitrage window",
+      "environmental": "Digital entertainment replacing physical entertainment — sustainable consumption narrative"
+    },
+    "why_now": "India has 570M gamers but the lowest average revenue per user in the world. Closing this gap is a $5B opportunity — and the infrastructure (5G, UPI payments, smartphone penetration) is finally ready.",
+    "ai_layers": [
+      "AI-generated game content (levels, characters, storylines) can create infinite content diversity at a fraction of traditional development cost",
+      "AI coaching that analyses gameplay patterns and gives real-time improvement suggestions — democratising the professional training that only esports teams currently get"
+    ],
+    "market_data": {
+      "tam_b": 185,
+      "sam_b": 20,
+      "som_m": 350,
+      "growth_cagr": 13,
+      "growth_chart": [
+        {"year":"2022","value":118},{"year":"2023","value":135},{"year":"2024","value":154},
+        {"year":"2025","value":185,"projected":true},{"year":"2026","value":209,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "Dream11", "weakness": "Fantasy sports only, not expanding into casual gaming", "market_share_pct": 30},
+      {"name": "WinZO", "weakness": "Casual games, limited engagement depth", "market_share_pct": 12},
+      {"name": "BGMI (PUBG)", "weakness": "Single game, no community infrastructure", "market_share_pct": 18}
+    ],
+    "positioning": "The gaming platform where Indian players get better together and earn while doing it",
+    "revenue_model": {
+      "primary": "In-app purchases (skins, power-ups) — 80% of gaming revenue globally",
+      "secondary": "Esports tournament entry fees and brand sponsorship of prize pools",
+      "unit_economics": "CAC ~₹120 (viral acquisition model), LTV ~₹1,800, payback 2.5 months"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Pick ONE game with an active Indian community (BGMI, Valorant, FIFA Mobile) and become a top 1% player yourself", "timeline": "Month 1"},
+      {"step": 2, "action": "Build a Discord community of 1000 players for that game before building any product — become the trusted community hub first", "timeline": "Month 2"},
+      {"step": 3, "action": "Run a paid tournament (₹100 entry, ₹5,000 prize) manually to validate willingness to pay before building the infrastructure", "timeline": "Month 3"}
+    ],
+    "honest_risk": "Gaming is winner-takes-most at the platform level. Unless you have a distribution moat (celebrity tie-in, franchise IP, telco partnership), you will not out-market BGMI or Dream11. Build for a specific niche first."
+  },
+
+  "travel_hospitality": {
+    "consumer_psychology": {
+      "level1_want": "A great trip that's stress-free to plan",
+      "level2_need": "Novel experiences that expand their sense of what's possible",
+      "level3_desire": "The version of themselves who is adventurous, cultured, and lives a life worth remembering — travel as identity",
+      "motivational_conflict": "Dreams of meaningful travel but decision paralysis in planning (hundreds of options, reviews, prices) makes it easier to just book the same Goa holiday again",
+      "jobs_to_be_done": "When I'm feeling stuck in routine, I want a travel experience that genuinely surprises me, so I come back feeling like a different — and better — person"
+    },
+    "pestle": {
+      "political": "India's e-visa expansion to 166 countries reducing friction for inbound tourism. G20 tourism ministry push.",
+      "economic": "India's outbound travel market growing 25% YoY. Domestic air travel at record 145M passengers in 2024.",
+      "social": "Solo travel growing 40% YoY especially among Indian women 25-35. Travel as therapy normalising post-pandemic.",
+      "technological": "Generative AI enabling personalised itinerary creation from a 3-sentence prompt — replacing days of research",
+      "legal": "ONDC travel vertical launch disrupting OTA duopoly (MakeMyTrip/Yatra) — distribution disruption opportunity",
+      "environmental": "Carbon-aware travel tools emerging — flight offset calculators and low-carbon itinerary planners gaining traction"
+    },
+    "why_now": "The post-COVID travel revenge spending has sustained longer than any analyst predicted. India's middle class has upgraded its travel aspirations permanently — and the tools haven't caught up.",
+    "ai_layers": [
+      "AI trip planning that creates a complete personalised itinerary from a 3-message conversation — eliminating 6 hours of research that blocks 40% of would-be travellers",
+      "Real-time AI travel companion that answers 'what should I do next' during the trip based on weather, local events, and your stated preferences"
+    ],
+    "market_data": {
+      "tam_b": 195,
+      "sam_b": 26,
+      "som_m": 440,
+      "growth_cagr": 12,
+      "growth_chart": [
+        {"year":"2022","value":118},{"year":"2023","value":140},{"year":"2024","value":162},
+        {"year":"2025","value":195,"projected":true},{"year":"2026","value":218,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "MakeMyTrip", "weakness": "Transactional, not experiential — books flights, not memories", "market_share_pct": 35},
+      {"name": "Airbnb Experiences", "weakness": "Host supply limited in India, discovery broken", "market_share_pct": 8},
+      {"name": "TripAdvisor", "weakness": "Review aggregator, not a planning tool", "market_share_pct": 14}
+    ],
+    "positioning": "The travel platform that plans your perfect trip and makes you feel discovered, not touristy",
+    "revenue_model": {
+      "primary": "Commission on bookings made through the platform (8-15% on accommodation, 5% on activities)",
+      "secondary": "Premium membership (₹999/year) for personalised concierge and exclusive access",
+      "unit_economics": "CAC ~₹600, LTV ~₹8,500, payback 3 months"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Pick ONE destination (Hampi, Coorg, Spiti) and become the definitive source of insider knowledge for that destination only", "timeline": "Month 1"},
+      {"step": 2, "action": "Manually create personalised itineraries for 20 travellers via WhatsApp — learn what they actually value vs what they say they value", "timeline": "Month 1-2"},
+      {"step": 3, "action": "Build a community of 500 travellers to that destination before building a booking product — community is your moat", "timeline": "Month 2-3"}
+    ],
+    "honest_risk": "Travel is highly commoditised on price. If your value is just 'better itineraries', users will take your plan and book on MakeMyTrip. Your moat must be relationships with local suppliers that give you inventory unavailable anywhere else."
+  },
+
+  "media_entertainment": {
+    "consumer_psychology": {
+      "level1_want": "Entertainment that doesn't feel like a waste of time",
+      "level2_need": "To feel stimulated, curious, and part of cultural conversations",
+      "level3_desire": "To be the person in their circle who discovers things first — the cultural curator who always has a recommendation",
+      "motivational_conflict": "Wants substantive content but the algorithm keeps serving junk — surrenders to Netflix autoplay because curating feels like work",
+      "jobs_to_be_done": "When I have downtime, I want content that makes me feel something real and gives me something worth talking about the next day"
+    },
+    "pestle": {
+      "political": "I&B Ministry OTT regulations creating compliance costs but also legitimacy for serious players",
+      "economic": "India's entertainment market ₹2.1 lakh crore. Streaming ARPU still $1.5 (vs $15 in US) — 10x headroom for premium content",
+      "social": "Regional content consumption exploding: Tamil, Telugu, Kannada, Marathi all individually larger markets than most European countries",
+      "technological": "AI dubbing with lip-sync making English-language content accessible across Indian languages — expanding addressable market 5x",
+      "legal": "Intermediary guidelines requiring traceability for large OTT platforms. Content code compliance.",
+      "environmental": "Streaming carbon footprint becoming investor and consumer concern — cloud efficiency metrics increasingly reported"
+    },
+    "why_now": "JioBharat phones are bringing 200M new video consumers online by 2026 — the largest wave of new entertainment consumers in Indian history. The content for them doesn't exist yet.",
+    "ai_layers": [
+      "AI that generates personalised story variations based on viewing history — interactive narrative experiences impossible with traditional production",
+      "Real-time AI dubbing that matches lip movements in regional languages — enabling pan-India distribution of any content at near-zero cost"
+    ],
+    "market_data": {
+      "tam_b": 288,
+      "sam_b": 32,
+      "som_m": 560,
+      "growth_cagr": 9,
+      "growth_chart": [
+        {"year":"2022","value":230},{"year":"2023","value":248},{"year":"2024","value":268},
+        {"year":"2025","value":288,"projected":true},{"year":"2026","value":314,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "Netflix India", "weakness": "English-first content strategy missing regional India", "market_share_pct": 18},
+      {"name": "Hotstar", "weakness": "Cricket-dependent, weak non-sports content", "market_share_pct": 28},
+      {"name": "Amazon Prime Video", "weakness": "Discovery is broken — users can't find what to watch", "market_share_pct": 22}
+    ],
+    "positioning": "The entertainment platform where every Indian finds content made for people exactly like them",
+    "revenue_model": {
+      "primary": "Subscription (₹49-199/month) with family sharing tiers",
+      "secondary": "Advertising on free tier — regional advertisers willing to pay 3x CPM for targeted local audiences",
+      "unit_economics": "CAC ~₹400, LTV ~₹3,600, payback 4 months"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Commission 3 short films (30 min each) in ONE regional language with genuine cultural authenticity — not Bollywood translated", "timeline": "Month 1-2"},
+      {"step": 2, "action": "Distribute via YouTube free — build an audience before building a platform. 1M views validates demand before paywall", "timeline": "Month 3"},
+      {"step": 3, "action": "Launch a WhatsApp community for fans of that content before launching a subscription product", "timeline": "Month 4"}
+    ],
+    "honest_risk": "Content is capital-intensive and hit-driven. One miss on a flagship show can consume 12 months of runway. Build a content testing framework (short form → long form) before betting on expensive productions."
+  },
+
+  "real_estate": {
+    "consumer_psychology": {
+      "level1_want": "To buy / rent the right home at the right price",
+      "level2_need": "Security — a place that feels like theirs, that won't disappoint them",
+      "level3_desire": "To make a smart financial decision that their future self will thank them for — real estate as adulting done right",
+      "motivational_conflict": "This is the biggest purchase of their life but they have to trust a broker whose incentives are misaligned — anxiety and distrust block decisions for months",
+      "jobs_to_be_done": "When I'm making the biggest financial decision of my life, I want to feel informed and protected, so I don't regret it for 20 years"
+    },
+    "pestle": {
+      "political": "RERA enforcement improving but still patchy — trust gap is the product opportunity",
+      "economic": "India home prices up 15-20% in 2024. Rising rates creating affordability crunch — rent vs buy calculations shifting",
+      "social": "Work-from-home normalisation changing location decisions — tier-2 cities (Pune, Hyderabad, Ahmedabad) seeing 30% migration from tier-1",
+      "technological": "Digital property registration (e-stamping) enabling online transaction completion. VR property tours reducing need for physical visits.",
+      "legal": "SEBI SM REIT guidelines (2024) creating legal fractional real estate framework for first time in India",
+      "environmental": "Green building certifications (IGBC, LEED) becoming buyer preference in metro markets"
+    },
+    "why_now": "SEBI's SM REIT framework went live in 2024 — for the first time, fractional real estate investment is legally defined and regulated. A massive market is forming in real time.",
+    "ai_layers": [
+      "Computer vision analysis of property photos detecting defects, estimating renovation costs, and flagging red flags that human buyers miss during rushed site visits",
+      "Predictive pricing models using satellite imagery, infrastructure development, and migration data to identify undervalued micro-markets 18 months before mainstream discovery"
+    ],
+    "market_data": {
+      "tam_b": 380,
+      "sam_b": 16,
+      "som_m": 290,
+      "growth_cagr": 5,
+      "growth_chart": [
+        {"year":"2022","value":315},{"year":"2023","value":332},{"year":"2024","value":355},
+        {"year":"2025","value":380,"projected":true},{"year":"2026","value":399,"projected":true}
+      ]
+    },
+    "competitors": [
+      {"name": "NoBroker", "weakness": "Disintermediated brokers but didn't improve trust or transparency", "market_share_pct": 14},
+      {"name": "Housing.com", "weakness": "Listing platform, no transaction intelligence or protection", "market_share_pct": 18},
+      {"name": "PropertyShare", "weakness": "High minimum ticket (₹25L) limits retail participation", "market_share_pct": 6}
+    ],
+    "positioning": "The real estate platform where you never feel cheated, confused, or alone in the process",
+    "revenue_model": {
+      "primary": "Transaction fee 0.5-1% of property value on verified transactions",
+      "secondary": "Subscription for property intelligence tools (₹499/month for active buyers)",
+      "unit_economics": "CAC ~₹3,500, LTV ~₹45,000 (per transaction), payback variable"
+    },
+    "first_steps": [
+      {"step": 1, "action": "Run 30 customer interviews with recent home buyers about the worst moments in their property purchase — buy the specific insight, not the general category", "timeline": "Week 1-2"},
+      {"step": 2, "action": "Pick ONE pain point (broker trust, legal verification, or fair pricing) and solve it manually for 10 buyers — charge ₹5,000 for the service", "timeline": "Month 1"},
+      {"step": 3, "action": "Get 3 builders on board as trusted verified supply before acquiring demand — supply credibility is the foundation", "timeline": "Month 2"}
+    ],
+    "honest_risk": "Real estate transactions are high-stakes and slow. Sales cycles are 3-18 months. You need very deep pockets or a niche that transacts faster (rental, fractional, commercial). Burn rate vs sales cycle length is the make-or-break calculation."
+  }
+}

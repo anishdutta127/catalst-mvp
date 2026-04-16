@@ -1,0 +1,158 @@
+[
+  {
+    "id": "architects",
+    "name": "House of Architects",
+    "hex": "#D4A843",
+    "tagline": "You don't just build things. You build things that last.",
+    "description": "Architects see systems where others see chaos. They build infrastructure that outlives them — frameworks, institutions, platforms that become the foundation others build on top of.",
+    "strengths": ["Systems thinking", "Long-term vision", "Structural precision", "Quiet confidence"],
+    "collective_impact": "Built systems that outlasted empires. Their work still runs the world.",
+    "lineage": [
+      {
+        "name": "Leonardo da Vinci",
+        "sharedTraitLine": "Led with Vision + Craft",
+        "quantified_impact": "Designed flying machines 400 years before aviation. 13,000+ pages of notebooks still referenced in engineering today.",
+        "epithet": "The Original Systems Thinker",
+        "years_active": "1452–1519"
+      },
+      {
+        "name": "Nikola Tesla",
+        "sharedTraitLine": "Led with Vision + Analysis",
+        "quantified_impact": "His AC power system delivers electricity to 5.5 billion people every day. 300 patents across 50 countries.",
+        "epithet": "Architect of the Electric Age",
+        "years_active": "1856–1943"
+      },
+      {
+        "name": "A.R. Rahman",
+        "sharedTraitLine": "Led with Craft + Vision",
+        "quantified_impact": "Sold 300M+ albums globally. India's highest-grossing film composer. Oscar, Grammy, and BAFTA — only Indian to hold all three.",
+        "epithet": "The Sound Architect",
+        "years_active": "1967–present"
+      },
+      {
+        "name": "Jensen Huang",
+        "sharedTraitLine": "Led with Vision + Analysis",
+        "quantified_impact": "Built NVIDIA from $0 to $3.3 trillion — the world's most valuable company. His GPU architecture powers 90% of all AI training globally.",
+        "epithet": "The Architect of AI Infrastructure",
+        "years_active": "1963–present"
+      }
+    ]
+  },
+  {
+    "id": "vanguards",
+    "name": "House of Vanguards",
+    "hex": "#C41E3A",
+    "tagline": "You don't wait for permission. You don't wait at all.",
+    "description": "Vanguards move before the market is ready and create the conditions for others to follow. They lead with conviction, build tribes, and change the rules of entire industries.",
+    "strengths": ["Fearless leadership", "Magnetic influence", "Bold execution", "Market creation"],
+    "collective_impact": "Led movements that changed entire markets. Went first so the world could follow.",
+    "lineage": [
+      {
+        "name": "Sun Tzu",
+        "sharedTraitLine": "Led with Grit + Influence",
+        "quantified_impact": "The Art of War cited by 47 of Fortune 500 CEOs. Applied in military strategy across 2,500 years and 54 countries. Still in print after 2,500 years.",
+        "epithet": "The First Strategic Disruptor",
+        "years_active": "544–496 BC"
+      },
+      {
+        "name": "Nelson Mandela",
+        "sharedTraitLine": "Led with Influence + Grit",
+        "quantified_impact": "Freed 56 million people from apartheid. Served 27 years in prison without breaking. Built South Africa's democracy from prison cell to presidency.",
+        "epithet": "The Vanguard of Human Dignity",
+        "years_active": "1918–2013"
+      },
+      {
+        "name": "Rihanna",
+        "sharedTraitLine": "Led with Grit + Vision",
+        "quantified_impact": "Built $1.4 billion Fenty Beauty in 4 years. Expanded foundation range to 50 shades — forcing every major cosmetics brand to follow. 260M social followers.",
+        "epithet": "The Market Creator",
+        "years_active": "1988–present"
+      },
+      {
+        "name": "Satya Nadella",
+        "sharedTraitLine": "Led with Influence + Grit",
+        "quantified_impact": "Grew Microsoft from $300B to $3.1 trillion in 10 years. Bet the company on cloud + AI. Turned around a company everyone wrote off.",
+        "epithet": "The Vanguard of Enterprise Reinvention",
+        "years_active": "1967–present"
+      }
+    ]
+  },
+  {
+    "id": "alchemists",
+    "name": "House of Alchemists",
+    "hex": "#2853A1",
+    "tagline": "You turn the ordinary into the extraordinary. Every time.",
+    "description": "Alchemists see connections no one else sees. They take existing elements — ideas, technologies, markets — and recombine them into something the world has never experienced.",
+    "strengths": ["Creative synthesis", "Conceptual leaps", "Deep curiosity", "Transformative thinking"],
+    "collective_impact": "Turned ideas into entirely new categories. Created things that didn't exist before.",
+    "lineage": [
+      {
+        "name": "Rumi",
+        "sharedTraitLine": "Led with Vision + Empathy",
+        "quantified_impact": "His poetry translated into 23 languages. Best-selling poet in the USA in 2023 — 800 years after writing. 66,000 verses that still generate licensing revenue.",
+        "epithet": "The Alchemist of Emotion",
+        "years_active": "1207–1273"
+      },
+      {
+        "name": "Albert Einstein",
+        "sharedTraitLine": "Led with Analysis + Vision",
+        "quantified_impact": "E=mc² enables every nuclear power plant and MRI machine on earth. GPS wouldn't work without his relativity equations — a $150B industry depends on his theory.",
+        "epithet": "The Alchemist of Reality",
+        "years_active": "1879–1955"
+      },
+      {
+        "name": "Steve Jobs",
+        "sharedTraitLine": "Led with Vision + Craft",
+        "quantified_impact": "Created 3 industry-defining products (Mac, iPod, iPhone). Apple went from near-bankruptcy in 1997 to $3T in 2023. 1.5 billion active Apple devices today.",
+        "epithet": "The Alchemist of Experience",
+        "years_active": "1955–2011"
+      },
+      {
+        "name": "Sam Altman",
+        "sharedTraitLine": "Led with Vision + Analysis",
+        "quantified_impact": "Launched ChatGPT to 100 million users in 5 days — fastest product in history. OpenAI valued at $157B. Triggered the global AI race across every industry.",
+        "epithet": "The Alchemist of Intelligence",
+        "years_active": "1985–present"
+      }
+    ]
+  },
+  {
+    "id": "pathfinders",
+    "name": "House of Pathfinders",
+    "hex": "#2E8B57",
+    "tagline": "You went first. So others could know it was possible.",
+    "description": "Pathfinders explore territories that don't yet have maps. They are driven by discovery — the need to see what's over the next horizon, and the courage to go there before anyone else.",
+    "strengths": ["Pioneering spirit", "Adaptability", "Relentless curiosity", "Courage of firsts"],
+    "collective_impact": "Went first so others could follow. Proved it was possible so others could dare.",
+    "lineage": [
+      {
+        "name": "Amelia Earhart",
+        "sharedTraitLine": "Led with Freedom + Grit",
+        "quantified_impact": "First woman to fly solo across the Atlantic (3,300 km, 14 hours). Inspired 1 million+ women to enter aviation. Her legacy funded 500+ aviation scholarships.",
+        "epithet": "The Pathfinder of the Skies",
+        "years_active": "1897–1937"
+      },
+      {
+        "name": "Charles Darwin",
+        "sharedTraitLine": "Led with Analysis + Freedom",
+        "quantified_impact": "5-year solo voyage → theory that became the foundation of all biology. 170 years of evolutionary science built on his framework. Evolution cited in 500K+ academic papers.",
+        "epithet": "The Pathfinder of Origins",
+        "years_active": "1809–1882"
+      },
+      {
+        "name": "Christopher Nolan",
+        "sharedTraitLine": "Led with Vision + Craft",
+        "quantified_impact": "Directed 12 films totalling $6B in global box office. Created new narrative structures (non-linear storytelling) adopted by 40% of prestige TV since 2010.",
+        "epithet": "The Pathfinder of Narrative",
+        "years_active": "1970–present"
+      },
+      {
+        "name": "Elon Musk",
+        "sharedTraitLine": "Led with Freedom + Grit",
+        "quantified_impact": "Put reusable rockets into orbit (80% cost reduction). 6,000 Starlink satellites. 3M Tesla EVs on road. SpaceX valued at $350B. Simultaneously running 6 companies.",
+        "epithet": "The Pathfinder of Impossible",
+        "years_active": "1971–present"
+      }
+    ]
+  }
+]

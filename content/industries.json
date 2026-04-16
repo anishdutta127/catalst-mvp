@@ -3,7 +3,10 @@
     "id": "ai_ml",
     "name": "AI & Machine Learning",
     "icon": "🤖",
-    "riasec": ["I", "E"],
+    "riasec": [
+      "I",
+      "E"
+    ],
     "hookLine": "Companies using AI have seen up to 40% revenue acceleration , and we're still in the first inning.",
     "prompts": [
       {
@@ -22,16 +25,100 @@
     "stats": {
       "marketSize": "$200B global market",
       "growth": "36% CAGR",
-      "whatsHot": ["Agentic AI workflows", "Small language models for edge", "AI-native developer tools"]
+      "whatsHot": [
+        "Agentic AI workflows",
+        "Small language models for edge",
+        "AI-native developer tools"
+      ]
     },
-    "trendingIdeas": ["AI agents for enterprise workflows", "Vertical SaaS with embedded AI", "Open-source model wrappers"],
-    "hotRegions": ["US", "India", "UK"]
+    "trendingIdeas": [
+      "AI agents for enterprise workflows",
+      "Vertical SaaS with embedded AI",
+      "Open-source model wrappers"
+    ],
+    "hotRegions": [
+      "US",
+      "India",
+      "UK"
+    ],
+    "market_size_b": 200,
+    "cagr_pct": 36,
+    "trending_insight": "Agentic AI workflows are replacing SaaS point solutions",
+    "why_now": "GPT-4 class models are now API-cheap enough for solo founders to build enterprise-grade AI products",
+    "market_leaders": [
+      "OpenAI",
+      "Google DeepMind",
+      "Anthropic",
+      "Cohere"
+    ],
+    "trending_startups": [
+      "Cursor",
+      "Cognition",
+      "Imbue",
+      "Adept",
+      "Harvey AI"
+    ],
+    "trending_countries": [
+      "USA",
+      "UK",
+      "India",
+      "Israel",
+      "Canada"
+    ],
+    "tam_b": 200,
+    "sam_b": 48,
+    "som_m": 950,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 40
+      },
+      {
+        "year": "2021",
+        "value": 62
+      },
+      {
+        "year": "2022",
+        "value": 95
+      },
+      {
+        "year": "2023",
+        "value": 136
+      },
+      {
+        "year": "2024",
+        "value": 184
+      },
+      {
+        "year": "2025",
+        "value": 200,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 272,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Krutrim",
+      "Sarvam AI",
+      "Yellow.ai",
+      "Observe.AI"
+    ],
+    "ai_opportunity": "Every knowledge workflow (legal, medical, financial, engineering) can be rebuilt with LLMs at 10x speed and 90% lower cost",
+    "key_insight": "The AI infrastructure layer is commoditising — the value is in vertical application. Domain expertise + LLM = unfair advantage.",
+    "investor_sentiment": "Hottest sector in VC. 30%+ of all 2024 deals touched AI.",
+    "regulation_watch": "EU AI Act live 2025. High-risk AI systems need conformity assessment — creates compliance SaaS opportunity."
   },
   {
     "id": "health_wellness",
     "name": "Health & Wellness",
     "icon": "💚",
-    "riasec": ["S", "I"],
+    "riasec": [
+      "S",
+      "I"
+    ],
     "hookLine": "Global digital health hit $330B in 2025 , and 70% of people still can't get a same-week appointment.",
     "prompts": [
       {
@@ -50,16 +137,101 @@
     "stats": {
       "marketSize": "$330B global market",
       "growth": "18% CAGR",
-      "whatsHot": ["GLP-1 companion platforms", "Remote patient monitoring", "Mental health AI triage"]
+      "whatsHot": [
+        "GLP-1 companion platforms",
+        "Remote patient monitoring",
+        "Mental health AI triage"
+      ]
     },
-    "trendingIdeas": ["GLP-1 companion apps", "AI triage chatbots", "Remote monitoring wearables"],
-    "hotRegions": ["US", "India", "Singapore"]
+    "trendingIdeas": [
+      "GLP-1 companion apps",
+      "AI triage chatbots",
+      "Remote monitoring wearables"
+    ],
+    "hotRegions": [
+      "US",
+      "India",
+      "Singapore"
+    ],
+    "market_size_b": 330,
+    "cagr_pct": 18,
+    "trending_insight": "GLP-1 drugs (Ozempic) are reshaping preventive health — companion apps are the adjacent opportunity",
+    "why_now": "India has 77M diabetics, 250M+ with metabolic risk — digital health penetration still <5%",
+    "market_leaders": [
+      "UnitedHealth",
+      "CVS",
+      "Apollo Hospitals",
+      "Practo"
+    ],
+    "trending_startups": [
+      "Levels Health",
+      "Noom",
+      "Hims & Hers",
+      "Lark Health",
+      "Mfine"
+    ],
+    "trending_countries": [
+      "USA",
+      "India",
+      "Germany",
+      "Australia",
+      "Brazil"
+    ],
+    "tam_b": 330,
+    "sam_b": 52,
+    "som_m": 1200,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 150
+      },
+      {
+        "year": "2021",
+        "value": 178
+      },
+      {
+        "year": "2022",
+        "value": 214
+      },
+      {
+        "year": "2023",
+        "value": 258
+      },
+      {
+        "year": "2024",
+        "value": 295
+      },
+      {
+        "year": "2025",
+        "value": 330,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 389,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "HealthifyMe",
+      "Cure.fit",
+      "1mg",
+      "Pristyn Care",
+      "Niramai"
+    ],
+    "ai_opportunity": "Continuous glucose monitors + LLMs can deliver personalised nutrition advice at zero marginal cost per user",
+    "key_insight": "Prevention > Treatment. Users pay for outcomes (weight loss, sleep, energy) not for 'health tech'. Frame everything as a life upgrade.",
+    "investor_sentiment": "Post-COVID tailwind sustained. Mental health, metabolic health, and women's health are highest-growth sub-sectors.",
+    "regulation_watch": "CDSCO digital health guidelines in India. FDA SaMD pathways in US. Both creating moats for first-movers who get certified."
   },
   {
     "id": "creator_media",
     "name": "Creator & Media",
     "icon": "🎬",
-    "riasec": ["A", "E"],
+    "riasec": [
+      "A",
+      "E"
+    ],
     "hookLine": "The creator economy crossed $250B, yet the average creator earns less than $500/month. Someone fix the middle.",
     "prompts": [
       {
@@ -78,16 +250,102 @@
     "stats": {
       "marketSize": "$250B global market",
       "growth": "22% CAGR",
-      "whatsHot": ["AI video production tools", "Creator-led commerce", "Decentralized content monetization"]
+      "whatsHot": [
+        "AI video production tools",
+        "Creator-led commerce",
+        "Decentralized content monetization"
+      ]
     },
-    "trendingIdeas": ["AI-native video editors", "Creator CRM and audience analytics", "Micro-brand storefronts"],
-    "hotRegions": ["US", "Brazil", "South Korea"]
+    "trendingIdeas": [
+      "AI-native video editors",
+      "Creator CRM and audience analytics",
+      "Micro-brand storefronts"
+    ],
+    "hotRegions": [
+      "US",
+      "Brazil",
+      "South Korea"
+    ],
+    "market_size_b": 250,
+    "cagr_pct": 22,
+    "trending_insight": "The creator economy crosses $500B by 2027 — but 98% of creators earn under $500/month",
+    "why_now": "AI video generation (Sora, Kling, Runway) makes professional content production accessible to solo creators",
+    "market_leaders": [
+      "YouTube",
+      "TikTok",
+      "Substack",
+      "Patreon",
+      "Spotify"
+    ],
+    "trending_startups": [
+      "Beehiiv",
+      "Riverside.fm",
+      "Descript",
+      "ElevenLabs",
+      "HeyGen"
+    ],
+    "trending_countries": [
+      "USA",
+      "India",
+      "Nigeria",
+      "Brazil",
+      "Indonesia"
+    ],
+    "tam_b": 250,
+    "sam_b": 38,
+    "som_m": 750,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 95
+      },
+      {
+        "year": "2021",
+        "value": 120
+      },
+      {
+        "year": "2022",
+        "value": 158
+      },
+      {
+        "year": "2023",
+        "value": 194
+      },
+      {
+        "year": "2024",
+        "value": 224
+      },
+      {
+        "year": "2025",
+        "value": 250,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 305,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Kuku FM",
+      "Pocket FM",
+      "ShareChat",
+      "Josh",
+      "Moj"
+    ],
+    "ai_opportunity": "AI dubbing + lip-sync enables any Indian creator to publish in 10 languages simultaneously — unlocking Bharat tier-2/3 audiences",
+    "key_insight": "Distribution beats content quality. The winning creator tools help get MORE viewers, not make BETTER videos.",
+    "investor_sentiment": "Strong. Creator monetisation tools and AI production tools attracting Series A/B rounds.",
+    "regulation_watch": "ASCI guidelines on influencer disclosures tightening. Deepfake regulations emerging in EU and India."
   },
   {
     "id": "finance_payments",
     "name": "Finance & Payments",
     "icon": "💳",
-    "riasec": ["E", "C"],
+    "riasec": [
+      "E",
+      "C"
+    ],
     "hookLine": "Global fintech revenue will cross $1.5T by 2030 , and embedded finance is barely getting started.",
     "prompts": [
       {
@@ -106,16 +364,103 @@
     "stats": {
       "marketSize": "$340B global market",
       "growth": "14% CAGR",
-      "whatsHot": ["Embedded finance APIs", "Real-time cross-border payments", "AI-powered underwriting"]
+      "whatsHot": [
+        "Embedded finance APIs",
+        "Real-time cross-border payments",
+        "AI-powered underwriting"
+      ]
     },
-    "trendingIdeas": ["Stablecoin payment rails", "AI fraud detection", "Banking-as-a-service for vertical SaaS"],
-    "hotRegions": ["US", "UK", "Nigeria"]
+    "trendingIdeas": [
+      "Stablecoin payment rails",
+      "AI fraud detection",
+      "Banking-as-a-service for vertical SaaS"
+    ],
+    "hotRegions": [
+      "US",
+      "UK",
+      "Nigeria"
+    ],
+    "market_size_b": 340,
+    "cagr_pct": 14,
+    "trending_insight": "Embedded finance APIs are becoming the infrastructure layer — every app will have financial features by 2027",
+    "why_now": "UPI 2.0 + RBI account aggregator framework + 135M unbanked Indians gaining smartphone access creates a once-per-decade window",
+    "market_leaders": [
+      "Stripe",
+      "Razorpay",
+      "PhonePe",
+      "Paytm",
+      "Visa"
+    ],
+    "trending_startups": [
+      "Open",
+      "Cashfree",
+      "Setu",
+      "Decentro",
+      "Perfios",
+      "Jupiter"
+    ],
+    "trending_countries": [
+      "India",
+      "Nigeria",
+      "Brazil",
+      "Indonesia",
+      "Mexico"
+    ],
+    "tam_b": 340,
+    "sam_b": 45,
+    "som_m": 800,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 180
+      },
+      {
+        "year": "2021",
+        "value": 210
+      },
+      {
+        "year": "2022",
+        "value": 248
+      },
+      {
+        "year": "2023",
+        "value": 285
+      },
+      {
+        "year": "2024",
+        "value": 314
+      },
+      {
+        "year": "2025",
+        "value": 340,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 388,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "BharatPe",
+      "Slice",
+      "Fi Money",
+      "Freo",
+      "Niyo"
+    ],
+    "ai_opportunity": "LLM-powered financial advisory at ₹0 marginal cost per conversation — democratising wealth management for mass-market India",
+    "key_insight": "The most valuable fintech play in India is not payments (solved) — it's credit scoring for the informal economy using alternative data.",
+    "investor_sentiment": "Cautious post-2022 correction but B2B fintech infrastructure and lending-as-a-service remain active.",
+    "regulation_watch": "RBI digital lending guidelines. SEBI investment adviser licensing. Both creating compliance moats."
   },
   {
     "id": "education_learning",
     "name": "Education & Learning",
     "icon": "📚",
-    "riasec": ["S", "A"],
+    "riasec": [
+      "S",
+      "A"
+    ],
     "hookLine": "Global edtech is a $400B market, but 250 million kids worldwide still don't have access to basic schooling.",
     "prompts": [
       {
@@ -134,16 +479,102 @@
     "stats": {
       "marketSize": "$400B global market",
       "growth": "16% CAGR",
-      "whatsHot": ["AI tutoring agents", "Skills-based credentialing", "Cohort-based learning platforms"]
+      "whatsHot": [
+        "AI tutoring agents",
+        "Skills-based credentialing",
+        "Cohort-based learning platforms"
+      ]
     },
-    "trendingIdeas": ["AI tutoring with real-time feedback", "Micro-credentialing marketplaces", "Workforce upskilling platforms"],
-    "hotRegions": ["US", "India", "Kenya"]
+    "trendingIdeas": [
+      "AI tutoring with real-time feedback",
+      "Micro-credentialing marketplaces",
+      "Workforce upskilling platforms"
+    ],
+    "hotRegions": [
+      "US",
+      "India",
+      "Kenya"
+    ],
+    "market_size_b": 142,
+    "cagr_pct": 16,
+    "trending_insight": "Personalised AI tutors are outperforming traditional e-learning by 2x on completion rates",
+    "why_now": "Post-BYJU's collapse, trust gap creates a clean field for quality-first edtech with real outcomes",
+    "market_leaders": [
+      "Coursera",
+      "Duolingo",
+      "Khan Academy",
+      "Unacademy",
+      "upGrad"
+    ],
+    "trending_startups": [
+      "Khanmigo",
+      "Synthesis",
+      "Elsa",
+      "Speak",
+      "Practically"
+    ],
+    "trending_countries": [
+      "India",
+      "USA",
+      "China",
+      "Brazil",
+      "Nigeria"
+    ],
+    "tam_b": 142,
+    "sam_b": 28,
+    "som_m": 520,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 60
+      },
+      {
+        "year": "2021",
+        "value": 78
+      },
+      {
+        "year": "2022",
+        "value": 94
+      },
+      {
+        "year": "2023",
+        "value": 108
+      },
+      {
+        "year": "2024",
+        "value": 126
+      },
+      {
+        "year": "2025",
+        "value": 142,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 165,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Vedantu",
+      "Topper",
+      "Classplus",
+      "Teachmint",
+      "Scaler"
+    ],
+    "ai_opportunity": "AI tutors can provide real-time Socratic questioning — the teaching technique that produces 2x better retention — at zero marginal cost",
+    "key_insight": "The edtech graveyard is full of content companies. Outcome-based models (pay after placement) are the only model users trust now.",
+    "investor_sentiment": "Selective after BYJU's. B2B edtech (teacher tools, school SaaS) and outcome-linked models preferred.",
+    "regulation_watch": "AICTE regulations on online degrees. NEP 2020 implementation creating huge institutional demand for digital tools."
   },
   {
     "id": "food_agriculture",
     "name": "Food & Agriculture",
     "icon": "🌾",
-    "riasec": ["R", "E"],
+    "riasec": [
+      "R",
+      "E"
+    ],
     "hookLine": "We feed 8 billion people daily , and waste a third of it. That's a $1.2 trillion inefficiency, annually.",
     "prompts": [
       {
@@ -162,16 +593,102 @@
     "stats": {
       "marketSize": "$9T global market",
       "growth": "9% CAGR",
-      "whatsHot": ["Precision agriculture AI", "Alternative proteins at scale", "Farm-to-fork traceability platforms"]
+      "whatsHot": [
+        "Precision agriculture AI",
+        "Alternative proteins at scale",
+        "Farm-to-fork traceability platforms"
+      ]
     },
-    "trendingIdeas": ["Precision fermentation startups", "AI crop disease detection", "Dark kitchen infrastructure"],
-    "hotRegions": ["India", "Brazil", "Netherlands"]
+    "trendingIdeas": [
+      "Precision fermentation startups",
+      "AI crop disease detection",
+      "Dark kitchen infrastructure"
+    ],
+    "hotRegions": [
+      "India",
+      "Brazil",
+      "Netherlands"
+    ],
+    "market_size_b": 148,
+    "cagr_pct": 17,
+    "trending_insight": "Precision agriculture using satellite + ML is unlocking 30% yield improvement for smallholder farmers in India",
+    "why_now": "India's 140M smallholder farmers are getting smartphones for the first time — 4G penetration in rural India crossed 60% in 2024",
+    "market_leaders": [
+      "Bayer",
+      "Syngenta",
+      "Deere & Company",
+      "ITC Agri",
+      "Mahindra Agri"
+    ],
+    "trending_startups": [
+      "DeHaat",
+      "Ninjacart",
+      "Waycool",
+      "Stellapps",
+      "CropIn"
+    ],
+    "trending_countries": [
+      "India",
+      "USA",
+      "Brazil",
+      "Netherlands",
+      "Israel"
+    ],
+    "tam_b": 148,
+    "sam_b": 24,
+    "som_m": 420,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 75
+      },
+      {
+        "year": "2021",
+        "value": 88
+      },
+      {
+        "year": "2022",
+        "value": 103
+      },
+      {
+        "year": "2023",
+        "value": 120
+      },
+      {
+        "year": "2024",
+        "value": 133
+      },
+      {
+        "year": "2025",
+        "value": 148,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 173,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "DeHaat",
+      "AgroStar",
+      "BigHaat",
+      "Eruvaka",
+      "Fasal"
+    ],
+    "ai_opportunity": "Satellite imagery + weather ML can predict crop disease 2 weeks before visible symptoms — turning reactive spraying into preventive precision",
+    "key_insight": "Farmers trust other farmers, not apps. Build community-led distribution with village-level influencers (Krishi Mitras) as your sales channel.",
+    "investor_sentiment": "Patient capital required (long sales cycles). SoftBank, NABARD, and impact investors most active. Exit via strategic acquisition likely.",
+    "regulation_watch": "PM-KISAN data APIs opening. Agri-stack initiative creating digital farmer identity. Farm laws stability improving investment climate."
   },
   {
     "id": "climate_energy",
     "name": "Climate & Energy",
     "icon": "🌍",
-    "riasec": ["I", "R"],
+    "riasec": [
+      "I",
+      "R"
+    ],
     "hookLine": "Clean energy investment hit $1.8 trillion in 2024 , officially surpassing fossil fuels for the first time.",
     "prompts": [
       {
@@ -190,16 +707,102 @@
     "stats": {
       "marketSize": "$1.8T global investment",
       "growth": "12% CAGR",
-      "whatsHot": ["Grid-scale battery software", "Carbon credit marketplaces", "Industrial decarbonization SaaS"]
+      "whatsHot": [
+        "Grid-scale battery software",
+        "Carbon credit marketplaces",
+        "Industrial decarbonization SaaS"
+      ]
     },
-    "trendingIdeas": ["Virtual power plant software", "Carbon accounting for SMBs", "EV charging network optimization"],
-    "hotRegions": ["US", "Germany", "China"]
+    "trendingIdeas": [
+      "Virtual power plant software",
+      "Carbon accounting for SMBs",
+      "EV charging network optimization"
+    ],
+    "hotRegions": [
+      "US",
+      "Germany",
+      "China"
+    ],
+    "market_size_b": 180,
+    "cagr_pct": 25,
+    "trending_insight": "Carbon markets going from voluntary to mandatory — corporate carbon compliance becoming a $50B software opportunity",
+    "why_now": "India's Net Zero 2070 commitment + corporate BRSR reporting mandates create mandatory climate tech spending for every large Indian company",
+    "market_leaders": [
+      "Tesla",
+      "Vestas",
+      "CATL",
+      "ReNew Power",
+      "Greenko"
+    ],
+    "trending_startups": [
+      "Watershed",
+      "Persefoni",
+      "Pachama",
+      "Anew",
+      "CarbonChain"
+    ],
+    "trending_countries": [
+      "USA",
+      "Germany",
+      "India",
+      "UK",
+      "Australia"
+    ],
+    "tam_b": 180,
+    "sam_b": 28,
+    "som_m": 450,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 60
+      },
+      {
+        "year": "2021",
+        "value": 78
+      },
+      {
+        "year": "2022",
+        "value": 102
+      },
+      {
+        "year": "2023",
+        "value": 130
+      },
+      {
+        "year": "2024",
+        "value": 158
+      },
+      {
+        "year": "2025",
+        "value": 180,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 225,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Log9 Materials",
+      "Euler Motors",
+      "Cashify",
+      "Climes",
+      "GreenJams"
+    ],
+    "ai_opportunity": "Satellite + ML-based carbon monitoring is replacing expensive manual audits — turning carbon accounting from annual reports to real-time dashboards",
+    "key_insight": "Don't sell 'climate' — sell 'compliance', 'cost savings', and 'ESG rating'. The CFO not the CSO is the buyer.",
+    "investor_sentiment": "Strong government backing globally. IRA in US, Green Deal in EU, PM KUSUM in India all creating predictable revenue.",
+    "regulation_watch": "SEBI BRSR Core mandatory from FY25 for top 1000 listed companies. Carbon Border Adjustment Mechanism in EU from 2026."
   },
   {
     "id": "gaming_entertainment",
     "name": "Gaming & Entertainment",
     "icon": "🎮",
-    "riasec": ["A", "I"],
+    "riasec": [
+      "A",
+      "I"
+    ],
     "hookLine": "3.4 billion gamers worldwide spend more on games than movies and music combined.",
     "prompts": [
       {
@@ -218,16 +821,100 @@
     "stats": {
       "marketSize": "$220B global market",
       "growth": "10% CAGR",
-      "whatsHot": ["AI-generated game assets", "User-generated content platforms", "Cloud gaming infrastructure"]
+      "whatsHot": [
+        "AI-generated game assets",
+        "User-generated content platforms",
+        "Cloud gaming infrastructure"
+      ]
     },
-    "trendingIdeas": ["AI NPC dialogue engines", "UGC monetization platforms", "Cross-platform game backend APIs"],
-    "hotRegions": ["US", "Japan", "South Korea"]
+    "trendingIdeas": [
+      "AI NPC dialogue engines",
+      "UGC monetization platforms",
+      "Cross-platform game backend APIs"
+    ],
+    "hotRegions": [
+      "US",
+      "Japan",
+      "South Korea"
+    ],
+    "market_size_b": 200,
+    "cagr_pct": 36,
+    "trending_insight": "Agentic AI workflows are replacing SaaS point solutions",
+    "why_now": "GPT-4 class models are now API-cheap enough for solo founders to build enterprise-grade AI products",
+    "market_leaders": [
+      "OpenAI",
+      "Google DeepMind",
+      "Anthropic",
+      "Cohere"
+    ],
+    "trending_startups": [
+      "Cursor",
+      "Cognition",
+      "Imbue",
+      "Adept",
+      "Harvey AI"
+    ],
+    "trending_countries": [
+      "USA",
+      "UK",
+      "India",
+      "Israel",
+      "Canada"
+    ],
+    "tam_b": 200,
+    "sam_b": 48,
+    "som_m": 950,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 40
+      },
+      {
+        "year": "2021",
+        "value": 62
+      },
+      {
+        "year": "2022",
+        "value": 95
+      },
+      {
+        "year": "2023",
+        "value": 136
+      },
+      {
+        "year": "2024",
+        "value": 184
+      },
+      {
+        "year": "2025",
+        "value": 200,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 272,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Krutrim",
+      "Sarvam AI",
+      "Yellow.ai",
+      "Observe.AI"
+    ],
+    "ai_opportunity": "Every knowledge workflow (legal, medical, financial, engineering) can be rebuilt with LLMs at 10x speed and 90% lower cost",
+    "key_insight": "The AI infrastructure layer is commoditising — the value is in vertical application. Domain expertise + LLM = unfair advantage.",
+    "investor_sentiment": "Hottest sector in VC. 30%+ of all 2024 deals touched AI.",
+    "regulation_watch": "EU AI Act live 2025. High-risk AI systems need conformity assessment — creates compliance SaaS opportunity."
   },
   {
     "id": "fashion_beauty",
     "name": "Fashion & Beauty",
     "icon": "👗",
-    "riasec": ["A", "E"],
+    "riasec": [
+      "A",
+      "E"
+    ],
     "hookLine": "The global fashion industry is worth $1.7 trillion , and returns alone cost $800 billion a year.",
     "prompts": [
       {
@@ -246,16 +933,102 @@
     "stats": {
       "marketSize": "$1.7T global market",
       "growth": "8% CAGR",
-      "whatsHot": ["AI-powered virtual try-on", "On-demand micro-manufacturing", "Resale and circular fashion platforms"]
+      "whatsHot": [
+        "AI-powered virtual try-on",
+        "On-demand micro-manufacturing",
+        "Resale and circular fashion platforms"
+      ]
     },
-    "trendingIdeas": ["AI styling assistants", "Digital fashion and virtual wearables", "Returns reduction tech"],
-    "hotRegions": ["US", "France", "UAE"]
+    "trendingIdeas": [
+      "AI styling assistants",
+      "Digital fashion and virtual wearables",
+      "Returns reduction tech"
+    ],
+    "hotRegions": [
+      "US",
+      "France",
+      "UAE"
+    ],
+    "market_size_b": 165,
+    "cagr_pct": 10,
+    "trending_insight": "Virtual try-on adoption accelerating — IKEA, Warby Parker, L'Oreal seeing 30% higher conversion with AR experiences",
+    "why_now": "India's GenZ beauty market doubling every 3 years. Influencer commerce (from social to checkout in 3 taps) becoming primary channel.",
+    "market_leaders": [
+      "Nykaa",
+      "Myntra",
+      "Purplle",
+      "Sugar Cosmetics",
+      "Mamaearth"
+    ],
+    "trending_startups": [
+      "Dot & Key",
+      "Minimalist",
+      "The Derma Co",
+      "Pilgrim",
+      "MyGlamm"
+    ],
+    "trending_countries": [
+      "India",
+      "South Korea",
+      "USA",
+      "France",
+      "Japan"
+    ],
+    "tam_b": 165,
+    "sam_b": 20,
+    "som_m": 350,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 105
+      },
+      {
+        "year": "2021",
+        "value": 116
+      },
+      {
+        "year": "2022",
+        "value": 128
+      },
+      {
+        "year": "2023",
+        "value": 140
+      },
+      {
+        "year": "2024",
+        "value": 152
+      },
+      {
+        "year": "2025",
+        "value": 165,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 182,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Nykaa",
+      "Sugar Cosmetics",
+      "Minimalist",
+      "mCaffeine",
+      "Plum"
+    ],
+    "ai_opportunity": "AI skin analysis via selfie recommending personalised skincare routines — driving 3x repeat purchase rates vs generic recommendation engines",
+    "key_insight": "Community > catalogue. The winning beauty brand in India will be built around a content community that discovers products together.",
+    "investor_sentiment": "Strong for clean/sustainable beauty and science-backed skincare. Pure fashion getting cautious; beauty has better unit economics.",
+    "regulation_watch": "BIS quality standards for cosmetics. Microplastics regulations. 'Natural' and 'organic' claim standards being tightened by CDSCO."
   },
   {
     "id": "sports_fitness",
     "name": "Sports & Fitness",
     "icon": "⚡",
-    "riasec": ["R", "E"],
+    "riasec": [
+      "R",
+      "E"
+    ],
     "hookLine": "Global sports tech hit $40B, but 80% of gym memberships go unused after February. Someone crack retention.",
     "prompts": [
       {
@@ -274,16 +1047,102 @@
     "stats": {
       "marketSize": "$40B global market",
       "growth": "17% CAGR",
-      "whatsHot": ["Wearable-integrated coaching AI", "Sports betting analytics", "Recovery and longevity tech"]
+      "whatsHot": [
+        "Wearable-integrated coaching AI",
+        "Sports betting analytics",
+        "Recovery and longevity tech"
+      ]
     },
-    "trendingIdeas": ["Longevity-focused fitness platforms", "Youth athlete performance tracking", "AI personal training"],
-    "hotRegions": ["US", "UK", "Australia"]
+    "trendingIdeas": [
+      "Longevity-focused fitness platforms",
+      "Youth athlete performance tracking",
+      "AI personal training"
+    ],
+    "hotRegions": [
+      "US",
+      "UK",
+      "Australia"
+    ],
+    "market_size_b": 185,
+    "cagr_pct": 13,
+    "trending_insight": "India is the world's largest mobile gaming market by downloads — but monetisation is 50x lower than USA. Closing that gap is a $20B opportunity.",
+    "why_now": "JioBharat phones bringing 100M new gamers online in 2024-2026 — the next wave of Indian gamers is younger, rural, and vernacular",
+    "market_leaders": [
+      "Tencent",
+      "Sony",
+      "Microsoft",
+      "Krafton",
+      "Dream11"
+    ],
+    "trending_startups": [
+      "WinZO",
+      "Loco",
+      "Rooter",
+      "Rario",
+      "Mobile Premier League"
+    ],
+    "trending_countries": [
+      "India",
+      "USA",
+      "China",
+      "South Korea",
+      "Brazil"
+    ],
+    "tam_b": 185,
+    "sam_b": 22,
+    "som_m": 380,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 95
+      },
+      {
+        "year": "2021",
+        "value": 112
+      },
+      {
+        "year": "2022",
+        "value": 130
+      },
+      {
+        "year": "2023",
+        "value": 148
+      },
+      {
+        "year": "2024",
+        "value": 165
+      },
+      {
+        "year": "2025",
+        "value": 185,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 209,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Dream11",
+      "Games24x7",
+      "Nazara Technologies",
+      "WinZO",
+      "Loco"
+    ],
+    "ai_opportunity": "AI-generated game content (levels, characters, dialogue) can cut game development costs by 60% — enabling indie studios to compete with AAA titles",
+    "key_insight": "In India, gaming is a social activity, not a solo one. The winning platform is the one that builds multiplayer social graphs, not better graphics.",
+    "investor_sentiment": "Cautious post-fantasy sports regulation. Skill gaming vs gambling line still being drawn. Clean-room gaming and esports infrastructure getting funded.",
+    "regulation_watch": "MeitY online gaming regulations 2023. States varying in fantasy sports legality. Regulatory arbitrage window closing."
   },
   {
     "id": "community_social",
     "name": "Community & Social Impact",
     "icon": "🤝",
-    "riasec": ["S", "E"],
+    "riasec": [
+      "S",
+      "E"
+    ],
     "hookLine": "Impact investing crossed $1.1 trillion in AUM , proof that doing good and making money finally stopped being mutually exclusive.",
     "prompts": [
       {
@@ -302,16 +1161,102 @@
     "stats": {
       "marketSize": "$1.1T impact investing AUM",
       "growth": "15% CAGR",
-      "whatsHot": ["Outcome-based financing platforms", "Civic tech and govtech", "Impact measurement infrastructure"]
+      "whatsHot": [
+        "Outcome-based financing platforms",
+        "Civic tech and govtech",
+        "Impact measurement infrastructure"
+      ]
     },
-    "trendingIdeas": ["Govtech procurement platforms", "Impact verification via satellite data", "Community-owned cooperatives tech"],
-    "hotRegions": ["US", "India", "Rwanda"]
+    "trendingIdeas": [
+      "Govtech procurement platforms",
+      "Impact verification via satellite data",
+      "Community-owned cooperatives tech"
+    ],
+    "hotRegions": [
+      "US",
+      "India",
+      "Rwanda"
+    ],
+    "market_size_b": 62,
+    "cagr_pct": 15,
+    "trending_insight": "Hyper-local community platforms outperforming national social networks on engagement — people want smaller, more trusted circles",
+    "why_now": "Post-pandemic loneliness epidemic driving massive demand for belonging. India's nuclear family transition creating community vacuum in urban centres.",
+    "market_leaders": [
+      "Mighty Networks",
+      "Discord",
+      "Geneva",
+      "Meetup",
+      "Bumble BFF"
+    ],
+    "trending_startups": [
+      "Luma",
+      "Partiful",
+      "Playbook",
+      "Venice",
+      "Substack"
+    ],
+    "trending_countries": [
+      "USA",
+      "India",
+      "UK",
+      "Brazil",
+      "South Korea"
+    ],
+    "tam_b": 62,
+    "sam_b": 10,
+    "som_m": 180,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 30
+      },
+      {
+        "year": "2021",
+        "value": 36
+      },
+      {
+        "year": "2022",
+        "value": 43
+      },
+      {
+        "year": "2023",
+        "value": 50
+      },
+      {
+        "year": "2024",
+        "value": 56
+      },
+      {
+        "year": "2025",
+        "value": 62,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 71,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Clubhouse India communities",
+      "ShareChat",
+      "Lokal",
+      "Vokal",
+      "Kutumb"
+    ],
+    "ai_opportunity": "AI community moderators that match members with shared goals and surface the right conversations at the right time — increasing community activation by 4x",
+    "key_insight": "Communities fail when they're content platforms. They win when they help members achieve outcomes. Design for transformation, not engagement.",
+    "investor_sentiment": "Impact investors and community-led VC funds most active. Hard to monetise early but winner-takes-most dynamics once scale achieved.",
+    "regulation_watch": "IT Rules 2021 intermediary guidelines applying to large community platforms. User data protection under DPDP Act."
   },
   {
     "id": "real_estate_home",
     "name": "Real Estate & Home",
     "icon": "🏠",
-    "riasec": ["R", "C"],
+    "riasec": [
+      "R",
+      "C"
+    ],
     "hookLine": "Global real estate is worth $380 trillion , the single largest asset class on the planet, and still mostly run on handshakes.",
     "prompts": [
       {
@@ -330,16 +1275,102 @@
     "stats": {
       "marketSize": "$380T global asset value",
       "growth": "5% CAGR",
-      "whatsHot": ["AI property valuation models", "Fractional real estate investing", "Smart building operating systems"]
+      "whatsHot": [
+        "AI property valuation models",
+        "Fractional real estate investing",
+        "Smart building operating systems"
+      ]
     },
-    "trendingIdeas": ["Fractional ownership platforms", "AI-powered property management", "Construction tech for modular housing"],
-    "hotRegions": ["US", "UAE", "India"]
+    "trendingIdeas": [
+      "Fractional ownership platforms",
+      "AI-powered property management",
+      "Construction tech for modular housing"
+    ],
+    "hotRegions": [
+      "US",
+      "UAE",
+      "India"
+    ],
+    "market_size_b": 380,
+    "cagr_pct": 5,
+    "trending_insight": "Fractional ownership platforms are democratising real estate investment — minimum ticket dropping from ₹1Cr to ₹10K",
+    "why_now": "SEBI's SM REIT regulations (2024) create a legal framework for fractional real estate — India's first compliant fractional real estate market forming NOW",
+    "market_leaders": [
+      "DLF",
+      "Godrej Properties",
+      "Magicbricks",
+      "NoBroker",
+      "Square Yards"
+    ],
+    "trending_startups": [
+      "hBits",
+      "Strata",
+      "Pyse",
+      "PropertyShare",
+      "Alt DRX"
+    ],
+    "trending_countries": [
+      "India",
+      "USA",
+      "UAE",
+      "UK",
+      "Singapore"
+    ],
+    "tam_b": 380,
+    "sam_b": 18,
+    "som_m": 320,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 280
+      },
+      {
+        "year": "2021",
+        "value": 305
+      },
+      {
+        "year": "2022",
+        "value": 328
+      },
+      {
+        "year": "2023",
+        "value": 348
+      },
+      {
+        "year": "2024",
+        "value": 365
+      },
+      {
+        "year": "2025",
+        "value": 380,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 399,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "NoBroker",
+      "Housing.com",
+      "PropTiger",
+      "Square Yards",
+      "Brick&Bolt"
+    ],
+    "ai_opportunity": "Computer vision-based property valuation and virtual staging — cutting transaction costs by removing 50% of physical viewings",
+    "key_insight": "Trust is the product in real estate. The winning startup will be the one that reduces information asymmetry between buyer, broker, and developer.",
+    "investor_sentiment": "Selective. PropTech 2.0 focusing on transaction infrastructure and fractional ownership rather than listing aggregators.",
+    "regulation_watch": "RERA enforcement improving. SEBI SM REIT guidelines opening fractional market. Both creating compliance software demand."
   },
   {
     "id": "logistics_mobility",
     "name": "Logistics & Mobility",
     "icon": "🚀",
-    "riasec": ["R", "C"],
+    "riasec": [
+      "R",
+      "C"
+    ],
     "hookLine": "Global logistics is an $11 trillion industry where 40% of trucks still drive empty on return trips.",
     "prompts": [
       {
@@ -358,16 +1389,102 @@
     "stats": {
       "marketSize": "$11T global market",
       "growth": "7% CAGR",
-      "whatsHot": ["Autonomous last-mile delivery", "AI demand forecasting", "Digital freight brokerage"]
+      "whatsHot": [
+        "Autonomous last-mile delivery",
+        "AI demand forecasting",
+        "Digital freight brokerage"
+      ]
     },
-    "trendingIdeas": ["Autonomous trucking corridors", "Drone delivery networks", "Real-time supply chain visibility"],
-    "hotRegions": ["US", "China", "Germany"]
+    "trendingIdeas": [
+      "Autonomous trucking corridors",
+      "Drone delivery networks",
+      "Real-time supply chain visibility"
+    ],
+    "hotRegions": [
+      "US",
+      "China",
+      "Germany"
+    ],
+    "market_size_b": 215,
+    "cagr_pct": 10,
+    "trending_insight": "India's logistics sector digitising at 3x global average — driven by e-commerce volume and GST data transparency",
+    "why_now": "PM Gati Shakti + National Logistics Policy targeting 14% of GDP logistics cost down to 8% — massive government push creating private sector opportunity",
+    "market_leaders": [
+      "Blue Dart",
+      "Delhivery",
+      "Ecom Express",
+      "XpressBees",
+      "Shadowfax"
+    ],
+    "trending_startups": [
+      "Porter",
+      "BlackBuck",
+      "Freight Tiger",
+      "Locus",
+      "Piaggio Vehicles"
+    ],
+    "trending_countries": [
+      "India",
+      "China",
+      "USA",
+      "Germany",
+      "Brazil"
+    ],
+    "tam_b": 215,
+    "sam_b": 32,
+    "som_m": 580,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 140
+      },
+      {
+        "year": "2021",
+        "value": 158
+      },
+      {
+        "year": "2022",
+        "value": 174
+      },
+      {
+        "year": "2023",
+        "value": 190
+      },
+      {
+        "year": "2024",
+        "value": 204
+      },
+      {
+        "year": "2025",
+        "value": 215,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 237,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Delhivery",
+      "Rivigo",
+      "Shyplite",
+      "Shiprocket",
+      "WayCool"
+    ],
+    "ai_opportunity": "Route optimisation AI can cut last-mile delivery costs by 22% — in a sector where margins are 2-4%, this is transformational",
+    "key_insight": "The last-mile problem in India isn't technology — it's address quality and trust. Solve address standardisation and you unlock the market.",
+    "investor_sentiment": "Selective post-funding winter. EV logistics fleets and cold chain getting disproportionate investor interest.",
+    "regulation_watch": "Drone delivery regulations DGCA finalising. EV subsidies creating operational advantage for early fleet adopters."
   },
   {
     "id": "legal_compliance",
     "name": "Legal & Compliance",
     "icon": "⚖️",
-    "riasec": ["I", "C"],
+    "riasec": [
+      "I",
+      "C"
+    ],
     "hookLine": "Global legal services crossed $1 trillion , and lawyers still bill $500/hour to review documents a machine could parse in seconds.",
     "prompts": [
       {
@@ -386,16 +1503,102 @@
     "stats": {
       "marketSize": "$1T global market",
       "growth": "9% CAGR",
-      "whatsHot": ["AI contract review and drafting", "Regulatory change management", "Compliance automation platforms"]
+      "whatsHot": [
+        "AI contract review and drafting",
+        "Regulatory change management",
+        "Compliance automation platforms"
+      ]
     },
-    "trendingIdeas": ["AI-powered due diligence", "Regulatory intelligence feeds", "Self-service legal for SMBs"],
-    "hotRegions": ["US", "UK", "Singapore"]
+    "trendingIdeas": [
+      "AI-powered due diligence",
+      "Regulatory intelligence feeds",
+      "Self-service legal for SMBs"
+    ],
+    "hotRegions": [
+      "US",
+      "UK",
+      "Singapore"
+    ],
+    "market_size_b": 100,
+    "cagr_pct": 9,
+    "trending_insight": "LegalTech is 10 years behind FinTech — the disruption wave is just beginning, starting with AI contract review",
+    "why_now": "GPT-4 class models pass bar exams in the 90th percentile — legal AI is no longer theoretical. Harvey AI raised $100M in 2024.",
+    "market_leaders": [
+      "LexisNexis",
+      "Thomson Reuters",
+      "Kira Systems",
+      "Relativity",
+      "Casetext"
+    ],
+    "trending_startups": [
+      "Harvey",
+      "Ironclad",
+      "Spellbook",
+      "Juro",
+      "Leya"
+    ],
+    "trending_countries": [
+      "USA",
+      "UK",
+      "India",
+      "Australia",
+      "Singapore"
+    ],
+    "tam_b": 100,
+    "sam_b": 12,
+    "som_m": 220,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 62
+      },
+      {
+        "year": "2021",
+        "value": 70
+      },
+      {
+        "year": "2022",
+        "value": 78
+      },
+      {
+        "year": "2023",
+        "value": 86
+      },
+      {
+        "year": "2024",
+        "value": 93
+      },
+      {
+        "year": "2025",
+        "value": 100,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 109,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Legistify",
+      "Tookitaki",
+      "Indiafilings",
+      "Leegality",
+      "SignDesk"
+    ],
+    "ai_opportunity": "AI contract review cuts due diligence time from 40 hours to 2 hours per deal — direct ROI measurable in legal billing rate",
+    "key_insight": "Lawyers are the most change-resistant profession. Sell to General Counsel who are under cost pressure from boards — not to partners.",
+    "investor_sentiment": "Early but accelerating. $2.8B invested in LegalTech globally in 2024. India market still largely untapped.",
+    "regulation_watch": "Bar Council rules on who can provide legal advice creating compliance complexity. AI Act implications for legal AI in EU."
   },
   {
     "id": "hardware_robotics",
     "name": "Hardware & Robotics",
     "icon": "🔧",
-    "riasec": ["R", "I"],
+    "riasec": [
+      "R",
+      "I"
+    ],
     "hookLine": "The robotics market will hit $275B by 2030 , because software finally met the physical world and realized it needs hands.",
     "prompts": [
       {
@@ -414,16 +1617,102 @@
     "stats": {
       "marketSize": "$275B global market",
       "growth": "25% CAGR",
-      "whatsHot": ["Humanoid robots for warehouses", "Surgical robotics", "Edge AI chips for embedded systems"]
+      "whatsHot": [
+        "Humanoid robots for warehouses",
+        "Surgical robotics",
+        "Edge AI chips for embedded systems"
+      ]
     },
-    "trendingIdeas": ["Humanoid general-purpose robots", "Collaborative cobots for SMB factories", "RISC-V custom silicon"],
-    "hotRegions": ["US", "China", "Japan"]
+    "trendingIdeas": [
+      "Humanoid general-purpose robots",
+      "Collaborative cobots for SMB factories",
+      "RISC-V custom silicon"
+    ],
+    "hotRegions": [
+      "US",
+      "China",
+      "Japan"
+    ],
+    "market_size_b": 275,
+    "cagr_pct": 25,
+    "trending_insight": "Humanoid robots entering commercial deployment — Figure AI, Tesla Optimus shipping units in 2025",
+    "why_now": "India's PLI scheme for electronics manufacturing creating domestic hardware ecosystem for the first time — component supply chains forming",
+    "market_leaders": [
+      "Boston Dynamics",
+      "Fanuc",
+      "ABB",
+      "Siemens",
+      "Tesla"
+    ],
+    "trending_startups": [
+      "Figure AI",
+      "1X Technologies",
+      "Apptronik",
+      "Agility Robotics",
+      "Navi"
+    ],
+    "trending_countries": [
+      "USA",
+      "Japan",
+      "Germany",
+      "South Korea",
+      "India"
+    ],
+    "tam_b": 275,
+    "sam_b": 42,
+    "som_m": 620,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 90
+      },
+      {
+        "year": "2021",
+        "value": 118
+      },
+      {
+        "year": "2022",
+        "value": 152
+      },
+      {
+        "year": "2023",
+        "value": 192
+      },
+      {
+        "year": "2024",
+        "value": 232
+      },
+      {
+        "year": "2025",
+        "value": 275,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 344,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Ati Motors",
+      "Systemantics",
+      "Asimov Robotics",
+      "Hi-Tech Robotic Systemz",
+      "Sastra Robotics"
+    ],
+    "ai_opportunity": "Foundation models for robot control (Google RT-2, Tesla FSD) making general-purpose robots commercially viable — 2025 is the inflection point",
+    "key_insight": "Don't build the robot — build the software that makes any robot 10x more useful. The robotics OS layer is the highest-margin play.",
+    "investor_sentiment": "Extremely hot in 2024-2025. Deeptech funds and strategic investors (Samsung, Hyundai) deploying aggressively.",
+    "regulation_watch": "Industrial robots: existing safety standards (ISO 10218). Humanoid robots in public spaces: no framework yet — first mover sets the standard."
   },
   {
     "id": "pet_care",
     "name": "Pet Care & Animal Tech",
     "icon": "🐾",
-    "riasec": ["S", "R"],
+    "riasec": [
+      "S",
+      "R"
+    ],
     "hookLine": "Pet parents spend more on their pets than on themselves.",
     "prompts": [
       {
@@ -442,16 +1731,102 @@
     "stats": {
       "marketSize": "$320B global market",
       "growth": "7% CAGR",
-      "whatsHot": ["Pet telehealth platforms", "AI-powered pet health diagnostics", "Premium D2C pet nutrition"]
+      "whatsHot": [
+        "Pet telehealth platforms",
+        "AI-powered pet health diagnostics",
+        "Premium D2C pet nutrition"
+      ]
     },
-    "trendingIdeas": ["Pet insurance tech", "GPS and health wearables for pets", "Fresh-food subscription services"],
-    "hotRegions": ["US", "UK", "China"]
+    "trendingIdeas": [
+      "Pet insurance tech",
+      "GPS and health wearables for pets",
+      "Fresh-food subscription services"
+    ],
+    "hotRegions": [
+      "US",
+      "UK",
+      "China"
+    ],
+    "market_size_b": 22,
+    "cagr_pct": 16,
+    "trending_insight": "Pet humanisation trend: Indian urban millennials treating pets as family members, spending 10x what their parents did",
+    "why_now": "India's pet industry crossing ₹20,000 Cr in 2025. Urban pet ownership surged 25% post-COVID. Premium vet care demand outpacing supply 5:1.",
+    "market_leaders": [
+      "Mars Petcare",
+      "Nestle Purina",
+      "PetSmart",
+      "Heads Up For Tails",
+      "Supertails"
+    ],
+    "trending_startups": [
+      "Supertails",
+      "Zigly",
+      "PetKonnect",
+      "Pawfectly",
+      "Sploot"
+    ],
+    "trending_countries": [
+      "India",
+      "USA",
+      "Brazil",
+      "Germany",
+      "Australia"
+    ],
+    "tam_b": 22,
+    "sam_b": 4,
+    "som_m": 80,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 10
+      },
+      {
+        "year": "2021",
+        "value": 12
+      },
+      {
+        "year": "2022",
+        "value": 14
+      },
+      {
+        "year": "2023",
+        "value": 17
+      },
+      {
+        "year": "2024",
+        "value": 19
+      },
+      {
+        "year": "2025",
+        "value": 22,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 26,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Heads Up For Tails",
+      "Supertails",
+      "Zigly",
+      "Mr n Mrs Pet",
+      "Dogspot"
+    ],
+    "ai_opportunity": "AI vet triage that assesses symptoms via photo/video and recommends home care vs emergency visit — reducing unnecessary ₹3000 vet visits by 40%",
+    "key_insight": "Pet parents are the most emotionally driven buyers. Anxiety sells. Lead with peace of mind and safety, not price.",
+    "investor_sentiment": "Niche but growing. Consumer investors and D2C specialists most active. Subscription recurring revenue models preferred.",
+    "regulation_watch": "PCA (Prevention of Cruelty to Animals) Act update pending. Online pet sales regulation being drafted."
   },
   {
     "id": "spirituality",
     "name": "Spirituality & Mindfulness",
     "icon": "🧘",
-    "riasec": ["S", "A"],
+    "riasec": [
+      "S",
+      "A"
+    ],
     "hookLine": "The meditation app market alone crossed $5B. The soul economy is real.",
     "prompts": [
       {
@@ -470,16 +1845,31 @@
     "stats": {
       "marketSize": "$6.3T global wellness market",
       "growth": "10% CAGR",
-      "whatsHot": ["AI-guided breathwork and meditation", "Corporate burnout prevention platforms", "Psychedelic-assisted therapy tech"]
+      "whatsHot": [
+        "AI-guided breathwork and meditation",
+        "Corporate burnout prevention platforms",
+        "Psychedelic-assisted therapy tech"
+      ]
     },
-    "trendingIdeas": ["Psychedelic therapy clinical platforms", "AI spiritual coaching", "Retreat and experience marketplaces"],
-    "hotRegions": ["US", "India", "Netherlands"]
+    "trendingIdeas": [
+      "Psychedelic therapy clinical platforms",
+      "AI spiritual coaching",
+      "Retreat and experience marketplaces"
+    ],
+    "hotRegions": [
+      "US",
+      "India",
+      "Netherlands"
+    ]
   },
   {
     "id": "space_tech",
     "name": "Space Tech & Aerospace",
     "icon": "🚀",
-    "riasec": ["I", "R"],
+    "riasec": [
+      "I",
+      "R"
+    ],
     "hookLine": "Private space industry hit $470B. The new frontier is hiring.",
     "prompts": [
       {
@@ -498,16 +1888,31 @@
     "stats": {
       "marketSize": "$470B global market",
       "growth": "9% CAGR",
-      "whatsHot": ["Satellite data analytics", "Space debris management", "In-orbit servicing and manufacturing"]
+      "whatsHot": [
+        "Satellite data analytics",
+        "Space debris management",
+        "In-orbit servicing and manufacturing"
+      ]
     },
-    "trendingIdeas": ["Smallsat constellation operators", "Earth observation data platforms", "Space-as-a-service infrastructure"],
-    "hotRegions": ["US", "India", "Luxembourg"]
+    "trendingIdeas": [
+      "Smallsat constellation operators",
+      "Earth observation data platforms",
+      "Space-as-a-service infrastructure"
+    ],
+    "hotRegions": [
+      "US",
+      "India",
+      "Luxembourg"
+    ]
   },
   {
     "id": "cybersecurity",
     "name": "Cybersecurity",
     "icon": "🔒",
-    "riasec": ["I", "C"],
+    "riasec": [
+      "I",
+      "C"
+    ],
     "hookLine": "Cybercrime costs $10T per year. Defence is the growth story.",
     "prompts": [
       {
@@ -526,16 +1931,102 @@
     "stats": {
       "marketSize": "$200B global market",
       "growth": "12% CAGR",
-      "whatsHot": ["AI-powered threat detection", "Identity and access management", "Cloud security posture management"]
+      "whatsHot": [
+        "AI-powered threat detection",
+        "Identity and access management",
+        "Cloud security posture management"
+      ]
     },
-    "trendingIdeas": ["AI SOC automation", "Supply chain security platforms", "Post-quantum cryptography readiness"],
-    "hotRegions": ["US", "Israel", "UK"]
+    "trendingIdeas": [
+      "AI SOC automation",
+      "Supply chain security platforms",
+      "Post-quantum cryptography readiness"
+    ],
+    "hotRegions": [
+      "US",
+      "Israel",
+      "UK"
+    ],
+    "market_size_b": 175,
+    "cagr_pct": 14,
+    "trending_insight": "AI-powered attacks are outpacing traditional security tools — the response is AI-native defence platforms",
+    "why_now": "CERT-In compliance mandates + RBI cybersecurity guidelines creating mandatory security spending across all regulated sectors in India",
+    "market_leaders": [
+      "CrowdStrike",
+      "Palo Alto Networks",
+      "Zscaler",
+      "SentinelOne",
+      "Microsoft Security"
+    ],
+    "trending_startups": [
+      "Wiz",
+      "Orca Security",
+      "Securonix",
+      "Telos",
+      "Darktrace"
+    ],
+    "trending_countries": [
+      "USA",
+      "Israel",
+      "UK",
+      "India",
+      "Singapore"
+    ],
+    "tam_b": 175,
+    "sam_b": 28,
+    "som_m": 520,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 95
+      },
+      {
+        "year": "2021",
+        "value": 110
+      },
+      {
+        "year": "2022",
+        "value": 128
+      },
+      {
+        "year": "2023",
+        "value": 146
+      },
+      {
+        "year": "2024",
+        "value": 160
+      },
+      {
+        "year": "2025",
+        "value": 175,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 200,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "InstaSafe",
+      "Sequretek",
+      "Arrka",
+      "Lucideus",
+      "TAC Security"
+    ],
+    "ai_opportunity": "LLM-powered threat intelligence that translates security alerts into plain English for non-technical CEOs — making security decisions 10x faster",
+    "key_insight": "Don't sell fear — sell insurance. Frame security as business continuity, not IT hygiene. The CFO, not CTO, approves the budget.",
+    "investor_sentiment": "Consistent strong investment. Every major breach creates a wave of security spend. AI-native security getting premium valuations.",
+    "regulation_watch": "CERT-In 6-hour incident reporting mandate. DPDP Act breach notification. SEBI cybersecurity circular for market infrastructure."
   },
   {
     "id": "dating",
     "name": "Dating & Relationships",
     "icon": "💕",
-    "riasec": ["S", "E"],
+    "riasec": [
+      "S",
+      "E"
+    ],
     "hookLine": "Dating app revenue topped $6B but satisfaction is at an all-time low.",
     "prompts": [
       {
@@ -554,16 +2045,31 @@
     "stats": {
       "marketSize": "$12B global market",
       "growth": "8% CAGR",
-      "whatsHot": ["AI matchmaking with personality modeling", "Video-first and voice-first dating", "Adult friendship and platonic connection apps"]
+      "whatsHot": [
+        "AI matchmaking with personality modeling",
+        "Video-first and voice-first dating",
+        "Adult friendship and platonic connection apps"
+      ]
     },
-    "trendingIdeas": ["AI-powered compatibility matching", "Relationship coaching platforms", "Niche community-first dating"],
-    "hotRegions": ["US", "India", "Japan"]
+    "trendingIdeas": [
+      "AI-powered compatibility matching",
+      "Relationship coaching platforms",
+      "Niche community-first dating"
+    ],
+    "hotRegions": [
+      "US",
+      "India",
+      "Japan"
+    ]
   },
   {
     "id": "travel",
     "name": "Travel & Hospitality",
     "icon": "✈️",
-    "riasec": ["E", "A"],
+    "riasec": [
+      "E",
+      "A"
+    ],
     "hookLine": "Travel tech recovered past pre-pandemic levels and is still accelerating.",
     "prompts": [
       {
@@ -582,16 +2088,102 @@
     "stats": {
       "marketSize": "$9.5T global market",
       "growth": "11% CAGR",
-      "whatsHot": ["AI trip planning assistants", "Experience-first booking platforms", "Sustainable travel certification"]
+      "whatsHot": [
+        "AI trip planning assistants",
+        "Experience-first booking platforms",
+        "Sustainable travel certification"
+      ]
     },
-    "trendingIdeas": ["AI concierge and itinerary planners", "Digital nomad infrastructure", "Experiential travel marketplaces"],
-    "hotRegions": ["US", "UAE", "Thailand"]
+    "trendingIdeas": [
+      "AI concierge and itinerary planners",
+      "Digital nomad infrastructure",
+      "Experiential travel marketplaces"
+    ],
+    "hotRegions": [
+      "US",
+      "UAE",
+      "Thailand"
+    ],
+    "market_size_b": 195,
+    "cagr_pct": 12,
+    "trending_insight": "Experiential travel overtaking leisure travel — Gen Z spending 3x more on 'experiences' than previous generations",
+    "why_now": "Post-COVID travel revenge spending has sustained 3 years. India's outbound travel crossing 30M trips/year. Domestic tourism at record highs.",
+    "market_leaders": [
+      "MakeMyTrip",
+      "Booking.com",
+      "Airbnb",
+      "Marriott",
+      "OYO"
+    ],
+    "trending_startups": [
+      "Zostel",
+      "StayVista",
+      "SaffronStays",
+      "Tripoto",
+      "Roam"
+    ],
+    "trending_countries": [
+      "India",
+      "UAE",
+      "Thailand",
+      "Portugal",
+      "Japan"
+    ],
+    "tam_b": 195,
+    "sam_b": 28,
+    "som_m": 490,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 80
+      },
+      {
+        "year": "2021",
+        "value": 95
+      },
+      {
+        "year": "2022",
+        "value": 130
+      },
+      {
+        "year": "2023",
+        "value": 158
+      },
+      {
+        "year": "2024",
+        "value": 176
+      },
+      {
+        "year": "2025",
+        "value": 195,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 218,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "OYO",
+      "StayVista",
+      "Zostel",
+      "treebo",
+      "FabHotels"
+    ],
+    "ai_opportunity": "AI trip planners that personalise 7-day itineraries in 60 seconds from a 3-message conversation — replacing 4 hours of Google search",
+    "key_insight": "The hidden opportunity is travel content — the $8B spent on travel advertising is inefficient. AI-powered personalised travel content is the next wave.",
+    "investor_sentiment": "Recovering strongly. Alternative accommodation, experience tourism, and travel tech infrastructure getting funded.",
+    "regulation_watch": "ONDC travel launch bringing new distribution models. Visa digitalisation programs opening new destination markets."
   },
   {
     "id": "senior_care",
     "name": "Senior Care & Aging",
     "icon": "👴",
-    "riasec": ["S", "R"],
+    "riasec": [
+      "S",
+      "R"
+    ],
     "hookLine": "10,000 people turn 65 every day in the US alone.",
     "prompts": [
       {
@@ -610,16 +2202,31 @@
     "stats": {
       "marketSize": "$1.2T global market",
       "growth": "8% CAGR",
-      "whatsHot": ["Aging-in-place smart home tech", "Caregiver coordination platforms", "AI fall detection and health monitoring"]
+      "whatsHot": [
+        "Aging-in-place smart home tech",
+        "Caregiver coordination platforms",
+        "AI fall detection and health monitoring"
+      ]
     },
-    "trendingIdeas": ["Companion robots for elderly", "Caregiver marketplace platforms", "Cognitive health monitoring AI"],
-    "hotRegions": ["US", "Japan", "Germany"]
+    "trendingIdeas": [
+      "Companion robots for elderly",
+      "Caregiver marketplace platforms",
+      "Cognitive health monitoring AI"
+    ],
+    "hotRegions": [
+      "US",
+      "Japan",
+      "Germany"
+    ]
   },
   {
     "id": "parenting",
     "name": "Parenting & Family",
     "icon": "👶",
-    "riasec": ["S", "E"],
+    "riasec": [
+      "S",
+      "E"
+    ],
     "hookLine": "Parents spend $18K per year per child. Most solutions are terrible.",
     "prompts": [
       {
@@ -638,16 +2245,31 @@
     "stats": {
       "marketSize": "$26B global parenting app market",
       "growth": "9% CAGR",
-      "whatsHot": ["AI-powered child development tracking", "Childcare marketplace platforms", "Family finance and planning tools"]
+      "whatsHot": [
+        "AI-powered child development tracking",
+        "Childcare marketplace platforms",
+        "Family finance and planning tools"
+      ]
     },
-    "trendingIdeas": ["AI developmental milestone tracking", "Childcare matching platforms", "Co-parenting coordination tools"],
-    "hotRegions": ["US", "India", "Australia"]
+    "trendingIdeas": [
+      "AI developmental milestone tracking",
+      "Childcare matching platforms",
+      "Co-parenting coordination tools"
+    ],
+    "hotRegions": [
+      "US",
+      "India",
+      "Australia"
+    ]
   },
   {
     "id": "cannabis",
     "name": "Cannabis & Alt Wellness",
     "icon": "🌿",
-    "riasec": ["R", "E"],
+    "riasec": [
+      "R",
+      "E"
+    ],
     "hookLine": "Legal cannabis projected $70B+ by 2028.",
     "prompts": [
       {
@@ -666,16 +2288,31 @@
     "stats": {
       "marketSize": "$40B legal global market",
       "growth": "14% CAGR",
-      "whatsHot": ["Seed-to-sale compliance platforms", "Cannabis delivery and logistics", "Minor cannabinoid research and products"]
+      "whatsHot": [
+        "Seed-to-sale compliance platforms",
+        "Cannabis delivery and logistics",
+        "Minor cannabinoid research and products"
+      ]
     },
-    "trendingIdeas": ["Cannabis compliance automation", "THC beverage brands", "Psychedelic-adjacent wellness"],
-    "hotRegions": ["US", "Canada", "Germany"]
+    "trendingIdeas": [
+      "Cannabis compliance automation",
+      "THC beverage brands",
+      "Psychedelic-adjacent wellness"
+    ],
+    "hotRegions": [
+      "US",
+      "Canada",
+      "Germany"
+    ]
   },
   {
     "id": "web3",
     "name": "Web3 & Blockchain",
     "icon": "⛓️",
-    "riasec": ["I", "E"],
+    "riasec": [
+      "I",
+      "E"
+    ],
     "hookLine": "Beyond crypto. Infrastructure, identity, ownership.",
     "prompts": [
       {
@@ -694,9 +2331,470 @@
     "stats": {
       "marketSize": "$70B blockchain market",
       "growth": "56% CAGR",
-      "whatsHot": ["Stablecoin payment infrastructure", "Decentralized identity (DID)", "Real-world asset tokenization"]
+      "whatsHot": [
+        "Stablecoin payment infrastructure",
+        "Decentralized identity (DID)",
+        "Real-world asset tokenization"
+      ]
     },
-    "trendingIdeas": ["Real-world asset tokenization", "Decentralized identity protocols", "Stablecoin-native fintech"],
-    "hotRegions": ["US", "Singapore", "UAE"]
+    "trendingIdeas": [
+      "Real-world asset tokenization",
+      "Decentralized identity protocols",
+      "Stablecoin-native fintech"
+    ],
+    "hotRegions": [
+      "US",
+      "Singapore",
+      "UAE"
+    ],
+    "market_size_b": 200,
+    "cagr_pct": 36,
+    "trending_insight": "Agentic AI workflows are replacing SaaS point solutions",
+    "why_now": "GPT-4 class models are now API-cheap enough for solo founders to build enterprise-grade AI products",
+    "market_leaders": [
+      "OpenAI",
+      "Google DeepMind",
+      "Anthropic",
+      "Cohere"
+    ],
+    "trending_startups": [
+      "Cursor",
+      "Cognition",
+      "Imbue",
+      "Adept",
+      "Harvey AI"
+    ],
+    "trending_countries": [
+      "USA",
+      "UK",
+      "India",
+      "Israel",
+      "Canada"
+    ],
+    "tam_b": 200,
+    "sam_b": 48,
+    "som_m": 950,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 40
+      },
+      {
+        "year": "2021",
+        "value": 62
+      },
+      {
+        "year": "2022",
+        "value": 95
+      },
+      {
+        "year": "2023",
+        "value": 136
+      },
+      {
+        "year": "2024",
+        "value": 184
+      },
+      {
+        "year": "2025",
+        "value": 200,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 272,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Krutrim",
+      "Sarvam AI",
+      "Yellow.ai",
+      "Observe.AI"
+    ],
+    "ai_opportunity": "Every knowledge workflow (legal, medical, financial, engineering) can be rebuilt with LLMs at 10x speed and 90% lower cost",
+    "key_insight": "The AI infrastructure layer is commoditising — the value is in vertical application. Domain expertise + LLM = unfair advantage.",
+    "investor_sentiment": "Hottest sector in VC. 30%+ of all 2024 deals touched AI.",
+    "regulation_watch": "EU AI Act live 2025. High-risk AI systems need conformity assessment — creates compliance SaaS opportunity."
+  },
+  {
+    "id": "saas_productivity",
+    "name": "SaaS & Productivity",
+    "emoji": "⚙️",
+    "market_size_b": 310,
+    "cagr_pct": 19,
+    "trending_insight": "AI-native SaaS is replacing legacy tools at 10x the speed of previous SaaS waves",
+    "why_now": "Every Fortune 500 tool (CRM, ERP, HRMS) has a 10-year-old codebase that can't natively integrate LLMs — massive rip-and-replace cycle starting",
+    "market_leaders": [
+      "Salesforce",
+      "Microsoft",
+      "Workday",
+      "ServiceNow",
+      "Notion"
+    ],
+    "trending_startups": [
+      "Linear",
+      "Retool",
+      "Airtable",
+      "Loom",
+      "Granola"
+    ],
+    "trending_countries": [
+      "USA",
+      "India",
+      "UK",
+      "Germany",
+      "Canada"
+    ],
+    "tam_b": 310,
+    "sam_b": 62,
+    "som_m": 1400,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 140
+      },
+      {
+        "year": "2021",
+        "value": 175
+      },
+      {
+        "year": "2022",
+        "value": 214
+      },
+      {
+        "year": "2023",
+        "value": 252
+      },
+      {
+        "year": "2024",
+        "value": 282
+      },
+      {
+        "year": "2025",
+        "value": 310,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 369,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Freshworks",
+      "Zoho",
+      "Chargebee",
+      "Postman",
+      "Hasura"
+    ],
+    "ai_opportunity": "Vertical AI agents that replace entire job functions (SDR, analyst, paralegal) — sold as SaaS but delivering 10x the ROI of traditional software",
+    "key_insight": "The best SaaS founders are those who spent 5+ years as power users of the old tool they're replacing. Insider knowledge beats outside analysis.",
+    "investor_sentiment": "Strong. AI SaaS companies reaching $1M ARR in months not years. Multi-stage investors moving faster.",
+    "regulation_watch": "SOC2 compliance becoming table stakes even for early-stage. GDPR enforcement in EU. Build privacy-first from day one."
+  },
+  {
+    "id": "ecommerce_retail",
+    "name": "E-commerce & Retail",
+    "emoji": "🛍️",
+    "market_size_b": 280,
+    "cagr_pct": 12,
+    "trending_insight": "Quick commerce (10-min delivery) is expanding from groceries to every retail category",
+    "why_now": "India's D2C market reaching $60B by 2027 — brands are cutting Flipkart/Amazon dependency and building direct relationships",
+    "market_leaders": [
+      "Amazon",
+      "Flipkart",
+      "Meesho",
+      "Nykaa",
+      "Myntra"
+    ],
+    "trending_startups": [
+      "Blinkit",
+      "Zepto",
+      "CRED",
+      "Mamaearth",
+      "BoAt"
+    ],
+    "trending_countries": [
+      "India",
+      "USA",
+      "Indonesia",
+      "Brazil",
+      "Vietnam"
+    ],
+    "tam_b": 280,
+    "sam_b": 38,
+    "som_m": 680,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 140
+      },
+      {
+        "year": "2021",
+        "value": 168
+      },
+      {
+        "year": "2022",
+        "value": 194
+      },
+      {
+        "year": "2023",
+        "value": 218
+      },
+      {
+        "year": "2024",
+        "value": 250
+      },
+      {
+        "year": "2025",
+        "value": 280,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 314,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Lenskart",
+      "Wakefit",
+      "Wow Skin Science",
+      "Plum",
+      "Sugar"
+    ],
+    "ai_opportunity": "AI-powered demand forecasting cuts inventory waste by 30% for D2C brands — direct EBITDA impact on thin-margin businesses",
+    "key_insight": "The next wave is social commerce — buying decisions made in community contexts (WhatsApp groups, YouTube comments) not on marketplaces.",
+    "investor_sentiment": "D2C brands with strong unit economics and owned community getting funded. Pure marketplace plays harder to fund.",
+    "regulation_watch": "ONDC network disrupting marketplace dominance. FDI rules in multi-brand retail. Both creating new entry points."
+  },
+  {
+    "id": "govtech_civic",
+    "name": "GovTech & Civic",
+    "emoji": "🏛️",
+    "market_size_b": 82,
+    "cagr_pct": 15,
+    "trending_insight": "India's Digital Public Infrastructure (DPI) stack — Aadhaar, UPI, ONDC — is becoming an exportable model that 50+ countries want to adopt",
+    "why_now": "India Stack APIs now publicly accessible. Governments globally allocating billions to digital transformation post-COVID",
+    "market_leaders": [
+      "Infosys (government)",
+      "TCS",
+      "Oracle",
+      "Tyler Technologies",
+      "Salesforce Gov"
+    ],
+    "trending_startups": [
+      "Aaple Sarkar",
+      "CivicTech",
+      "iSPIRT",
+      "Digi Yatra",
+      "DigiLocker"
+    ],
+    "trending_countries": [
+      "India",
+      "USA",
+      "UK",
+      "Estonia",
+      "UAE"
+    ],
+    "tam_b": 82,
+    "sam_b": 14,
+    "som_m": 280,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 38
+      },
+      {
+        "year": "2021",
+        "value": 46
+      },
+      {
+        "year": "2022",
+        "value": 56
+      },
+      {
+        "year": "2023",
+        "value": 65
+      },
+      {
+        "year": "2024",
+        "value": 74
+      },
+      {
+        "year": "2025",
+        "value": 82,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 94,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "BharatERP",
+      "Janaagraha",
+      "Agami",
+      "NyaayaM",
+      "MeriPehchaan"
+    ],
+    "ai_opportunity": "AI-powered document processing can reduce government service delivery time from weeks to minutes — massive adoption tailwind from PM Gati Shakti",
+    "key_insight": "GovTech sales cycles are brutal (18-36 months). Build a private sector wedge first, then sell the government reference case.",
+    "investor_sentiment": "Niche but growing. Impact-first investors and DFIs actively funding. Commercial GovTech getting mainstream VC interest.",
+    "regulation_watch": "Gem procurement portal mandatory for government purchases. CERT-In cybersecurity mandates. Compliance = competitive moat."
+  },
+  {
+    "id": "mental_health",
+    "name": "Mental Health & Wellbeing",
+    "emoji": "🧠",
+    "market_size_b": 95,
+    "cagr_pct": 22,
+    "trending_insight": "AI therapy companions are achieving clinical outcomes comparable to human therapists for mild-to-moderate anxiety in controlled trials",
+    "why_now": "India has 1 psychiatrist per 200,000 people. 150M+ Indians need mental health support but can't access it. Stigma is falling for under-35s.",
+    "market_leaders": [
+      "Headspace",
+      "Calm",
+      "BetterHelp",
+      "Talkspace",
+      "iCall"
+    ],
+    "trending_startups": [
+      "Wysa",
+      "YourDost",
+      "Vandrevala Foundation",
+      "Mantra Care",
+      "InnerHour"
+    ],
+    "trending_countries": [
+      "USA",
+      "India",
+      "UK",
+      "Australia",
+      "Canada"
+    ],
+    "tam_b": 95,
+    "sam_b": 16,
+    "som_m": 280,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 35
+      },
+      {
+        "year": "2021",
+        "value": 44
+      },
+      {
+        "year": "2022",
+        "value": 56
+      },
+      {
+        "year": "2023",
+        "value": 68
+      },
+      {
+        "year": "2024",
+        "value": 80
+      },
+      {
+        "year": "2025",
+        "value": 95,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 116,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Wysa",
+      "YourDost",
+      "iCall",
+      "The Mindspark",
+      "Amaha"
+    ],
+    "ai_opportunity": "24/7 AI-first mental health triage can catch crisis signals before they escalate — reducing emergency mental health costs by 40% for insurers",
+    "key_insight": "The biggest barrier isn't awareness — it's shame. Design for anonymous first interaction. Trust before identity.",
+    "investor_sentiment": "Mission-driven investors dominant. Impact funds and health insurance companies both interested in outcomes-based models.",
+    "regulation_watch": "DPDP Act implications for sensitive health data. Telemedicine guidelines allowing remote mental health consultation creating market clarity."
+  },
+  {
+    "id": "hrtech_future_work",
+    "name": "HR Tech & Future of Work",
+    "emoji": "👥",
+    "market_size_b": 88,
+    "cagr_pct": 14,
+    "trending_insight": "AI is replacing the recruiting function — not recruiters, but the administrative 80% of their work (sourcing, screening, scheduling)",
+    "why_now": "India has 500M+ working-age population with a skills gap crisis. NSDC digital skilling mandate + gig economy growth creating massive HR transformation demand",
+    "market_leaders": [
+      "Workday",
+      "SAP SuccessFactors",
+      "Darwinbox",
+      "Keka",
+      "GreytHR"
+    ],
+    "trending_startups": [
+      "Rippling",
+      "Deel",
+      "Remote",
+      "Leena AI",
+      "Springworks"
+    ],
+    "trending_countries": [
+      "India",
+      "USA",
+      "UK",
+      "Singapore",
+      "Germany"
+    ],
+    "tam_b": 88,
+    "sam_b": 14,
+    "som_m": 260,
+    "growth_data": [
+      {
+        "year": "2020",
+        "value": 48
+      },
+      {
+        "year": "2021",
+        "value": 56
+      },
+      {
+        "year": "2022",
+        "value": 64
+      },
+      {
+        "year": "2023",
+        "value": 72
+      },
+      {
+        "year": "2024",
+        "value": 80
+      },
+      {
+        "year": "2025",
+        "value": 88,
+        "projected": true
+      },
+      {
+        "year": "2026",
+        "value": 100,
+        "projected": true
+      }
+    ],
+    "example_startups_india": [
+      "Darwinbox",
+      "Keka",
+      "Springworks",
+      "HRMantra",
+      "Zimyo"
+    ],
+    "ai_opportunity": "AI that monitors employee sentiment through communication patterns (with consent) and predicts attrition 90 days before resignation — saving ₹15L per retained employee",
+    "key_insight": "The best HRTech sells to HR as a 'people win' but saves money for Finance. Build the business case for both buyers simultaneously.",
+    "investor_sentiment": "Healthy. India-specific HR compliance complexity creates natural moats. Payroll + compliance + performance management bundled platforms preferred.",
+    "regulation_watch": "Labour codes consolidation (4 codes replacing 29 laws) rolling out. Digital labour contract mandate creating compliance software demand."
   }
 ]

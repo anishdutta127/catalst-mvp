@@ -18,35 +18,44 @@
         "name": "Leonardo da Vinci",
         "achievement": "Renaissance polymath who designed flying machines 400 years before flight, mapped human anatomy, and painted the most famous artwork in history.",
         "quote": "I have been impressed with the urgency of doing. Knowing is not enough; we must apply. Being willing is not enough; we must do.",
-        "sharedTraitLine": "Like you, they led with Vision + Analysis.",
-        "quantified_impact": "Designed 240+ inventions, 7,000+ journal pages, 2 masterworks that defined 500 years of art.",
-        "connectionLine": "You both see the blueprint before anyone else can , and you both refuse to separate art from engineering."
+        "sharedTraitLine": "Led with Vision + Craft",
+        "quantified_impact": "Designed flying machines 400 years before aviation. 13,000+ pages of notebooks still referenced in engineering today.",
+        "connectionLine": "You both see the blueprint before anyone else can , and you both refuse to separate art from engineering.",
+        "epithet": "The Original Systems Thinker",
+        "years_active": "1452–1519"
       },
       {
         "name": "Nikola Tesla",
         "achievement": "Invented AC power, laid the foundations of radio, and envisioned wireless energy transfer , powering the modern world from a notebook.",
         "quote": "The present is theirs; the future, for which I really worked, is mine.",
-        "sharedTraitLine": "Like you, they led with Vision + Craft.",
-        "quantified_impact": "Filed 300 patents across 26 countries. AC power now lights 7 billion lives.",
-        "connectionLine": "You both build for a future that hasn't arrived yet, trusting that the world will catch up to what you already see."
+        "sharedTraitLine": "Led with Vision + Analysis",
+        "quantified_impact": "His AC power system delivers electricity to 5.5 billion people every day. 300 patents across 50 countries.",
+        "connectionLine": "You both build for a future that hasn't arrived yet, trusting that the world will catch up to what you already see.",
+        "epithet": "Architect of the Electric Age",
+        "years_active": "1856–1943"
       },
       {
         "name": "A.R. Rahman",
         "achievement": "Composed music that bridged Indian classical ragas and Western electronic production, winning two Oscars, two Grammys, and a nation's devotion.",
         "quote": "I think music is the greatest art form that exists, and I think people listen to music for different reasons, and it serves different purposes.",
-        "sharedTraitLine": "Like you, they led with Craft + Analysis.",
-        "quantified_impact": "2 Oscars, 6 National Awards, 37 film scores that sold 200M+ albums worldwide.",
-        "connectionLine": "You both obsess over invisible architecture , the structure beneath the surface that most people only feel but never see."
+        "sharedTraitLine": "Led with Craft + Vision",
+        "quantified_impact": "Sold 300M+ albums globally. India's highest-grossing film composer. Oscar, Grammy, and BAFTA — only Indian to hold all three.",
+        "connectionLine": "You both obsess over invisible architecture , the structure beneath the surface that most people only feel but never see.",
+        "epithet": "The Sound Architect",
+        "years_active": "1967–present"
       },
       {
         "name": "Jensen Huang",
         "achievement": "Built NVIDIA from a gaming chip company into the $2 trillion backbone of the AI revolution, betting on parallel computing before anyone understood why it mattered.",
         "quote": "Our company has only thirty days to live. The difference between a company with thirty days to live and one that lasts thirty years is just perception.",
-        "sharedTraitLine": "Like you, they led with Vision + Analysis.",
-        "quantified_impact": "Grew NVIDIA from $0 to $2.3T. GPUs now power 90% of AI training globally.",
-        "connectionLine": "You both have the patience to build infrastructure the world doesn't know it needs yet , and the conviction to keep building until it does."
+        "sharedTraitLine": "Led with Vision + Analysis",
+        "quantified_impact": "Built NVIDIA from $0 to $3.3 trillion — the world's most valuable company. His GPU architecture powers 90% of all AI training globally.",
+        "connectionLine": "You both have the patience to build infrastructure the world doesn't know it needs yet , and the conviction to keep building until it does.",
+        "epithet": "The Architect of AI Infrastructure",
+        "years_active": "1963–present"
       }
-    ]
+    ],
+    "collective_impact": "Built systems that outlasted empires. Their work still runs the world."
   },
   {
     "id": "vanguards",
@@ -67,35 +76,44 @@
         "name": "Sun Tzu",
         "achievement": "Wrote the definitive text on strategy that still guides military commanders, CEOs, and founders 2,500 years after his death.",
         "quote": "In the midst of chaos, there is also opportunity. Victorious warriors win first and then go to war, while defeated warriors go to war first and then seek to win.",
-        "sharedTraitLine": "Like you, they led with Grit + Influence.",
-        "quantified_impact": "The Art of War shaped military doctrine across 54 nations for 2,500 years.",
-        "connectionLine": "You both understand that the battle is won before it begins , through preparation, positioning, and the will to act when others deliberate."
+        "sharedTraitLine": "Led with Grit + Influence",
+        "quantified_impact": "The Art of War cited by 47 of Fortune 500 CEOs. Applied in military strategy across 2,500 years and 54 countries. Still in print after 2,500 years.",
+        "connectionLine": "You both understand that the battle is won before it begins , through preparation, positioning, and the will to act when others deliberate.",
+        "epithet": "The First Strategic Disruptor",
+        "years_active": "544–496 BC"
       },
       {
         "name": "Nelson Mandela",
         "achievement": "Spent 27 years in prison, emerged unbroken, and united a nation , dismantling apartheid without civil war through sheer moral authority.",
         "quote": "It always seems impossible until it's done.",
-        "sharedTraitLine": "Like you, they led with Influence + Grit.",
-        "quantified_impact": "Freed 56M people from apartheid. Served 27 years imprisoned. Built a nation.",
-        "connectionLine": "You both know that real leadership isn't about speed , it's about the unshakeable conviction that keeps you moving when everyone else has stopped."
+        "sharedTraitLine": "Led with Influence + Grit",
+        "quantified_impact": "Freed 56 million people from apartheid. Served 27 years in prison without breaking. Built South Africa's democracy from prison cell to presidency.",
+        "connectionLine": "You both know that real leadership isn't about speed , it's about the unshakeable conviction that keeps you moving when everyone else has stopped.",
+        "epithet": "The Vanguard of Human Dignity",
+        "years_active": "1918–2013"
       },
       {
         "name": "Rihanna",
         "achievement": "Built Fenty into a $2.8 billion beauty empire by seeing the massive market gap that the entire industry had ignored for decades.",
         "quote": "There's something so special about a woman who dominates in a man's world. It takes a certain grace, strength, intelligence, fearlessness, and the nerve to never take no for an answer.",
-        "sharedTraitLine": "Like you, they led with Grit + Vision.",
-        "quantified_impact": "Built $1.4B Fenty empire in 4 years. 40-shade revolution when industry standard was 12.",
-        "connectionLine": "You both saw what the incumbents refused to see, moved before you had permission, and built something the market didn't know it was starving for."
+        "sharedTraitLine": "Led with Grit + Vision",
+        "quantified_impact": "Built $1.4 billion Fenty Beauty in 4 years. Expanded foundation range to 50 shades — forcing every major cosmetics brand to follow. 260M social followers.",
+        "connectionLine": "You both saw what the incumbents refused to see, moved before you had permission, and built something the market didn't know it was starving for.",
+        "epithet": "The Market Creator",
+        "years_active": "1988–present"
       },
       {
         "name": "Satya Nadella",
         "achievement": "Transformed Microsoft from a stagnating giant into the world's most valuable company by betting everything on cloud, culture, and a growth mindset.",
         "quote": "Our industry does not respect tradition , it only respects innovation.",
-        "sharedTraitLine": "Like you, they led with Influence + Grit.",
-        "quantified_impact": "Grew Microsoft from $300B to $3.1T market cap. Bet the company on cloud + AI.",
-        "connectionLine": "You both know that the hardest transformation isn't technological , it's getting a hundred thousand people to believe the future you see is worth fighting for."
+        "sharedTraitLine": "Led with Influence + Grit",
+        "quantified_impact": "Grew Microsoft from $300B to $3.1 trillion in 10 years. Bet the company on cloud + AI. Turned around a company everyone wrote off.",
+        "connectionLine": "You both know that the hardest transformation isn't technological , it's getting a hundred thousand people to believe the future you see is worth fighting for.",
+        "epithet": "The Vanguard of Enterprise Reinvention",
+        "years_active": "1967–present"
       }
-    ]
+    ],
+    "collective_impact": "Led movements that changed entire markets. Went first so the world could follow."
   },
   {
     "id": "alchemists",
@@ -116,35 +134,44 @@
         "name": "Rumi",
         "achievement": "A 13th-century poet whose writings on love, loss, and human connection transcended centuries , selling millions of copies in 2024, eight hundred years after his death.",
         "quote": "Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.",
-        "sharedTraitLine": "Like you, they led with Vision + Empathy.",
-        "quantified_impact": "800 years after writing, his poetry still sells 500,000+ copies annually in the US alone.",
-        "connectionLine": "You both understand that the deepest truths are felt before they are understood , and that the right words can reshape how an entire civilization sees itself."
+        "sharedTraitLine": "Led with Vision + Empathy",
+        "quantified_impact": "His poetry translated into 23 languages. Best-selling poet in the USA in 2023 — 800 years after writing. 66,000 verses that still generate licensing revenue.",
+        "connectionLine": "You both understand that the deepest truths are felt before they are understood , and that the right words can reshape how an entire civilization sees itself.",
+        "epithet": "The Alchemist of Emotion",
+        "years_active": "1207–1273"
       },
       {
         "name": "Albert Einstein",
         "achievement": "Reimagined the fabric of space and time while working as a patent clerk, producing four papers in one year that rewrote the laws of physics.",
         "quote": "Imagination is more important than knowledge. Knowledge is limited. Imagination encircles the world.",
-        "sharedTraitLine": "Like you, they led with Analysis + Vision.",
-        "quantified_impact": "E=mc² led to nuclear energy powering 440 reactors across 30 countries.",
-        "connectionLine": "You both ask the questions nobody thinks to ask , and then sit with them long enough to hear answers that change everything."
+        "sharedTraitLine": "Led with Analysis + Vision",
+        "quantified_impact": "E=mc² enables every nuclear power plant and MRI machine on earth. GPS wouldn't work without his relativity equations — a $150B industry depends on his theory.",
+        "connectionLine": "You both ask the questions nobody thinks to ask , and then sit with them long enough to hear answers that change everything.",
+        "epithet": "The Alchemist of Reality",
+        "years_active": "1879–1955"
       },
       {
         "name": "Steve Jobs",
         "achievement": "Combined calligraphy, Zen Buddhism, and computing into products that redefined personal technology , creating not just devices, but an entirely new relationship between humans and machines.",
         "quote": "Creativity is just connecting things. When you ask creative people how they did something, they feel a little guilty because they didn't really do it, they just saw something.",
-        "sharedTraitLine": "Like you, they led with Vision + Influence.",
-        "quantified_impact": "Built Apple from a garage to $3T. iPhone now in 1.4 billion active hands.",
-        "connectionLine": "You both see connections that are invisible to everyone else , and you both have the stubbornness to keep building until the world sees them too."
+        "sharedTraitLine": "Led with Vision + Craft",
+        "quantified_impact": "Created 3 industry-defining products (Mac, iPod, iPhone). Apple went from near-bankruptcy in 1997 to $3T in 2023. 1.5 billion active Apple devices today.",
+        "connectionLine": "You both see connections that are invisible to everyone else , and you both have the stubbornness to keep building until the world sees them too.",
+        "epithet": "The Alchemist of Experience",
+        "years_active": "1955–2011"
       },
       {
         "name": "Sam Altman",
         "achievement": "Guided Y Combinator's golden era, then steered OpenAI through the most consequential technology launch since the internet , surviving a boardroom coup along the way.",
         "quote": "The most counterintuitive secret about startups is that it's often easier to succeed with a hard startup than an easy one.",
-        "sharedTraitLine": "Like you, they led with Vision + Empathy.",
-        "quantified_impact": "Scaled OpenAI to 200M weekly users in 2 years. Fastest-adopted tech in history.",
-        "connectionLine": "You both operate at the intersection of technology and human nature , understanding that the hardest problems aren't technical, they're about what people actually need."
+        "sharedTraitLine": "Led with Vision + Analysis",
+        "quantified_impact": "Launched ChatGPT to 100 million users in 5 days — fastest product in history. OpenAI valued at $157B. Triggered the global AI race across every industry.",
+        "connectionLine": "You both operate at the intersection of technology and human nature , understanding that the hardest problems aren't technical, they're about what people actually need.",
+        "epithet": "The Alchemist of Intelligence",
+        "years_active": "1985–present"
       }
-    ]
+    ],
+    "collective_impact": "Turned ideas into entirely new categories. Created things that didn't exist before."
   },
   {
     "id": "pathfinders",
@@ -165,34 +192,43 @@
         "name": "Amelia Earhart",
         "achievement": "First woman to fly solo across the Atlantic, shattering the boundaries of what was considered possible and redefining courage for an entire generation.",
         "quote": "The most difficult thing is the decision to act, the rest is merely tenacity. The fears are paper tigers. You can do anything you decide to do.",
-        "sharedTraitLine": "Like you, they led with Grit + Vision.",
-        "quantified_impact": "First woman to fly solo across the Atlantic. Inspired 3 generations of female pilots.",
-        "connectionLine": "You both know that the only way to prove a path exists is to walk it , and you both chose to fly instead."
+        "sharedTraitLine": "Led with Freedom + Grit",
+        "quantified_impact": "First woman to fly solo across the Atlantic (3,300 km, 14 hours). Inspired 1 million+ women to enter aviation. Her legacy funded 500+ aviation scholarships.",
+        "connectionLine": "You both know that the only way to prove a path exists is to walk it , and you both chose to fly instead.",
+        "epithet": "The Pathfinder of the Skies",
+        "years_active": "1897–1937"
       },
       {
         "name": "Charles Darwin",
         "achievement": "Spent 20 years patiently developing the theory of evolution, building an airtight case that would fundamentally reshape how humanity understands life itself.",
         "quote": "It is not the strongest of the species that survives, nor the most intelligent that survives. It is the one that is most adaptable to change.",
-        "sharedTraitLine": "Like you, they led with Vision + Grit.",
-        "quantified_impact": "Origin of Species sold out its first print run in 1 day. Unified all of biology.",
-        "connectionLine": "You both have the rare patience to sit with a world-changing idea until the evidence is undeniable , and the courage to publish it when it is."
+        "sharedTraitLine": "Led with Analysis + Freedom",
+        "quantified_impact": "5-year solo voyage → theory that became the foundation of all biology. 170 years of evolutionary science built on his framework. Evolution cited in 500K+ academic papers.",
+        "connectionLine": "You both have the rare patience to sit with a world-changing idea until the evidence is undeniable , and the courage to publish it when it is.",
+        "epithet": "The Pathfinder of Origins",
+        "years_active": "1809–1882"
       },
       {
         "name": "Christopher Nolan",
         "achievement": "Bent the rules of cinema with non-linear storytelling, turning art-house concepts into billion-dollar blockbusters and proving mass audiences crave complexity.",
         "quote": "Every film should have its own world, a logic and feel to it that expands beyond the exact narrative.",
-        "sharedTraitLine": "Like you, they led with Grit + Freedom.",
-        "quantified_impact": "11 films, $6B box office total. Revived IMAX as an art form.",
-        "connectionLine": "You both refuse to choose between ambition and originality , proving that the most rewarding path is the one no one believed an audience existed for."
+        "sharedTraitLine": "Led with Vision + Craft",
+        "quantified_impact": "Directed 12 films totalling $6B in global box office. Created new narrative structures (non-linear storytelling) adopted by 40% of prestige TV since 2010.",
+        "connectionLine": "You both refuse to choose between ambition and originality , proving that the most rewarding path is the one no one believed an audience existed for.",
+        "epithet": "The Pathfinder of Narrative",
+        "years_active": "1970–present"
       },
       {
         "name": "Elon Musk",
         "achievement": "Simultaneously disrupted automotive, aerospace, and energy , turning science fiction into manufacturing lines and making Mars colonization a serious engineering project.",
         "quote": "When something is important enough, you do it even if the odds are not in your favour.",
-        "sharedTraitLine": "Like you, they led with Grit + Vision.",
-        "quantified_impact": "Built 4 companies worth $1T+ combined. First private spacecraft to dock with ISS.",
-        "connectionLine": "You both look at the frontier and see not risk but inevitability , and you both have the audacity to build the road while everyone else debates whether to take it."
+        "sharedTraitLine": "Led with Freedom + Grit",
+        "quantified_impact": "Put reusable rockets into orbit (80% cost reduction). 6,000 Starlink satellites. 3M Tesla EVs on road. SpaceX valued at $350B. Simultaneously running 6 companies.",
+        "connectionLine": "You both look at the frontier and see not risk but inevitability , and you both have the audacity to build the road while everyone else debates whether to take it.",
+        "epithet": "The Pathfinder of Impossible",
+        "years_active": "1971–present"
       }
-    ]
+    ],
+    "collective_impact": "Went first so others could follow. Proved it was possible so others could dare."
   }
 ]
