@@ -8,6 +8,8 @@ import { lines } from '@/content/lines';
 import { analytics } from '@/lib/analytics';
 import type { ScoredIdea } from '@/lib/scoring/types';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
+import { FitRadar } from '@/components/ui/FitRadar';
+import { MarketBar } from '@/components/ui/MarketBar';
 
 /**
  * S09 — Ideas Revealed (enriched)
@@ -140,12 +142,37 @@ export function S09Ideas() {
       {crowned && (() => {
         const idea = crowned.scored.idea;
         const whyYou = whyYouTexts[crownedIdeaId!];
+        // Derive fit scores from idea properties + score
+        const fitScores = {
+          skill_fit: Math.round(Math.min(100, crowned.scored.displayScore + (idea.builder_fit || 0.5) * 20)),
+          market_timing: Math.round(Math.min(100, 50 + (idea.novelty_score || 5) * 5)),
+          capital_efficiency: Math.round(Math.min(100, idea.solo_viable ? 85 : 60)),
+          execution_ease: Math.round(Math.min(100, (1 - (idea.time_floor_weeks || 4) / 24) * 100)),
+          passion_alignment: Math.round(Math.min(100, crowned.scored.displayScore + 5)),
+        };
+
+        // Market size from idea stats
+        const marketStats = idea.analytics || {} as Record<string, string>;
+
         const sections = [
-          { key: 'idea', title: 'The Idea', content: idea.pain_to_promise },
-          { key: 'why', title: 'Why You', content: whyYou || '' },
-          { key: 'market', title: 'The Market', content: `${idea.domain_primary.replace(/_/g, ' ')} — ${idea.why_now}` },
-          { key: 'steps', title: 'First Steps', content: `Week 1: ${idea.quickStart.week1}\nMVP: ${idea.quickStart.mvp}\nFirst customers: ${idea.quickStart.firstCustomers}` },
-          { key: 'risk', title: 'The Risk', content: idea.proof.gap },
+          { key: 'idea', title: 'The Idea', content: idea.pain_to_promise, jsx: null as React.ReactNode },
+          { key: 'why', title: 'Why You', content: whyYou || '', jsx: null as React.ReactNode },
+          { key: 'market', title: 'The Market', content: '', jsx: (
+            <div className="px-4 pb-3 space-y-4">
+              <p className="text-xs text-ivory/50 leading-relaxed">{idea.domain_primary.replace(/_/g, ' ')} — {idea.why_now}</p>
+              <MarketBar
+                tam={marketStats.priceRange || '$10B+'}
+                sam={marketStats.year1RevenueRange || '$1B'}
+                som={marketStats.grossMargin || '$50M'}
+              />
+              <div className="border-t border-white/5 pt-3">
+                <p className="text-[10px] font-mono text-gold/60 uppercase tracking-wider mb-2">YOUR FIT</p>
+                <FitRadar scores={fitScores} />
+              </div>
+            </div>
+          ) },
+          { key: 'steps', title: 'First Steps', content: `Week 1: ${idea.quickStart.week1}\nMVP: ${idea.quickStart.mvp}\nFirst customers: ${idea.quickStart.firstCustomers}`, jsx: null as React.ReactNode },
+          { key: 'risk', title: 'The Risk', content: idea.proof.gap, jsx: null as React.ReactNode },
         ];
 
         return (
@@ -159,6 +186,7 @@ export function S09Ideas() {
                 <AnimatePresence>
                   {expandedSection === sec.key && (
                     <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
+                      {sec.jsx ? sec.jsx : (
                       <div className="px-4 pb-3">
                         {sec.content === '__loading__' ? (
                           <div className="animate-pulse space-y-2">
@@ -169,6 +197,7 @@ export function S09Ideas() {
                           <p className="text-xs text-ivory/50 leading-relaxed whitespace-pre-line">{sec.content}</p>
                         )}
                       </div>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
