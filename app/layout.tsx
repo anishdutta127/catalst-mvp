@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, Playfair_Display, JetBrains_Mono } from 'next/font/google';
+import { AnalyticsInit } from '@/components/providers/AnalyticsInit';
 import './globals.css';
 
 const inter = Inter({
@@ -41,7 +42,10 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable} ${jetbrains.variable} h-full antialiased`}
     >
-      <body className="h-full font-sans">{children}</body>
+      <body className="h-full font-sans">
+        <AnalyticsInit />
+        {children}
+      </body>
     </html>
   );
 }

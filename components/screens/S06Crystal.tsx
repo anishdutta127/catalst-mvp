@@ -82,6 +82,7 @@ export function S06Crystal() {
             <motion.button
               key={orb.id}
               onClick={() => handleOrbTap(orb.id, i)}
+              data-testid={`orb-${orb.id}`}
               animate={{
                 scale: isSelected ? 1.1 : crystalOrbs.length >= 3 && !isSelected ? 0.95 : 1,
                 opacity: crystalOrbs.length >= 3 && !isSelected ? 0.4 : 1,
@@ -137,6 +138,7 @@ export function S06Crystal() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           onClick={handleConfirm}
+          data-testid="confirm-crystal"
           className="px-6 py-2.5 rounded-full bg-gold text-dark font-semibold text-sm hover:bg-gold/90 transition-all"
         >
           Confirm Crystal

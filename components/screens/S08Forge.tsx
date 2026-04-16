@@ -222,6 +222,7 @@ export function S08Forge() {
           scale: { duration: 1.5, repeat: phase === 'waiting' ? Infinity : 0, ease: 'easeInOut' },
           boxShadow: { duration: 0.5 },
         }}
+        data-testid="forge-crystal"
         className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-2 flex items-center justify-center"
         style={{
           borderColor: phaseColors[phase],
@@ -238,7 +239,7 @@ export function S08Forge() {
       </motion.div>
 
       {/* Phase label */}
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1" data-testid="forge-phase">
         <p className="text-xs font-mono text-ivory/30 uppercase tracking-widest">
           {phase === 'gathering' && 'Gathering instincts...'}
           {phase === 'forming' && 'Forming connections...'}

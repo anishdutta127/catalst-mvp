@@ -125,6 +125,7 @@ export function S03Words() {
           exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.3 }}
           className="text-center"
+          data-testid="word-display"
         >
           <h2 className="text-4xl sm:text-5xl font-serif font-bold text-gold tracking-wider">
             {word.word}
@@ -146,7 +147,7 @@ export function S03Words() {
 
       {/* Choice buttons */}
       <div className="flex gap-4 w-full max-w-xs">
-        {[word.left, word.right].map((choice) => {
+        {[word.left, word.right].map((choice, idx) => {
           const isSelected = selected === choice;
           const isDissolved = selected !== null && !isSelected;
           return (
@@ -154,6 +155,7 @@ export function S03Words() {
               key={choice}
               onClick={() => handleChoice(choice)}
               disabled={!!selected}
+              data-testid={idx === 0 ? 'word-left' : 'word-right'}
               animate={{
                 opacity: isDissolved ? 0.3 : 1,
                 scale: isSelected ? 1.05 : isDissolved ? 0.95 : 1,

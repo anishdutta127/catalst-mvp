@@ -111,6 +111,7 @@ export function S04Industries() {
           <button
             key={f.label}
             onClick={() => setActiveFilter(f.label)}
+            data-testid={`filter-${f.label}`}
             className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
               activeFilter === f.label
                 ? 'bg-gold/20 text-gold border border-gold/40'
@@ -137,6 +138,7 @@ export function S04Industries() {
               key={ind.id}
               layout
               onClick={() => setOpenSheet(ind.id)}
+              data-testid={`industry-card-${ind.id}`}
               className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-all ${
                 status === 'kept'
                   ? 'bg-dark-surface border-2 border-gold/40'
@@ -168,6 +170,7 @@ export function S04Industries() {
             {nudge && <p className="text-xs text-error">{nudge}</p>}
             <button
               onClick={handleContinue}
+              data-testid="continue-btn"
               className="px-6 py-2.5 rounded-full bg-gold text-dark font-semibold text-sm hover:bg-gold/90 transition-all"
             >
               Continue
@@ -200,6 +203,7 @@ export function S04Industries() {
               onDragEnd={(_, info) => {
                 if (info.offset.y > 100) setOpenSheet(null);
               }}
+              data-testid="industry-sheet"
               className="fixed bottom-0 left-0 right-0 z-50 bg-dark-surface border-t border-white/10 rounded-t-2xl max-h-[70dvh] overflow-y-auto"
             >
               {/* Drag handle */}
@@ -236,6 +240,7 @@ export function S04Industries() {
                 <div className="flex gap-2 pt-2">
                   <button
                     onClick={() => { passIndustry(openIndustry.id); setOpenSheet(null); }}
+                    data-testid="pass-btn"
                     className="flex-1 py-2.5 rounded-lg bg-white/5 text-ivory/50 text-sm font-medium hover:bg-white/10 transition-all"
                   >
                     Pass
@@ -243,6 +248,7 @@ export function S04Industries() {
                   <button
                     onClick={() => { edgeIndustry(openIndustry.id); setOpenSheet(null); }}
                     disabled={industriesEdged.length >= 2 && !industriesEdged.includes(openIndustry.id)}
+                    data-testid="edge-btn"
                     className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-all ${
                       industriesEdged.length >= 2 && !industriesEdged.includes(openIndustry.id)
                         ? 'bg-white/5 text-ivory/20 cursor-not-allowed'
@@ -253,6 +259,7 @@ export function S04Industries() {
                   </button>
                   <button
                     onClick={() => { keepIndustry(openIndustry.id); setOpenSheet(null); }}
+                    data-testid="keep-btn"
                     className="flex-1 py-2.5 rounded-lg bg-gold/20 text-gold font-semibold text-sm border border-gold/40 hover:bg-gold/30 transition-all"
                   >
                     Keep

@@ -13,6 +13,7 @@ import {
   extractPersonality,
   runMatchingPipeline,
 } from './engine';
+import * as Sentry from '@sentry/nextjs';
 import type { Idea, ForgeProfile, PipelineResult, ScoredIdea } from './types';
 
 // ── House Assignment (R2-FIX-1) ──────────────────────────────
@@ -164,6 +165,7 @@ export function finalRun(profile: ForgeProfile): OrchestratorResult {
     // Level 3: engine failure → safe fallback (covers assignHouse + pipeline)
     console.error('[orchestrator] Level 3 fallback: engine threw', err);
     console.error('[orchestrator] ForgeProfile dump:', JSON.stringify(profile));
+    Sentry.captureException(err, { extra: { forgeProfile: profile, screen: 's08' } });
     const safeIdeas = getSafeIdeas();
     return {
       pipeline: {

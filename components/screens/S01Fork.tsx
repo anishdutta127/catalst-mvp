@@ -90,6 +90,7 @@ export function S01Fork() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
               onClick={handlePathA}
+              data-testid="path-a-card"
               className="flex-1 bg-dark-surface border border-white/10 rounded-lg p-5 text-left cursor-pointer hover:border-gold/40 transition-colors"
             >
               <span className="text-2xl mb-2 block">{lines.s01.cards.a.emoji}</span>
@@ -102,6 +103,7 @@ export function S01Fork() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
               onClick={handlePathB}
+              data-testid="path-b-card"
               className="flex-1 bg-dark-surface border border-white/10 rounded-lg p-5 text-left cursor-pointer hover:border-gold/40 transition-colors"
             >
               <span className="text-2xl mb-2 block">{lines.s01.cards.b.emoji}</span>
@@ -116,6 +118,7 @@ export function S01Fork() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
             onClick={handlePathC}
+            data-testid="path-c-link"
             className="text-xs text-ivory/30 hover:text-gold/60 transition-colors underline underline-offset-2"
           >
             Already described your profile to an AI? Paste it here
@@ -134,11 +137,13 @@ export function S01Fork() {
             placeholder={lines.s01.ideaPlaceholder}
             autoFocus
             rows={3}
+            data-testid="idea-input"
             className="w-full px-4 py-3 rounded-lg bg-dark-surface border border-white/10 text-ivory placeholder:text-ivory/30 focus:outline-none focus:border-gold/50 text-sm resize-none"
           />
           <button
             onClick={handleIdeaSubmit}
             disabled={ideaText.trim().length < 5}
+            data-testid="idea-submit"
             className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all ${
               ideaText.trim().length >= 5
                 ? 'bg-gold text-dark hover:bg-gold/90'

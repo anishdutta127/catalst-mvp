@@ -7,6 +7,8 @@ import { create } from 'zustand';
 import type { ScreenId, IdeaMode } from '@/lib/constants';
 import type { PipelineResult } from '@/lib/scoring/types';
 import { getNextScreen, getCompletedScreens } from '@/lib/screenFlow';
+import { syncSession } from '@/lib/supabase/sync';
+import { analytics } from '@/lib/analytics';
 
 // ── State Shape ───────────────────────────────────────────────
 
@@ -262,12 +264,18 @@ export const useJourneyStore = create<JourneyState & JourneyActions>()((set, get
   setMirrorPoolText: (text) => set({ mirrorPoolText: text }),
 
   // ── Navigation ──
-  advanceScreen: () => set((s) => {
+  advanceScreen: () => {
+    const s = get();
     const next = getNextScreen(s.currentScreen, s.ideaMode);
-    if (!next) return s;
+    if (!next) return;
     const completed = getCompletedScreens(next, s.ideaMode);
-    return { currentScreen: next, completedScreens: completed };
-  }),
+    set({ currentScreen: next, completedScreens: completed });
+
+    // Non-blocking: sync to Supabase + fire analytics
+    analytics.advance(s.currentScreen, next);
+    analytics.screen(next);
+    syncSession({ ...get() }).catch(() => {});
+  },
   goToScreen: (screen) => set((s) => {
     const completed = getCompletedScreens(screen, s.ideaMode);
     return { currentScreen: screen, completedScreens: completed };
@@ -283,6 +291,12 @@ export const useJourneyStore = create<JourneyState & JourneyActions>()((set, get
     set({ ...initialState, sessionId: newId });
   },
 }));
+
+// ── Dev mode store exposure ──────────────────────────────────
+
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  (window as unknown as Record<string, unknown>).__catalstStore = useJourneyStore;
+}
 
 // ── Session ID Initialization ─────────────────────────────────
 

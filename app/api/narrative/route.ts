@@ -9,6 +9,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 
 // Rate limit tracking (in-memory, resets on deploy)
 const generated = new Map<string, Set<string>>();
@@ -121,7 +122,8 @@ Write ONLY the reflection. No preamble.`;
     }
 
     return NextResponse.json({ text: text.trim(), source: 'gemini' });
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error, { extra: { route: '/api/narrative' } });
     return NextResponse.json(
       { text: 'The garden sees something in you. Trust the match.', source: 'error' },
       { status: 200 }

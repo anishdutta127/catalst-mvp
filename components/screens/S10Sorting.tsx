@@ -113,6 +113,7 @@ export function S10Sorting() {
           duration: 0.5,
           delay: isEliminated ? losingHouses.indexOf(house) * 0.3 : 0,
         }}
+        data-testid={isRevealed ? `house-winner` : `house-crest-${house.id}`}
         className="flex flex-col items-center gap-2"
       >
         {/* Crest circle */}
@@ -176,6 +177,7 @@ export function S10Sorting() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1 }}
+                    data-testid={`lineage-${figure.name}`}
                     className="bg-dark-surface border border-white/10 rounded-lg p-3"
                   >
                     <p className="text-sm font-semibold text-ivory">{figure.name}</p>
@@ -194,6 +196,7 @@ export function S10Sorting() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           onClick={() => advanceScreen()}
+          data-testid="claim-profile-btn"
           className="px-8 py-3 rounded-full bg-gold text-dark font-semibold hover:bg-gold/90 hover:shadow-[0_0_8px_rgba(212,168,67,0.3)] transition-all"
         >
           {lines.s10.continueButton}

@@ -99,6 +99,7 @@ export function S02Inkblots() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.3 }}
+          data-testid="blot-image"
           className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-xl overflow-hidden"
         >
           <Image
@@ -140,6 +141,7 @@ export function S02Inkblots() {
               key={`${currentBlot}-${i}`}
               onClick={() => handleSelect(opt.emoji)}
               disabled={!!selectedEmoji}
+              data-testid={`blot-option-${i}`}
               animate={{
                 opacity: isDissolved ? 0 : 1,
                 y: isDissolved ? 4 : 0,

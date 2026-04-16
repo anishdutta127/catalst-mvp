@@ -131,6 +131,7 @@ export function S09Ideas() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.15 }}
               onClick={() => handleCrown(scored.idea.idea_id)}
+              data-testid={`idea-card-${tier}`}
               className={`flex-1 bg-dark-surface rounded-lg p-4 text-left transition-all ${
                 isCrowned
                   ? 'border-2 border-gold/70 shadow-[0_0_12px_rgba(212,168,67,0.4)]'
@@ -186,6 +187,7 @@ export function S09Ideas() {
               <div key={sec.key} className="bg-dark-surface border border-white/10 rounded-lg overflow-hidden">
                 <button
                   onClick={() => toggleSection(sec.key)}
+                  data-testid={`accordion-${sec.title}`}
                   className="w-full flex items-center justify-between px-4 py-3 text-left cursor-pointer"
                 >
                   <span className="text-xs font-semibold text-ivory/70">{sec.title}</span>
@@ -230,6 +232,7 @@ export function S09Ideas() {
                 href={getWhatsAppUrl(crowned.scored)}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-testid="whatsapp-cta"
                 className="inline-block px-4 py-2 rounded-full border border-gold/40 text-gold text-xs font-medium hover:bg-gold/10 transition-all"
               >
                 Message Anish on WhatsApp
@@ -249,6 +252,7 @@ export function S09Ideas() {
         >
           <button
             onClick={() => advanceScreen()}
+            data-testid="crown-cta"
             className="px-8 py-3 rounded-full bg-gold text-dark font-semibold hover:bg-gold/90 hover:shadow-[0_0_8px_rgba(212,168,67,0.3)] transition-all"
           >
             This is my idea →

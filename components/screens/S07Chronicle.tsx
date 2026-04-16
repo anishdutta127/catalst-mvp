@@ -150,6 +150,7 @@ export function S07Chronicle() {
                 key={hl.id}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => handleHeadlineSelect(hl.id)}
+                data-testid={`headline-card-${lines.s07.headlines.indexOf(hl)}`}
                 className={`w-full bg-dark-surface border border-white/10 rounded-lg p-4 text-left hover:border-gold/30 transition-colors ${
                   state.headlineChoice === hl.id ? 'border-gold/50' : ''
                 }`}
@@ -183,6 +184,7 @@ export function S07Chronicle() {
                   <button
                     key={budget}
                     onClick={() => handleTimeBudget(budget)}
+                    data-testid={`time-${budget}`}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                       selectedTime === budget
                         ? 'bg-gold/20 text-gold border border-gold/40'
@@ -205,6 +207,7 @@ export function S07Chronicle() {
                   <button
                     key={level}
                     onClick={() => handleResourceLevel(level)}
+                    data-testid={`resource-${level}`}
                     className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                       selectedResource === level
                         ? 'bg-gold/20 text-gold border border-gold/40'
@@ -227,6 +230,7 @@ export function S07Chronicle() {
                 >
                   <button
                     onClick={handleComplete}
+                    data-testid="reveal-btn"
                     className="px-6 py-2.5 rounded-full bg-gold text-dark font-semibold text-sm hover:bg-gold/90 transition-all"
                   >
                     Reveal My Ideas

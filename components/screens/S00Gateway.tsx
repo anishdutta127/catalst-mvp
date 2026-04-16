@@ -88,6 +88,7 @@ export function S00Gateway() {
             }}
             placeholder="Your first name"
             autoFocus
+            data-testid="name-input"
             className="w-full px-4 py-3 rounded-lg bg-dark-surface border border-white/10 text-ivory placeholder:text-ivory/30 focus:outline-none focus:border-gold/50 text-center text-base"
           />
           {error && (
@@ -105,6 +106,7 @@ export function S00Gateway() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               onClick={handleSubmit}
+              data-testid="s00-cta"
               className="px-8 py-3 rounded-full font-semibold bg-gold text-dark hover:bg-gold/90 hover:shadow-[0_0_8px_rgba(212,168,67,0.3)] transition-all"
             >
               {lines.s00.cta}
