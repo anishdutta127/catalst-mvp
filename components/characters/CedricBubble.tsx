@@ -1,0 +1,65 @@
+'use client';
+
+import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
+import { DIALOGUE_TIMING } from '@/lib/constants';
+
+interface CedricBubbleProps {
+  text: string;
+  onComplete?: () => void;
+  /** Delay before streaming starts (ms) */
+  delay?: number;
+}
+
+export function CedricBubble({ text, onComplete, delay = 0 }: CedricBubbleProps) {
+  const words = text.split(' ');
+  const [visibleCount, setVisibleCount] = useState(0);
+  const [started, setStarted] = useState(false);
+
+  // Delay before starting
+  useEffect(() => {
+    const timer = setTimeout(() => setStarted(true), delay);
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  // Word-by-word reveal
+  useEffect(() => {
+    if (!started) return;
+    if (visibleCount >= words.length) {
+      onComplete?.();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setVisibleCount((c) => c + 1);
+    }, DIALOGUE_TIMING.cedricWordDelay);
+
+    return () => clearTimeout(timer);
+  }, [started, visibleCount, words.length, onComplete]);
+
+  if (!started) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="glass rounded-xl px-4 py-3 max-w-[85%]"
+    >
+      <div className="flex items-center gap-2 mb-1">
+        <span className="text-xs font-semibold text-gold">🔥 Cedric</span>
+      </div>
+      <p className="text-sm leading-relaxed text-ivory">
+        {words.map((word, i) => (
+          <span
+            key={i}
+            className="transition-opacity duration-100"
+            style={{ opacity: i < visibleCount ? 1 : 0 }}
+          >
+            {word}{i < words.length - 1 ? ' ' : ''}
+          </span>
+        ))}
+      </p>
+    </motion.div>
+  );
+}

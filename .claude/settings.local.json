@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp handoff/content/ideas.json content/ideas.json)",
+      "Bash(cp handoff/content/industries.json content/industries.json)",
+      "Bash(cp handoff/content/houses.json content/houses.json)",
+      "Bash(cp handoff/content/lines.ts content/lines.ts)",
+      "Bash(cp -r handoff/public/backgrounds/* public/backgrounds/)",
+      "Bash(cp -r handoff/public/blots/* public/blots/)",
+      "Bash(mkdir -p public/backgrounds public/blots)",
+      "Bash(cp handoff/public/backgrounds/* public/backgrounds/)",
+      "Bash(cp handoff/public/blots/* public/blots/)",
+      "Bash(npx tsc *)",
+      "Bash(npx next *)",
+      "Bash(python3 -c \"import json; print\\(len\\(json.load\\(open\\('content/industries.json'\\)\\)\\)\\)\")",
+      "Bash(node -e \"console.log\\(JSON.parse\\(require\\('fs'\\).readFileSync\\('content/industries.json','utf8'\\)\\).length\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(curl -s http://localhost:3000/journey)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  }
+}
