@@ -49,21 +49,23 @@ body {
   overflow: hidden;
 }
 
-/* ── Journey Grid Layout ──────────────────────────────────── */
+/* ── Journey Grid Layout (Three-zone rule) ───────────────── */
+/* ZONE 1: header+chat (fixed ~188px: 48px header + 140px chat) */
+/* ZONE 2: activity (flex-1, transparent — background shows through) */
+/* ZONE 3: cta (fixed 64px, sticky bottom) */
 
 .journey-grid {
-  grid-template-rows: auto minmax(80px, 15dvh) 1fr auto 56px;
+  grid-template-rows: 48px 140px 1fr 64px;
   grid-template-areas:
     "header"
-    "dialogue"
+    "chat"
     "activity"
-    "pip"
     "cta";
 }
 
 @media (min-width: 640px) {
   .journey-grid {
-    grid-template-rows: auto minmax(100px, 20dvh) 1fr auto 56px;
+    grid-template-rows: 48px 140px 1fr 64px;
   }
 }
 

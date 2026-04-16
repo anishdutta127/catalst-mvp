@@ -62,6 +62,7 @@ export interface JourneyState {
   // Navigation
   currentScreen: ScreenId;
   completedScreens: ScreenId[];
+  screenHistory: ScreenId[];
 }
 
 export interface JourneyActions {
@@ -108,6 +109,7 @@ export interface JourneyActions {
   // Navigation
   advanceScreen: () => void;
   goToScreen: (screen: ScreenId) => void;
+  goBack: () => void;
 
   // Session
   hydrateFromSaved: (data: Partial<JourneyState>) => void;
@@ -151,6 +153,7 @@ const initialState: JourneyState = {
   mirrorPoolText: '',
   currentScreen: 's00',
   completedScreens: [],
+  screenHistory: [],
 };
 
 // ── Store ─────────────────────────────────────────────────────
@@ -269,7 +272,11 @@ export const useJourneyStore = create<JourneyState & JourneyActions>()((set, get
     const next = getNextScreen(s.currentScreen, s.ideaMode);
     if (!next) return;
     const completed = getCompletedScreens(next, s.ideaMode);
-    set({ currentScreen: next, completedScreens: completed });
+    set({
+      currentScreen: next,
+      completedScreens: completed,
+      screenHistory: [...s.screenHistory, s.currentScreen],
+    });
 
     // Non-blocking: sync to Supabase + fire analytics
     analytics.advance(s.currentScreen, next);
@@ -280,6 +287,13 @@ export const useJourneyStore = create<JourneyState & JourneyActions>()((set, get
     const completed = getCompletedScreens(screen, s.ideaMode);
     return { currentScreen: screen, completedScreens: completed };
   }),
+  goBack: () => {
+    const s = get();
+    const history = [...s.screenHistory];
+    const prev = history.pop();
+    if (!prev) return;
+    set({ currentScreen: prev, screenHistory: history });
+  },
 
   // ── Session ──
   hydrateFromSaved: (data) => set(data),

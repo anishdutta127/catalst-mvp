@@ -3,8 +3,7 @@
 import { type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from './Header';
-import { DialogueStrip } from './DialogueStrip';
-import { CTABar } from './CTABar';
+import { ChatZone } from './ChatZone';
 import { SCREEN_BACKGROUNDS, type ScreenId } from '@/lib/constants';
 
 interface JourneyShellProps {
@@ -17,17 +16,14 @@ interface JourneyShellProps {
 }
 
 /**
- * JourneyShell — full-viewport container using CSS Grid with named areas.
+ * JourneyShell — three-zone layout enforced by CSS Grid.
  *
- * Grid layout (top to bottom):
- *   header    — CATALST wordmark + milestone bar
- *   dialogue  — Cedric/Pip message strip (reserved space, not overlay)
- *   activity  — screen-specific interactions (1fr)
- *   pip       — Pip character zone (auto height)
- *   cta       — sticky action buttons
+ * ZONE 1: header (48px) + chat (140px) — fixed, dark overlay
+ * ZONE 2: activity (1fr) — TRANSPARENT, background shows through
+ * ZONE 3: cta (64px) — fixed, dark overlay
  *
- * Background: full-bleed Midjourney image with dark vignette overlay.
- * Content: max-w-[720px] centered on desktop, full-width with padding on mobile.
+ * Background: full-bleed Midjourney image with dark vignette.
+ * The background IS the design. Activity zone is transparent.
  */
 export function JourneyShell({
   currentScreen,
@@ -41,7 +37,7 @@ export function JourneyShell({
 
   return (
     <div className="journey-shell relative h-dvh w-full overflow-hidden bg-dark">
-      {/* Background layer — crossfade between screens */}
+      {/* Background layer */}
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -58,37 +54,34 @@ export function JourneyShell({
                 style={{ backgroundImage: `url(${bgImage})` }}
               />
             )}
-            {/* Dark vignette for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-b from-dark/50 via-dark/60 to-dark/85" />
+            {/* Vignette — lighter in center for readability */}
+            <div className="absolute inset-0 bg-gradient-to-b from-dark/60 via-dark/30 to-dark/70" />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Grid container — sits above background */}
+      {/* Grid container */}
       <div className="relative z-10 grid h-dvh journey-grid">
-        {/* Zone 1: Header */}
+        {/* ZONE 1a: Header (48px) */}
         <div className="[grid-area:header]">
-          <Header
-            currentScreen={currentScreen}
-            completedScreens={completedScreens}
-          />
+          <Header currentScreen={currentScreen} completedScreens={completedScreens} />
         </div>
 
-        {/* Zone 2: Dialogue strip (reserved space, not overlay) */}
-        <div className="[grid-area:dialogue] overflow-y-auto">
-          <DialogueStrip />
+        {/* ZONE 1b: Chat zone (140px, dark overlay) */}
+        <div className="[grid-area:chat] overflow-hidden">
+          <ChatZone />
         </div>
 
-        {/* Zone 3: Activity area — screen content */}
-        <div className="[grid-area:activity] overflow-y-auto px-4">
-          <div className="mx-auto w-full max-w-[720px] h-full flex items-center justify-center">
+        {/* ZONE 2: Activity (transparent — background shows through) */}
+        <div className="[grid-area:activity] overflow-y-auto relative">
+          <div className="mx-auto w-full max-w-[720px] h-full px-4">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentScreen}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0, transition: { duration: 0.4, delay: 0.1 } }}
                 exit={{ opacity: 0, transition: { duration: 0.3 } }}
-                className="w-full"
+                className="w-full h-full"
               >
                 {children}
               </motion.div>
@@ -96,25 +89,31 @@ export function JourneyShell({
           </div>
         </div>
 
-        {/* Zone 4: Pip character (singleton renders here, controlled by store) */}
-        <div className="[grid-area:pip] flex items-center justify-center">
-          {/* PipCharacter will render here in a later gate */}
-        </div>
-
-        {/* Zone 5: CTA bar */}
-        <div className="[grid-area:cta]">
-          <CTABar visible={ctaVisible}>
-            {ctaContent}
-          </CTABar>
+        {/* ZONE 3: CTA (64px, dark overlay) */}
+        <div
+          className="[grid-area:cta] flex items-center justify-center px-4"
+          style={{ background: 'rgba(0,0,0,0.7)', borderTop: '1px solid rgba(255,255,255,0.05)' }}
+        >
+          <div className="mx-auto w-full max-w-[720px] flex flex-col items-center">
+            <AnimatePresence>
+              {ctaVisible && ctaContent && (
+                <motion.div
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full flex flex-col items-center"
+                >
+                  {ctaContent}
+                </motion.div>
+              )}
+            </AnimatePresence>
+            {footerContent && (
+              <span className="text-[10px] text-ivory/20 mt-1">{footerContent}</span>
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Optional footer (absolute, outside grid) */}
-      {footerContent && (
-        <div className="absolute bottom-1 left-0 right-0 z-20 flex justify-center">
-          <span className="text-xs text-ivory/20">{footerContent}</span>
-        </div>
-      )}
     </div>
   );
 }
