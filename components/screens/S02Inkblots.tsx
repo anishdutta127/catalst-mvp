@@ -7,14 +7,14 @@ import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
 import { createTimer } from '@/lib/timing';
 import { TIMER_DEFAULTS } from '@/lib/constants';
+import { ActivityTimer } from '@/components/ui/ActivityTimer';
 import Image from 'next/image';
 
 /**
- * S02 — Inkblots
+ * S02 — Inkblots (enriched)
  *
- * 3 Rorschach plates sequentially. Per plate: 4 options in 2x2 grid (bottom-right empty),
- * 8s depleting vine timer, auto-selects first option on expire.
- * Selection: chosen glows gold, others dissolve, advance after 400ms.
+ * Circular blot mask, 2x2 option grid (all 4 filled),
+ * ActivityTimer (SVG circle, top-right), gold selection glow.
  */
 
 const BLOTS = [lines.s02.blots.blot1, lines.s02.blots.blot2, lines.s02.blots.blot3];
@@ -27,42 +27,21 @@ export function S02Inkblots() {
 
   const [currentBlot, setCurrentBlot] = useState(0);
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState<number>(TIMER_DEFAULTS.s02_blot);
   const timer = useRef(createTimer());
   const dialogueSent = useRef(false);
 
-  // Cedric intro
   useEffect(() => {
     if (dialogueSent.current) return;
     dialogueSent.current = true;
-    enqueueMessage({
-      speaker: 'cedric',
-      text: lines.s02.cedric.intro,
-      type: 'dialogue',
-    });
+    enqueueMessage({ speaker: 'cedric', text: lines.s02.cedric.intro, type: 'instruction' });
+    setTimeout(() => {
+      enqueueMessage({ speaker: 'pip', text: lines.s02.pip.intro, type: 'dialogue' });
+    }, 1500);
   }, [enqueueMessage]);
 
-  // Timer countdown
   useEffect(() => {
-    if (selectedEmoji) return;
     timer.current.start();
-    setTimeLeft(TIMER_DEFAULTS.s02_blot);
-
-    const interval = setInterval(() => {
-      const elapsed = timer.current.peek();
-      const remaining = TIMER_DEFAULTS.s02_blot - elapsed;
-      setTimeLeft(Math.max(0, remaining));
-      if (remaining <= 0) {
-        clearInterval(interval);
-        // Auto-select first option
-        const firstOption = BLOTS[currentBlot].options[0];
-        handleSelect(firstOption.emoji);
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentBlot, selectedEmoji]);
+  }, [currentBlot]);
 
   const handleSelect = useCallback((emoji: string) => {
     if (selectedEmoji) return;
@@ -70,68 +49,52 @@ export function S02Inkblots() {
     setSelectedEmoji(emoji);
     recordBlotResponse(currentBlot, emoji, responseTime);
 
-    // Advance after dissolve animation
     setTimeout(() => {
       if (currentBlot < 2) {
         setCurrentBlot((c) => c + 1);
         setSelectedEmoji(null);
       } else {
-        enqueueMessage({
-          speaker: 'cedric',
-          text: lines.s02.cedric.afterAllBlots,
-          type: 'dialogue',
-        });
+        enqueueMessage({ speaker: 'cedric', text: lines.s02.cedric.afterAllBlots, type: 'dialogue' });
         setTimeout(() => advanceScreen(), 600);
       }
-    }, 400);
+    }, 500);
   }, [selectedEmoji, currentBlot, recordBlotResponse, enqueueMessage, advanceScreen]);
 
-  const timerPct = timeLeft / TIMER_DEFAULTS.s02_blot;
+  const handleExpire = useCallback(() => {
+    const first = BLOTS[currentBlot].options[0];
+    handleSelect(first.emoji);
+  }, [currentBlot, handleSelect]);
+
   const blot = BLOTS[currentBlot];
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full h-full justify-center">
-      {/* Blot image */}
+    <div className="flex flex-col items-center gap-4 h-full justify-center relative">
+      {/* ActivityTimer */}
+      <ActivityTimer durationMs={TIMER_DEFAULTS.s02_blot} onExpire={handleExpire} resetKey={currentBlot} />
+
+      <p className="text-[10px] font-mono text-ivory/40 uppercase tracking-widest">
+        {currentBlot + 1} of 3
+      </p>
+
+      {/* Circular blot */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentBlot}
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
+          exit={{ opacity: 0, scale: 0.9 }}
           transition={{ duration: 0.3 }}
           data-testid="blot-image"
-          className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-xl overflow-hidden"
+          className="rounded-full overflow-hidden ring-2 ring-white/20 p-2"
+          style={{ width: 'min(70vw, 280px)', height: 'min(70vw, 280px)' }}
         >
-          <Image
-            src={BLOT_IMAGES[currentBlot]}
-            alt={`Rorschach blot ${currentBlot + 1}`}
-            fill
-            className="object-cover"
-            priority
-          />
-          {/* Timer vine (top-right corner) */}
-          <div className="absolute top-2 right-2 w-6 h-6">
-            <svg viewBox="0 0 24 24" className="w-full h-full -rotate-90">
-              <circle cx="12" cy="12" r="10" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
-              <circle
-                cx="12" cy="12" r="10" fill="none"
-                stroke={timerPct > 0.3 ? '#4ade80' : timerPct > 0.1 ? '#fbbf24' : '#ef4444'}
-                strokeWidth="2"
-                strokeDasharray={`${timerPct * 62.83} 62.83`}
-                strokeLinecap="round"
-                className="transition-all duration-100"
-              />
-            </svg>
+          <div className="w-full h-full rounded-full overflow-hidden relative">
+            <Image src={BLOT_IMAGES[currentBlot]} alt={`Rorschach blot ${currentBlot + 1}`} fill className="object-contain" priority />
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Blot counter */}
-      <p className="text-[10px] font-mono text-ivory/30 uppercase tracking-widest">
-        {currentBlot + 1} / 3
-      </p>
-
-      {/* 2x2 option grid */}
+      {/* 2x2 grid */}
       <div className="grid grid-cols-2 gap-2 w-full max-w-sm">
         {blot.options.map((opt, i) => {
           const isSelected = selectedEmoji === opt.emoji;
@@ -143,18 +106,19 @@ export function S02Inkblots() {
               disabled={!!selectedEmoji}
               data-testid={`blot-option-${i}`}
               animate={{
-                opacity: isDissolved ? 0 : 1,
+                opacity: isDissolved ? 0.3 : 1,
                 y: isDissolved ? 4 : 0,
+                scale: isSelected ? 1.02 : isDissolved ? 0.95 : 1,
               }}
               transition={{ duration: 0.25, delay: isDissolved ? i * 0.06 : 0 }}
-              className={`bg-dark-surface border rounded-lg p-3 text-left transition-all ${
+              className={`min-h-[56px] flex items-center gap-2 p-3 rounded-lg text-left transition-all ${
                 isSelected
-                  ? 'border-gold/60 shadow-[0_0_8px_rgba(212,168,67,0.4)]'
-                  : 'border-white/10 hover:border-white/20'
+                  ? 'border-2 border-gold/60 bg-gold/10 shadow-[0_0_12px_rgba(212,168,67,0.4)]'
+                  : 'bg-dark-surface border border-white/10 hover:border-gold/30'
               } ${selectedEmoji && !isSelected ? 'pointer-events-none' : 'cursor-pointer'}`}
             >
-              <span className="text-lg block mb-1">{opt.emoji}</span>
-              <span className="text-xs text-ivory/70 leading-snug block">
+              <span className="text-xl shrink-0">{opt.emoji}</span>
+              <span className="text-sm text-ivory leading-snug">
                 {opt.label.replace(/\s*\\\s*\.\s*/g, ' ')}
               </span>
             </motion.button>
