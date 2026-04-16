@@ -9,11 +9,19 @@ import industriesRaw from '@/content/industries.json';
 import { filterByIndustryOnly } from '@/lib/scoring/orchestrator';
 import { IDEAS } from '@/lib/scoring/engine';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
+import { AreaChart, Area, XAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface Industry {
   id: string; name: string; icon: string; hookLine: string;
   stats: { marketSize: string; growth: string; whatsHot: string[] };
   trendingIdeas: string[];
+  // Rich data (from merge script)
+  emoji?: string; market_size_b?: number; cagr_pct?: number;
+  trending_insight?: string; why_now?: string; ai_opportunity?: string;
+  investor_sentiment?: string;
+  trending_startups?: string[]; example_startups_india?: string[];
+  tam_b?: number; sam_b?: number; som_m?: number;
+  growth_data?: { year: string; value: number }[];
 }
 
 const INDUSTRIES = industriesRaw as unknown as Industry[];
@@ -190,38 +198,129 @@ export function S04Industries() {
               className="fixed bottom-0 left-0 right-0 z-50 bg-dark-surface border-t border-white/10 rounded-t-2xl max-h-[70dvh] overflow-y-auto"
             >
               <div className="flex justify-center py-3"><div className="w-10 h-1 bg-white/20 rounded-full" /></div>
-              <div className="px-4 pb-4 space-y-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-3xl">{openIndustry.icon}</span>
+              <div className="px-5 pt-1 pb-6 space-y-5">
+                {/* Header */}
+                <div className="flex items-start gap-3">
+                  <span className="text-4xl">{openIndustry.emoji || openIndustry.icon}</span>
                   <div>
-                    <h3 className="text-lg font-semibold text-ivory">{openIndustry.name}</h3>
-                    <p className="text-xs text-ivory/40">{openIndustry.stats.marketSize} · {openIndustry.stats.growth}</p>
+                    <h3 className="text-ivory font-serif text-xl font-bold">{openIndustry.name}</h3>
+                    <div className="flex gap-2 mt-1.5 flex-wrap">
+                      {openIndustry.cagr_pct && <span className="text-[11px] bg-gold/20 text-gold rounded-full px-2.5 py-0.5 font-medium">{openIndustry.cagr_pct}% CAGR</span>}
+                      {openIndustry.market_size_b && <span className="text-[11px] bg-white/10 text-ivory/60 rounded-full px-2.5 py-0.5">${openIndustry.market_size_b}B market</span>}
+                    </div>
                   </div>
                 </div>
-                <p className="text-sm text-ivory/70">{openIndustry.hookLine}</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {openIndustry.trendingIdeas.map((t) => (
-                    <span key={t} className="text-xs px-2 py-0.5 rounded-full bg-gold/10 text-gold/70">{t}</span>
-                  ))}
-                </div>
+
+                {/* Trending insight */}
+                {openIndustry.trending_insight && (
+                  <div className="bg-gold/10 border-l-2 border-gold rounded-r-xl px-4 py-3">
+                    <p className="text-[10px] text-gold/70 uppercase tracking-widest mb-1">What&apos;s happening right now</p>
+                    <p className="text-ivory/90 text-[13px] leading-relaxed italic">&ldquo;{openIndustry.trending_insight}&rdquo;</p>
+                  </div>
+                )}
+
+                {/* Growth chart */}
+                {openIndustry.growth_data && openIndustry.growth_data.length > 0 && (
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[10px] text-ivory/40 uppercase tracking-wider">Market Size ($B)</p>
+                      {openIndustry.cagr_pct && <p className="text-[11px] text-gold">+{openIndustry.cagr_pct}% per year</p>}
+                    </div>
+                    <div className="h-20">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={openIndustry.growth_data}>
+                          <defs>
+                            <linearGradient id={`grad-${openIndustry.id}`} x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#D4A843" stopOpacity={0.3} />
+                              <stop offset="95%" stopColor="#D4A843" stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <Area type="monotone" dataKey="value" stroke="#D4A843" strokeWidth={2} fill={`url(#grad-${openIndustry.id})`} dot={false} />
+                          <XAxis dataKey="year" tick={{ fill: 'rgba(255,255,255,0.3)', fontSize: 9 }} axisLine={false} tickLine={false} />
+                          <Tooltip contentStyle={{ background: '#14171E', border: '1px solid rgba(212,168,67,0.3)', borderRadius: 8, fontSize: 11 }} labelStyle={{ color: 'rgba(255,255,255,0.5)' }} formatter={(v) => [`$${v}B`, 'Market size']} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+
+                {/* TAM/SAM/SOM */}
+                {openIndustry.tam_b && (
+                  <div className="space-y-2">
+                    <p className="text-[10px] text-ivory/40 uppercase tracking-wider">Market Layers</p>
+                    {[
+                      { label: 'Total Market (TAM)', value: openIndustry.tam_b, color: 'rgba(212,168,67,0.7)' },
+                      { label: 'Serviceable (SAM)', value: openIndustry.sam_b || 0, color: 'rgba(212,168,67,0.5)' },
+                      { label: 'Your Slice (SOM)', value: (openIndustry.som_m || 0) / 1000, color: 'rgba(212,168,67,0.35)' },
+                    ].map(({ label, value, color }) => (
+                      <div key={label} className="flex items-center gap-3">
+                        <span className="text-[10px] text-ivory/40 w-32 flex-shrink-0">{label}</span>
+                        <div className="flex-1 h-2 bg-white/8 rounded-full overflow-hidden">
+                          <div className="h-full rounded-full" style={{ width: `${Math.min((value / openIndustry.tam_b!) * 100, 100)}%`, background: color }} />
+                        </div>
+                        <span className="text-[11px] text-gold w-12 text-right">${value.toFixed(0)}B</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Why now */}
+                {openIndustry.why_now && (
+                  <div className="bg-emerald-500/8 border border-emerald-500/20 rounded-xl p-3">
+                    <p className="text-[10px] text-emerald-400/70 uppercase tracking-wider mb-1">Why this moment</p>
+                    <p className="text-ivory/80 text-[12px] leading-relaxed">{openIndustry.why_now}</p>
+                  </div>
+                )}
+
+                {/* AI opportunity */}
+                {openIndustry.ai_opportunity && (
+                  <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-3">
+                    <p className="text-[10px] text-purple-400/70 uppercase tracking-wider mb-1">The AI angle</p>
+                    <p className="text-ivory/80 text-[12px] leading-relaxed">{openIndustry.ai_opportunity}</p>
+                  </div>
+                )}
+
+                {/* Trending startups */}
+                {openIndustry.trending_startups && openIndustry.trending_startups.length > 0 && (
+                  <div>
+                    <p className="text-[10px] text-ivory/40 uppercase tracking-wider mb-2">Companies to watch</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {openIndustry.trending_startups.map((s) => (
+                        <span key={s} className="text-[11px] bg-white/8 border border-white/10 rounded-full px-2.5 py-1 text-ivory/70">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* India startups */}
+                {openIndustry.example_startups_india && openIndustry.example_startups_india.length > 0 && (
+                  <div>
+                    <p className="text-[10px] text-ivory/40 uppercase tracking-wider mb-2">India leaders</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {openIndustry.example_startups_india.map((s) => (
+                        <span key={s} className="text-[11px] bg-orange-500/10 border border-orange-500/20 rounded-full px-2.5 py-1 text-orange-300/80">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Action buttons */}
-                <div className="flex gap-2 pt-2">
+                <div className="flex gap-3 pt-2">
                   <button data-testid="pass-btn" onClick={() => handleAction('pass', openIndustry.id)}
-                    className="flex-1 py-3 rounded-lg bg-white/5 text-ivory/50 text-sm font-medium hover:bg-white/10">
+                    className="flex-1 h-11 rounded-xl border border-white/15 bg-white/5 text-ivory/60 text-[13px] hover:bg-red-500/15 hover:border-red-500/30 transition-all">
                     ✕ Pass
                   </button>
                   <button data-testid="edge-btn" onClick={() => handleAction('edge', openIndustry.id)}
                     disabled={industriesEdged.length >= 2 && !industriesEdged.includes(openIndustry.id)}
-                    className={`flex-1 py-3 rounded-lg text-sm font-medium ${
+                    className={`flex-1 h-11 rounded-xl text-[13px] font-medium transition-all ${
                       industriesEdged.length >= 2 && !industriesEdged.includes(openIndustry.id)
-                        ? 'bg-white/5 text-ivory/20 cursor-not-allowed'
-                        : 'bg-gold/10 text-gold border border-gold/30 hover:bg-gold/20'
+                        ? 'border border-white/10 bg-white/5 text-ivory/20 cursor-not-allowed'
+                        : 'border border-gold/40 bg-gold/10 text-gold hover:bg-gold/20'
                     }`}>
                     ★ Edge
                   </button>
                   <button data-testid="keep-btn" onClick={() => handleAction('keep', openIndustry.id)}
-                    className="flex-1 py-3 rounded-lg bg-gold/20 text-gold font-semibold text-sm border border-gold/40 hover:bg-gold/30">
+                    className="flex-1 h-11 rounded-xl border border-emerald-500/40 bg-emerald-500/10 text-emerald-400 text-[13px] font-medium hover:bg-emerald-500/20 transition-all">
                     ✓ Keep
                   </button>
                 </div>
