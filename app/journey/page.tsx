@@ -4,8 +4,8 @@
  * Journey Page — single-page state machine for the entire Catalst flow.
  * Renders the current screen inside JourneyShell based on Zustand state.
  *
- * Gate 4: S00-S04, S06-S07 are real screens.
- * Remaining screens (S08-S11, S01_LLM) use placeholder.
+ * Gate 4: S00-S04, S06-S07. Gate 5: S08-S10.
+ * Remaining: S11, S01_LLM use placeholder.
  */
 
 import { useJourneyStore } from '@/lib/store/journeyStore';
@@ -18,6 +18,9 @@ import { S03Words } from '@/components/screens/S03Words';
 import { S04Industries } from '@/components/screens/S04Industries';
 import { S06Crystal } from '@/components/screens/S06Crystal';
 import { S07Chronicle } from '@/components/screens/S07Chronicle';
+import { S08Forge } from '@/components/screens/S08Forge';
+import { S09Ideas } from '@/components/screens/S09Ideas';
+import { S10Sorting } from '@/components/screens/S10Sorting';
 import type { ScreenId } from '@/lib/constants';
 
 // ── Placeholder for unbuilt screens ──
@@ -26,10 +29,7 @@ function PlaceholderScreen({ screenId }: { screenId: ScreenId }) {
   const screenLabels: Partial<Record<ScreenId, string>> = {
     s01_llm: 'LLM Shortcut',
     s05: 'Founder Scenarios (Killed)',
-    s08: 'The Forge',
-    s09: 'Ideas Revealed',
     s09b: 'Idea Deep Dive',
-    s10: 'Sorting Ceremony',
     s11: 'Founder Profile',
   };
 
@@ -57,6 +57,9 @@ function S03Wrapper() { return <S03Words />; }
 function S04Wrapper() { return <S04Industries />; }
 function S06Wrapper() { return <S06Crystal />; }
 function S07Wrapper() { return <S07Chronicle />; }
+function S08Wrapper() { return <S08Forge />; }
+function S09Wrapper() { return <S09Ideas />; }
+function S10Wrapper() { return <S10Sorting />; }
 
 // ── Screen registry ──
 
@@ -70,16 +73,17 @@ const SCREEN_COMPONENTS: Record<ScreenId, React.ComponentType<{ screenId: Screen
   s05: PlaceholderScreen,
   s06: S06Wrapper,
   s07: S07Wrapper,
-  s08: PlaceholderScreen,
-  s09: PlaceholderScreen,
+  s08: S08Wrapper,
+  s09: S09Wrapper,
   s09b: PlaceholderScreen,
-  s10: PlaceholderScreen,
+  s10: S10Wrapper,
   s11: PlaceholderScreen,
 };
 
 // ── Screens that manage their own CTA (no global CTA bar) ──
 const SELF_MANAGED_SCREENS = new Set<ScreenId>([
   's00', 's01', 's02', 's03', 's04', 's06', 's07',
+  's08', 's09', 's10',
 ]);
 
 // ── Page ──
