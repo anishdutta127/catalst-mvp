@@ -1,20 +1,32 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { DIALOGUE_TIMING } from '@/lib/constants';
 
 interface CedricBubbleProps {
   text: string;
   onComplete?: () => void;
-  /** Delay before streaming starts (ms) */
   delay?: number;
 }
 
+/**
+ * CedricBubble — word-by-word streaming text for Cedric.
+ * Rate: DIALOGUE_TIMING.cedricWordDelay ms per word (50ms).
+ * Uses useRef for onComplete to prevent Framer Motion closure restarts.
+ */
 export function CedricBubble({ text, onComplete, delay = 0 }: CedricBubbleProps) {
   const words = text.split(' ');
   const [visibleCount, setVisibleCount] = useState(0);
   const [started, setStarted] = useState(false);
+
+  // Stable ref for onComplete — prevents closure recreation on re-render
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
+
+  const handleComplete = useCallback(() => {
+    onCompleteRef.current?.();
+  }, []);
 
   // Delay before starting
   useEffect(() => {
@@ -26,7 +38,7 @@ export function CedricBubble({ text, onComplete, delay = 0 }: CedricBubbleProps)
   useEffect(() => {
     if (!started) return;
     if (visibleCount >= words.length) {
-      onComplete?.();
+      handleComplete();
       return;
     }
 
@@ -35,7 +47,7 @@ export function CedricBubble({ text, onComplete, delay = 0 }: CedricBubbleProps)
     }, DIALOGUE_TIMING.cedricWordDelay);
 
     return () => clearTimeout(timer);
-  }, [started, visibleCount, words.length, onComplete]);
+  }, [started, visibleCount, words.length, handleComplete]);
 
   if (!started) return null;
 

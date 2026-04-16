@@ -93,10 +93,10 @@ export const TIMER_DEFAULTS = {
 
 export const DIALOGUE_TIMING = {
   /** ms per word for Cedric's streaming text */
-  cedricWordDelay: 45,
+  cedricWordDelay: 50,
   /** ms per word for Pip's streaming text */
-  pipWordDelay: 30,
-  /** Base hold time for dialogue messages (ms) */
+  pipWordDelay: 35,
+  /** Base hold time after streaming completes (ms) */
   baseHoldTime: 2000,
   /** Additional hold time per word (ms) */
   perWordHoldTime: 60,

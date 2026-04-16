@@ -1,9 +1,18 @@
 /**
  * UI Store — ephemeral state for animations, dialogue queue, Pip positioning.
  * Never persisted to Supabase.
+ *
+ * Message lifecycle (from ARCHITECTURE_ENG.md):
+ *   dialogue   — auto-fade after streaming_time + hold_time
+ *   instruction — persists until replaced by new instruction or screen change
+ *   result      — persists until screen change
+ *
+ * Max 2 messages visible. Oldest dialogue evicted first.
+ * Instructions and results auto-clear on screen change via subscription.
  */
 
 import { create } from 'zustand';
+import { DIALOGUE_TIMING } from '@/lib/constants';
 
 // ── Types ─────────────────────────────────────────────────────
 
@@ -16,7 +25,7 @@ export type PipState =
   | 'celebrating';
 
 export type PipPosition =
-  | 'zone3'
+  | 'zone-pip'
   | 'activity-left'
   | 'activity-right'
   | 'activity-center'
@@ -58,6 +67,8 @@ interface UIActions {
   removeMessage: (id: string) => void;
   clearMessagesByType: (type: MessageType) => void;
   clearAllMessages: () => void;
+  /** Called on screen change — clears instruction + result messages */
+  clearOnScreenChange: () => void;
 
   // Pip
   setPipState: (state: PipState) => void;
@@ -72,15 +83,25 @@ interface UIActions {
   closeDeepDive: () => void;
 }
 
-// ── Store ─────────────────────────────────────────────────────
+// ── Expiry Calculation ───────────────────────────────────────
 
-let messageCounter = 0;
+function computeExpiry(text: string, speaker: 'cedric' | 'pip'): number {
+  const wordCount = text.split(' ').length;
+  const wordDelay = speaker === 'cedric'
+    ? DIALOGUE_TIMING.cedricWordDelay
+    : DIALOGUE_TIMING.pipWordDelay;
+  const streamingTime = wordCount * wordDelay;
+  const holdTime = DIALOGUE_TIMING.baseHoldTime + (wordCount * DIALOGUE_TIMING.perWordHoldTime);
+  return Date.now() + streamingTime + holdTime;
+}
+
+// ── Store ─────────────────────────────────────────────────────
 
 export const useUIStore = create<UIState & UIActions>()((set) => ({
   // Initial state
   messageQueue: [],
   pipState: 'idle',
-  pipPosition: 'zone3',
+  pipPosition: 'zone-pip',
   pipVisible: false,
   isTransitioning: false,
   deepDiveOpen: false,
@@ -88,19 +109,17 @@ export const useUIStore = create<UIState & UIActions>()((set) => ({
 
   // Dialogue
   enqueueMessage: (msg) => set((s) => {
-    const id = `msg_${++messageCounter}`;
+    const id = crypto.randomUUID();
     const message: DialogueMessage = { ...msg, id };
 
-    // For dialogue messages, calculate expiry
+    // For dialogue messages, calculate expiry using correct math
     if (msg.type === 'dialogue') {
-      const wordCount = msg.text.split(' ').length;
-      const holdTime = 2000 + wordCount * 60;
-      message.expiresAt = Date.now() + holdTime + 3000; // +3s for streaming time
+      message.expiresAt = computeExpiry(msg.text, msg.speaker);
     }
 
-    // Max 3 messages visible. If at limit, remove oldest dialogue.
+    // Max 2 messages visible. If at limit, remove oldest dialogue first.
     let queue = [...s.messageQueue, message];
-    while (queue.length > 3) {
+    while (queue.length > 2) {
       const oldestDialogue = queue.findIndex((m) => m.type === 'dialogue');
       if (oldestDialogue >= 0) {
         queue.splice(oldestDialogue, 1);
@@ -121,6 +140,10 @@ export const useUIStore = create<UIState & UIActions>()((set) => ({
   })),
 
   clearAllMessages: () => set({ messageQueue: [] }),
+
+  clearOnScreenChange: () => set((s) => ({
+    messageQueue: s.messageQueue.filter((m) => m.type === 'dialogue'),
+  })),
 
   // Pip
   setPipState: (state) => set({ pipState: state }),
