@@ -48,8 +48,8 @@ interface IndustrySwipeCardProps {
   cardKey: string | number;
 }
 
-type TrendingChip = { name: string; isIndia: boolean };
-type TrendingBlock = { chips: TrendingChip[]; label: string; icon: string };
+type RaceChip = { name: string; isIndia: boolean };
+type RaceBlock = { chips: RaceChip[] };
 type FallbackStat = { leadLabel: string; value: string; unit: string; name: string };
 
 function formatMarketSize(m: number): string {
@@ -62,25 +62,23 @@ function formatCategory(c: string): string {
 }
 
 /**
- * IndustrySwipeCard — Hinge-style swipe card for S04.
+ * IndustrySwipeCard — S04 swipe card, rewritten as a conviction-bet sheet.
  *
- * Front (40/22/23/15 vertical split):
- *   - Hero (40%)  : color gradient, emoji 56px, name 28px serif, meta line.
- *   - Prompt (22%): ONE Hinge prompt — slightly larger type than before,
- *                   since it's alone.
- *   - Data (23%)  : trending-companies chip row (global-primary + one 🇮🇳
- *                   India leader blended in) OR fallback "fastest-growing
- *                   slice" stat if no trending data.
- *   - Hint (15%)  : "tap for the deep read →".
+ * Front stack (36/14/19/16/15 vertical split):
+ *   - HERO (36%)    : emoji 48px, name 24px serif, meta line
+ *                     ("$200B · 36% CAGR · TECH").
+ *   - THE PULL (14%): label + the industry tagline. No card — just a
+ *                     conviction line on the dark background.
+ *   - THE OPENING (19%): gold left-border card. Surfaces the
+ *                     "TOGETHER WE COULD" hinge prompt as the bet.
+ *   - WHO'S IN THE RACE (16%): chip row — 4 global + 1 🇮🇳 India leader.
+ *   - FLIP HINT (15%): "↻  flip for the full read".
  *
- * Back:
- *   - Header (emoji + name + "the deep read")
- *   - 2nd Hinge prompt as left-border accent intro
- *   - Why now
+ * Back — 4 sections only:
  *   - ⚡ AI disruption angle
- *   - Top 3 sub-CAGRs
- *   - What's happening (📰 headline + 🌿 cultural trend + opposite chip row)
- *   - Footer "← back to pitch"
+ *   - Top 3 sub-CAGRs (with bars)
+ *   - 📰 What's happening (recent headline)
+ *   - 🇮🇳 India leaders (up to 6 chips)
  *
  * Gestures: drag left = Pass, right = Keep, up = Edge. Tap = flip.
  */
@@ -106,7 +104,6 @@ export function IndustrySwipeCard({
   const colorDark = industry.color_secondary || '#78350F';
   const emoji = industry.emoji || industry.icon || '🌐';
 
-  // Meta line: "$200B · 36% CAGR · Tech"
   const metaLine = useMemo(() => {
     const parts: string[] = [];
     if (industry.market_size_b) parts.push(formatMarketSize(industry.market_size_b));
@@ -115,129 +112,63 @@ export function IndustrySwipeCard({
     return parts.join(' · ');
   }, [industry.market_size_b, industry.cagr_pct, industry.category]);
 
-  // 2 prompts per card — front gets the first, back gets the second.
-  const [frontPrompt, backPrompt] = useMemo(() => {
+  // THE PULL — prefer tagline, fall back to cultural_trend.
+  const pullText = industry.tagline || industry.cultural_trend || '';
+
+  // THE OPENING — the "TOGETHER WE COULD" prompt. Fallback: first prompt.
+  const openingText = useMemo(() => {
     const bank = industry.hinge_prompts || [];
-    if (bank.length === 0) return [null, null];
-    if (bank.length === 1) return [bank[0], null];
-    const shuffled = [...bank].sort(() => Math.random() - 0.5);
-    return [shuffled[0], shuffled[1]];
-  }, [industry.id, industry.hinge_prompts]);
+    if (bank.length === 0) return null;
+    const together = bank.find((p) => p.label.toUpperCase() === 'TOGETHER WE COULD');
+    return (together || bank[0])?.text || null;
+  }, [industry.hinge_prompts]);
 
   const topCagrs = useMemo(() => {
     const arr = industry.sub_category_cagrs || [];
     return [...arr].sort((a, b) => b.cagr_pct - a.cagr_pct).slice(0, 3);
   }, [industry.sub_category_cagrs]);
 
-  // Front data block: trending-companies chip row (global-primary + blend 1 India)
-  // Fallback cascade: trending_global → india_leaders → trending_startups → stat.
-  const { frontTrending, fallbackStat, frontSource } = useMemo(() => {
+  // WHO'S IN THE RACE — global-primary + 1 India leader blended as last chip.
+  // Falls back cleanly when data is thin.
+  const { raceBlock, fallbackStat } = useMemo(() => {
     const global = industry.trending_global || [];
     const india = industry.india_leaders || industry.example_startups_india || [];
     const other = industry.trending_startups || [];
 
-    // Primary: global with one India leader blended as the last chip.
     if (global.length >= 2) {
-      const globalSlice = global.slice(0, india.length > 0 ? 4 : 5);
-      const chips: TrendingChip[] = globalSlice.map((n) => ({ name: n, isIndia: false }));
+      const take = india.length > 0 ? 4 : 5;
+      const chips: RaceChip[] = global.slice(0, take).map((n) => ({ name: n, isIndia: false }));
       if (india.length > 0) chips.push({ name: india[0], isIndia: true });
-      return {
-        frontTrending: { chips, label: 'Trending now', icon: '🌎' } as TrendingBlock,
-        fallbackStat: null,
-        frontSource: 'global-with-india' as const,
-      };
+      return { raceBlock: { chips } as RaceBlock, fallbackStat: null };
     }
-
-    // Secondary: India-only if no global data.
     if (india.length >= 2) {
       return {
-        frontTrending: {
-          chips: india.slice(0, 5).map((n) => ({ name: n, isIndia: true })),
-          label: 'Leading in India',
-          icon: '🇮🇳',
-        } as TrendingBlock,
+        raceBlock: { chips: india.slice(0, 5).map((n) => ({ name: n, isIndia: true })) } as RaceBlock,
         fallbackStat: null,
-        frontSource: 'india' as const,
       };
     }
-
-    // Tertiary: generic trending_startups bucket.
     if (other.length >= 2) {
       return {
-        frontTrending: {
-          chips: other.slice(0, 5).map((n) => ({ name: n, isIndia: false })),
-          label: 'Notable players',
-          icon: '✨',
-        } as TrendingBlock,
+        raceBlock: { chips: other.slice(0, 5).map((n) => ({ name: n, isIndia: false })) } as RaceBlock,
         fallbackStat: null,
-        frontSource: 'other' as const,
       };
     }
-
-    // Final fallback: top sub-CAGR as a big stat.
     const top = topCagrs[0];
     if (top) {
       return {
-        frontTrending: null,
+        raceBlock: null,
         fallbackStat: {
           leadLabel: 'Fastest-growing slice',
           value: `${top.cagr_pct}`,
           unit: '% CAGR',
           name: top.name,
         } as FallbackStat,
-        frontSource: 'stat' as const,
       };
     }
-
-    return { frontTrending: null, fallbackStat: null, frontSource: 'none' as const };
+    return { raceBlock: null, fallbackStat: null };
   }, [industry.trending_global, industry.india_leaders, industry.example_startups_india, industry.trending_startups, topCagrs]);
 
-  // Back data block: opposite of what's on front so chips aren't duplicated.
-  const backTrending = useMemo((): TrendingBlock | null => {
-    const global = industry.trending_global || [];
-    const india = industry.india_leaders || industry.example_startups_india || [];
-
-    if (frontSource === 'global-with-india') {
-      // Front used global + india[0]. Back shows remaining india leaders.
-      const rest = india.slice(1, 5);
-      if (rest.length === 0) return null;
-      return {
-        chips: rest.map((n) => ({ name: n, isIndia: true })),
-        label: 'More from India',
-        icon: '🇮🇳',
-      };
-    }
-
-    if (frontSource === 'india') {
-      // Front used india only. Back shows global trending if present.
-      if (global.length === 0) return null;
-      return {
-        chips: global.slice(0, 5).map((n) => ({ name: n, isIndia: false })),
-        label: 'Trending globally',
-        icon: '🌎',
-      };
-    }
-
-    if (frontSource === 'other' || frontSource === 'stat' || frontSource === 'none') {
-      // Front had generic/stat — back can surface any lists that exist.
-      if (global.length) {
-        return {
-          chips: global.slice(0, 5).map((n) => ({ name: n, isIndia: false })),
-          label: 'Trending globally',
-          icon: '🌎',
-        };
-      }
-      if (india.length) {
-        return {
-          chips: india.slice(0, 5).map((n) => ({ name: n, isIndia: true })),
-          label: 'Leading in India',
-          icon: '🇮🇳',
-        };
-      }
-    }
-
-    return null;
-  }, [frontSource, industry.trending_global, industry.india_leaders, industry.example_startups_india]);
+  const indiaLeaders = (industry.india_leaders || industry.example_startups_india || []).slice(0, 6);
 
   function handleDragEnd(_: unknown, info: { offset: { x: number; y: number } }) {
     const { x: dx, y: dy } = info.offset;
@@ -264,6 +195,10 @@ export function IndustrySwipeCard({
         up: { y: -500, opacity: 0, scale: 0.9 },
       }[exitDirection]
     : undefined;
+
+  // Gold tints for labels
+  const GOLD_SOLID = '#D4A843';
+  const GOLD_TINT = 'rgba(212,168,67,0.56)'; // #D4A84390 equivalent
 
   return (
     <motion.div
@@ -315,9 +250,9 @@ export function IndustrySwipeCard({
               boxShadow: `0 14px 44px -10px ${color}80, 0 0 0 1px ${color}30`,
             }}
           >
-            {/* Hero — 40% */}
+            {/* HERO — 36% */}
             <div
-              className="basis-[40%] shrink-0 relative flex flex-col justify-end px-5 pb-3"
+              className="basis-[36%] shrink-0 relative flex flex-col justify-end px-5 pb-3"
               style={{
                 background: `linear-gradient(160deg, ${color} 0%, ${colorDark} 65%, #0C0E12 100%)`,
               }}
@@ -332,50 +267,74 @@ export function IndustrySwipeCard({
                 }}
               />
               <div className="relative">
-                <div className="text-[56px] leading-none select-none mb-1" aria-hidden>
+                <div className="text-[48px] leading-none select-none mb-1" aria-hidden>
                   {emoji}
                 </div>
-                <h2 className="text-[28px] font-serif font-bold text-white leading-[1.05]">
+                <h2 className="text-[24px] font-serif font-bold text-white leading-[1.05]">
                   {industry.name}
                 </h2>
                 {metaLine && (
-                  <p className="text-[11px] font-mono uppercase tracking-[0.12em] text-white/65 mt-1.5">
+                  <p className="text-[10.5px] font-mono uppercase tracking-[0.12em] text-white/65 mt-1">
                     {metaLine}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* 1 Hinge prompt — 22% */}
-            <div className="basis-[22%] shrink-0 flex items-center px-5">
-              {frontPrompt ? (
-                <div className="w-full bg-black/35 backdrop-blur-sm rounded-xl px-4 py-3 border border-white/10">
+            {/* THE PULL — 14% (label + tagline, no container) */}
+            <div className="basis-[14%] shrink-0 flex flex-col justify-center px-5">
+              {pullText && (
+                <>
                   <p
-                    className="text-[10px] font-mono uppercase tracking-[0.15em] font-semibold mb-1.5"
-                    style={{ color: `${color}E0` }}
+                    className="text-[9px] font-mono uppercase font-semibold mb-1"
+                    style={{ color: GOLD_TINT, letterSpacing: '0.2em' }}
                   >
-                    {frontPrompt.label}
+                    The Pull
                   </p>
-                  <p className="text-[14px] text-white/95 leading-snug line-clamp-2">
-                    {frontPrompt.text}
+                  <p className="text-[15px] italic text-ivory/90 leading-[1.3]">
+                    {pullText}
                   </p>
-                </div>
-              ) : null}
+                </>
+              )}
             </div>
 
-            {/* Data block — 23% (trending chips OR stat fallback) */}
-            <div className="basis-[23%] shrink-0 flex flex-col justify-center px-5">
-              {frontTrending ? (
-                <div>
-                  <p className="text-[10px] text-white/55 uppercase tracking-[0.15em] font-semibold mb-1.5 flex items-center gap-1.5">
-                    <span className="text-[12px]">{frontTrending.icon}</span>
-                    {frontTrending.label}
+            {/* THE OPENING — 19% (gold-accent card with the conviction bet) */}
+            <div className="basis-[19%] shrink-0 flex items-center px-5">
+              {openingText && (
+                <div
+                  className="w-full rounded-[10px]"
+                  style={{
+                    background: 'rgba(212,168,67,0.08)',
+                    borderLeft: '2px solid rgba(212,168,67,0.5)',
+                    padding: '10px 12px',
+                  }}
+                >
+                  <p
+                    className="text-[9px] font-mono uppercase font-semibold mb-1"
+                    style={{ color: GOLD_SOLID, letterSpacing: '0.2em' }}
+                  >
+                    The Opening
+                  </p>
+                  <p className="text-[13px] text-ivory/85 leading-snug">{openingText}</p>
+                </div>
+              )}
+            </div>
+
+            {/* WHO'S IN THE RACE — 16% (chip row or stat fallback) */}
+            <div className="basis-[16%] shrink-0 flex flex-col justify-center px-5">
+              {raceBlock ? (
+                <>
+                  <p
+                    className="text-[9px] font-mono uppercase font-semibold mb-1.5"
+                    style={{ color: GOLD_TINT, letterSpacing: '0.2em' }}
+                  >
+                    Who's in the Race
                   </p>
                   <div className="flex flex-wrap gap-1.5">
-                    {frontTrending.chips.map((chip) => (
+                    {raceBlock.chips.map((chip) => (
                       <span
                         key={chip.name}
-                        className="text-[11px] px-2.5 py-1 rounded-full text-white/90 border inline-flex items-center gap-1"
+                        className="text-[11px] px-2.5 py-0.5 rounded-full text-white/90 border inline-flex items-center gap-1"
                         style={{
                           background: `${color}22`,
                           borderColor: `${color}55`,
@@ -386,29 +345,31 @@ export function IndustrySwipeCard({
                       </span>
                     ))}
                   </div>
-                </div>
+                </>
               ) : fallbackStat ? (
-                <div>
-                  <p className="text-[10px] text-white/55 uppercase tracking-[0.15em] font-semibold mb-1.5 flex items-center gap-1.5">
-                    <span className="text-[12px]">🚀</span>
-                    {fallbackStat.leadLabel}
+                <>
+                  <p
+                    className="text-[9px] font-mono uppercase font-semibold mb-1"
+                    style={{ color: GOLD_TINT, letterSpacing: '0.2em' }}
+                  >
+                    🚀 {fallbackStat.leadLabel}
                   </p>
                   <div className="flex items-baseline gap-2">
-                    <span className="text-[26px] font-bold leading-none" style={{ color }}>
+                    <span className="text-[22px] font-bold leading-none" style={{ color }}>
                       {fallbackStat.value}
                     </span>
                     <span className="text-[12px] text-white/75">{fallbackStat.unit}</span>
                     <span className="text-[11px] text-white/40">·</span>
                     <span className="text-[12px] text-white/70 truncate">{fallbackStat.name}</span>
                   </div>
-                </div>
+                </>
               ) : null}
             </div>
 
-            {/* Hint — 15% */}
+            {/* FLIP HINT — 15% */}
             <div className="basis-[15%] shrink-0 flex items-center justify-center">
-              <p className="text-[10px] italic text-ivory/45 tracking-wide">
-                tap for the deep read →
+              <p className="text-[10px] italic text-ivory/35 tracking-wide">
+                ↻  flip for the full read
               </p>
             </div>
           </div>
@@ -437,37 +398,9 @@ export function IndustrySwipeCard({
               </div>
             </div>
 
-            {/* Scrollable zones */}
-            <div className="flex-1 overflow-y-auto px-5 py-3 space-y-3 min-h-0">
-              {/* 2nd Hinge prompt — left-border accent intro */}
-              {backPrompt && (
-                <div
-                  className="bg-white/5 border-l-2 rounded-r-xl px-4 py-3"
-                  style={{ borderColor: color }}
-                >
-                  <p
-                    className="text-[9px] font-mono uppercase tracking-[0.15em] font-semibold mb-1"
-                    style={{ color: `${color}CC` }}
-                  >
-                    {backPrompt.label}
-                  </p>
-                  <p className="text-[13px] text-white/90 leading-relaxed">{backPrompt.text}</p>
-                </div>
-              )}
-
-              {/* Why now */}
-              {industry.why_now && (
-                <div className="border-l-2 pl-3" style={{ borderColor: color }}>
-                  <p className="text-[9px] uppercase tracking-widest mb-1" style={{ color }}>
-                    Why now
-                  </p>
-                  <p className="text-[12px] text-white/85 leading-relaxed italic">
-                    {industry.why_now}
-                  </p>
-                </div>
-              )}
-
-              {/* AI disruption angle */}
+            {/* 4 zones only */}
+            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 min-h-0">
+              {/* 1. AI disruption angle */}
               {industry.ai_disruption_angle && (
                 <div className="bg-purple-500/10 border border-purple-500/25 rounded-xl p-3 flex items-start gap-2">
                   <span className="text-[15px] mt-0.5">⚡</span>
@@ -482,7 +415,7 @@ export function IndustrySwipeCard({
                 </div>
               )}
 
-              {/* Top 3 sub-CAGRs */}
+              {/* 2. Top sub-CAGRs */}
               {topCagrs.length > 0 && (
                 <div>
                   <p className="text-[9px] text-white/40 uppercase tracking-widest mb-2 font-semibold">
@@ -510,39 +443,37 @@ export function IndustrySwipeCard({
                 </div>
               )}
 
-              {/* What's happening — headline + cultural trend + opposite chip row */}
-              {(industry.recent_headline || industry.cultural_trend || backTrending) && (
-                <div className="bg-white/4 border border-white/8 rounded-xl p-3 space-y-2">
-                  <p className="text-[9px] text-white/40 uppercase tracking-widest font-semibold">
+              {/* 3. What's happening — recent headline */}
+              {industry.recent_headline && (
+                <div className="bg-white/4 border border-white/8 rounded-xl p-3">
+                  <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold">
                     What's happening
                   </p>
-                  {industry.recent_headline && (
-                    <p className="text-[11.5px] text-white/85 leading-snug flex items-start gap-1.5">
-                      <span className="shrink-0">📰</span>
-                      <span>{industry.recent_headline}</span>
-                    </p>
-                  )}
-                  {industry.cultural_trend && (
-                    <p className="text-[11.5px] text-white/70 leading-snug italic flex items-start gap-1.5">
-                      <span className="shrink-0">🌿</span>
-                      <span>&ldquo;{industry.cultural_trend}&rdquo;</span>
-                    </p>
-                  )}
-                  {backTrending && backTrending.chips.length > 0 && (
-                    <div className="flex items-center flex-wrap gap-1.5 pt-1">
-                      <span className="text-[11px] shrink-0">{backTrending.icon}</span>
-                      {backTrending.chips.map((chip) => (
-                        <span
-                          key={chip.name}
-                          className="text-[10px] px-2 py-0.5 rounded-full text-white/80 inline-flex items-center gap-1"
-                          style={{ background: `${color}22`, border: `1px solid ${color}40` }}
-                        >
-                          {chip.isIndia && <span className="text-[9px] leading-none">🇮🇳</span>}
-                          {chip.name}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+                  <p className="text-[12px] text-white/85 leading-snug flex items-start gap-1.5">
+                    <span className="shrink-0">📰</span>
+                    <span>{industry.recent_headline}</span>
+                  </p>
+                </div>
+              )}
+
+              {/* 4. India leaders */}
+              {indiaLeaders.length > 0 && (
+                <div>
+                  <p className="text-[9px] text-white/40 uppercase tracking-widest mb-2 font-semibold flex items-center gap-1.5">
+                    <span>🇮🇳</span>
+                    India leaders
+                  </p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {indiaLeaders.map((name) => (
+                      <span
+                        key={name}
+                        className="text-[11px] px-2.5 py-1 rounded-full text-white/90 border"
+                        style={{ background: `${color}22`, borderColor: `${color}55` }}
+                      >
+                        {name}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

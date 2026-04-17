@@ -115,12 +115,15 @@ export const lines = {
 
   s04: {
     cedric: {
-      intro: 'Now I\'m going to show you fifteen worlds. Some will pull you in. Some won\'t. Trust the pull — not the logic.',
+      intro: 'Fifteen worlds. Some will pull. Some won\'t. Keep what pulls. Star what obsesses you — only two obsessions allowed.',
       afterPip: '...that\'s not entirely wrong, actually.',
       afterAll: (kept: number, edged: number) => `${kept} worlds kept. ${edged} edges marked. The garden is narrowing.`,
     },
     pip: {
       intro: 'This is the fun part! It\'s like shopping but for your FUTURE.',
+      afterFirstKeep: 'Ooh, good one. I can feel that one\'s pulling.',
+      afterFirstEdge: 'An obsession! That\'s a commitment, you know. Only two of those allowed.',
+      atThreshold: 'Okay! Two worlds that pulled. You could stop here — or keep going and find the ones that OBSESS you.',
       afterAll: 'I wanted to edge ALL of them. Cedric said that \'defeats the purpose.\' Whatever that means.',
     },
   },

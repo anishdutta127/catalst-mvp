@@ -61,6 +61,9 @@ export function S04Industries() {
   const [isPulsing, setIsPulsing] = useState(false);
   const dialogueSent = useRef(false);
   const hasPulsed = useRef(false);
+  const firstKeepFired = useRef(false);
+  const firstEdgeFired = useRef(false);
+  const thresholdFired = useRef(false);
 
   // Intro dialogue — once per mount.
   useEffect(() => {
@@ -112,8 +115,26 @@ export function S04Industries() {
 
   function handleKeep() {
     if (!currentCard) return;
+    const prevKeepCount = industriesKept.length;
     keepIndustry(currentCard.id);
     setLastAction({ type: 'keep', id: currentCard.id });
+
+    // Pip beat — first keep (0 → 1)
+    if (!firstKeepFired.current && prevKeepCount === 0) {
+      firstKeepFired.current = true;
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'pip', text: lines.s04.pip.afterFirstKeep, type: 'dialogue' });
+      }, 600);
+    }
+
+    // Pip beat — threshold crossed (1 → 2). Extra 300ms delay so it doesn't
+    // step on the firstKeep beat on rapid keep-keep.
+    if (!thresholdFired.current && prevKeepCount === 1) {
+      thresholdFired.current = true;
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'pip', text: lines.s04.pip.atThreshold, type: 'dialogue' });
+      }, 1100);
+    }
   }
 
   function handleEdge() {
@@ -125,6 +146,14 @@ export function S04Industries() {
     }
     edgeIndustry(currentCard.id);
     setLastAction({ type: 'edge', id: currentCard.id });
+
+    // Pip beat — first edge
+    if (!firstEdgeFired.current) {
+      firstEdgeFired.current = true;
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'pip', text: lines.s04.pip.afterFirstEdge, type: 'dialogue' });
+      }, 600);
+    }
   }
 
   function handleUndo() {
@@ -158,7 +187,8 @@ export function S04Industries() {
   return (
     <div className="flex flex-col h-full">
       {/* ════════ [A] Filter strip — 36px wavelength bar ════════ */}
-      <div className="shrink-0 h-9 flex overflow-x-auto scrollbar-none rounded-lg border border-white/5 bg-white/[0.02]">
+      {/* pr-14 reserves Pip's top-right airspace (~56px) */}
+      <div className="shrink-0 h-9 flex overflow-x-auto scrollbar-none rounded-lg border border-white/5 bg-white/[0.02] pr-14">
         {CATEGORIES.map((c, i) => {
           const active = activeCategory === c.id;
           return (
@@ -195,7 +225,8 @@ export function S04Industries() {
       </div>
 
       {/* ════════ [B] Counter + undo — 24px ════════ */}
-      <div className="shrink-0 h-6 flex items-center justify-between px-1 text-[10px] font-mono uppercase tracking-wider">
+      {/* pr-14 matches the filter strip — keeps text out of Pip's column */}
+      <div className="shrink-0 h-6 flex items-center justify-between pl-1 pr-14 text-[10px] font-mono uppercase tracking-wider">
         <span className="text-ivory/40">
           {totalSeen} of {INDUSTRIES.length} · {industriesKept.length} kept
           {industriesEdged.length > 0 && ` · ${industriesEdged.length} edged`}
@@ -211,7 +242,8 @@ export function S04Industries() {
       </div>
 
       {/* ════════ [C] Card zone — flex-1 ════════ */}
-      <div className="flex-1 relative min-h-0 py-1.5">
+      {/* pt-3 = 12px buffer between counter row and card top */}
+      <div className="flex-1 relative min-h-0 pt-3 pb-1.5">
         <AnimatePresence mode="popLayout">
           {!currentCard && (
             <motion.div
