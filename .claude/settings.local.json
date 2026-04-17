@@ -37,7 +37,10 @@
       "Bash(cp C:/Users/anish/Downloads/industries-rich.json C:/Users/anish/Downloads/catalst-mvp/scripts/rich-data/industries-rich.json)",
       "Bash(cp C:/Users/anish/Downloads/houses-quantified.json C:/Users/anish/Downloads/catalst-mvp/scripts/rich-data/houses-quantified.json)",
       "Bash(cp C:/Users/anish/Downloads/ideas-deep-content-templates.json C:/Users/anish/Downloads/catalst-mvp/scripts/rich-data/ideas-deep-content-templates.json)",
-      "Bash(cp C:/Users/anish/Downloads/merge-rich-data.js C:/Users/anish/Downloads/catalst-mvp/scripts/merge-rich-data.js)"
+      "Bash(cp C:/Users/anish/Downloads/merge-rich-data.js C:/Users/anish/Downloads/catalst-mvp/scripts/merge-rich-data.js)",
+      "Bash(npx eslint *)",
+      "Bash(gstack --help)",
+      "Bash(python *)"
     ]
   }
 }
