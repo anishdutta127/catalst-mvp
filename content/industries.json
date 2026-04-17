@@ -109,7 +109,87 @@
     "ai_opportunity": "Every knowledge workflow (legal, medical, financial, engineering) can be rebuilt with LLMs at 10x speed and 90% lower cost",
     "key_insight": "The AI infrastructure layer is commoditising — the value is in vertical application. Domain expertise + LLM = unfair advantage.",
     "investor_sentiment": "Hottest sector in VC. 30%+ of all 2024 deals touched AI.",
-    "regulation_watch": "EU AI Act live 2025. High-risk AI systems need conformity assessment — creates compliance SaaS opportunity."
+    "regulation_watch": "EU AI Act live 2025. High-risk AI systems need conformity assessment — creates compliance SaaS opportunity.",
+    "category": "tech",
+    "color_primary": "#7C3AED",
+    "color_secondary": "#4C1D95",
+    "tagline": "The picks and shovels of every other industry",
+    "ai_disruption_angle": "Every knowledge-work flow — legal, medical, financial, engineering — is being rebuilt at 10x speed, 90% lower cost. The moat is vertical depth and distribution, not the model.",
+    "cultural_trend": "Every B2B SaaS is now a 'wrapper' until proven otherwise",
+    "recent_headline": "Cursor hits $9B valuation as Claude 4.7 agents ship in production for Fortune 500",
+    "investor_sentiment_short": "$45B deployed globally in Q1 2026 — 3x YoY. Late-stage AI tooling has never been hotter.",
+    "sub_category_cagrs": [
+      {
+        "name": "AI agents",
+        "cagr_pct": 42
+      },
+      {
+        "name": "Vertical AI (healthcare, legal)",
+        "cagr_pct": 38
+      },
+      {
+        "name": "AI-native dev tools",
+        "cagr_pct": 50
+      },
+      {
+        "name": "RAG infrastructure",
+        "cagr_pct": 35
+      },
+      {
+        "name": "On-device / edge models",
+        "cagr_pct": 28
+      }
+    ],
+    "india_leaders": [
+      "Krutrim",
+      "Sarvam AI",
+      "Yellow.ai",
+      "Observe.AI",
+      "Haptik",
+      "Gupshup"
+    ],
+    "trending_global": [
+      "Cursor",
+      "Cognition",
+      "Harvey",
+      "Perplexity",
+      "Decagon",
+      "Sierra"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$200B market, 36% CAGR, and no vertical leader has locked in yet"
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've shipped something with an LLM API this month"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Vertical depth, not horizontal breadth — narrow beats broad here"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Your moat isn't the model. It's distribution, workflow integration, and domain data"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "India's AI funding doubled in 2025 — Sarvam and Krutrim raised on tokenizer IP alone"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Rebuild a legacy workflow — tax filing, radiology reads, contract review — at 10x speed"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "AGI is a distraction. 90% of the value is in boring, specific, well-scoped automation"
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see the margin on a well-scoped vertical AI tool — 80%+ gross, often solo-profitable"
+      }
+    ]
   },
   {
     "id": "health_wellness",
@@ -222,7 +302,87 @@
     "ai_opportunity": "Continuous glucose monitors + LLMs can deliver personalised nutrition advice at zero marginal cost per user",
     "key_insight": "Prevention > Treatment. Users pay for outcomes (weight loss, sleep, energy) not for 'health tech'. Frame everything as a life upgrade.",
     "investor_sentiment": "Post-COVID tailwind sustained. Mental health, metabolic health, and women's health are highest-growth sub-sectors.",
-    "regulation_watch": "CDSCO digital health guidelines in India. FDA SaMD pathways in US. Both creating moats for first-movers who get certified."
+    "regulation_watch": "CDSCO digital health guidelines in India. FDA SaMD pathways in US. Both creating moats for first-movers who get certified.",
+    "category": "health",
+    "color_primary": "#059669",
+    "color_secondary": "#064E3B",
+    "tagline": "Where longevity meets AI meets GLP-1",
+    "ai_disruption_angle": "AI triage and continuous remote monitoring will absorb 60% of primary care visits by 2030. The winners own the data pipeline, not the devices.",
+    "cultural_trend": "Ozempic reframed obesity as a solvable biology problem, not a willpower one",
+    "recent_headline": "Hims & Hers quietly becomes a $12B GLP-1 distribution company",
+    "investor_sentiment_short": "Longevity-specific funds raised $8B in 2025. GLP-1 adjacency is the new fintech.",
+    "sub_category_cagrs": [
+      {
+        "name": "GLP-1 adjacent services",
+        "cagr_pct": 45
+      },
+      {
+        "name": "Mental health tech",
+        "cagr_pct": 22
+      },
+      {
+        "name": "Continuous monitoring",
+        "cagr_pct": 30
+      },
+      {
+        "name": "Longevity / diagnostics",
+        "cagr_pct": 28
+      },
+      {
+        "name": "Women's health",
+        "cagr_pct": 24
+      }
+    ],
+    "india_leaders": [
+      "Practo",
+      "HealthifyMe",
+      "PharmEasy",
+      "Cult.fit",
+      "MFine",
+      "Pristyn Care"
+    ],
+    "trending_global": [
+      "Hims & Hers",
+      "Ro",
+      "Function Health",
+      "Levels",
+      "Oura",
+      "WHOOP"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$330B global market. Aging demographics everywhere. This one doesn't go away."
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've actually used a wearable for 90 straight days and have opinions"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders who see obesity, sleep, and mental health as biological — not moral — problems"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Regulation is the moat. The winners learn the FDA game early, not late"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "India's preventive-health market is growing 35% YoY — and we're just starting"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the GLP-1 companion layer — coaching, habit support, off-ramp"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Wellness is a luxury category. The next trillion is in medicalization of lifestyle"
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When the first remote-first GP practice crosses $100M — which is happening in the next 18 months"
+      }
+    ]
   },
   {
     "id": "creator_media",
@@ -336,7 +496,87 @@
     "ai_opportunity": "AI dubbing + lip-sync enables any Indian creator to publish in 10 languages simultaneously — unlocking Bharat tier-2/3 audiences",
     "key_insight": "Distribution beats content quality. The winning creator tools help get MORE viewers, not make BETTER videos.",
     "investor_sentiment": "Strong. Creator monetisation tools and AI production tools attracting Series A/B rounds.",
-    "regulation_watch": "ASCI guidelines on influencer disclosures tightening. Deepfake regulations emerging in EU and India."
+    "regulation_watch": "ASCI guidelines on influencer disclosures tightening. Deepfake regulations emerging in EU and India.",
+    "category": "creative",
+    "color_primary": "#EC4899",
+    "color_secondary": "#831843",
+    "tagline": "Attention is the only scarce resource left",
+    "ai_disruption_angle": "Gen AI collapsed production cost to zero. The moat moved to taste, distribution, and unique POV. Editors who curate beat creators who generate.",
+    "cultural_trend": "India's creator economy is minting more millionaires per capita than Silicon Valley per year",
+    "recent_headline": "Indian short-form creator Kusha Kapila signs $30M multi-platform deal, redefining talent economics",
+    "investor_sentiment_short": "Creator SaaS ARR grew 48% in 2025. Tools that help creators monetize 10x'd.",
+    "sub_category_cagrs": [
+      {
+        "name": "Creator tooling (editing, analytics)",
+        "cagr_pct": 35
+      },
+      {
+        "name": "Short-form video / AI-native",
+        "cagr_pct": 40
+      },
+      {
+        "name": "Newsletter / substack economy",
+        "cagr_pct": 22
+      },
+      {
+        "name": "Podcast tech",
+        "cagr_pct": 18
+      },
+      {
+        "name": "Creator commerce / storefronts",
+        "cagr_pct": 32
+      }
+    ],
+    "india_leaders": [
+      "Sharechat",
+      "Kuku FM",
+      "Khabri",
+      "Winzo",
+      "Rigi",
+      "Instamojo"
+    ],
+    "trending_global": [
+      "Cameo",
+      "Patreon",
+      "Substack",
+      "Beehiiv",
+      "Descript",
+      "Captions"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "A 21-year-old in Bangalore can now outearn a VP at Goldman"
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've published something — anything — publicly in the last week"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Taste. Specific opinions. A POV that makes people angry or obsessed"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "99% of creator tools are commodified. The winners sell monetization, not creation"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "India's short-form watch time exceeded the US in 2025 — on 6x the population"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the agent infrastructure for the next 10,000 Indian creators to go pro"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "YouTube is the best venture-backable business to compete with. Shorts is already over."
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see a solo creator's P&L — 70%+ margin, $500K ARR, 4-person team"
+      }
+    ]
   },
   {
     "id": "finance_payments",
@@ -451,7 +691,87 @@
     "ai_opportunity": "LLM-powered financial advisory at ₹0 marginal cost per conversation — democratising wealth management for mass-market India",
     "key_insight": "The most valuable fintech play in India is not payments (solved) — it's credit scoring for the informal economy using alternative data.",
     "investor_sentiment": "Cautious post-2022 correction but B2B fintech infrastructure and lending-as-a-service remain active.",
-    "regulation_watch": "RBI digital lending guidelines. SEBI investment adviser licensing. Both creating compliance moats."
+    "regulation_watch": "RBI digital lending guidelines. SEBI investment adviser licensing. Both creating compliance moats.",
+    "category": "finance",
+    "color_primary": "#0EA5E9",
+    "color_secondary": "#0C4A6E",
+    "tagline": "Bank rails are software now",
+    "ai_disruption_angle": "Risk underwriting, fraud detection, compliance review — every backoffice function in finance is being reinvented with LLMs. The winners own the data lake.",
+    "cultural_trend": "UPI normalised $3T+ in annual retail flows — stablecoins are next",
+    "recent_headline": "RBI-backed CBDC pilot crosses 10M daily users, reshapes cross-border remittance pricing",
+    "investor_sentiment_short": "Stablecoin infra raised $6B in 2025. B2B payments margin compression is accelerating.",
+    "sub_category_cagrs": [
+      {
+        "name": "Stablecoin rails",
+        "cagr_pct": 55
+      },
+      {
+        "name": "Wealth / robo advisory",
+        "cagr_pct": 18
+      },
+      {
+        "name": "SME lending",
+        "cagr_pct": 25
+      },
+      {
+        "name": "Embedded finance",
+        "cagr_pct": 32
+      },
+      {
+        "name": "Cross-border B2B",
+        "cagr_pct": 28
+      }
+    ],
+    "india_leaders": [
+      "Razorpay",
+      "Cred",
+      "Zerodha",
+      "Groww",
+      "Jupiter",
+      "Perfios"
+    ],
+    "trending_global": [
+      "Ramp",
+      "Mercury",
+      "Stripe",
+      "Wise",
+      "Chime",
+      "Revolut"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$340B market, and every company globally is now a potential fintech"
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You can explain interchange economics in under 60 seconds"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Patience. Fintech is a 5-year grind before it's a 20-year moat"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Regulation is brutal. If you can't talk to a bank CCO, you won't survive month 6"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "UPI processes more transactions in a day than Visa did in a year in 2014"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the stablecoin rails for Indian SMBs doing cross-border — a $200B underserved market"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "B2C fintech is over. B2B-embedded is where the next decade of margin lives"
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see what CAC/LTV looks like in embedded finance vs standalone — 10x better"
+      }
+    ]
   },
   {
     "id": "education_learning",
@@ -565,7 +885,87 @@
     "ai_opportunity": "AI tutors can provide real-time Socratic questioning — the teaching technique that produces 2x better retention — at zero marginal cost",
     "key_insight": "The edtech graveyard is full of content companies. Outcome-based models (pay after placement) are the only model users trust now.",
     "investor_sentiment": "Selective after BYJU's. B2B edtech (teacher tools, school SaaS) and outcome-linked models preferred.",
-    "regulation_watch": "AICTE regulations on online degrees. NEP 2020 implementation creating huge institutional demand for digital tools."
+    "regulation_watch": "AICTE regulations on online degrees. NEP 2020 implementation creating huge institutional demand for digital tools.",
+    "category": "social",
+    "color_primary": "#F59E0B",
+    "color_secondary": "#78350F",
+    "tagline": "The BYJU's collapse left a clean field",
+    "ai_disruption_angle": "AI tutors deliver real-time Socratic questioning — the teaching technique that produces 2x retention — at zero marginal cost. The moat is outcomes proof, not content.",
+    "cultural_trend": "Post-BYJU's, Indian parents trust outcome-backed edtech over celebrity-backed edtech",
+    "recent_headline": "Khan Academy's Khanmigo crosses 10M students worldwide, India state partnerships accelerating",
+    "investor_sentiment_short": "Edtech funding rebounded 40% in 2025 after the 2023-24 trough. AI-tutor category leads.",
+    "sub_category_cagrs": [
+      {
+        "name": "AI tutoring / personalised learning",
+        "cagr_pct": 38
+      },
+      {
+        "name": "K-12 future-skills (coding, AI, robotics)",
+        "cagr_pct": 30
+      },
+      {
+        "name": "Upskilling / career transitions",
+        "cagr_pct": 22
+      },
+      {
+        "name": "Test prep (K-12 + UPSC/NEET)",
+        "cagr_pct": 15
+      },
+      {
+        "name": "Teacher tools / school ops",
+        "cagr_pct": 25
+      }
+    ],
+    "india_leaders": [
+      "PhysicsWallah",
+      "Vedantu",
+      "Scaler",
+      "Camp K12",
+      "Teachmint",
+      "Get Set Learn"
+    ],
+    "trending_global": [
+      "Khan Academy",
+      "Coursera",
+      "Synthesis",
+      "Speak",
+      "Elsa",
+      "Duolingo"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "1.4 billion people in India alone. And trust in the old guard is gone."
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've taught someone something and documented the outcome"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders obsessed with learning outcomes, not learning time"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Content is a commodity. Assessment, feedback loops, and habit are the moat"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "The post-BYJU's trust gap is a competitive opportunity. Quality-first wins fast now."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the next-gen K-12 platform where every student has a Socratic tutor"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Degrees are becoming signaling-only. Actual skill verification is the real market"
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see a student's scores jump from an AI tutor — then you see the retention LTV"
+      }
+    ]
   },
   {
     "id": "food_agriculture",
@@ -679,7 +1079,87 @@
     "ai_opportunity": "Satellite imagery + weather ML can predict crop disease 2 weeks before visible symptoms — turning reactive spraying into preventive precision",
     "key_insight": "Farmers trust other farmers, not apps. Build community-led distribution with village-level influencers (Krishi Mitras) as your sales channel.",
     "investor_sentiment": "Patient capital required (long sales cycles). SoftBank, NABARD, and impact investors most active. Exit via strategic acquisition likely.",
-    "regulation_watch": "PM-KISAN data APIs opening. Agri-stack initiative creating digital farmer identity. Farm laws stability improving investment climate."
+    "regulation_watch": "PM-KISAN data APIs opening. Agri-stack initiative creating digital farmer identity. Farm laws stability improving investment climate.",
+    "category": "other",
+    "color_primary": "#65A30D",
+    "color_secondary": "#1A2E05",
+    "tagline": "Precision fermentation is the next semiconductor",
+    "ai_disruption_angle": "Satellite + computer vision + LLMs are collapsing farm advisory from bi-weekly visits to real-time. The winners build data loops from 100M smallholder farmers.",
+    "cultural_trend": "Protein-scarcity panic + lab-grown tech breakthroughs = the next Tesla moment",
+    "recent_headline": "Indian agritech 'DeHaat' crosses 2M farmers, announces precision-fermentation joint venture",
+    "investor_sentiment_short": "Agritech funding grew 35% in 2025. Alt-protein funding is selective but massive for winners.",
+    "sub_category_cagrs": [
+      {
+        "name": "Precision fermentation / alt-protein",
+        "cagr_pct": 38
+      },
+      {
+        "name": "Satellite / vision agriculture",
+        "cagr_pct": 28
+      },
+      {
+        "name": "Supply chain / D2C farm-to-table",
+        "cagr_pct": 22
+      },
+      {
+        "name": "Vertical / indoor farming",
+        "cagr_pct": 20
+      },
+      {
+        "name": "Food-tech for regional cuisine",
+        "cagr_pct": 18
+      }
+    ],
+    "india_leaders": [
+      "DeHaat",
+      "Ninjacart",
+      "WayCool",
+      "Licious",
+      "Samunnati",
+      "FarMart"
+    ],
+    "trending_global": [
+      "Perfect Day",
+      "Impossible Foods",
+      "Indigo Ag",
+      "Mission Barns",
+      "Climax Foods",
+      "Nature's Fynd"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$148B market, 17% CAGR. Food security + climate = decade-long tailwind"
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've actually talked to a farmer in the last year"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders willing to work with unglamorous, offline distribution"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Agri margins are thin. You win with scale density or with premium niches — nothing in between"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "India has 100M+ smallholder farmers. The data play alone is a generational opportunity."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the agronomist-in-every-pocket for rural Bharat"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Lab-grown meat will be an Indian success story before an American one"
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see a farmer's yield double with ML-driven advisory — then you see the ARPU"
+      }
+    ]
   },
   {
     "id": "climate_energy",
@@ -793,7 +1273,87 @@
     "ai_opportunity": "Satellite + ML-based carbon monitoring is replacing expensive manual audits — turning carbon accounting from annual reports to real-time dashboards",
     "key_insight": "Don't sell 'climate' — sell 'compliance', 'cost savings', and 'ESG rating'. The CFO not the CSO is the buyer.",
     "investor_sentiment": "Strong government backing globally. IRA in US, Green Deal in EU, PM KUSUM in India all creating predictable revenue.",
-    "regulation_watch": "SEBI BRSR Core mandatory from FY25 for top 1000 listed companies. Carbon Border Adjustment Mechanism in EU from 2026."
+    "regulation_watch": "SEBI BRSR Core mandatory from FY25 for top 1000 listed companies. Carbon Border Adjustment Mechanism in EU from 2026.",
+    "category": "tech",
+    "color_primary": "#14B8A6",
+    "color_secondary": "#134E4A",
+    "tagline": "The biggest capital reallocation in history is happening now",
+    "ai_disruption_angle": "AI is compressing drug-discovery-style cycles for battery chemistry, solar efficiency, and grid balancing. The breakthrough is real-time optimisation of fragmented energy assets.",
+    "cultural_trend": "Climate is no longer ideological — it's an insurance and infrastructure problem",
+    "recent_headline": "India hits 500GW renewable target 5 years early, battery storage sector raises $3.2B in 2025",
+    "investor_sentiment_short": "Climate funding hit $115B globally in 2025. Grid tech and battery chemistry are leading categories.",
+    "sub_category_cagrs": [
+      {
+        "name": "Virtual power plants / grid software",
+        "cagr_pct": 32
+      },
+      {
+        "name": "Battery chemistry / solid state",
+        "cagr_pct": 35
+      },
+      {
+        "name": "Carbon capture / direct air",
+        "cagr_pct": 28
+      },
+      {
+        "name": "EV charging infrastructure",
+        "cagr_pct": 40
+      },
+      {
+        "name": "Industrial heat / green hydrogen",
+        "cagr_pct": 25
+      }
+    ],
+    "india_leaders": [
+      "ReNew Power",
+      "Ola Electric",
+      "Ather",
+      "Tata Cleantech",
+      "Oorja",
+      "Hygenco"
+    ],
+    "trending_global": [
+      "Sunrun",
+      "Enphase",
+      "Form Energy",
+      "Heirloom",
+      "Octopus Energy",
+      "Tesla Energy"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$180B market. Largest capex cycle in human history. 30+ year tailwind."
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You can read a solar data sheet or battery spec and actually understand it"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Patient founders. Climate is hard tech — years before revenue, decades of moat"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Policy dependency is real. Know the subsidies. Know the state politics. Or partner with someone who does."
+      },
+      {
+        "label": "FUN FACT",
+        "text": "India installed 15GW of solar in 2024 alone — more than Germany's total grid"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the software layer for India's distributed rooftop solar — it doesn't exist at scale yet"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Climate SaaS is more venture-scalable than hardware. The software eating the grid is the real story."
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see the unit economics of a modern EV fleet manager — solar → battery → EV is one product now"
+      }
+    ]
   },
   {
     "id": "gaming_entertainment",
@@ -905,7 +1465,87 @@
     "ai_opportunity": "Every knowledge workflow (legal, medical, financial, engineering) can be rebuilt with LLMs at 10x speed and 90% lower cost",
     "key_insight": "The AI infrastructure layer is commoditising — the value is in vertical application. Domain expertise + LLM = unfair advantage.",
     "investor_sentiment": "Hottest sector in VC. 30%+ of all 2024 deals touched AI.",
-    "regulation_watch": "EU AI Act live 2025. High-risk AI systems need conformity assessment — creates compliance SaaS opportunity."
+    "regulation_watch": "EU AI Act live 2025. High-risk AI systems need conformity assessment — creates compliance SaaS opportunity.",
+    "category": "creative",
+    "color_primary": "#A855F7",
+    "color_secondary": "#581C87",
+    "tagline": "India's gaming audience just passed the US",
+    "ai_disruption_angle": "AI-generated NPC dialogue, procedural quests, and live voiceover are collapsing game-dev cost 10x. Indie studios can now ship AAA-feeling content with 5-person teams.",
+    "cultural_trend": "Krafton's India bet + domestic publisher rise = a new Valve-sized opportunity in Asia",
+    "recent_headline": "Indian gaming market hits $6B, Nazara crosses 500M MAU across the portfolio",
+    "investor_sentiment_short": "Gaming funding consolidated in 2025 around India-first publishers and AI-native tooling.",
+    "sub_category_cagrs": [
+      {
+        "name": "AI-native game tooling",
+        "cagr_pct": 45
+      },
+      {
+        "name": "Real-money gaming / fantasy",
+        "cagr_pct": 25
+      },
+      {
+        "name": "Hyper-casual / mobile-first",
+        "cagr_pct": 20
+      },
+      {
+        "name": "Streaming / esports",
+        "cagr_pct": 28
+      },
+      {
+        "name": "Mid-core / indie publishing",
+        "cagr_pct": 22
+      }
+    ],
+    "india_leaders": [
+      "Nazara",
+      "Games24x7",
+      "Dream11",
+      "MPL",
+      "Winzo",
+      "JetSynthesys"
+    ],
+    "trending_global": [
+      "Roblox",
+      "Epic Games",
+      "Scopely",
+      "Supercell",
+      "Krafton",
+      "Riot Games"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$200B globally. 3.2B players. India is the fastest-growing market."
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've actually shipped a game, even a small one. Or you love games obsessively."
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders who can code AND understand retention math"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Hit-driven industry. Most studios fail. Live-service is the only consistently-monetisable model"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "India has 568M gamers — more than the US population — and the market is 6B and growing"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build AI NPCs that players actually want to talk to — that changes the entire quest paradigm"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Real-money gaming is the most addictive monetisation ever invented. Regulate it or ride it."
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see what a 5-person studio can ship with AI tools in 2026 — it feels illegal"
+      }
+    ]
   },
   {
     "id": "fashion_beauty",
@@ -1019,7 +1659,87 @@
     "ai_opportunity": "AI skin analysis via selfie recommending personalised skincare routines — driving 3x repeat purchase rates vs generic recommendation engines",
     "key_insight": "Community > catalogue. The winning beauty brand in India will be built around a content community that discovers products together.",
     "investor_sentiment": "Strong for clean/sustainable beauty and science-backed skincare. Pure fashion getting cautious; beauty has better unit economics.",
-    "regulation_watch": "BIS quality standards for cosmetics. Microplastics regulations. 'Natural' and 'organic' claim standards being tightened by CDSCO."
+    "regulation_watch": "BIS quality standards for cosmetics. Microplastics regulations. 'Natural' and 'organic' claim standards being tightened by CDSCO.",
+    "category": "creative",
+    "color_primary": "#E11D48",
+    "color_secondary": "#881337",
+    "tagline": "$165B category reshaped by 60-second virality",
+    "ai_disruption_angle": "AI styling and virtual try-on are collapsing category-decision friction. The winners own the try-before-buy loop, not the product SKU.",
+    "cultural_trend": "Indian GenZ spend on beauty grew 4x faster than apparel in 2025",
+    "recent_headline": "Nykaa crosses $8B valuation as its in-house brands out-grow the platform",
+    "investor_sentiment_short": "D2C beauty had its reset in 2024. Survivors are cleaner, more profitable, and capital-efficient.",
+    "sub_category_cagrs": [
+      {
+        "name": "Virtual try-on / AR commerce",
+        "cagr_pct": 30
+      },
+      {
+        "name": "Clean / conscious beauty",
+        "cagr_pct": 22
+      },
+      {
+        "name": "Men's grooming (emerging markets)",
+        "cagr_pct": 18
+      },
+      {
+        "name": "Quick-commerce fashion",
+        "cagr_pct": 35
+      },
+      {
+        "name": "Ayurveda / natural-Indian",
+        "cagr_pct": 20
+      }
+    ],
+    "india_leaders": [
+      "Nykaa",
+      "Mamaearth",
+      "SUGAR",
+      "Bewakoof",
+      "Plum",
+      "MyGlamm"
+    ],
+    "trending_global": [
+      "Glossier",
+      "Rhode",
+      "Kosas",
+      "Selkie",
+      "Parade",
+      "Glossier"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$165B market. 50% of GenZ spend. One viral moment can build a brand in 30 days."
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've actually launched a product and gotten honest feedback from strangers"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders with taste. Brand is everything here — can't be bolted on later"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "D2C has been brutal since 2023. Survivors are profitable, slow-growing, and margin-obsessed"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "Nykaa's private-label brands now out-earn the platform business"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the AI stylist that actually works — recommend-to-purchase conversion is a $20B opportunity"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Quick commerce killed discovery in fashion. The next wave is assisted decision-making."
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see the margin on a beauty brand done right — 70%+ gross, 30%+ net at scale"
+      }
+    ]
   },
   {
     "id": "sports_fitness",
@@ -1133,7 +1853,87 @@
     "ai_opportunity": "AI-generated game content (levels, characters, dialogue) can cut game development costs by 60% — enabling indie studios to compete with AAA titles",
     "key_insight": "In India, gaming is a social activity, not a solo one. The winning platform is the one that builds multiplayer social graphs, not better graphics.",
     "investor_sentiment": "Cautious post-fantasy sports regulation. Skill gaming vs gambling line still being drawn. Clean-room gaming and esports infrastructure getting funded.",
-    "regulation_watch": "MeitY online gaming regulations 2023. States varying in fantasy sports legality. Regulatory arbitrage window closing."
+    "regulation_watch": "MeitY online gaming regulations 2023. States varying in fantasy sports legality. Regulatory arbitrage window closing.",
+    "category": "health",
+    "color_primary": "#F97316",
+    "color_secondary": "#7C2D12",
+    "tagline": "From niche to mainstream to infrastructure",
+    "ai_disruption_angle": "AI-powered form correction, adaptive programming, and real-time biomechanics coaching collapse the value of in-person trainers by 80%. The winner owns engagement data.",
+    "cultural_trend": "Running clubs are the new networking events — across every major Indian city",
+    "recent_headline": "Cult.fit achieves profitability at $450M ARR, expands into corporate wellness",
+    "investor_sentiment_short": "Fitness tech is thriving selectively. B2B wellness and connected hardware are strong categories.",
+    "sub_category_cagrs": [
+      {
+        "name": "Connected fitness hardware",
+        "cagr_pct": 25
+      },
+      {
+        "name": "AI coaching apps",
+        "cagr_pct": 32
+      },
+      {
+        "name": "Corporate wellness",
+        "cagr_pct": 20
+      },
+      {
+        "name": "Longevity / recovery",
+        "cagr_pct": 28
+      },
+      {
+        "name": "Fantasy / sports content",
+        "cagr_pct": 18
+      }
+    ],
+    "india_leaders": [
+      "Cult.fit",
+      "HealthifyMe",
+      "Dream11",
+      "FanCode",
+      "WinZO",
+      "Sportskeeda"
+    ],
+    "trending_global": [
+      "WHOOP",
+      "Peloton",
+      "Strava",
+      "Tonal",
+      "Oura",
+      "Hyperice"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "The health-is-the-new-wealth wave is actually a decade-long trend"
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You have a training streak longer than 30 days and can talk about it specifically"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders with genuine obsession — lifestyle, not line-item"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Retention is brutal. 80% of users churn in 90 days. The game is making habit cheap."
+      },
+      {
+        "label": "FUN FACT",
+        "text": "India's connected-fitness market is 4x larger now than it was pre-pandemic"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the corporate wellness platform that actually gets employees to move — none exist"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Wearable data is mostly noise. The winners build software that ignores 95% and acts on 5%"
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see the LTV of a corporate wellness contract — 5-year MSAs, $100/employee/mo"
+      }
+    ]
   },
   {
     "id": "community_social",
@@ -1247,7 +2047,87 @@
     "ai_opportunity": "AI community moderators that match members with shared goals and surface the right conversations at the right time — increasing community activation by 4x",
     "key_insight": "Communities fail when they're content platforms. They win when they help members achieve outcomes. Design for transformation, not engagement.",
     "investor_sentiment": "Impact investors and community-led VC funds most active. Hard to monetise early but winner-takes-most dynamics once scale achieved.",
-    "regulation_watch": "IT Rules 2021 intermediary guidelines applying to large community platforms. User data protection under DPDP Act."
+    "regulation_watch": "IT Rules 2021 intermediary guidelines applying to large community platforms. User data protection under DPDP Act.",
+    "category": "social",
+    "color_primary": "#8B5CF6",
+    "color_secondary": "#4C1D95",
+    "tagline": "The platforms broke. Communities are the fix.",
+    "ai_disruption_angle": "AI is rebuilding moderation, matchmaking, and content filtering at 100x speed. The winners are small communities with big moats, not big networks with thin engagement.",
+    "cultural_trend": "GenZ's loneliness crisis + platform fatigue + private Discord growth = seismic shift",
+    "recent_headline": "Indian creator-led communities on Rigi and Circle platforms hit 30M paying members",
+    "investor_sentiment_short": "Community tooling raised $2.1B in 2025. Professional niches outperform consumer plays.",
+    "sub_category_cagrs": [
+      {
+        "name": "Creator-led paid communities",
+        "cagr_pct": 38
+      },
+      {
+        "name": "Professional niche platforms",
+        "cagr_pct": 25
+      },
+      {
+        "name": "Social-impact / cause platforms",
+        "cagr_pct": 18
+      },
+      {
+        "name": "Local / neighborhood apps",
+        "cagr_pct": 22
+      },
+      {
+        "name": "Community tooling / infrastructure",
+        "cagr_pct": 30
+      }
+    ],
+    "india_leaders": [
+      "Rigi",
+      "Winzo communities",
+      "Josh",
+      "Sharechat groups",
+      "Clubhouse India",
+      "Koo"
+    ],
+    "trending_global": [
+      "Circle",
+      "Discord",
+      "Patreon",
+      "Slack Community",
+      "Mighty Networks",
+      "Geneva"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "The loneliness epidemic is real. Every community I build is a health intervention."
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've moderated a real community and understand what ruins one"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders with a specific tribe — not 'everyone,' one clear avatar"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Networks die fast without active seeding. First 100 members is everything."
+      },
+      {
+        "label": "FUN FACT",
+        "text": "Indian WhatsApp groups for professional interests are unmonetised — but have millions of members"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the 'LinkedIn for [underserved profession in India]' — there are 50 of these."
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Consumer social is a VC trap. Vertical pro communities are where the real retention lives."
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see a 50-member paid community generate more revenue than a 500K-member free one"
+      }
+    ]
   },
   {
     "id": "real_estate_home",
@@ -1361,7 +2241,87 @@
     "ai_opportunity": "Computer vision-based property valuation and virtual staging — cutting transaction costs by removing 50% of physical viewings",
     "key_insight": "Trust is the product in real estate. The winning startup will be the one that reduces information asymmetry between buyer, broker, and developer.",
     "investor_sentiment": "Selective. PropTech 2.0 focusing on transaction infrastructure and fractional ownership rather than listing aggregators.",
-    "regulation_watch": "RERA enforcement improving. SEBI SM REIT guidelines opening fractional market. Both creating compliance software demand."
+    "regulation_watch": "RERA enforcement improving. SEBI SM REIT guidelines opening fractional market. Both creating compliance software demand.",
+    "category": "other",
+    "color_primary": "#CA8A04",
+    "color_secondary": "#713F12",
+    "tagline": "The last big industry still running on spreadsheets",
+    "ai_disruption_angle": "AI agents are replacing brokers for transactions under $500K in India. Full-stack ownership of listing → visit → close → finance is the winning model.",
+    "cultural_trend": "Gen-Z India is renting longer than any prior generation — rental-tech is finally investable",
+    "recent_headline": "NoBroker hits 100M registered users, announces IPO plans for 2027",
+    "investor_sentiment_short": "PropTech funding rebounded in 2025 after post-COVID correction. Mortgage and rental-tech leading.",
+    "sub_category_cagrs": [
+      {
+        "name": "Rental / co-living tech",
+        "cagr_pct": 22
+      },
+      {
+        "name": "Mortgage tech / iBuying",
+        "cagr_pct": 25
+      },
+      {
+        "name": "Construction tech / material sourcing",
+        "cagr_pct": 18
+      },
+      {
+        "name": "Smart-home / IoT",
+        "cagr_pct": 20
+      },
+      {
+        "name": "Brokerage / listing platforms",
+        "cagr_pct": 15
+      }
+    ],
+    "india_leaders": [
+      "NoBroker",
+      "99acres",
+      "Square Yards",
+      "Housing.com",
+      "CommonFloor",
+      "MagicBricks"
+    ],
+    "trending_global": [
+      "Opendoor",
+      "Compass",
+      "Zillow",
+      "Redfin",
+      "Flyhomes",
+      "Pacaso"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "Every human needs shelter. Every transaction runs on fax machines. Huge."
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've actually bought or rented something and survived the process"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders who can navigate offline-heavy stakeholders (brokers, builders, banks)"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Cycle-sensitive. Rates matter more than features. Know the macro or lose money."
+      },
+      {
+        "label": "FUN FACT",
+        "text": "India's real-estate market is $270B and still mostly run on broker phone networks"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the mortgage underwriting agent — banks want to outsource it, regulators are ready"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "iBuying is a capital-heavy zombie. The real winner is rental-tech — asset-light, recurring"
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see the take-rate on a full-stack rental ops platform — fee, deposit, utility, furniture"
+      }
+    ]
   },
   {
     "id": "logistics_mobility",
@@ -1475,7 +2435,87 @@
     "ai_opportunity": "Route optimisation AI can cut last-mile delivery costs by 22% — in a sector where margins are 2-4%, this is transformational",
     "key_insight": "The last-mile problem in India isn't technology — it's address quality and trust. Solve address standardisation and you unlock the market.",
     "investor_sentiment": "Selective post-funding winter. EV logistics fleets and cold chain getting disproportionate investor interest.",
-    "regulation_watch": "Drone delivery regulations DGCA finalising. EV subsidies creating operational advantage for early fleet adopters."
+    "regulation_watch": "Drone delivery regulations DGCA finalising. EV subsidies creating operational advantage for early fleet adopters.",
+    "category": "build",
+    "color_primary": "#EA580C",
+    "color_secondary": "#7C2D12",
+    "tagline": "The invisible infrastructure of everything",
+    "ai_disruption_angle": "AI routing, autonomous last-mile, and real-time warehouse robotics are collapsing delivery cost per km by 40%. The winners aren't asset-heavy — they're data-heavy.",
+    "cultural_trend": "Quick commerce (10-min delivery) is becoming the default expectation in urban India",
+    "recent_headline": "Zepto quietly achieves contribution profitability, plans $6B IPO for FY27",
+    "investor_sentiment_short": "Logistics funding is selectively strong. Quick commerce, autonomous, and EV fleet are top categories.",
+    "sub_category_cagrs": [
+      {
+        "name": "Quick commerce / 10-min delivery",
+        "cagr_pct": 45
+      },
+      {
+        "name": "Autonomous last-mile",
+        "cagr_pct": 32
+      },
+      {
+        "name": "EV fleet management",
+        "cagr_pct": 30
+      },
+      {
+        "name": "B2B trucking / freight",
+        "cagr_pct": 20
+      },
+      {
+        "name": "Warehousing / micro-fulfillment",
+        "cagr_pct": 25
+      }
+    ],
+    "india_leaders": [
+      "Zepto",
+      "Blinkit",
+      "Dunzo",
+      "Delhivery",
+      "Shiprocket",
+      "Rapido"
+    ],
+    "trending_global": [
+      "Gopuff",
+      "Flink",
+      "Convoy",
+      "Flexport",
+      "Nuro",
+      "Zipline"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "Every e-commerce order. Every restaurant delivery. Every supply chain. I'm the infrastructure."
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You're comfortable with operations — real operations, not PowerPoint operations"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders who love unit economics and have patience for unsexy optimisation wins"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Capex-heavy. Margins are thin until density kicks in. Geography matters more than tech"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "Indian quick commerce hit $10B GMV in 2025 — 3 years after launch"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the autonomous yard operations layer — the moat is in last-100-meters, not last-mile"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Autonomous trucks arrive before autonomous cars. Highway miles are the easier problem."
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see the unit economics of a dark store at 10-min-density — 30%+ contribution margin"
+      }
+    ]
   },
   {
     "id": "legal_compliance",
@@ -1589,7 +2629,87 @@
     "ai_opportunity": "AI contract review cuts due diligence time from 40 hours to 2 hours per deal — direct ROI measurable in legal billing rate",
     "key_insight": "Lawyers are the most change-resistant profession. Sell to General Counsel who are under cost pressure from boards — not to partners.",
     "investor_sentiment": "Early but accelerating. $2.8B invested in LegalTech globally in 2024. India market still largely untapped.",
-    "regulation_watch": "Bar Council rules on who can provide legal advice creating compliance complexity. AI Act implications for legal AI in EU."
+    "regulation_watch": "Bar Council rules on who can provide legal advice creating compliance complexity. AI Act implications for legal AI in EU.",
+    "category": "tech",
+    "color_primary": "#6366F1",
+    "color_secondary": "#312E81",
+    "tagline": "Document review at 1/100th the cost",
+    "ai_disruption_angle": "Legal research, contract review, and regulatory compliance are the most clearly-automatable white-collar functions. The winners build workflows, not just models — lawyers buy outcomes, not AI.",
+    "cultural_trend": "Legaltech went from laughingstock to unicorn factory in 18 months — Harvey alone raised $300M",
+    "recent_headline": "Harvey crosses $200M ARR with Big Law partnerships covering 30+ of top 50 firms",
+    "investor_sentiment_short": "Legaltech is one of the hottest 2025 categories. AI moats are clearer than in most verticals.",
+    "sub_category_cagrs": [
+      {
+        "name": "Contract AI / CLM",
+        "cagr_pct": 45
+      },
+      {
+        "name": "Legal research / AI briefs",
+        "cagr_pct": 38
+      },
+      {
+        "name": "Compliance automation / regtech",
+        "cagr_pct": 32
+      },
+      {
+        "name": "Dispute / litigation tech",
+        "cagr_pct": 22
+      },
+      {
+        "name": "IP / patent tech",
+        "cagr_pct": 20
+      }
+    ],
+    "india_leaders": [
+      "SpotDraft",
+      "Legistify",
+      "LegalKart",
+      "MyAdvo",
+      "Signeasy",
+      "Compliance Calendar"
+    ],
+    "trending_global": [
+      "Harvey",
+      "Ironclad",
+      "Spellbook",
+      "EvenUp",
+      "LegalMation",
+      "Casetext"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "A $1T global legal industry that still runs on Word documents and billable hours"
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've actually read a contract end-to-end in the last year"
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Founders who can sell to lawyers — slow, reference-driven, pilot-heavy"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Selling to Big Law is slow. The real early traction is in-house counsel at mid-market"
+      },
+      {
+        "label": "FUN FACT",
+        "text": "India spends $6B on legal services annually — almost all of it untouched by AI"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the GST/labour compliance autopilot for Indian SMBs — 60M businesses need it"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Lawyers will demand AI tools faster than any other profession — billable hour pressure forces it"
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see how fast Harvey went from 0 to $200M ARR — the category is on fire"
+      }
+    ]
   },
   {
     "id": "hardware_robotics",
@@ -1703,7 +2823,87 @@
     "ai_opportunity": "Foundation models for robot control (Google RT-2, Tesla FSD) making general-purpose robots commercially viable — 2025 is the inflection point",
     "key_insight": "Don't build the robot — build the software that makes any robot 10x more useful. The robotics OS layer is the highest-margin play.",
     "investor_sentiment": "Extremely hot in 2024-2025. Deeptech funds and strategic investors (Samsung, Hyundai) deploying aggressively.",
-    "regulation_watch": "Industrial robots: existing safety standards (ISO 10218). Humanoid robots in public spaces: no framework yet — first mover sets the standard."
+    "regulation_watch": "Industrial robots: existing safety standards (ISO 10218). Humanoid robots in public spaces: no framework yet — first mover sets the standard.",
+    "category": "build",
+    "color_primary": "#475569",
+    "color_secondary": "#1E293B",
+    "tagline": "Atoms are getting their AI moment",
+    "ai_disruption_angle": "Foundation-model robotics is finally here. General-purpose arms, humanoids, and warehouse robots are moving from demos to deployments. The winners own specific use cases, not the platform.",
+    "cultural_trend": "Manufacturing is coming home — US and India reshoring simultaneously for the first time since 1990",
+    "recent_headline": "Figure AI's BMW deployment scales to 3 plants, Indian automotive OEMs announce humanoid pilots",
+    "investor_sentiment_short": "Robotics funding exploded to $14B in 2025. Humanoid, warehouse, and drone are leading.",
+    "sub_category_cagrs": [
+      {
+        "name": "Humanoid / general-purpose robots",
+        "cagr_pct": 55
+      },
+      {
+        "name": "Warehouse / logistics robots",
+        "cagr_pct": 35
+      },
+      {
+        "name": "Defence / autonomous drones",
+        "cagr_pct": 40
+      },
+      {
+        "name": "Medical / surgical robotics",
+        "cagr_pct": 28
+      },
+      {
+        "name": "Agricultural / mobile robotics",
+        "cagr_pct": 25
+      }
+    ],
+    "india_leaders": [
+      "Garuda Aerospace",
+      "ideaForge",
+      "Peppermint Robotics",
+      "GreyOrange",
+      "Asimov Robotics",
+      "Niramai"
+    ],
+    "trending_global": [
+      "Figure AI",
+      "Physical Intelligence",
+      "Boston Dynamics",
+      "Agility Robotics",
+      "Waymo",
+      "Cruise"
+    ],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "Robots are the next iPhone moment. Foundation models for atoms finally work."
+      },
+      {
+        "label": "GREEN FLAG",
+        "text": "You've actually built hardware — real or hobby. You respect the BOM."
+      },
+      {
+        "label": "LOOKING FOR",
+        "text": "Patient founders with engineering depth. No-code hardware doesn't exist."
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Hardware is brutal. Cycle times are years. You need capital, patience, and zero romance."
+      },
+      {
+        "label": "FUN FACT",
+        "text": "Indian defence drones are now a $2B export category — started at $50M in 2021"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Build the robotic inspection layer for Indian manufacturing — all currently manual"
+      },
+      {
+        "label": "MY CONTROVERSIAL TAKE",
+        "text": "Humanoids are a science project. Vertical-specific robots (warehouse, agri) will make money first"
+      },
+      {
+        "label": "I'LL WIN YOU OVER",
+        "text": "When you see a single warehouse robot amortise in 14 months — the ROI is obvious"
+      }
+    ]
   },
   {
     "id": "pet_care",
@@ -1817,7 +3017,30 @@
     "ai_opportunity": "AI vet triage that assesses symptoms via photo/video and recommends home care vs emergency visit — reducing unnecessary ₹3000 vet visits by 40%",
     "key_insight": "Pet parents are the most emotionally driven buyers. Anxiety sells. Lead with peace of mind and safety, not price.",
     "investor_sentiment": "Niche but growing. Consumer investors and D2C specialists most active. Subscription recurring revenue models preferred.",
-    "regulation_watch": "PCA (Prevention of Cruelty to Animals) Act update pending. Online pet sales regulation being drafted."
+    "regulation_watch": "PCA (Prevention of Cruelty to Animals) Act update pending. Online pet sales regulation being drafted.",
+    "category": "social",
+    "color_primary": "#F59E0B",
+    "color_secondary": "#78350F",
+    "tagline": "Pet humanisation trend: Indian urban millennials treating pets as family members, spending 10x what their parents did",
+    "ai_disruption_angle": "AI vet triage that assesses symptoms via photo/video and recommends home care vs emergency visit — reducing unnecessary ₹3000 vet visits by 40%",
+    "cultural_trend": "Pet humanisation trend: Indian urban millennials treating pets as family members, spending 10x what their parents did",
+    "recent_headline": "Pet Care & Animal Tech hits milestone — check the latest moves",
+    "investor_sentiment_short": "Niche but growing. Consumer investors and D2C specialists most active. Subscription recurring revenue models preferred.",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$22B market, 16% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Pet parents spend more on their pets than on themselves."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Pet insurance tech"
+      }
+    ]
   },
   {
     "id": "spirituality",
@@ -1860,6 +3083,29 @@
       "US",
       "India",
       "Netherlands"
+    ],
+    "category": "social",
+    "color_primary": "#9333EA",
+    "color_secondary": "#4C1D95",
+    "tagline": "$?B market, ?% CAGR",
+    "ai_disruption_angle": "AI reshaping workflows across this sector",
+    "cultural_trend": "Category on the move",
+    "recent_headline": "Spirituality & Mindfulness hits milestone — check the latest moves",
+    "investor_sentiment_short": "Mixed — category-dependent",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$?B market, ?% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "The meditation app market alone crossed $5B. The soul economy is real."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Psychedelic therapy clinical platforms"
+      }
     ]
   },
   {
@@ -1903,6 +3149,29 @@
       "US",
       "India",
       "Luxembourg"
+    ],
+    "category": "build",
+    "color_primary": "#0F172A",
+    "color_secondary": "#020617",
+    "tagline": "$?B market, ?% CAGR",
+    "ai_disruption_angle": "AI reshaping workflows across this sector",
+    "cultural_trend": "Category on the move",
+    "recent_headline": "Space Tech & Aerospace hits milestone — check the latest moves",
+    "investor_sentiment_short": "Mixed — category-dependent",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$?B market, ?% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Private space industry hit $470B. The new frontier is hiring."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Smallsat constellation operators"
+      }
     ]
   },
   {
@@ -2017,7 +3286,30 @@
     "ai_opportunity": "LLM-powered threat intelligence that translates security alerts into plain English for non-technical CEOs — making security decisions 10x faster",
     "key_insight": "Don't sell fear — sell insurance. Frame security as business continuity, not IT hygiene. The CFO, not CTO, approves the budget.",
     "investor_sentiment": "Consistent strong investment. Every major breach creates a wave of security spend. AI-native security getting premium valuations.",
-    "regulation_watch": "CERT-In 6-hour incident reporting mandate. DPDP Act breach notification. SEBI cybersecurity circular for market infrastructure."
+    "regulation_watch": "CERT-In 6-hour incident reporting mandate. DPDP Act breach notification. SEBI cybersecurity circular for market infrastructure.",
+    "category": "tech",
+    "color_primary": "#DC2626",
+    "color_secondary": "#7F1D1D",
+    "tagline": "AI-powered attacks are outpacing traditional security tools — the response is AI-native defence platforms",
+    "ai_disruption_angle": "LLM-powered threat intelligence that translates security alerts into plain English for non-technical CEOs — making security decisions 10x faster",
+    "cultural_trend": "AI-powered attacks are outpacing traditional security tools — the response is AI-native defence platforms",
+    "recent_headline": "Cybersecurity hits milestone — check the latest moves",
+    "investor_sentiment_short": "Consistent strong investment. Every major breach creates a wave of security spend. AI-native security getting premium valuations.",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$175B market, 14% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Cybercrime costs $10T per year. Defence is the growth story."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "AI SOC automation"
+      }
+    ]
   },
   {
     "id": "dating",
@@ -2060,6 +3352,29 @@
       "US",
       "India",
       "Japan"
+    ],
+    "category": "social",
+    "color_primary": "#E11D48",
+    "color_secondary": "#881337",
+    "tagline": "$?B market, ?% CAGR",
+    "ai_disruption_angle": "AI reshaping workflows across this sector",
+    "cultural_trend": "Category on the move",
+    "recent_headline": "Dating & Relationships hits milestone — check the latest moves",
+    "investor_sentiment_short": "Mixed — category-dependent",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$?B market, ?% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Dating app revenue topped $6B but satisfaction is at an all-time low."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "AI-powered compatibility matching"
+      }
     ]
   },
   {
@@ -2174,7 +3489,30 @@
     "ai_opportunity": "AI trip planners that personalise 7-day itineraries in 60 seconds from a 3-message conversation — replacing 4 hours of Google search",
     "key_insight": "The hidden opportunity is travel content — the $8B spent on travel advertising is inefficient. AI-powered personalised travel content is the next wave.",
     "investor_sentiment": "Recovering strongly. Alternative accommodation, experience tourism, and travel tech infrastructure getting funded.",
-    "regulation_watch": "ONDC travel launch bringing new distribution models. Visa digitalisation programs opening new destination markets."
+    "regulation_watch": "ONDC travel launch bringing new distribution models. Visa digitalisation programs opening new destination markets.",
+    "category": "play",
+    "color_primary": "#0EA5E9",
+    "color_secondary": "#0C4A6E",
+    "tagline": "Experiential travel overtaking leisure travel — Gen Z spending 3x more on 'experiences' than previous generations",
+    "ai_disruption_angle": "AI trip planners that personalise 7-day itineraries in 60 seconds from a 3-message conversation — replacing 4 hours of Google search",
+    "cultural_trend": "Experiential travel overtaking leisure travel — Gen Z spending 3x more on 'experiences' than previous generations",
+    "recent_headline": "Travel & Hospitality hits milestone — check the latest moves",
+    "investor_sentiment_short": "Recovering strongly. Alternative accommodation, experience tourism, and travel tech infrastructure getting funded.",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$195B market, 12% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Travel tech recovered past pre-pandemic levels and is still accelerating."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "AI concierge and itinerary planners"
+      }
+    ]
   },
   {
     "id": "senior_care",
@@ -2217,6 +3555,29 @@
       "US",
       "Japan",
       "Germany"
+    ],
+    "category": "health",
+    "color_primary": "#0891B2",
+    "color_secondary": "#164E63",
+    "tagline": "$?B market, ?% CAGR",
+    "ai_disruption_angle": "AI reshaping workflows across this sector",
+    "cultural_trend": "Category on the move",
+    "recent_headline": "Senior Care & Aging hits milestone — check the latest moves",
+    "investor_sentiment_short": "Mixed — category-dependent",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$?B market, ?% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "10,000 people turn 65 every day in the US alone."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Companion robots for elderly"
+      }
     ]
   },
   {
@@ -2260,6 +3621,29 @@
       "US",
       "India",
       "Australia"
+    ],
+    "category": "social",
+    "color_primary": "#DB2777",
+    "color_secondary": "#831843",
+    "tagline": "$?B market, ?% CAGR",
+    "ai_disruption_angle": "AI reshaping workflows across this sector",
+    "cultural_trend": "Category on the move",
+    "recent_headline": "Parenting & Family hits milestone — check the latest moves",
+    "investor_sentiment_short": "Mixed — category-dependent",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$?B market, ?% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Parents spend $18K per year per child. Most solutions are terrible."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "AI developmental milestone tracking"
+      }
     ]
   },
   {
@@ -2303,6 +3687,29 @@
       "US",
       "Canada",
       "Germany"
+    ],
+    "category": "health",
+    "color_primary": "#16A34A",
+    "color_secondary": "#14532D",
+    "tagline": "$?B market, ?% CAGR",
+    "ai_disruption_angle": "AI reshaping workflows across this sector",
+    "cultural_trend": "Category on the move",
+    "recent_headline": "Cannabis & Alt Wellness hits milestone — check the latest moves",
+    "investor_sentiment_short": "Mixed — category-dependent",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$?B market, ?% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Legal cannabis projected $70B+ by 2028."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Cannabis compliance automation"
+      }
     ]
   },
   {
@@ -2415,7 +3822,30 @@
     "ai_opportunity": "Every knowledge workflow (legal, medical, financial, engineering) can be rebuilt with LLMs at 10x speed and 90% lower cost",
     "key_insight": "The AI infrastructure layer is commoditising — the value is in vertical application. Domain expertise + LLM = unfair advantage.",
     "investor_sentiment": "Hottest sector in VC. 30%+ of all 2024 deals touched AI.",
-    "regulation_watch": "EU AI Act live 2025. High-risk AI systems need conformity assessment — creates compliance SaaS opportunity."
+    "regulation_watch": "EU AI Act live 2025. High-risk AI systems need conformity assessment — creates compliance SaaS opportunity.",
+    "category": "finance",
+    "color_primary": "#D97706",
+    "color_secondary": "#78350F",
+    "tagline": "Agentic AI workflows are replacing SaaS point solutions",
+    "ai_disruption_angle": "Every knowledge workflow (legal, medical, financial, engineering) can be rebuilt with LLMs at 10x speed and 90% lower cost",
+    "cultural_trend": "Agentic AI workflows are replacing SaaS point solutions",
+    "recent_headline": "Web3 & Blockchain hits milestone — check the latest moves",
+    "investor_sentiment_short": "Hottest sector in VC. 30%+ of all 2024 deals touched AI.",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$200B market, 36% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Beyond crypto. Infrastructure, identity, ownership."
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Real-world asset tokenization"
+      }
+    ]
   },
   {
     "id": "saas_productivity",
@@ -2491,7 +3921,30 @@
     "ai_opportunity": "Vertical AI agents that replace entire job functions (SDR, analyst, paralegal) — sold as SaaS but delivering 10x the ROI of traditional software",
     "key_insight": "The best SaaS founders are those who spent 5+ years as power users of the old tool they're replacing. Insider knowledge beats outside analysis.",
     "investor_sentiment": "Strong. AI SaaS companies reaching $1M ARR in months not years. Multi-stage investors moving faster.",
-    "regulation_watch": "SOC2 compliance becoming table stakes even for early-stage. GDPR enforcement in EU. Build privacy-first from day one."
+    "regulation_watch": "SOC2 compliance becoming table stakes even for early-stage. GDPR enforcement in EU. Build privacy-first from day one.",
+    "category": "other",
+    "color_primary": "#78716C",
+    "color_secondary": "#292524",
+    "tagline": "AI-native SaaS is replacing legacy tools at 10x the speed of previous SaaS waves",
+    "ai_disruption_angle": "Vertical AI agents that replace entire job functions (SDR, analyst, paralegal) — sold as SaaS but delivering 10x the ROI of traditional software",
+    "cultural_trend": "AI-native SaaS is replacing legacy tools at 10x the speed of previous SaaS waves",
+    "recent_headline": "SaaS & Productivity hits milestone — check the latest moves",
+    "investor_sentiment_short": "Strong. AI SaaS companies reaching $1M ARR in months not years. Multi-stage investors moving faster.",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$310B market, 19% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Worth a closer look"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Find the angle others missed"
+      }
+    ]
   },
   {
     "id": "ecommerce_retail",
@@ -2567,7 +4020,30 @@
     "ai_opportunity": "AI-powered demand forecasting cuts inventory waste by 30% for D2C brands — direct EBITDA impact on thin-margin businesses",
     "key_insight": "The next wave is social commerce — buying decisions made in community contexts (WhatsApp groups, YouTube comments) not on marketplaces.",
     "investor_sentiment": "D2C brands with strong unit economics and owned community getting funded. Pure marketplace plays harder to fund.",
-    "regulation_watch": "ONDC network disrupting marketplace dominance. FDI rules in multi-brand retail. Both creating new entry points."
+    "regulation_watch": "ONDC network disrupting marketplace dominance. FDI rules in multi-brand retail. Both creating new entry points.",
+    "category": "other",
+    "color_primary": "#78716C",
+    "color_secondary": "#292524",
+    "tagline": "Quick commerce (10-min delivery) is expanding from groceries to every retail category",
+    "ai_disruption_angle": "AI-powered demand forecasting cuts inventory waste by 30% for D2C brands — direct EBITDA impact on thin-margin businesses",
+    "cultural_trend": "Quick commerce (10-min delivery) is expanding from groceries to every retail category",
+    "recent_headline": "E-commerce & Retail hits milestone — check the latest moves",
+    "investor_sentiment_short": "D2C brands with strong unit economics and owned community getting funded. Pure marketplace plays harder to fund.",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$280B market, 12% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Worth a closer look"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Find the angle others missed"
+      }
+    ]
   },
   {
     "id": "govtech_civic",
@@ -2643,7 +4119,30 @@
     "ai_opportunity": "AI-powered document processing can reduce government service delivery time from weeks to minutes — massive adoption tailwind from PM Gati Shakti",
     "key_insight": "GovTech sales cycles are brutal (18-36 months). Build a private sector wedge first, then sell the government reference case.",
     "investor_sentiment": "Niche but growing. Impact-first investors and DFIs actively funding. Commercial GovTech getting mainstream VC interest.",
-    "regulation_watch": "Gem procurement portal mandatory for government purchases. CERT-In cybersecurity mandates. Compliance = competitive moat."
+    "regulation_watch": "Gem procurement portal mandatory for government purchases. CERT-In cybersecurity mandates. Compliance = competitive moat.",
+    "category": "other",
+    "color_primary": "#78716C",
+    "color_secondary": "#292524",
+    "tagline": "India's Digital Public Infrastructure (DPI) stack — Aadhaar, UPI, ONDC — is becoming an exportable model that 50+ countries want to adopt",
+    "ai_disruption_angle": "AI-powered document processing can reduce government service delivery time from weeks to minutes — massive adoption tailwind from PM Gati Shakti",
+    "cultural_trend": "India's Digital Public Infrastructure (DPI) stack — Aadhaar, UPI, ONDC — is becoming an exportable model that 50+ countries want to adopt",
+    "recent_headline": "GovTech & Civic hits milestone — check the latest moves",
+    "investor_sentiment_short": "Niche but growing. Impact-first investors and DFIs actively funding. Commercial GovTech getting mainstream VC interest.",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$82B market, 15% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Worth a closer look"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Find the angle others missed"
+      }
+    ]
   },
   {
     "id": "mental_health",
@@ -2719,7 +4218,30 @@
     "ai_opportunity": "24/7 AI-first mental health triage can catch crisis signals before they escalate — reducing emergency mental health costs by 40% for insurers",
     "key_insight": "The biggest barrier isn't awareness — it's shame. Design for anonymous first interaction. Trust before identity.",
     "investor_sentiment": "Mission-driven investors dominant. Impact funds and health insurance companies both interested in outcomes-based models.",
-    "regulation_watch": "DPDP Act implications for sensitive health data. Telemedicine guidelines allowing remote mental health consultation creating market clarity."
+    "regulation_watch": "DPDP Act implications for sensitive health data. Telemedicine guidelines allowing remote mental health consultation creating market clarity.",
+    "category": "other",
+    "color_primary": "#78716C",
+    "color_secondary": "#292524",
+    "tagline": "AI therapy companions are achieving clinical outcomes comparable to human therapists for mild-to-moderate anxiety in controlled trials",
+    "ai_disruption_angle": "24/7 AI-first mental health triage can catch crisis signals before they escalate — reducing emergency mental health costs by 40% for insurers",
+    "cultural_trend": "AI therapy companions are achieving clinical outcomes comparable to human therapists for mild-to-moderate anxiety in controlled trials",
+    "recent_headline": "Mental Health & Wellbeing hits milestone — check the latest moves",
+    "investor_sentiment_short": "Mission-driven investors dominant. Impact funds and health insurance companies both interested in outcomes-based models.",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$95B market, 22% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Worth a closer look"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Find the angle others missed"
+      }
+    ]
   },
   {
     "id": "hrtech_future_work",
@@ -2795,6 +4317,29 @@
     "ai_opportunity": "AI that monitors employee sentiment through communication patterns (with consent) and predicts attrition 90 days before resignation — saving ₹15L per retained employee",
     "key_insight": "The best HRTech sells to HR as a 'people win' but saves money for Finance. Build the business case for both buyers simultaneously.",
     "investor_sentiment": "Healthy. India-specific HR compliance complexity creates natural moats. Payroll + compliance + performance management bundled platforms preferred.",
-    "regulation_watch": "Labour codes consolidation (4 codes replacing 29 laws) rolling out. Digital labour contract mandate creating compliance software demand."
+    "regulation_watch": "Labour codes consolidation (4 codes replacing 29 laws) rolling out. Digital labour contract mandate creating compliance software demand.",
+    "category": "other",
+    "color_primary": "#78716C",
+    "color_secondary": "#292524",
+    "tagline": "AI is replacing the recruiting function — not recruiters, but the administrative 80% of their work (sourcing, screening, scheduling)",
+    "ai_disruption_angle": "AI that monitors employee sentiment through communication patterns (with consent) and predicts attrition 90 days before resignation — saving ₹15L per retained employee",
+    "cultural_trend": "AI is replacing the recruiting function — not recruiters, but the administrative 80% of their work (sourcing, screening, scheduling)",
+    "recent_headline": "HR Tech & Future of Work hits milestone — check the latest moves",
+    "investor_sentiment_short": "Healthy. India-specific HR compliance complexity creates natural moats. Payroll + compliance + performance management bundled platforms preferred.",
+    "sub_category_cagrs": [],
+    "hinge_prompts": [
+      {
+        "label": "MY BIGGEST FLEX",
+        "text": "$88B market, 14% CAGR — space is moving"
+      },
+      {
+        "label": "HONEST TRUTH",
+        "text": "Worth a closer look"
+      },
+      {
+        "label": "TOGETHER WE COULD",
+        "text": "Find the angle others missed"
+      }
+    ]
   }
 ]

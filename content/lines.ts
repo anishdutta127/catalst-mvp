@@ -115,12 +115,12 @@ export const lines = {
 
   s04: {
     cedric: {
-      intro: 'Now I\'m going to show you fifteen worlds. Some will pull you in. Some won\'t. Trust the pull — not the logic.',
+      intro: 'Fifteen worlds. Some will pull at you. Some won\'t. Keep the ones that pull — star the ones that obsess you. Trust the pull, not the logic.',
       afterPip: '...that\'s not entirely wrong, actually.',
-      afterAll: (kept: number, edged: number) => `${kept} worlds kept. ${edged} edges marked. The garden is narrowing.`,
+      afterAll: (kept: number, edged: number) => `${kept} worlds kept${edged > 0 ? `, ${edged} obsessions marked` : ''}. The garden is narrowing.`,
     },
     pip: {
-      intro: 'This is the fun part! It\'s like shopping but for your FUTURE.',
+      intro: 'Ooh this is the fun part — swipe like your taste is the whole personality.',
       afterAll: 'I wanted to edge ALL of them. Cedric said that \'defeats the purpose.\' Whatever that means.',
     },
   },
@@ -172,9 +172,9 @@ export const lines = {
     quote: 'The privilege of a lifetime is to become who you truly are',
     quoteAttribution: 'Carl Jung',
     cedric: {
-      intro: 'Everything so far has been instinct. This one is a choice. Eight essences. You can only carry three. Choose what defines you — not what sounds impressive.',
+      intro: 'Every instinct so far was you reacting. This one is you choosing. Eight essences. You carry three. Pick what defines you — not what sounds impressive. The crystal will grow with the ones you pick and dim with the ones you leave behind.',
       afterPip: '...I\'m genuinely moved, Pip.',
-      afterSelection: (name: string) => `${name}'s crystal is formed. It won't change — but it will grow.`,
+      afterSelection: (name: string) => `${name}'s crystal is set. The shape won\'t change. But the light will.`,
       afterPip2: 'Yours is a pebble, Pip. But a very charming pebble.',
     },
     pip: {
