@@ -159,7 +159,7 @@ function derivePersona(idea: ScoredIdea['idea']): Persona {
   else if (budgetInr >= 100000) budget_signal = `Mid-market buyer — ₹${(budgetInr / 1000).toFixed(0)}K-${((budgetInr * 2) / 1000).toFixed(0)}K, VP-level approval needed`;
   else if (budgetInr < 20000) budget_signal = `Prosumer — up to ₹${((budgetInr * 2) / 1000).toFixed(0)}K/month willingly, self-serve decision`;
 
-  const d = idea.deep_content as Record<string, unknown> | undefined;
+  const d = (idea as unknown as { deep_content?: Record<string, unknown> }).deep_content;
   const cp = (d?.consumer_psychology as Record<string, string> | undefined);
 
   const buying_moment = cp?.jobs_to_be_done
@@ -484,7 +484,7 @@ export function IdeaDossier({
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-[10px] uppercase tracking-widest text-ivory/40">Market growth ($B)</p>
-                        {marketData.growth_cagr && (
+                        {Boolean(marketData.growth_cagr) && (
                           <p className="text-[11px] font-mono text-emerald-400">+{marketData.growth_cagr as number}% CAGR</p>
                         )}
                       </div>

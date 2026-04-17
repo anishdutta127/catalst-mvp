@@ -8,6 +8,7 @@ import { lines } from '@/content/lines';
 import { createTimer } from '@/lib/timing';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { CrystalViewport } from '@/components/ui/CrystalViewport';
+import type { OrbDef } from '@/components/ui/CrystalViewport';
 
 const ORBS = lines.s06.orbs;
 
@@ -67,7 +68,7 @@ export function S06Crystal() {
     <div className="flex flex-col h-full relative overflow-hidden">
       {/* ── Crystal Viewport (upper stage) ── */}
       <div className="flex-1 flex items-center justify-center min-h-[280px]">
-        <CrystalViewport allOrbs={ORBS} selectedOrbIds={crystalOrbs} size={340} />
+        <CrystalViewport allOrbs={ORBS as unknown as OrbDef[]} selectedOrbIds={crystalOrbs} size={340} />
       </div>
 
       {/* Counter */}

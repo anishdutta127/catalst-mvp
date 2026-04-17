@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo } from 'react';
 
-interface OrbDef {
+export interface OrbDef {
   id: string;
   icon: string;
   colour: string;

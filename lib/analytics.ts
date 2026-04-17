@@ -33,7 +33,7 @@ export const analytics = {
     posthog.capture('screen_advance', { from, to });
   },
 
-  cta: (type: 'whatsapp' | 'download' | 'consultation') => {
+  cta: (type: 'whatsapp' | 'download' | 'consultation' | 'linkedin') => {
     posthog.capture('cta_tap', { type });
   },
 
