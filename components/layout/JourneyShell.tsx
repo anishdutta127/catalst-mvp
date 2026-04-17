@@ -4,6 +4,7 @@ import { type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Header } from './Header';
 import { ChatZone } from './ChatZone';
+import { PipFloater } from './PipFloater';
 import { useUIStore } from '@/lib/store/uiStore';
 import { SCREEN_BACKGROUNDS, type ScreenId } from '@/lib/constants';
 
@@ -16,12 +17,13 @@ interface JourneyShellProps {
 }
 
 /**
- * JourneyShell — dynamic layout.
+ * JourneyShell — full-bleed background, full-width chat/header strips, 720px activity column.
  *
- * Background: full-bleed viewport.
- * Content: max-w-[720px] centered column.
- * Chat zone: dynamic height (0 when empty, auto when messages exist).
- * No footers. No bottom bars except screen-provided CTAs.
+ * Fixes:
+ *   - Chat backdrop moved from inside 720px column to full-viewport-width strip.
+ *     (The old column edge against the chat's dark rgba bg was drawing the hairline.)
+ *   - AnimatePresence modes unified to 'wait' — no more bg/content timing mismatch.
+ *   - Header + chat strip use flex column, activity zone scoped with relative/absolute.
  */
 export function JourneyShell({
   currentScreen,
@@ -35,60 +37,85 @@ export function JourneyShell({
   const hasChatContent = messages.length > 0 && currentScreen !== 's00';
 
   return (
-    <div className="relative h-dvh w-full overflow-hidden bg-dark">
-      {/* Background — full bleed */}
-      <div className="absolute inset-0 z-0">
-        <AnimatePresence mode="popLayout">
+    <div className="relative h-dvh w-full overflow-hidden bg-dark flex flex-col">
+      {/* Background — full bleed, absolute behind everything */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <AnimatePresence mode="wait">
           <motion.div
             key={currentScreen}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
             className="absolute inset-0"
           >
             {bgImage && (
-              <div className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                style={{ backgroundImage: `url(${bgImage})` }} />
+              <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url(${bgImage})` }}
+              />
             )}
             <div className="absolute inset-0 bg-gradient-to-b from-dark/50 via-dark/20 to-dark/60" />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Content column */}
-      <div className="relative z-10 h-dvh mx-auto w-full max-w-[720px] flex flex-col">
-        {/* Header */}
-        <div className="shrink-0">
-          <Header currentScreen={currentScreen} completedScreens={completedScreens} />
-        </div>
+      {/* FULL-WIDTH header strip (no column edge = no hairline) */}
+      <div className="relative z-10 shrink-0">
+        <Header currentScreen={currentScreen} completedScreens={completedScreens} />
+      </div>
 
-        {/* Chat zone — only renders when content exists */}
+      {/* CENTERED chat card — backdrop wrapped to inner column, not full-bleed */}
+      <AnimatePresence initial={false}>
         {hasChatContent && (
-          <div className="shrink-0 px-4 pt-2 pb-1"
-            style={{ background: 'rgba(0,0,0,0.55)', borderRadius: '0 0 12px 12px', backdropFilter: 'blur(4px)' }}>
-            <ChatZone />
-          </div>
+          <motion.div
+            key="chatstrip"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+            className="relative z-10 shrink-0 px-4 pt-3"
+          >
+            <div
+              className="mx-auto w-full max-w-[720px] rounded-xl overflow-hidden"
+              style={{
+                background: 'rgba(0, 0, 0, 0.58)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+              }}
+            >
+              <ChatZone />
+            </div>
+          </motion.div>
         )}
+      </AnimatePresence>
 
-        {/* Activity zone — transparent, flex-1 */}
-        <div className="flex-1 overflow-y-auto relative px-4">
+      {/* Activity zone — scoped 720px column, relative so scoped sheets + PipFloater work */}
+      <div className="relative z-10 flex-1 overflow-hidden">
+        <div className="mx-auto w-full max-w-[720px] h-full relative px-4">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentScreen}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0, transition: { duration: 0.4, delay: 0.1 } }}
-              exit={{ opacity: 0, transition: { duration: 0.3 } }}
-              className="w-full h-full"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6, transition: { duration: 0.15 } }}
+              transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+              className="w-full h-full overflow-y-auto"
             >
               {children}
             </motion.div>
           </AnimatePresence>
-        </div>
 
-        {/* CTA zone — only renders when screen provides content */}
-        {ctaVisible && ctaContent && (
-          <div className="shrink-0 px-4 pb-4 pt-2">
+          {/* Pip lives in the activity zone, bottom-right */}
+          <PipFloater />
+        </div>
+      </div>
+
+      {/* CTA zone */}
+      {ctaVisible && ctaContent && (
+        <div className="relative z-10 shrink-0 px-4 pb-4 pt-2">
+          <div className="mx-auto w-full max-w-[720px]">
             <AnimatePresence>
               <motion.div
                 initial={{ opacity: 0, y: 6 }}
@@ -101,8 +128,8 @@ export function JourneyShell({
               </motion.div>
             </AnimatePresence>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

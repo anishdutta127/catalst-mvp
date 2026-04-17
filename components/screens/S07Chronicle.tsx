@@ -50,6 +50,8 @@ export function S07Chronicle() {
     state.setHeadlineChoice(hl.id);
     setTimeout(() => {
       setPhase('constraints');
+      // Clear stale "Fast-forward ten years..." message before showing constraints intro.
+      useUIStore.getState().clearAllMessages();
       enqueueMessage({ speaker: 'cedric', text: lines.s07.cedric.constraintsIntro, type: 'instruction' });
     }, 400);
   }
@@ -104,17 +106,17 @@ export function S07Chronicle() {
 
                 {/* Stats pills */}
                 <p className="text-[11px] text-gold/70">
-                  {currentHl.stats.replace(/\\u[0-9a-fA-F]{4}/g, '').replace(/\s*\\\s*\.\s*/g, ' ')}
+                  {currentHl.stats}
                 </p>
 
                 <p className="text-sm text-ivory/60 leading-relaxed">
-                  {currentHl.story.replace(/\s*\\\s*\.\s*/g, ' ')}
+                  {currentHl.story}
                 </p>
 
                 {/* Quote */}
                 <div className="border-l-2 border-gold/40 pl-3">
                   <p className="text-[13px] text-ivory/50 italic">
-                    {currentHl.quote(displayName).replace(/\s*\\\s*\.\s*/g, ' ')}
+                    {currentHl.quote(displayName)}
                   </p>
                 </div>
               </div>
@@ -204,7 +206,7 @@ export function S07Chronicle() {
                   data-testid="reveal-btn"
                   className="w-full py-3 rounded-full bg-gold text-dark font-semibold text-sm hover:bg-gold/90 transition-all"
                 >
-                  Seal My Path →
+                  Generate my 3 ideas →
                 </motion.button>
               )}
             </AnimatePresence>

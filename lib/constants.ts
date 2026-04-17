@@ -23,17 +23,33 @@ export interface Milestone {
 
 export const MILESTONES: Milestone[] = [
   { id: 'gate',    icon: '🌱', label: 'Gate',    screens: ['s00', 's01', 's01_llm'] },
-  { id: 'mind',    icon: '🧠', label: 'Mind',    screens: ['s02', 's03'] },
-  { id: 'world',   icon: '🌍', label: 'World',   screens: ['s04'] },
+  { id: 'mind',    icon: '🔮', label: 'Mind',    screens: ['s02', 's03'] },
+  { id: 'world',   icon: '🌊', label: 'World',   screens: ['s04'] },
   { id: 'test',    icon: '⚡', label: 'Test',    screens: ['s05'] },
-  { id: 'crystal', icon: '💎', label: 'Crystal',  screens: ['s06', 's07'] },
-  { id: 'forge',   icon: '⚒️', label: 'Forge',   screens: ['s08'] },
+  { id: 'crystal', icon: '💎', label: 'Crystal', screens: ['s06', 's07'] },
+  { id: 'forge',   icon: '🔥', label: 'Forge',   screens: ['s08'] },
   { id: 'ideas',   icon: '💡', label: 'Ideas',   screens: ['s09', 's09b'] },
   { id: 'home',    icon: '🏠', label: 'Home',    screens: ['s10', 's11'] },
 ];
 
 export function getMilestoneForScreen(screen: ScreenId): Milestone | undefined {
   return MILESTONES.find(m => m.screens.includes(screen));
+}
+
+/** Returns the milestone that's *completed* by leaving `fromScreen` for the
+ *  next screen — i.e. the current screen's milestone iff the next screen
+ *  belongs to a different one. Returns undefined if still inside the same
+ *  milestone. Pass undefined `toScreen` (end of journey) to celebrate the
+ *  current milestone unconditionally. */
+export function milestoneCompletedOnLeave(
+  fromScreen: ScreenId,
+  toScreen: ScreenId | undefined,
+): Milestone | undefined {
+  const from = getMilestoneForScreen(fromScreen);
+  if (!from) return undefined;
+  if (!toScreen) return from;
+  const to = getMilestoneForScreen(toScreen);
+  return to && to.id === from.id ? undefined : from;
 }
 
 // ── House Data ────────────────────────────────────────────────

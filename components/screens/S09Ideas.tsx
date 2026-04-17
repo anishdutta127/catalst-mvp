@@ -12,10 +12,12 @@ import { FitRadar } from '@/components/ui/FitRadar';
 import { AreaChart, Area, XAxis, ResponsiveContainer } from 'recharts';
 
 /**
- * S09 — Ideas Revealed (enriched)
+ * S09 — Ideas Revealed.
  *
- * Staggered card reveal, gradient header, crown mechanic,
- * accordion deep-dive, SELL ZONE with WhatsApp CTA.
+ * Fixes vs previous:
+ *   - Crown CTA ("This is my idea →") now GOLD (was purple) and sits ABOVE the sell zone.
+ *   - Sell zone moved below, same content for now — Batch 3 will rebuild as Mystic Vault Card (sapphire).
+ *   - whyYou fallback grammar fixed: "As a architects" -> proper house-name handling.
  */
 
 const TIER_META = {
@@ -66,6 +68,14 @@ export function S09Ideas() {
     fetchWhyYou(ideaId);
   }
 
+  function houseAsLabel(hid: string | null | undefined): string {
+    // Clean house label: "architects" -> "an Architect", "vanguards" -> "a Vanguard", etc.
+    if (!hid) return 'a founder';
+    const article = /^[aeiou]/i.test(hid) ? 'an' : 'a';
+    const noun = hid.charAt(0).toUpperCase() + hid.slice(1).toLowerCase().replace(/s$/, '');
+    return `${article} ${noun}`;
+  }
+
   function fetchWhyYou(ideaId: string) {
     if (whyYouTexts[ideaId]) return;
     const idea = ideas.find((i) => i.scored.idea.idea_id === ideaId);
@@ -76,18 +86,26 @@ export function S09Ideas() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         type: 'whyYou', sessionId,
-        context: { ideaName: idea.scored.idea.idea_name, ideaOneLiner: idea.scored.idea.one_liner, houseId: houseId || 'founder', topStrengths: 'determination and vision' },
+        context: {
+          ideaName: idea.scored.idea.idea_name,
+          ideaOneLiner: idea.scored.idea.one_liner,
+          houseId: houseId || 'founder',
+          topStrengths: 'determination and vision',
+        },
       }),
     })
       .then((r) => r.json())
       .then((d) => setWhyYouText(ideaId, d.text))
-      .catch(() => setWhyYouText(ideaId, `Your instincts led you here. ${idea.scored.idea.idea_name} fits the way you think.`));
+      .catch(() => setWhyYouText(
+        ideaId,
+        `Your instincts led you here. ${idea.scored.idea.idea_name} fits the way you think. As ${houseAsLabel(houseId)}, your reading of this space is sharper than most founders' — trust the pull.`,
+      ));
   }
 
   function toggleSection(key: string) { setExpandedSection((s) => (s === key ? null : key)); }
 
   function getWhatsAppUrl(scored: ScoredIdea) {
-    const msg = encodeURIComponent(`Hi Anish! I just found my idea on Catalst. I'm a ${houseId || 'founder'} founder. My top match: ${scored.idea.idea_name} in ${scored.idea.domain_primary}. I want to book a 30-min strategy call (₹500).`);
+    const msg = encodeURIComponent(`Hi Anish! I just found my idea on Catalst. I'm ${houseAsLabel(houseId)} founder. My top match: ${scored.idea.idea_name} in ${scored.idea.domain_primary}. I want to book a 30-min strategy call (₹500).`);
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
   }
 
@@ -115,7 +133,6 @@ export function S09Ideas() {
                 'hover:ring-1 hover:ring-white/20'
               } cursor-pointer`}
             >
-              {/* Gradient header bar */}
               <div className="h-1" style={{ background: `linear-gradient(90deg, #D4A843, ${tier === 'wildvine' ? '#059669' : '#F59E0B'})` }} />
 
               <div className="bg-dark-surface p-4">
@@ -142,7 +159,6 @@ export function S09Ideas() {
       {crowned && (() => {
         const idea = crowned.scored.idea;
         const whyYou = whyYouTexts[crownedIdeaId!];
-        // Derive fit scores from idea properties + score
         const fitScores = {
           skill_fit: Math.round(Math.min(100, crowned.scored.displayScore + (idea.builder_fit || 0.5) * 20)),
           market_timing: Math.round(Math.min(100, 50 + (idea.novelty_score || 5) * 5)),
@@ -151,41 +167,35 @@ export function S09Ideas() {
           passion_alignment: Math.round(Math.min(100, crowned.scored.displayScore + 5)),
         };
 
-        // Market size from idea stats
         const marketStats = idea.analytics || {} as Record<string, string>;
+        const dc = (idea as unknown as { deepContent?: Record<string, unknown> }).deepContent;
+        const pestle = (dc?.pestle as Record<string, string> | undefined);
+        const competitors = (dc?.competitors as { name: string; weakness: string; market_share_pct: number }[] | undefined);
+        const revenueModel = (dc?.revenueModel as { primary: string; secondary?: string } | undefined);
+        const growthChart = (dc?.growthChart as { year: string; value: number }[] | undefined);
+        const firstSteps = (dc?.firstSteps as { step: number; action: string; timeline: string }[] | undefined);
 
-        const dc = (idea as unknown as Record<string, unknown>).deep_content as Record<string, unknown> | undefined;
-        const cp = dc?.consumer_psychology as Record<string, string> | undefined;
-        const md = dc?.market_data as Record<string, unknown> | undefined;
-        const pestle = dc?.pestle as Record<string, string> | undefined;
-        const competitors = dc?.competitors as Array<{ name: string; weakness: string; market_share_pct: number }> | undefined;
-        const revenueModel = dc?.revenue_model as Record<string, string> | undefined;
-        const firstSteps = dc?.first_steps as Array<{ step: number; action: string; timeline: string }> | undefined;
-        const growthChart = md?.growth_chart as Array<{ year: string; value: number }> | undefined;
-
-        const sections = [
-          { key: 'idea', title: 'The Idea', content: idea.pain_to_promise, jsx: cp?.jobs_to_be_done ? (
-            <div className="p-4 space-y-3">
-              <p className="text-ivory/80 text-[14px] leading-relaxed">{idea.pain_to_promise}</p>
-              <div className="bg-gold/8 border-l-2 border-gold px-4 py-3 rounded-r-xl">
-                <p className="text-[10px] text-gold/60 uppercase tracking-wider mb-1">The job this idea does</p>
-                <p className="text-ivory/80 text-[13px] italic leading-relaxed">&ldquo;{cp.jobs_to_be_done}&rdquo;</p>
-              </div>
-            </div>
-          ) : null as React.ReactNode },
-          { key: 'why', title: 'Why You', content: whyYou || '', jsx: (whyYou && whyYou !== '__loading__') ? (
-            <div className="p-4 space-y-3">
-              <p className="text-ivory/70 text-[13px] leading-relaxed">{whyYou}</p>
-              <div className="flex flex-col items-center pt-2">
-                <p className="text-[10px] text-ivory/35 uppercase tracking-wider mb-2">Your founder fit</p>
+        const sections: { key: string; title: string; content: string; jsx?: React.ReactNode }[] = [
+          { key: 'idea', title: 'The Idea', content: idea.pain_to_promise || idea.one_liner },
+          { key: 'why', title: 'Why You', content: whyYou || 'Loading your reading...',
+            jsx: (
+              <div className="p-4 space-y-4">
+                <p className="text-sm text-ivory/70 leading-relaxed">
+                  {whyYou === '__loading__' ? 'Reading your instincts...' : whyYou || '—'}
+                </p>
                 <FitRadar scores={fitScores} />
-                <p className="text-[10px] text-ivory/25 italic mt-1">Gold = your profile. Grey = average founder.</p>
               </div>
-            </div>
-          ) : null as React.ReactNode },
+            ) },
           { key: 'market', title: 'The Market', content: '', jsx: (
             <div className="p-4 space-y-4">
-              <p className="text-xs text-ivory/50 leading-relaxed">{idea.domain_primary.replace(/_/g, ' ')} — {idea.why_now}</p>
+              <div className="grid grid-cols-2 gap-2">
+                {Object.entries(marketStats).slice(0, 4).map(([k, v]) => (
+                  <div key={k} className="bg-white/4 rounded-xl p-2.5">
+                    <p className="text-[9px] text-ivory/30 uppercase tracking-wider mb-0.5">{k.replace(/_/g, ' ')}</p>
+                    <p className="text-ivory/75 text-[12px] font-medium">{String(v)}</p>
+                  </div>
+                ))}
+              </div>
               {growthChart && growthChart.length > 0 && (
                 <div>
                   <p className="text-[10px] text-ivory/40 uppercase tracking-wider mb-2">Market Growth ($B)</p>
@@ -300,46 +310,52 @@ export function S09Ideas() {
         );
       })()}
 
-      {/* SELL ZONE */}
+      {/* ── Crown CTA — GOLD, now comes BEFORE sell zone ── */}
+      {crownedIdeaId && (
+        <motion.button
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          whileHover={{ scale: 1.02, boxShadow: '0 0 28px rgba(212,168,67,0.55)' }}
+          whileTap={{ scale: 0.97 }}
+          onClick={() => advanceScreen()}
+          data-testid="crown-cta"
+          className="w-full h-14 rounded-2xl font-bold text-[16px] text-dark bg-gold hover:bg-gold/95 border border-gold/60 shadow-[0_0_18px_rgba(212,168,67,0.4)] flex items-center justify-center gap-2 transition-all"
+        >
+          👑 This is my idea →
+        </motion.button>
+      )}
+
+      {/* ── Sell zone (moved BELOW crown CTA) ── */}
+      {/* NOTE: Batch 3 replaces this with the sapphire Mystic Vault Card per user spec. */}
       {crowned && (
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}
-          className="bg-dark-surface border-2 border-gold/30 rounded-2xl p-6 text-center space-y-3">
-          <h4 className="text-[22px] font-serif text-ivory">YOUR IDEA. BUILT. SHIPPED. IN 7 DAYS.</h4>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-dark-surface border border-white/10 rounded-2xl p-6 text-center space-y-3"
+        >
+          <p className="text-[10px] text-ivory/40 uppercase tracking-widest">Want to actually build it?</p>
+          <h4 className="text-[20px] font-serif text-ivory">Your idea. Built. Shipped. In 7 days.</h4>
           <div className="flex gap-2 justify-center flex-wrap">
-            {['⚡ Claude Code experts', '🏗️ Full MVP', '📱 Real product'].map((p) => (
-              <span key={p} className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold/70">{p}</span>
+            {['Claude Code experts', 'Full MVP', 'Real product'].map((p) => (
+              <span key={p} className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-ivory/60 border border-white/10">{p}</span>
             ))}
           </div>
-          <p className="text-gold font-semibold">Strategy call from ₹500</p>
+          <p className="text-ivory/60 text-[13px]">Strategy call from ₹500</p>
           <a
             href={getWhatsAppUrl(crowned.scored)}
             target="_blank" rel="noopener noreferrer"
             data-testid="whatsapp-cta"
             onClick={() => analytics.cta('whatsapp')}
-            className="block w-full py-3.5 rounded-full bg-gold text-dark font-semibold text-sm hover:bg-gold/90 transition-all"
+            className="block w-full py-3 rounded-full bg-white/8 text-ivory border border-white/15 font-medium text-sm hover:bg-white/12 transition-all"
           >
-            💬 Start the Conversation →
+            💬 Message Anish on WhatsApp
           </a>
           <p className="text-[10px] text-ivory/30">30 min · No commitment · Real builder talk</p>
         </motion.div>
       )}
 
       <ScreenQuote screen="s09" />
-
-      {/* Crown CTA — purple premium */}
-      {crownedIdeaId && (
-        <motion.button
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileHover={{ scale: 1.02, boxShadow: '0 0 28px rgba(124,58,237,0.55)' }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => advanceScreen()}
-          data-testid="crown-cta"
-          className="w-full h-14 rounded-2xl font-bold text-[16px] text-white bg-gradient-to-r from-violet-700 to-purple-600 border border-violet-400/25 shadow-[0_0_18px_rgba(124,58,237,0.35)] flex items-center justify-center gap-2 transition-all"
-        >
-          This is my idea →
-        </motion.button>
-      )}
     </div>
   );
 }

@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
+import { ProcessingSwirl } from '@/components/ui/ProcessingSwirl';
 
 /**
  * S01 — The Fork (enriched)
@@ -22,25 +23,51 @@ export function S01Fork() {
 
   const [showIdeaInput, setShowIdeaInput] = useState(false);
   const [ideaText, setIdeaText] = useState('');
+  const [processing, setProcessing] = useState(false);
+  // Cards stay hidden until Pip's line is mid-stream — gives the dialogue
+  // breathing room before the user is asked to choose. Cascade-from-top entry.
+  const [cardsRevealed, setCardsRevealed] = useState(false);
   const dialogueSent = useRef(false);
 
   useEffect(() => {
     if (dialogueSent.current) return;
     dialogueSent.current = true;
-    enqueueMessage({
-      speaker: 'cedric',
-      text: lines.s01.cedric.welcome1(displayName || 'Traveler'),
-      type: 'dialogue',
-    });
+
+    const w1 = lines.s01.cedric.welcome1(displayName || 'Traveler');
+    const w2 = lines.s01.cedric.welcome2;
+    const CHAR_MS = 28;
+    const READ_PAUSE = 900;
+    const stream1 = w1.length * CHAR_MS;
+    const stream2 = w2.length * CHAR_MS;
+
+    // Helper: skip a delayed enqueue if the user has already left S01.
+    // (Without this, a quick Path A click leaves S01 mid-welcome2 and Pip's
+    // line then enqueues onto S02, breaking message order sanity.)
+    const isStillHere = () => useJourneyStore.getState().currentScreen === 's01';
+
+    enqueueMessage({ speaker: 'cedric', text: w1, type: 'dialogue' });
     setTimeout(() => {
+      if (!isStillHere()) return;
+      enqueueMessage({ speaker: 'cedric', text: w2, type: 'dialogue' });
+    }, stream1 + READ_PAUSE);
+    const pipAt = stream1 + READ_PAUSE + Math.floor(stream2 * 0.5);
+    setTimeout(() => {
+      if (!isStillHere()) return;
       enqueueMessage({ speaker: 'pip', text: lines.s01.pip.entrance, type: 'dialogue' });
-    }, 2000);
+    }, pipAt);
+    // Reveal the path cards a beat after Pip starts talking.
+    setTimeout(() => {
+      if (!isStillHere()) return;
+      setCardsRevealed(true);
+    }, pipAt + 700);
   }, [enqueueMessage, displayName]);
 
   function handlePathA() {
     setIdeaMode('open');
-    enqueueMessage({ speaker: 'cedric', text: lines.s01.cedric.pathA.response, type: 'dialogue' });
-    setTimeout(() => advanceScreen(), 600);
+    setProcessing(true);
+    const text = lines.s01.cedric.pathA.response;
+    enqueueMessage({ speaker: 'cedric', text, type: 'dialogue' });
+    setTimeout(() => advanceScreen(), text.length * 28 + 600);
   }
 
   function handlePathB() {
@@ -52,8 +79,10 @@ export function S01Fork() {
     if (ideaText.trim().length < 5) return;
     setIdeaMode('directed');
     setUserIdeaText(ideaText.trim());
-    enqueueMessage({ speaker: 'cedric', text: lines.s01.cedric.pathB.afterSubmit, type: 'dialogue' });
-    setTimeout(() => advanceScreen(), 600);
+    setProcessing(true);
+    const text = lines.s01.cedric.pathB.afterSubmit;
+    enqueueMessage({ speaker: 'cedric', text, type: 'dialogue' });
+    setTimeout(() => advanceScreen(), text.length * 28 + 600);
   }
 
   function handlePathC() {
@@ -61,43 +90,70 @@ export function S01Fork() {
     goToScreen('s01_llm');
   }
 
-  if (showIdeaInput) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 h-full px-4">
-        <p className="text-xs text-ivory/40 uppercase tracking-wider">Describe your idea</p>
-        <textarea
-          value={ideaText}
-          onChange={(e) => setIdeaText(e.target.value)}
-          placeholder={lines.s01.ideaPlaceholder}
-          autoFocus
-          rows={3}
-          data-testid="idea-input"
-          className="w-full max-w-md px-4 py-3 rounded-lg bg-dark-surface border border-white/10 text-ivory placeholder:text-ivory/30 focus:outline-none focus:border-gold/50 text-sm resize-none"
-        />
-        <button
-          onClick={handleIdeaSubmit}
-          disabled={ideaText.trim().length < 5}
-          data-testid="idea-submit"
-          className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all ${
-            ideaText.trim().length >= 5
-              ? 'bg-gold text-dark hover:bg-gold/90'
-              : 'bg-gold/30 text-ivory/40 cursor-not-allowed'
-          }`}
-        >
-          Continue
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col gap-3 justify-center h-full px-2">
-      {/* Path A */}
+    <AnimatePresence mode="wait">
+      {processing ? (
+        <motion.div
+          key="swirl"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ type: 'spring', stiffness: 240, damping: 24 }}
+          className="flex items-center justify-center h-full"
+        >
+          <ProcessingSwirl
+            color="#D4A843"
+            milestoneIcon="🌱"
+            milestoneLabel="Gate"
+          />
+        </motion.div>
+      ) : showIdeaInput ? (
+        <motion.div
+          key="input"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 32, transition: { duration: 0.32, ease: 'easeIn' } }}
+          transition={{ type: 'spring', stiffness: 280, damping: 26 }}
+          className="flex flex-col items-center justify-center gap-4 h-full px-4"
+        >
+          <p className="text-xs text-ivory/40 uppercase tracking-wider">Describe your idea</p>
+          <textarea
+            value={ideaText}
+            onChange={(e) => setIdeaText(e.target.value)}
+            placeholder={lines.s01.ideaPlaceholder}
+            autoFocus
+            rows={3}
+            data-testid="idea-input"
+            className="w-full max-w-md px-4 py-3 rounded-lg bg-dark-surface border border-white/10 text-ivory placeholder:text-ivory/30 focus:outline-none focus:border-gold/50 text-sm resize-none"
+          />
+          <button
+            onClick={handleIdeaSubmit}
+            disabled={ideaText.trim().length < 5}
+            data-testid="idea-submit"
+            className={`px-6 py-2.5 rounded-full font-semibold text-sm transition-all ${
+              ideaText.trim().length >= 5
+                ? 'bg-gold text-dark hover:bg-gold/90'
+                : 'bg-gold/30 text-ivory/40 cursor-not-allowed'
+            }`}
+          >
+            Continue
+          </button>
+        </motion.div>
+      ) : (
+        <motion.div
+          key="cards"
+          initial={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 32, transition: { duration: 0.32, ease: 'easeIn' } }}
+          className="flex flex-col gap-3 justify-center h-full px-2"
+        >
+      {/* Path A — cascades down from above once Pip is mid-line */}
       <motion.button
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        onClick={handlePathA}
+        initial={{ opacity: 0, y: -28 }}
+        animate={cardsRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: -28 }}
+        transition={{ delay: cardsRevealed ? 0 : 0, type: 'spring', stiffness: 280, damping: 24 }}
+        whileTap={cardsRevealed ? { scale: 0.97 } : undefined}
+        onClick={cardsRevealed ? handlePathA : undefined}
         data-testid="path-a-card"
         className="relative bg-dark-surface border border-white/10 rounded-xl p-5 text-left cursor-pointer hover:border-gold/40 transition-colors"
       >
@@ -109,10 +165,11 @@ export function S01Fork() {
 
       {/* Path B */}
       <motion.button
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.25 }}
-        onClick={handlePathB}
+        initial={{ opacity: 0, y: -28 }}
+        animate={cardsRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: -28 }}
+        transition={{ delay: cardsRevealed ? 0.08 : 0, type: 'spring', stiffness: 280, damping: 24 }}
+        whileTap={cardsRevealed ? { scale: 0.97 } : undefined}
+        onClick={cardsRevealed ? handlePathB : undefined}
         data-testid="path-b-card"
         className="relative bg-dark-surface border border-white/10 rounded-xl p-5 text-left cursor-pointer hover:border-gold/40 transition-colors"
       >
@@ -124,10 +181,11 @@ export function S01Fork() {
 
       {/* Path C — teal premium accent */}
       <motion.button
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35 }}
-        onClick={handlePathC}
+        initial={{ opacity: 0, y: -28 }}
+        animate={cardsRevealed ? { opacity: 1, y: 0 } : { opacity: 0, y: -28 }}
+        transition={{ delay: cardsRevealed ? 0.16 : 0, type: 'spring', stiffness: 280, damping: 24 }}
+        whileTap={cardsRevealed ? { scale: 0.97 } : undefined}
+        onClick={cardsRevealed ? handlePathC : undefined}
         data-testid="path-c-link"
         className="relative bg-dark-surface border border-teal/30 rounded-xl p-5 text-left cursor-pointer hover:border-teal/60 transition-colors"
       >
@@ -137,6 +195,8 @@ export function S01Fork() {
         <p className="text-xs text-ivory-muted mt-1">Paste your ChatGPT profile for instant matching</p>
         <p className="text-[10px] text-teal/60 mt-2">Most efficient · Skips 4 screens</p>
       </motion.button>
-    </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

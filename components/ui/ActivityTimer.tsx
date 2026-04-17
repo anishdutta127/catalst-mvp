@@ -1,62 +1,44 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect } from 'react';
+import { useUIStore } from '@/lib/store/uiStore';
 
 interface ActivityTimerProps {
   durationMs: number;
   onExpire: () => void;
   /** Reset key — change to restart the timer */
   resetKey?: string | number;
+  /** Hold the ring at full for this long before the countdown actually
+   *  begins. Used on a screen's first question so the timer doesn't
+   *  start ticking while the user is still reading the intro. */
+  startDelayMs?: number;
 }
 
 /**
- * ActivityTimer — depleting circle arc, top-right of activity zone.
- * 24px diameter, 3px gold stroke, depletes clockwise.
- * < 20%: amber + pulse. Uses CSS animation for smooth 60fps.
+ * ActivityTimer — registers a depleting timer with the UI store.
+ *
+ * Renderless: PipFloater owns the visual (a ring around Pip's sprite) and the
+ * RAF loop. Screens just declare "I want a timer for N ms, call this onExpire."
+ *
+ * The previous version rendered a tiny 24px ring in the corner; we now want
+ * the timer visually attached to Pip so the user understands what it counts.
  */
-export function ActivityTimer({ durationMs, onExpire, resetKey }: ActivityTimerProps) {
-  const [pct, setPct] = useState(1);
-  const startRef = useRef(Date.now());
-  const firedRef = useRef(false);
+export function ActivityTimer({
+  durationMs,
+  onExpire,
+  resetKey = 'default',
+  startDelayMs = 0,
+}: ActivityTimerProps) {
+  const startPipTimer = useUIStore((s) => s.startPipTimer);
+  const stopPipTimer = useUIStore((s) => s.stopPipTimer);
 
   useEffect(() => {
-    startRef.current = Date.now();
-    firedRef.current = false;
-    setPct(1);
+    startPipTimer(durationMs, resetKey, onExpire, startDelayMs);
+    return () => stopPipTimer();
+    // onExpire intentionally omitted — startPipTimer captures the latest closure
+    // each time durationMs/resetKey/startDelayMs changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [durationMs, resetKey, startDelayMs, startPipTimer, stopPipTimer]);
 
-    const raf = () => {
-      const elapsed = Date.now() - startRef.current;
-      const remaining = Math.max(0, 1 - elapsed / durationMs);
-      setPct(remaining);
-
-      if (remaining <= 0 && !firedRef.current) {
-        firedRef.current = true;
-        onExpire();
-        return;
-      }
-      if (remaining > 0) requestAnimationFrame(raf);
-    };
-
-    const id = requestAnimationFrame(raf);
-    return () => cancelAnimationFrame(id);
-  }, [durationMs, onExpire, resetKey]);
-
-  const circumference = 2 * Math.PI * 10;
-  const isLow = pct < 0.2;
-  const color = isLow ? '#fbbf24' : '#D4A843';
-
-  return (
-    <div className={`absolute top-3 right-3 ${isLow ? 'animate-pulse' : ''}`}>
-      <svg width="24" height="24" viewBox="0 0 24 24" className="-rotate-90">
-        <circle cx="12" cy="12" r="10" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="3" />
-        <circle
-          cx="12" cy="12" r="10" fill="none"
-          stroke={color}
-          strokeWidth="3"
-          strokeDasharray={`${pct * circumference} ${circumference}`}
-          strokeLinecap="round"
-        />
-      </svg>
-    </div>
-  );
+  return null;
 }

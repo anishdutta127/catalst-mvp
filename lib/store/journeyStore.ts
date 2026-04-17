@@ -165,7 +165,14 @@ export const useJourneyStore = create<JourneyState & JourneyActions>()((set, get
     : '',
 
   // ── Identity ──
-  setDisplayName: (name) => set({ displayName: name }),
+  setDisplayName: (name) => {
+    // Capitalize: first letter uppercase, rest lowercase. Handles "anish" -> "Anish".
+    const trimmed = name.trim();
+    const cap = trimmed.length > 0
+      ? trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase()
+      : trimmed;
+    set({ displayName: cap });
+  },
 
   // ── Path ──
   setIdeaMode: (mode) => set({ ideaMode: mode }),

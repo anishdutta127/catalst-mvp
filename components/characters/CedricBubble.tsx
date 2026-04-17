@@ -2,25 +2,27 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { DIALOGUE_TIMING } from '@/lib/constants';
 
 interface CedricBubbleProps {
   text: string;
   onComplete?: () => void;
+  /** ms per character. Default 28 (Cedric is deliberate). */
+  charDelay?: number;
   delay?: number;
 }
 
 /**
- * CedricBubble — word-by-word streaming text for Cedric.
- * Rate: DIALOGUE_TIMING.cedricWordDelay ms per word (50ms).
- * Uses useRef for onComplete to prevent Framer Motion closure restarts.
+ * CedricBubble — character-by-character streaming, top-left aligned.
+ * Dark bg + gold name label. Bubble itself vertically centers in its column.
  */
-export function CedricBubble({ text, onComplete, delay = 0 }: CedricBubbleProps) {
-  const words = text.split(' ');
+export function CedricBubble({
+  text,
+  onComplete,
+  charDelay = 28,
+  delay = 0,
+}: CedricBubbleProps) {
   const [visibleCount, setVisibleCount] = useState(0);
   const [started, setStarted] = useState(false);
-
-  // Stable ref for onComplete — prevents closure recreation on re-render
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
 
@@ -28,26 +30,22 @@ export function CedricBubble({ text, onComplete, delay = 0 }: CedricBubbleProps)
     onCompleteRef.current?.();
   }, []);
 
-  // Delay before starting
   useEffect(() => {
     const timer = setTimeout(() => setStarted(true), delay);
     return () => clearTimeout(timer);
   }, [delay]);
 
-  // Word-by-word reveal
   useEffect(() => {
     if (!started) return;
-    if (visibleCount >= words.length) {
+    if (visibleCount >= text.length) {
       handleComplete();
       return;
     }
-
     const timer = setTimeout(() => {
       setVisibleCount((c) => c + 1);
-    }, DIALOGUE_TIMING.cedricWordDelay);
-
+    }, charDelay);
     return () => clearTimeout(timer);
-  }, [started, visibleCount, words.length, handleComplete]);
+  }, [started, visibleCount, text.length, charDelay, handleComplete]);
 
   if (!started) return null;
 
@@ -56,21 +54,17 @@ export function CedricBubble({ text, onComplete, delay = 0 }: CedricBubbleProps)
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="bg-dark-surface border border-white/10 rounded-lg px-4 py-3 max-w-[85%]"
+      className="bg-dark-surface/95 border border-white/10 rounded-xl px-4 py-3 w-full text-left"
+      style={{ backdropFilter: 'blur(6px)' }}
     >
-      <div className="flex items-center gap-2 mb-1">
-        <span className="text-xs font-semibold text-gold">🧙 Cedric</span>
+      <div className="flex items-center gap-1.5 mb-1">
+        <span className="text-[11px] font-semibold tracking-wide text-gold">🧙 Cedric</span>
       </div>
-      <p className="text-sm leading-relaxed text-ivory">
-        {words.map((word, i) => (
-          <span
-            key={i}
-            className="transition-opacity duration-100"
-            style={{ opacity: i < visibleCount ? 1 : 0 }}
-          >
-            {word}{i < words.length - 1 ? ' ' : ''}
-          </span>
-        ))}
+      <p className="text-[14px] leading-relaxed text-ivory whitespace-pre-wrap">
+        {text.slice(0, visibleCount)}
+        {visibleCount < text.length && (
+          <span className="inline-block w-[2px] h-[14px] align-middle ml-[1px] animate-pulse bg-gold" />
+        )}
       </p>
     </motion.div>
   );
