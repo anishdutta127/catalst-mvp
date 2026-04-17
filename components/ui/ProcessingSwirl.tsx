@@ -1,178 +1,195 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 
 interface ProcessingSwirlProps {
-  /** Particle + glow color. Defaults to garden gold. */
+  /** Sparkle + ring + glow color. Defaults to garden gold. */
   color?: string;
-  /** Optional shimmer caption below the swirl. Replaced by the milestone-
-   *  complete tagline when `milestoneLabel` is set. */
+  /** Caption shown as a brief pop during phase 3→4 (700–1100ms).
+   *  When `milestoneLabel` is set, "{label} unlocked" is shown instead. */
   caption?: string;
-  /** Emoji shown as the badge in the centre of the swirl. When omitted, a
-   *  default glowing orb takes its place. */
+  /** Emoji shown as the badge at center. Falls back to a glowing orb. */
   milestoneIcon?: string;
-  /** When set, the badge gets a "{label} complete" celebration tagline +
-   *  more dramatic entry — used only on screens that finish a milestone. */
+  /** When set, triggers the "{label} unlocked" celebration caption. */
   milestoneLabel?: string;
 }
 
+const SPARKLE_COUNT = 12;
+
 /**
- * ProcessingSwirl — the standard "your selections are being processed" outro.
+ * ProcessingSwirl — one-shot achievement-unlock beat.
  *
- * Visual = central badge (milestone emoji or glowing orb) wrapped in a
- * pulsing ring + outer aura + orbiting particles. Used at the end of every
- * activity screen so the user sees motion, not a frozen activity.
+ * Total duration 1100ms, zero loops. Four phases:
+ *   1. 0–300ms   — icon spring-in from scale 0 (natural overshoot to ~1.13,
+ *                  stiffness 280, damping 18).
+ *   2. 300–700ms — gold shockwave ring expands 40→240px, opacity 0→0.8→0.
+ *   3. 500–900ms — 12 sparkles burst outward with angular jitter, 3px gold
+ *                  dots with white core; fade at ~70% of travel.
+ *   4. 700–1100ms — held gold halo behind icon + optional caption pop; both
+ *                   fade to nothing by end.
  *
- * The badge is the focal point. The swirl is supporting motion around it.
+ * Replaces the old infinite orbital-particle loop that felt like a loading
+ * spinner. Vibe: Zelda item-unlock, Duolingo streak pop, iOS AirDrop received.
  */
-
-const ORBIT_PARTICLES = [
-  { radius: 70, duration: 1.5,  size: 3.0, delay: 0,    startAngle: 0 },
-  { radius: 58, duration: 1.2,  size: 2.5, delay: 0.06, startAngle: 60 },
-  { radius: 48, duration: 0.95, size: 2.2, delay: 0.12, startAngle: 120 },
-  { radius: 78, duration: 1.8,  size: 2.0, delay: 0.18, startAngle: 180 },
-  { radius: 64, duration: 1.35, size: 2.8, delay: 0.24, startAngle: 240 },
-  { radius: 52, duration: 1.05, size: 2.4, delay: 0.30, startAngle: 300 },
-  { radius: 84, duration: 2.0,  size: 1.8, delay: 0.36, startAngle: 30 },
-  { radius: 42, duration: 0.85, size: 2.0, delay: 0.42, startAngle: 210 },
-];
-
 export function ProcessingSwirl({
   color = '#D4A843',
   caption,
   milestoneIcon,
   milestoneLabel,
 }: ProcessingSwirlProps) {
-  const taglineText = milestoneLabel ? `${milestoneLabel} complete` : caption;
-  const isCelebration = !!milestoneLabel;
+  const captionText = milestoneLabel ? `${milestoneLabel} unlocked` : caption;
+
+  // Stable per-mount sparkle spread — angular jitter keeps it from feeling
+  // like a perfect geometric circle.
+  const sparkles = useMemo(() => {
+    return Array.from({ length: SPARKLE_COUNT }, (_, i) => {
+      const baseAngleDeg = (i / SPARKLE_COUNT) * 360;
+      const jitterDeg = (Math.random() - 0.5) * 25; // ±12.5°
+      const angle = ((baseAngleDeg + jitterDeg) * Math.PI) / 180;
+      const travel = 80 + Math.random() * 60; // 80–140px from center
+      return {
+        x: Math.cos(angle) * travel,
+        y: Math.sin(angle) * travel,
+        delay: 0.5 + Math.random() * 0.05,
+      };
+    });
+  }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <div className="relative" style={{ width: 180, height: 180 }}>
-        {/* Outer aura — quick breathing halo */}
+    <div className="flex flex-col items-center justify-center gap-3">
+      <div className="relative" style={{ width: 260, height: 260 }}>
+        {/* Phase 4 — held gold halo behind icon. Invisible until ~700ms, then
+            fades up + expands slightly, then fades out by 1100ms. */}
         <motion.div
-          className="absolute inset-0 rounded-full"
-          style={{ background: `radial-gradient(circle, ${color}33 0%, ${color}00 65%)` }}
-          animate={{ scale: [1, 1.22, 1], opacity: [0.55, 1, 0.55] }}
-          transition={{ duration: 1.1, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        {/* Inner ring pulse */}
-        <motion.div
-          className="absolute top-1/2 left-1/2 rounded-full -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1/2 left-1/2 rounded-full pointer-events-none"
           style={{
-            width: 96,
-            height: 96,
-            border: `1px solid ${color}66`,
-            boxShadow: `inset 0 0 22px ${color}44`,
+            width: 120,
+            height: 120,
+            marginLeft: -60,
+            marginTop: -60,
+            background: `radial-gradient(circle, ${color}55 0%, ${color}00 70%)`,
           }}
-          animate={{ scale: [0.85, 1.12, 0.85], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut' }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: [0, 0, 0.6, 0], scale: [0.8, 0.8, 1.0, 1.15] }}
+          transition={{ duration: 1.1, times: [0, 0.64, 0.78, 1], ease: 'easeOut' }}
         />
 
-        {/* Orbiting particles */}
-        {ORBIT_PARTICLES.map((p, i) => (
+        {/* Phase 2 — shockwave ring. Starts at 40/240 scale (40px), grows to
+            full 240px, opacity 0→0.8→0. */}
+        <motion.div
+          className="absolute top-1/2 left-1/2 rounded-full pointer-events-none"
+          style={{
+            width: 240,
+            height: 240,
+            marginLeft: -120,
+            marginTop: -120,
+            border: `2px solid ${color}`,
+            boxSizing: 'border-box',
+          }}
+          initial={{ scale: 40 / 240, opacity: 0 }}
+          animate={{ scale: 1, opacity: [0, 0.8, 0] }}
+          transition={{
+            duration: 0.4,
+            delay: 0.3,
+            ease: 'easeOut',
+            opacity: { duration: 0.4, delay: 0.3, times: [0, 0.1, 1] },
+          }}
+        />
+
+        {/* Phase 3 — 12 sparkles burst outward from center with angular jitter
+            + random travel distance. Fade at ~70% of travel. */}
+        {sparkles.map((s, i) => (
           <motion.div
             key={i}
-            className="absolute top-1/2 left-1/2"
-            style={{ width: 0, height: 0 }}
-            initial={{ rotate: p.startAngle }}
-            animate={{ rotate: p.startAngle + 360 }}
-            transition={{
-              duration: p.duration,
-              repeat: Infinity,
-              ease: 'linear',
-              delay: p.delay,
+            className="absolute top-1/2 left-1/2 rounded-full pointer-events-none"
+            style={{
+              width: 6,
+              height: 6,
+              marginLeft: -3,
+              marginTop: -3,
+              background: `radial-gradient(circle at 35% 30%, #ffffff 0%, ${color} 55%, ${color} 100%)`,
+              boxShadow: `0 0 6px ${color}`,
             }}
-          >
-            <motion.div
-              className="absolute rounded-full"
-              style={{
-                width: p.size * 2,
-                height: p.size * 2,
-                top: -p.radius - p.size,
-                left: -p.size,
-                background: color,
-                boxShadow: `0 0 ${p.size * 4}px ${color}`,
-              }}
-              animate={{ opacity: [0.4, 1, 0.4], scale: [0.8, 1.1, 0.8] }}
-              transition={{
-                duration: p.duration / 2,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: p.delay,
-              }}
-            />
-          </motion.div>
+            initial={{ x: 0, y: 0, opacity: 0, scale: 1 }}
+            animate={{
+              x: s.x,
+              y: s.y,
+              opacity: [0, 1, 1, 0],
+              scale: [1, 1.2, 0.8, 0.4],
+            }}
+            transition={{
+              duration: 0.4,
+              delay: s.delay,
+              ease: 'easeOut',
+              opacity: { duration: 0.4, delay: s.delay, times: [0, 0.15, 0.7, 1] },
+            }}
+          />
         ))}
 
-        {/* CENTRAL BADGE — milestone emoji takes the focal point. Falls back
-            to a plain glowing orb when no icon is supplied. */}
+        {/* Phase 1 (spring-in) — central icon or fallback glowing orb.
+            Spring {stiffness: 280, damping: 18} overshoots naturally to
+            ~1.13 and settles at 1.0 by ~450ms. */}
         {milestoneIcon ? (
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 leading-none flex items-center justify-center"
-            initial={
-              isCelebration
-                ? { scale: 0.15, opacity: 0, rotate: -30 }
-                : { scale: 0.6, opacity: 0 }
-            }
-            animate={
-              isCelebration
-                ? {
-                    scale: [0.15, 1.45, 0.95, 1.15, 1.05],
-                    opacity: 1,
-                    rotate: [-30, 12, -4, 4, 0],
-                  }
-                : { scale: 1, opacity: 1 }
-            }
-            transition={
-              isCelebration
-                ? { duration: 0.75, ease: 'easeOut', times: [0, 0.4, 0.6, 0.85, 1] }
-                : { type: 'spring', stiffness: 280, damping: 22 }
-            }
+            className="absolute top-1/2 left-1/2 leading-none flex items-center justify-center"
             style={{
               width: 80,
               height: 80,
+              marginLeft: -40,
+              marginTop: -40,
               fontSize: 52,
-              filter: `drop-shadow(0 0 16px ${color}cc) drop-shadow(0 0 32px ${color}55)`,
+              filter: `drop-shadow(0 0 18px ${color}bb)`,
+            }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              scale: { type: 'spring', stiffness: 280, damping: 18 },
+              opacity: { duration: 0.2 },
             }}
           >
             <span>{milestoneIcon}</span>
           </motion.div>
         ) : (
           <motion.div
-            className="absolute top-1/2 left-1/2 rounded-full -translate-x-1/2 -translate-y-1/2"
+            className="absolute top-1/2 left-1/2 rounded-full pointer-events-none"
             style={{
               width: 44,
               height: 44,
+              marginLeft: -22,
+              marginTop: -22,
               background: `radial-gradient(circle at 35% 30%, #fff 0%, ${color} 55%, ${color}99 100%)`,
-              boxShadow: `0 0 40px ${color}, 0 0 80px ${color}66`,
+              boxShadow: `0 0 24px ${color}`,
             }}
-            animate={{ scale: [1, 1.22, 1] }}
-            transition={{ duration: 0.7, repeat: Infinity, ease: 'easeInOut' }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{
+              scale: { type: 'spring', stiffness: 280, damping: 18 },
+              opacity: { duration: 0.2 },
+            }}
           />
         )}
       </div>
 
-      {taglineText && (
+      {/* Caption pop — 400ms between phase 3 and phase 4 (700–1100ms).
+          12px mono caps in gold, auto-fade. */}
+      {captionText && (
         <motion.p
-          initial={{ opacity: 0, y: 4 }}
-          animate={{
-            opacity: isCelebration ? 1 : [0.45, 1, 0.45],
-            y: 0,
-          }}
-          transition={
-            isCelebration
-              ? { delay: 0.5, duration: 0.3 }
-              : { duration: 1.0, repeat: Infinity, ease: 'easeInOut' }
-          }
-          className={`text-[11px] tracking-[0.28em] uppercase ${isCelebration ? 'font-bold' : 'italic'}`}
+          className="font-mono uppercase tracking-[0.28em] text-center font-bold"
           style={{
-            color: isCelebration ? color : `${color}cc`,
-            textShadow: isCelebration ? `0 0 12px ${color}88` : undefined,
+            fontSize: 12,
+            color,
+            textShadow: `0 0 12px ${color}88`,
+          }}
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: [0, 1, 1, 0], y: 0 }}
+          transition={{
+            duration: 0.4,
+            delay: 0.7,
+            times: [0, 0.25, 0.75, 1],
           }}
         >
-          {taglineText}
+          {captionText}
         </motion.p>
       )}
     </div>
