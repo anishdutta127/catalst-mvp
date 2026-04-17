@@ -10,6 +10,7 @@ import { filterByIndustryOnly } from '@/lib/scoring/orchestrator';
 import { IDEAS } from '@/lib/scoring/engine';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { IndustrySwipeCard, type IndustryCardData } from '@/components/ui/IndustrySwipeCard';
+import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
 
 /**
  * S04 — Industry Discovery (zero-scroll layout rebuild).
@@ -59,6 +60,7 @@ export function S04Industries() {
   const [lastAction, setLastAction] = useState<{ type: 'keep' | 'pass' | 'edge'; id: string } | null>(null);
   const [nudge, setNudge] = useState('');
   const [isPulsing, setIsPulsing] = useState(false);
+  const [pipReaction, setPipReaction] = useState<string | null>(null);
   const dialogueSent = useRef(false);
   const hasPulsed = useRef(false);
   const firstKeepFired = useRef(false);
@@ -119,21 +121,22 @@ export function S04Industries() {
     keepIndustry(currentCard.id);
     setLastAction({ type: 'keep', id: currentCard.id });
 
-    // Pip beat — first keep (0 → 1)
+    // Pip reaction — first keep (0 → 1). 180ms lets the card swipe-out land
+    // before the bubble appears.
     if (!firstKeepFired.current && prevKeepCount === 0) {
       firstKeepFired.current = true;
       setTimeout(() => {
-        enqueueMessage({ speaker: 'pip', text: lines.s04.pip.afterFirstKeep, type: 'dialogue' });
-      }, 600);
+        setPipReaction(lines.s04.pip.afterFirstKeep);
+      }, 180);
     }
 
-    // Pip beat — threshold crossed (1 → 2). Extra 300ms delay so it doesn't
-    // step on the firstKeep beat on rapid keep-keep.
+    // Pip reaction — threshold crossed (1 → 2). 850ms spacing so the
+    // firstKeep bubble has room to clear before this one appears.
     if (!thresholdFired.current && prevKeepCount === 1) {
       thresholdFired.current = true;
       setTimeout(() => {
-        enqueueMessage({ speaker: 'pip', text: lines.s04.pip.atThreshold, type: 'dialogue' });
-      }, 1100);
+        setPipReaction(lines.s04.pip.atThreshold);
+      }, 850);
     }
   }
 
@@ -147,12 +150,12 @@ export function S04Industries() {
     edgeIndustry(currentCard.id);
     setLastAction({ type: 'edge', id: currentCard.id });
 
-    // Pip beat — first edge
+    // Pip reaction — first edge. 180ms for swipe-out to resolve first.
     if (!firstEdgeFired.current) {
       firstEdgeFired.current = true;
       setTimeout(() => {
-        enqueueMessage({ speaker: 'pip', text: lines.s04.pip.afterFirstEdge, type: 'dialogue' });
-      }, 600);
+        setPipReaction(lines.s04.pip.afterFirstEdge);
+      }, 180);
     }
   }
 
@@ -376,6 +379,20 @@ export function S04Industries() {
       <div className="shrink-0 h-6 flex items-center justify-center overflow-hidden">
         <ScreenQuote screen="s04" />
       </div>
+
+      {/* Pip floating reaction bubble — anchored near Pip's sprite. Fixed
+          positioning so it sits outside the flex-column stack and doesn't
+          steal vertical space from the card zone. */}
+      <AnimatePresence>
+        {pipReaction && (
+          <PipFloatingBubble
+            key={pipReaction}
+            text={pipReaction}
+            color="#4ade80"
+            onComplete={() => setPipReaction(null)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

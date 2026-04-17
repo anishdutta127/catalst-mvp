@@ -121,9 +121,9 @@ export const lines = {
     },
     pip: {
       intro: 'This is the fun part! It\'s like shopping but for your FUTURE.',
-      afterFirstKeep: 'Ooh, good one. I can feel that one\'s pulling.',
-      afterFirstEdge: 'An obsession! That\'s a commitment, you know. Only two of those allowed.',
-      atThreshold: 'Okay! Two worlds that pulled. You could stop here — or keep going and find the ones that OBSESS you.',
+      afterFirstKeep: 'Ooh. That one\'s pulling.',
+      afterFirstEdge: 'Whoa — an obsession. Only two of those allowed.',
+      atThreshold: 'You could stop here. Or keep going and find the OBSESSIONS.',
       afterAll: 'I wanted to edge ALL of them. Cedric said that \'defeats the purpose.\' Whatever that means.',
     },
   },
