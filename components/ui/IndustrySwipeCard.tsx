@@ -37,6 +37,10 @@ export interface IndustryCardData {
   example_startups_india?: string[];
   trending_global?: string[];
   trending_startups?: string[];
+  // New richer back-of-card fields (Batch 2 hinge-data enrichment).
+  user_behavior_shift?: string;
+  impact_potential?: string;
+  india_scene?: string;
 }
 
 interface IndustrySwipeCardProps {
@@ -58,23 +62,33 @@ function formatCategory(c: string): string {
   return c.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 }
 
+/** Truncate to ~max chars at a word boundary with an ellipsis. */
+function truncateAtWord(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const cut = text.slice(0, max - 1);
+  const lastSpace = cut.lastIndexOf(' ');
+  const end = lastSpace > max * 0.7 ? lastSpace : max - 1;
+  return cut.slice(0, end).trimEnd() + '…';
+}
+
 /**
- * IndustrySwipeCard — S04 swipe card, bento-grid front + 4-zone back.
+ * IndustrySwipeCard — S04 swipe card with a bento front and a rich back.
  *
- * Front stack (vertical flex):
- *   - HERO (28%)   : emoji 48px, name 24px serif, meta line
- *   - HOOK (10%)   : italic tagline on dark bg — the conviction line
+ * Front stack (32/8/flex/10 vertical split):
+ *   - HERO (32%)   : emoji 48px, name 24px serif, meta line
+ *   - HOOK (8%)    : italicized tagline on dark bg (no label, no border)
  *   - BENTO (flex) : 2-col grid, 3 rows
- *       Row 1 (col-span-2) : TILE A — THE OPPORTUNITY (gold-accent)
- *       Row 2 (B | C)      : 🔥 TRENDING  |  👀 TO WATCH
- *       Row 3 (col-span-2) : TILE D — HOTTEST SUB-SPACE (bar + %)
- *   - HINT (11%)   : "↻  flip for the full read"
+ *       Row 1 [col-span-2] : TILE A — 💡 OPPORTUNITY (gold-tinted card)
+ *       Row 2 [B | C]      : 🔥 TRENDING  |  👀 TO WATCH
+ *       Row 3 [col-span-2] : HOTTEST SUB-SPACE — bar + CAGR %
+ *   - FOOTER (10%) : "↻  flip for the deeper read"
  *
- * Back — 4 sections:
- *   1. ⚡ AI disruption angle
- *   2. Top 3 sub-CAGRs (bars)
- *   3. 📰 What's happening (recent headline)
- *   4. 🇮🇳 India leaders (up to 6 chips)
+ * Back — 6 zones:
+ *   1. ⚡ AI disruption angle                       (full-width thesis)
+ *   2. Top 3 sub-CAGRs                              (full-width, bars)
+ *   3. USER BEHAVIOR SHIFT | IMPACT POTENTIAL       (2-col row)
+ *   4. 📰 What's happening (recent headline)        (full-width)
+ *   5. 🇮🇳 India scene                              (full-width)
  *
  * Gestures: drag left = Pass, right = Keep, up = Edge. Tap = flip.
  */
@@ -108,28 +122,25 @@ export function IndustrySwipeCard({
     return parts.join(' · ');
   }, [industry.market_size_b, industry.cagr_pct, industry.category]);
 
-  // HOOK — prefer tagline, fall back to cultural_trend.
   const hookText = industry.tagline || industry.cultural_trend || '';
 
-  // TILE A — the "TOGETHER WE COULD" bet. Falls back to first prompt.
-  const openingText = useMemo(() => {
+  // TILE A — "TOGETHER WE COULD" prompt text, truncated to ~85 chars.
+  const opportunityText = useMemo(() => {
     const bank = industry.hinge_prompts || [];
     if (bank.length === 0) return null;
     const together = bank.find((p) => p.label.toUpperCase() === 'TOGETHER WE COULD');
-    return (together || bank[0])?.text || null;
+    const raw = (together || bank[0])?.text || null;
+    return raw ? truncateAtWord(raw, 85) : null;
   }, [industry.hinge_prompts]);
 
   // TILE B + C — curated India company callouts
   const stats = INDUSTRY_STATS[industry.id] || FALLBACK_STAT;
 
-  // TILE D — highest-CAGR sub-category
   const topCagrs = useMemo(() => {
     const arr = industry.sub_category_cagrs || [];
     return [...arr].sort((a, b) => b.cagr_pct - a.cagr_pct).slice(0, 3);
   }, [industry.sub_category_cagrs]);
   const topSubCagr = topCagrs[0] || null;
-
-  const indiaLeaders = (industry.india_leaders || industry.example_startups_india || []).slice(0, 6);
 
   function handleDragEnd(_: unknown, info: { offset: { x: number; y: number } }) {
     const { x: dx, y: dy } = info.offset;
@@ -158,7 +169,7 @@ export function IndustrySwipeCard({
     : undefined;
 
   const GOLD_SOLID = '#D4A843';
-  const GOLD_TINT = 'rgba(212,168,67,0.56)';
+  const GOLD_70 = 'rgba(212,168,67,0.70)';
 
   return (
     <motion.div
@@ -210,9 +221,9 @@ export function IndustrySwipeCard({
               boxShadow: `0 14px 44px -10px ${color}80, 0 0 0 1px ${color}30`,
             }}
           >
-            {/* ─── HERO — 28% ─── */}
+            {/* ─── HERO — 32% ─── */}
             <div
-              className="basis-[28%] shrink-0 relative flex flex-col justify-end px-5 pb-3"
+              className="basis-[32%] shrink-0 relative flex flex-col justify-end px-5 pb-3"
               style={{
                 background: `linear-gradient(160deg, ${color} 0%, ${colorDark} 65%, #0C0E12 100%)`,
               }}
@@ -227,7 +238,7 @@ export function IndustrySwipeCard({
                 }}
               />
               <div className="relative">
-                <div className="text-[44px] leading-none select-none mb-0.5" aria-hidden>
+                <div className="text-[48px] leading-none select-none mb-1" aria-hidden>
                   {emoji}
                 </div>
                 <h2 className="text-[24px] font-serif font-bold text-white leading-[1.05]">
@@ -241,43 +252,38 @@ export function IndustrySwipeCard({
               </div>
             </div>
 
-            {/* ─── HOOK — 10% ─── */}
-            <div className="basis-[10%] shrink-0 flex flex-col justify-center px-5">
+            {/* ─── HOOK — 8% (no label, no border) ─── */}
+            <div className="basis-[8%] shrink-0 flex items-center px-4">
               {hookText && (
-                <>
-                  <p
-                    className="text-[9px] font-mono uppercase font-semibold mb-0.5"
-                    style={{ color: GOLD_TINT, letterSpacing: '0.2em' }}
-                  >
-                    The Hook
-                  </p>
-                  <p className="text-[14px] italic text-ivory/90 leading-[1.25] line-clamp-2">
-                    {hookText}
-                  </p>
-                </>
+                <p className="text-[14px] italic text-ivory/90 leading-snug line-clamp-1">
+                  {hookText}
+                </p>
               )}
             </div>
 
             {/* ─── BENTO GRID — flex-1 ─── */}
-            <div className="flex-1 grid grid-cols-2 grid-rows-[auto_minmax(0,1fr)_auto] gap-2 px-5 pb-1 min-h-0 overflow-hidden">
-              {/* TILE A — THE OPPORTUNITY (gold-accent, full-width) */}
-              {openingText && (
+            <div className="flex-1 grid grid-cols-2 grid-rows-[auto_minmax(0,1fr)_auto] gap-2 px-4 pb-1 min-h-0 overflow-hidden">
+              {/* TILE A — 💡 OPPORTUNITY (gold-tinted, full-width) */}
+              {opportunityText && (
                 <div
-                  className="col-span-2 rounded-[10px]"
+                  className="col-span-2 rounded-xl"
                   style={{
-                    background: 'rgba(212,168,67,0.08)',
-                    borderLeft: '2px solid rgba(212,168,67,0.5)',
-                    padding: '8px 10px',
+                    background: 'rgba(212,168,67,0.09)',
+                    border: '1px solid rgba(212,168,67,0.28)',
+                    padding: '10px 12px',
                   }}
                 >
-                  <p
-                    className="text-[9px] font-mono uppercase font-semibold mb-0.5"
-                    style={{ color: GOLD_SOLID, letterSpacing: '0.2em' }}
-                  >
-                    The Opportunity
-                  </p>
-                  <p className="text-[12.5px] text-ivory/85 leading-snug line-clamp-2">
-                    {openingText}
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="text-[14px] leading-none">💡</span>
+                    <p
+                      className="text-[10px] font-mono uppercase font-semibold"
+                      style={{ color: GOLD_70, letterSpacing: '0.18em' }}
+                    >
+                      Opportunity
+                    </p>
+                  </div>
+                  <p className="text-[13px] text-ivory/90 leading-snug font-semibold line-clamp-2">
+                    {opportunityText}
                   </p>
                 </div>
               )}
@@ -320,24 +326,30 @@ export function IndustrySwipeCard({
                 </p>
               </div>
 
-              {/* TILE D — HOTTEST SUB-SPACE (full-width, single row) */}
+              {/* TILE D — HOTTEST SUB-SPACE (label + name+CAGR row + 2px bar) */}
               {topSubCagr && (
                 <div
-                  className="col-span-2 rounded-xl px-3 py-2 flex items-center gap-3 min-w-0"
+                  className="col-span-2 rounded-xl px-3 py-2 min-w-0"
                   style={{
                     background: 'rgba(255,255,255,0.04)',
                     border: '1px solid rgba(255,255,255,0.10)',
                   }}
                 >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[10px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none">
-                      Hottest Sub-Space
-                    </p>
-                    <p className="text-[12px] text-ivory/85 font-medium mt-0.5 truncate">
+                  <p className="text-[10px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none mb-1">
+                    Hottest Sub-Space
+                  </p>
+                  <div className="flex items-baseline justify-between mb-1.5 gap-2">
+                    <span className="text-[12px] text-ivory/90 font-medium truncate">
                       {topSubCagr.name}
-                    </p>
+                    </span>
+                    <span
+                      className="text-[11px] font-mono font-bold shrink-0"
+                      style={{ color: GOLD_SOLID }}
+                    >
+                      {topSubCagr.cagr_pct}% CAGR
+                    </span>
                   </div>
-                  <div className="w-20 h-1.5 bg-white/5 rounded-full overflow-hidden shrink-0">
+                  <div className="h-[2px] w-full bg-white/[0.08] rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -346,20 +358,14 @@ export function IndustrySwipeCard({
                       }}
                     />
                   </div>
-                  <span
-                    className="text-[12px] font-mono font-bold shrink-0 w-10 text-right"
-                    style={{ color }}
-                  >
-                    {topSubCagr.cagr_pct}%
-                  </span>
                 </div>
               )}
             </div>
 
-            {/* ─── HINT — 11% ─── */}
-            <div className="basis-[11%] shrink-0 flex items-center justify-center">
+            {/* ─── FOOTER / HINT — 10% ─── */}
+            <div className="basis-[10%] shrink-0 flex items-center justify-center">
               <p className="text-[10px] italic text-ivory/35 tracking-wide">
-                ↻  flip for the full read
+                ↻  flip for the deeper read
               </p>
             </div>
           </div>
@@ -388,9 +394,9 @@ export function IndustrySwipeCard({
               </div>
             </div>
 
-            {/* 4 zones only */}
+            {/* 6-zone body */}
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 min-h-0">
-              {/* 1. AI disruption angle */}
+              {/* 1. AI disruption angle — full */}
               {industry.ai_disruption_angle && (
                 <div className="bg-purple-500/10 border border-purple-500/25 rounded-xl p-3 flex items-start gap-2">
                   <span className="text-[15px] mt-0.5">⚡</span>
@@ -405,11 +411,11 @@ export function IndustrySwipeCard({
                 </div>
               )}
 
-              {/* 2. Top sub-CAGRs */}
+              {/* 2. Hottest sub-categories — full */}
               {topCagrs.length > 0 && (
                 <div>
                   <p className="text-[9px] text-white/40 uppercase tracking-widest mb-2 font-semibold">
-                    Top sub-categories
+                    Hottest sub-categories
                   </p>
                   <div className="space-y-1.5">
                     {topCagrs.map((sc) => (
@@ -433,7 +439,33 @@ export function IndustrySwipeCard({
                 </div>
               )}
 
-              {/* 3. What's happening — recent headline */}
+              {/* 3. Behavior shift + Impact potential — 2-col row */}
+              {(industry.user_behavior_shift || industry.impact_potential) && (
+                <div className="grid grid-cols-2 gap-2">
+                  {industry.user_behavior_shift && (
+                    <div className="bg-white/4 border border-white/8 rounded-xl p-3">
+                      <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold">
+                        User behavior
+                      </p>
+                      <p className="text-[11.5px] text-white/80 leading-snug">
+                        {industry.user_behavior_shift}
+                      </p>
+                    </div>
+                  )}
+                  {industry.impact_potential && (
+                    <div className="bg-white/4 border border-white/8 rounded-xl p-3">
+                      <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold">
+                        Impact ceiling
+                      </p>
+                      <p className="text-[11.5px] text-white/80 leading-snug">
+                        {industry.impact_potential}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* 4. What's happening — full */}
               {industry.recent_headline && (
                 <div className="bg-white/4 border border-white/8 rounded-xl p-3">
                   <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold">
@@ -446,24 +478,16 @@ export function IndustrySwipeCard({
                 </div>
               )}
 
-              {/* 4. India leaders */}
-              {indiaLeaders.length > 0 && (
-                <div>
-                  <p className="text-[9px] text-white/40 uppercase tracking-widest mb-2 font-semibold flex items-center gap-1.5">
+              {/* 5. India scene — full */}
+              {industry.india_scene && (
+                <div className="bg-white/4 border border-white/8 rounded-xl p-3">
+                  <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold flex items-center gap-1.5">
                     <span>🇮🇳</span>
-                    India leaders
+                    India scene
                   </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {indiaLeaders.map((name) => (
-                      <span
-                        key={name}
-                        className="text-[11px] px-2.5 py-1 rounded-full text-white/90 border"
-                        style={{ background: `${color}22`, borderColor: `${color}55` }}
-                      >
-                        {name}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="text-[12px] text-white/85 leading-snug">
+                    {industry.india_scene}
+                  </p>
                 </div>
               )}
             </div>
