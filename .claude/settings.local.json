@@ -17,7 +17,27 @@
       "Bash(node -e ' *)",
       "Bash(curl -s http://localhost:3000/journey)",
       "Bash(git add *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Skill(plan-eng-review)",
+      "Bash(sed -n '7,839p' /c/Users/anish/.claude/plans/foamy-sparking-lampson.md)",
+      "Bash(sed -n '1314,$p' /c/Users/anish/.claude/plans/foamy-sparking-lampson.md)",
+      "Bash(sed -n '842,$p' /c/Users/anish/.claude/plans/foamy-sparking-lampson.md)",
+      "Bash(npm run *)",
+      "Bash(bun run *)",
+      "Bash(curl *)",
+      "Skill(review)",
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(npm install *)",
+      "Bash(npx playwright *)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(bash *)",
+      "Bash(git remote *)",
+      "Bash(git symbolic-ref *)",
+      "Bash(node *)",
+      "Bash(cp C:/Users/anish/Downloads/industries-rich.json C:/Users/anish/Downloads/catalst-mvp/scripts/rich-data/industries-rich.json)",
+      "Bash(cp C:/Users/anish/Downloads/houses-quantified.json C:/Users/anish/Downloads/catalst-mvp/scripts/rich-data/houses-quantified.json)",
+      "Bash(cp C:/Users/anish/Downloads/ideas-deep-content-templates.json C:/Users/anish/Downloads/catalst-mvp/scripts/rich-data/ideas-deep-content-templates.json)",
+      "Bash(cp C:/Users/anish/Downloads/merge-rich-data.js C:/Users/anish/Downloads/catalst-mvp/scripts/merge-rich-data.js)"
     ]
   }
 }
