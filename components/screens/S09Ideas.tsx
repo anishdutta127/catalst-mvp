@@ -5,29 +5,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
-import { analytics } from '@/lib/analytics';
 import type { ScoredIdea } from '@/lib/scoring/types';
+import housesRaw from '@/content/houses.json';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
-import { FitRadar } from '@/components/ui/FitRadar';
-import { AreaChart, Area, XAxis, ResponsiveContainer } from 'recharts';
+import { IdeaDossier } from '@/components/ui/IdeaDossier';
+import { MysticVaultCard } from '@/components/ui/MysticVaultCard';
 
 /**
- * S09 — Ideas Revealed.
+ * S09 — Ideas Revealed (Batch 3 rebuild).
  *
- * Fixes vs previous:
- *   - Crown CTA ("This is my idea →") now GOLD (was purple) and sits ABOVE the sell zone.
- *   - Sell zone moved below, same content for now — Batch 3 will rebuild as Mystic Vault Card (sapphire).
- *   - whyYou fallback grammar fixed: "As a architects" -> proper house-name handling.
+ * New flow:
+ *   - Two modes: GRID and DOSSIER.
+ *   - GRID (default): shows 3 idea cards side-by-side. User can crown inline.
+ *   - Tap any card → switch to DOSSIER mode: full-screen deep read with tabs
+ *     to switch between the 3 ideas. Crown from here too.
+ *   - Crown CTA at bottom of each card (grid) and sticky-bottom in dossier.
+ *   - Mystic Vault sapphire card below the crown CTA (only visible post-crown in both modes).
+ *   - Advance to S10 via a "Continue to your house" gold CTA that shows once crowned.
  */
 
-const TIER_META = {
-  nest: { emoji: '🏠', label: 'Nest', desc: 'Safest, highest feasibility' },
-  spark: { emoji: '✨', label: 'Spark', desc: 'Strongest overall match' },
-  wildvine: { emoji: '🌿', label: 'Wildvine', desc: 'Bold leap, different domain' },
-  your_idea: { emoji: '🔥', label: 'Your Idea', desc: 'Your submitted idea' },
+const TIER_META: Record<string, { emoji: string; label: string; gradient: string; color: string }> = {
+  nest: { emoji: '🏠', label: 'Nest', gradient: 'from-amber-400 to-amber-600', color: '#F59E0B' },
+  spark: { emoji: '✨', label: 'Spark', gradient: 'from-yellow-400 to-amber-500', color: '#FCD34D' },
+  wildvine: { emoji: '🌿', label: 'Wildvine', gradient: 'from-emerald-400 to-emerald-600', color: '#10B981' },
+  your_idea: { emoji: '🔥', label: 'Your Idea', gradient: 'from-orange-400 to-red-500', color: '#F97316' },
 };
 
-const WHATSAPP_NUMBER = '919686917041';
+interface HouseJson { id: string; name: string; hex: string; tagline: string }
+const HOUSES = housesRaw as unknown as HouseJson[];
 
 export function S09Ideas() {
   const matchedIdeas = useJourneyStore((s) => s.matchedIdeas);
@@ -40,7 +45,9 @@ export function S09Ideas() {
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
   const goToScreen = useJourneyStore((s) => s.goToScreen);
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
-  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+  const [mode, setMode] = useState<'grid' | 'dossier'>('grid');
+  const [activeIdeaId, setActiveIdeaId] = useState<string | null>(null);
   const dialogueSent = useRef(false);
 
   useEffect(() => {
@@ -56,20 +63,28 @@ export function S09Ideas() {
 
   if (!matchedIdeas) return null;
 
-  const ideas: { scored: ScoredIdea; tier: keyof typeof TIER_META }[] = [
+  const ideas: { scored: ScoredIdea; tier: 'nest' | 'spark' | 'wildvine' | 'your_idea' }[] = [
     { scored: matchedIdeas.nest, tier: 'nest' },
     { scored: matchedIdeas.spark, tier: 'spark' },
     { scored: matchedIdeas.wildvine, tier: 'wildvine' },
   ];
   if (matchedIdeas.yourIdea) ideas.unshift({ scored: matchedIdeas.yourIdea, tier: 'your_idea' });
 
-  function handleCrown(ideaId: string) {
-    crownIdea(ideaId);
+  const activeIdea = activeIdeaId ? ideas.find((i) => i.scored.idea.idea_id === activeIdeaId) : null;
+  const crowned = ideas.find((i) => i.scored.idea.idea_id === crownedIdeaId);
+  const house = HOUSES.find((h) => h.id === houseId);
+
+  function openDossier(ideaId: string) {
+    setActiveIdeaId(ideaId);
+    setMode('dossier');
     fetchWhyYou(ideaId);
   }
 
+  function closeDossier() {
+    setMode('grid');
+  }
+
   function houseAsLabel(hid: string | null | undefined): string {
-    // Clean house label: "architects" -> "an Architect", "vanguards" -> "a Vanguard", etc.
     if (!hid) return 'a founder';
     const article = /^[aeiou]/i.test(hid) ? 'an' : 'a';
     const noun = hid.charAt(0).toUpperCase() + hid.slice(1).toLowerCase().replace(/s$/, '');
@@ -78,17 +93,18 @@ export function S09Ideas() {
 
   function fetchWhyYou(ideaId: string) {
     if (whyYouTexts[ideaId]) return;
-    const idea = ideas.find((i) => i.scored.idea.idea_id === ideaId);
-    if (!idea) return;
+    const item = ideas.find((i) => i.scored.idea.idea_id === ideaId);
+    if (!item) return;
     setWhyYouText(ideaId, '__loading__');
     fetch('/api/narrative', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        type: 'whyYou', sessionId,
+        type: 'whyYou',
+        sessionId,
         context: {
-          ideaName: idea.scored.idea.idea_name,
-          ideaOneLiner: idea.scored.idea.one_liner,
+          ideaName: item.scored.idea.idea_name,
+          ideaOneLiner: item.scored.idea.one_liner,
           houseId: houseId || 'founder',
           topStrengths: 'determination and vision',
         },
@@ -98,262 +114,176 @@ export function S09Ideas() {
       .then((d) => setWhyYouText(ideaId, d.text))
       .catch(() => setWhyYouText(
         ideaId,
-        `Your instincts led you here. ${idea.scored.idea.idea_name} fits the way you think. As ${houseAsLabel(houseId)}, your reading of this space is sharper than most founders' — trust the pull.`,
+        `Your instincts led you here. ${item.scored.idea.idea_name} fits the way you think. As ${houseAsLabel(houseId)}, your reading of this space is sharper than most founders' — trust the pull.`,
       ));
   }
 
-  function toggleSection(key: string) { setExpandedSection((s) => (s === key ? null : key)); }
-
-  function getWhatsAppUrl(scored: ScoredIdea) {
-    const msg = encodeURIComponent(`Hi Anish! I just found my idea on Catalst. I'm ${houseAsLabel(houseId)} founder. My top match: ${scored.idea.idea_name} in ${scored.idea.domain_primary}. I want to book a 30-min strategy call (₹500).`);
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+  function handleCrown(ideaId: string) {
+    crownIdea(ideaId);
+    // Nudge the user back to grid so they see the crowned state and the crown CTA.
+    // Or keep them in dossier and show crown confirmation inline.
+    // We'll keep them in dossier — CTA becomes "Continue to your house" at bottom.
   }
 
-  const crowned = ideas.find((i) => i.scored.idea.idea_id === crownedIdeaId);
-
-  return (
-    <div className="flex flex-col gap-4 h-full overflow-y-auto pb-4" data-testid="s09-ideas">
-      {/* Idea cards — staggered reveal */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        {ideas.map(({ scored, tier }, idx) => {
-          const isCrowned = crownedIdeaId === scored.idea.idea_id;
-          const meta = TIER_META[tier];
-          const isDimmed = !!crownedIdeaId && !isCrowned;
-
-          return (
-            <motion.button
-              key={scored.idea.idea_id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: isDimmed ? 0.5 : 1, y: 0 }}
-              transition={{ delay: idx * 0.15, duration: 0.4 }}
-              onClick={() => handleCrown(scored.idea.idea_id)}
-              data-testid={`idea-card-${tier}`}
-              className={`flex-1 rounded-xl overflow-hidden text-left transition-all ${
-                isCrowned ? 'ring-2 ring-gold shadow-[0_0_16px_rgba(212,168,67,0.3)] scale-[1.02]' :
-                'hover:ring-1 hover:ring-white/20'
-              } cursor-pointer`}
+  // ─────────────────────────────────────────────────
+  // DOSSIER MODE — full activity-zone takeover
+  // ─────────────────────────────────────────────────
+  if (mode === 'dossier' && activeIdea) {
+    const whyYou = whyYouTexts[activeIdea.scored.idea.idea_id];
+    return (
+      <div className="flex flex-col h-full gap-3" data-testid="s09-dossier-mode">
+        {/* Back button */}
+        <div className="shrink-0 flex items-center justify-between">
+          <button
+            onClick={closeDossier}
+            data-testid="dossier-back"
+            className="text-[12px] text-ivory/60 hover:text-ivory flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <span className="text-lg leading-none">←</span>
+            <span>Back to all three</span>
+          </button>
+          {crownedIdeaId && (
+            <button
+              onClick={() => advanceScreen()}
+              data-testid="advance-to-s10"
+              className="text-[11px] font-semibold text-gold hover:text-gold/80 underline underline-offset-4 cursor-pointer"
             >
-              <div className="h-1" style={{ background: `linear-gradient(90deg, #D4A843, ${tier === 'wildvine' ? '#059669' : '#F59E0B'})` }} />
+              Continue to your house →
+            </button>
+          )}
+        </div>
 
-              <div className="bg-dark-surface p-4">
-                <div className="flex items-center gap-1.5 mb-2">
-                  <span className="text-sm">{meta.emoji}</span>
-                  <span className="text-[10px] font-mono text-gold/60 uppercase tracking-wider">{meta.label}</span>
-                  {isCrowned && <span className="ml-1">👑</span>}
-                  <span className="ml-auto text-xs font-mono text-gold">{scored.displayScore}%</span>
+        {/* Dossier */}
+        <div className="flex-1 min-h-0">
+          <IdeaDossier
+            ideas={ideas.filter((i) => i.tier !== 'your_idea' || !!matchedIdeas.yourIdea)}
+            activeIdeaId={activeIdea.scored.idea.idea_id}
+            onSelectIdea={(id) => {
+              setActiveIdeaId(id);
+              fetchWhyYou(id);
+            }}
+            onCrown={handleCrown}
+            crownedIdeaId={crownedIdeaId}
+            whyYou={whyYou}
+            houseName={house?.name}
+          />
+        </div>
+
+        {/* Mystic Vault — only shown once crowned */}
+        {crownedIdeaId && crowned && (
+          <div className="shrink-0 pt-2">
+            <MysticVaultCard
+              matchPercent={crowned.scored.displayScore}
+              ideaName={crowned.scored.idea.idea_name}
+              houseName={house?.name}
+              variant="teaser"
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────
+  // GRID MODE — 3 idea preview cards
+  // ─────────────────────────────────────────────────
+  return (
+    <div className="flex flex-col h-full gap-4" data-testid="s09-grid-mode">
+      <div className="flex-1 overflow-y-auto space-y-3 pb-2">
+        {/* Idea preview cards */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          {ideas.map(({ scored, tier }, idx) => {
+            const isCrowned = crownedIdeaId === scored.idea.idea_id;
+            const meta = TIER_META[tier];
+            const isDimmed = !!crownedIdeaId && !isCrowned;
+
+            return (
+              <motion.button
+                key={scored.idea.idea_id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: isDimmed ? 0.55 : 1, y: 0 }}
+                transition={{ delay: idx * 0.12, duration: 0.4 }}
+                whileHover={{ scale: 1.015 }}
+                onClick={() => openDossier(scored.idea.idea_id)}
+                data-testid={`idea-card-${tier}`}
+                className={`flex-1 rounded-2xl overflow-hidden text-left transition-all group ${
+                  isCrowned ? 'ring-2 ring-gold shadow-[0_0_20px_rgba(212,168,67,0.4)]' : ''
+                } cursor-pointer`}
+              >
+                <div className={`h-1 bg-gradient-to-r ${meta.gradient}`} />
+                <div className="bg-dark-surface/90 backdrop-blur-sm p-4 sm:p-5 border-x border-b border-white/10 rounded-b-2xl">
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <span className="text-sm">{meta.emoji}</span>
+                    <span className="text-[10px] font-mono text-gold/60 uppercase tracking-wider">{meta.label}</span>
+                    {isCrowned && <span>👑</span>}
+                    <span className="ml-auto text-[11px] font-mono text-gold font-semibold">{scored.displayScore}%</span>
+                  </div>
+                  <h3 className="text-[17px] sm:text-[19px] font-serif font-bold text-ivory mb-1.5 leading-tight">
+                    {scored.idea.idea_name}
+                  </h3>
+                  <p className="text-[12px] text-ivory/55 leading-relaxed line-clamp-2 mb-3">
+                    {scored.idea.one_liner}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold/70 border border-gold/20">
+                      {scored.idea.domain_primary?.replace(/_/g, ' ')}
+                    </span>
+                    <span className="text-[10px] text-ivory/40 group-hover:text-gold/70 transition-colors">
+                      read the deep dive →
+                    </span>
+                  </div>
                 </div>
-                <h3 className="text-base font-serif text-ivory mb-1">{scored.idea.idea_name}</h3>
-                <p className="text-xs text-ivory/50 leading-relaxed line-clamp-2">{scored.idea.one_liner}</p>
-                <div className="mt-2 flex gap-1.5">
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold/70 border border-gold/20">
-                    {scored.idea.domain_primary.replace(/_/g, ' ')}
-                  </span>
-                </div>
-              </div>
-            </motion.button>
-          );
-        })}
+              </motion.button>
+            );
+          })}
+        </div>
+
+        {/* Guidance for picking */}
+        {!crownedIdeaId && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="text-center py-2"
+          >
+            <p className="text-[12px] text-ivory/45 italic">
+              Tap any idea to read its full dossier. Crown the one that fits.
+            </p>
+          </motion.div>
+        )}
+
+        {/* Mystic Vault (post-crown) */}
+        {crownedIdeaId && crowned && (
+          <MysticVaultCard
+            matchPercent={crowned.scored.displayScore}
+            ideaName={crowned.scored.idea.idea_name}
+            houseName={house?.name}
+            variant="teaser"
+          />
+        )}
       </div>
 
-      {/* Crowned idea deep dive */}
-      {crowned && (() => {
-        const idea = crowned.scored.idea;
-        const whyYou = whyYouTexts[crownedIdeaId!];
-        const fitScores = {
-          skill_fit: Math.round(Math.min(100, crowned.scored.displayScore + (idea.builder_fit || 0.5) * 20)),
-          market_timing: Math.round(Math.min(100, 50 + (idea.novelty_score || 5) * 5)),
-          capital_efficiency: Math.round(Math.min(100, idea.solo_viable ? 85 : 60)),
-          execution_ease: Math.round(Math.min(100, (1 - (idea.time_floor_weeks || 4) / 24) * 100)),
-          passion_alignment: Math.round(Math.min(100, crowned.scored.displayScore + 5)),
-        };
-
-        const marketStats = idea.analytics || {} as Record<string, string>;
-        const dc = (idea as unknown as { deepContent?: Record<string, unknown> }).deepContent;
-        const pestle = (dc?.pestle as Record<string, string> | undefined);
-        const competitors = (dc?.competitors as { name: string; weakness: string; market_share_pct: number }[] | undefined);
-        const revenueModel = (dc?.revenueModel as { primary: string; secondary?: string } | undefined);
-        const growthChart = (dc?.growthChart as { year: string; value: number }[] | undefined);
-        const firstSteps = (dc?.firstSteps as { step: number; action: string; timeline: string }[] | undefined);
-
-        const sections: { key: string; title: string; content: string; jsx?: React.ReactNode }[] = [
-          { key: 'idea', title: 'The Idea', content: idea.pain_to_promise || idea.one_liner },
-          { key: 'why', title: 'Why You', content: whyYou || 'Loading your reading...',
-            jsx: (
-              <div className="p-4 space-y-4">
-                <p className="text-sm text-ivory/70 leading-relaxed">
-                  {whyYou === '__loading__' ? 'Reading your instincts...' : whyYou || '—'}
-                </p>
-                <FitRadar scores={fitScores} />
-              </div>
-            ) },
-          { key: 'market', title: 'The Market', content: '', jsx: (
-            <div className="p-4 space-y-4">
-              <div className="grid grid-cols-2 gap-2">
-                {Object.entries(marketStats).slice(0, 4).map(([k, v]) => (
-                  <div key={k} className="bg-white/4 rounded-xl p-2.5">
-                    <p className="text-[9px] text-ivory/30 uppercase tracking-wider mb-0.5">{k.replace(/_/g, ' ')}</p>
-                    <p className="text-ivory/75 text-[12px] font-medium">{String(v)}</p>
-                  </div>
-                ))}
-              </div>
-              {growthChart && growthChart.length > 0 && (
-                <div>
-                  <p className="text-[10px] text-ivory/40 uppercase tracking-wider mb-2">Market Growth ($B)</p>
-                  <div className="h-20">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={growthChart}>
-                        <defs><linearGradient id={`ig-${idea.idea_id}`} x1="0" y1="0" x2="0" y2="1"><stop offset="5%" stopColor="#D4A843" stopOpacity={0.4}/><stop offset="95%" stopColor="#D4A843" stopOpacity={0}/></linearGradient></defs>
-                        <Area type="monotone" dataKey="value" stroke="#D4A843" strokeWidth={2} fill={`url(#ig-${idea.idea_id})`} dot={false}/>
-                        <XAxis dataKey="year" tick={{fill:'rgba(255,255,255,0.25)',fontSize:9}} axisLine={false} tickLine={false}/>
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              )}
-              {pestle && (
-                <div>
-                  <p className="text-[10px] text-ivory/35 uppercase tracking-wider mb-2">Context scan</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    {[['political','🏛️','Political'],['economic','💰','Economic'],['social','👥','Social'],['technological','⚡','Tech'],['legal','⚖️','Legal'],['environmental','🌱','Green']].map(([key,icon,label]) => (
-                      pestle[key] ? (
-                        <div key={key} className="bg-white/4 rounded-xl p-2.5">
-                          <p className="text-[9px] text-ivory/30 uppercase tracking-wider mb-0.5">{icon} {label}</p>
-                          <p className="text-ivory/65 text-[11px] leading-snug">{pestle[key]}</p>
-                        </div>
-                      ) : null
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) },
-          { key: 'steps', title: 'First Steps', content: '', jsx: (
-            <div className="p-4 space-y-3">
-              {(firstSteps || [
-                {step:1, action: idea.quickStart.week1, timeline:'Week 1'},
-                {step:2, action: idea.quickStart.mvp, timeline:'Week 2-4'},
-                {step:3, action: idea.quickStart.firstCustomers, timeline:'Month 2'},
-              ]).map(({step, action, timeline}) => (
-                <div key={step} className="flex gap-3 items-start">
-                  <div className="w-8 h-8 rounded-full bg-gold/15 border border-gold/30 flex items-center justify-center text-gold text-[12px] font-bold flex-shrink-0 mt-0.5">{step}</div>
-                  <div className="flex-1">
-                    <p className="text-ivory text-[13px] font-medium leading-snug">{action}</p>
-                    <span className="inline-block mt-1 text-[10px] bg-white/8 text-ivory/40 rounded-full px-2 py-0.5">{timeline}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) },
-          { key: 'risk', title: 'The Risk', content: '', jsx: (
-            <div className="p-4 space-y-4">
-              <div className="bg-orange-500/8 border border-orange-500/25 rounded-xl p-4">
-                <p className="text-[9px] text-orange-400/70 uppercase tracking-wider mb-2">The honest risk</p>
-                <p className="text-ivory/80 text-[13px] leading-relaxed">{(dc?.honest_risk as string) || idea.proof.gap}</p>
-              </div>
-              {competitors && competitors.length > 0 && (
-                <div>
-                  <p className="text-[10px] text-ivory/35 uppercase tracking-wider mb-2">Competition</p>
-                  {competitors.map((c) => (
-                    <div key={c.name} className="flex items-start gap-3 py-2.5 border-b border-white/6 last:border-0">
-                      <div className="flex-1">
-                        <p className="text-ivory/80 text-[13px] font-medium">{c.name}</p>
-                        <p className="text-ivory/40 text-[11px] mt-0.5">Gap: {c.weakness}</p>
-                      </div>
-                      <div className="text-right flex-shrink-0">
-                        <p className="text-[11px] text-ivory/40">{c.market_share_pct}% share</p>
-                        <div className="w-16 h-1.5 bg-white/10 rounded-full mt-1"><div className="h-full bg-red-400/50 rounded-full" style={{width:`${c.market_share_pct}%`}}/></div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {revenueModel && (
-                <div className="bg-white/4 rounded-xl p-3 space-y-1">
-                  <p className="text-[10px] text-ivory/35 uppercase tracking-wider">Revenue model</p>
-                  <p className="text-ivory/70 text-[12px]">{revenueModel.primary}</p>
-                  {revenueModel.secondary && <p className="text-ivory/45 text-[11px]">+ {revenueModel.secondary}</p>}
-                </div>
-              )}
-            </div>
-          ) },
-        ];
-
-        return (
-          <div className="flex flex-col gap-1">
-            {sections.map((sec) => (
-              <div key={sec.key} className="bg-dark-surface border border-white/10 rounded-lg overflow-hidden" data-testid={`accordion-${sec.title}`}>
-                <button onClick={() => toggleSection(sec.key)} className="w-full flex items-center justify-between px-4 py-3 text-left cursor-pointer">
-                  <span className="text-xs font-semibold text-ivory/70">{sec.title}</span>
-                  <span className="text-ivory/30 text-xs">{expandedSection === sec.key ? '−' : '+'}</span>
-                </button>
-                <AnimatePresence>
-                  {expandedSection === sec.key && (
-                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} className="overflow-hidden">
-                      {sec.jsx ? sec.jsx : (
-                      <div className="px-4 pb-3">
-                        {sec.content === '__loading__' ? (
-                          <div className="animate-pulse space-y-2">
-                            <div className="h-3 bg-white/10 rounded w-3/4" />
-                            <div className="h-3 bg-white/10 rounded w-1/2" />
-                          </div>
-                        ) : (
-                          <p className="text-xs text-ivory/50 leading-relaxed whitespace-pre-line">{sec.content}</p>
-                        )}
-                      </div>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
-          </div>
-        );
-      })()}
-
-      {/* ── Crown CTA — GOLD, now comes BEFORE sell zone ── */}
-      {crownedIdeaId && (
-        <motion.button
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          whileHover={{ scale: 1.02, boxShadow: '0 0 28px rgba(212,168,67,0.55)' }}
-          whileTap={{ scale: 0.97 }}
-          onClick={() => advanceScreen()}
-          data-testid="crown-cta"
-          className="w-full h-14 rounded-2xl font-bold text-[16px] text-dark bg-gold hover:bg-gold/95 border border-gold/60 shadow-[0_0_18px_rgba(212,168,67,0.4)] flex items-center justify-center gap-2 transition-all"
-        >
-          👑 This is my idea →
-        </motion.button>
-      )}
-
-      {/* ── Sell zone (moved BELOW crown CTA) ── */}
-      {/* NOTE: Batch 3 replaces this with the sapphire Mystic Vault Card per user spec. */}
-      {crowned && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-dark-surface border border-white/10 rounded-2xl p-6 text-center space-y-3"
-        >
-          <p className="text-[10px] text-ivory/40 uppercase tracking-widest">Want to actually build it?</p>
-          <h4 className="text-[20px] font-serif text-ivory">Your idea. Built. Shipped. In 7 days.</h4>
-          <div className="flex gap-2 justify-center flex-wrap">
-            {['Claude Code experts', 'Full MVP', 'Real product'].map((p) => (
-              <span key={p} className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-ivory/60 border border-white/10">{p}</span>
-            ))}
-          </div>
-          <p className="text-ivory/60 text-[13px]">Strategy call from ₹500</p>
-          <a
-            href={getWhatsAppUrl(crowned.scored)}
-            target="_blank" rel="noopener noreferrer"
-            data-testid="whatsapp-cta"
-            onClick={() => analytics.cta('whatsapp')}
-            className="block w-full py-3 rounded-full bg-white/8 text-ivory border border-white/15 font-medium text-sm hover:bg-white/12 transition-all"
+      {/* Sticky bottom: Advance CTA once crowned */}
+      <AnimatePresence>
+        {crownedIdeaId && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="shrink-0"
           >
-            💬 Message Anish on WhatsApp
-          </a>
-          <p className="text-[10px] text-ivory/30">30 min · No commitment · Real builder talk</p>
-        </motion.div>
-      )}
+            <motion.button
+              whileHover={{ scale: 1.02, boxShadow: '0 0 28px rgba(212,168,67,0.55)' }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => advanceScreen()}
+              data-testid="crown-cta"
+              className="w-full h-14 rounded-2xl font-bold text-[16px] text-dark bg-gold hover:bg-gold/95 border border-gold/60 shadow-[0_0_18px_rgba(212,168,67,0.4)] flex items-center justify-center gap-2 transition-all"
+            >
+              👑 This is my idea → continue to your house
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <ScreenQuote screen="s09" />
     </div>
