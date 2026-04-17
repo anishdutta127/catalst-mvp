@@ -101,8 +101,8 @@ export function PipFloater() {
   const ringColor = ringIsLow ? '#f59e0b' : pipColor;
 
   return (
-    <div className="pointer-events-none absolute top-2 right-2 z-20 flex items-start justify-end gap-2 max-w-[300px]">
-      <div className="flex-1 min-w-0 pt-2">
+    <div className="pointer-events-none absolute top-2 right-2 z-20 flex items-center justify-end gap-2 max-w-[300px]">
+      <div className="flex-1 min-w-0">
         <AnimatePresence mode="wait">
           {showText && (
             <motion.div
@@ -118,7 +118,7 @@ export function PipFloater() {
         </AnimatePresence>
       </div>
       <div
-        className="shrink-0 relative"
+        className="shrink-0 relative flex items-center justify-center"
         style={{ width: RING_OUTER, height: RING_OUTER }}
       >
         {/* Depleting timer ring — only when timer active */}

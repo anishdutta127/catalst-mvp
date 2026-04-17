@@ -79,10 +79,11 @@ export function JourneyShell({
             <div
               className="mx-auto w-full max-w-[720px] rounded-xl overflow-hidden"
               style={{
-                background: 'rgba(0, 0, 0, 0.58)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
+                background: 'rgba(8, 9, 14, 0.82)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
               }}
             >
               <ChatZone />
