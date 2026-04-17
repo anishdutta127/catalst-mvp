@@ -32,12 +32,12 @@ export const lines = {
         afterPip: 'That wasn\'t a compliment, Pip.',
       },
       pathB: {
-        prompt: 'Alright, let\'s hear it. One sentence. No elevator pitch — just the raw thought.',
+        prompt: 'Just tell me. One sentence. Don\'t dress it up — I\'ve heard every pitch. Give me the thought, not the spin.',
         afterSubmit: 'The garden will remember this. Let\'s see what your instincts say.',
       },
     },
     pip: {
-      entrance: 'That\'s his way of saying welcome! I think.',
+      entrance: 'Don\'t mind the face. He says that to everyone — means he likes you.',
       pathA: 'I had an idea once! Cedric said it was \'adorable.\'',
       pathB: 'Don\'t stress about making it perfect — Cedric\'s going to pull it apart anyway.',
     },
@@ -50,15 +50,15 @@ export const lines = {
 
   s02: {
     cedric: {
-      intro: 'Three shapes. No right answers. Tell me what you see — not what it is.',
+      intro: 'Three shapes. I\'m not testing you — I\'m reading you. First thing you see. Don\'t clean it up.',
       afterBlot1: 'It means it\'s working. Next.',
       afterBlot2a: 'Nobody said you were, Pip.',
-      afterAllBlots: 'Three instincts. The reading is taking shape. We\'re just getting started.',
+      afterAllBlots: 'Three instincts. The reading\'s taking shape — you\'re telling me more than you know.',
       blot3Intro: null,  // silence before blot 3 — the blot just appears
       beforeBlot3Response: 'That\'s the point.',
     },
     pip: {
-      intro: 'These things give me the creeps. But like... in a good way?',
+      intro: 'Okay these shapes are freaking me out — do NOT tell me what yours looks like, I\'ll overthink it for days.',
       afterBlot1: 'Okay that was weirdly intense. Is it supposed to feel like that?',
       beforeBlot2: 'This one\'s... bigger.',
       afterBlot2a: 'I wasn\'t scared. Just so you know.',
@@ -96,13 +96,13 @@ export const lines = {
 
   s03: {
     cedric: {
-      intro: 'Four words. React. Don\'t think.',
-      afterAll: 'The instincts don\'t lie. Even when we wish they would.',
-      afterPip1: 'Plants don\'t sweat, Pip.',
+      intro: 'Four words. First thought wins. Don\'t overthink — your second answer is always fear talking.',
+      afterAll: 'Your instincts just told me three things. You might not like all of them. That\'s kind of the point.',
+      afterPip1: 'Plants don\'t sweat, Pip. We\'ve talked about this.',
     },
     pip: {
-      intro: 'Finally! Something I\'m built for — not thinking is kind of my whole thing.',
-      afterAll: 'That was FOUR words?! It felt like forty. My leaves are sweating.',
+      intro: 'Finally, something I\'m built for. Not thinking is kind of my whole thing.',
+      afterAll: 'That was four words?? It felt like forty. I\'m exhausted.',
       afterCedric: 'MINE DO.',
     },
     words: [
@@ -127,13 +127,13 @@ export const lines = {
 
   s05: {
     cedric: {
-      intro1: 'You\'ve seen the worlds. Now I need to see how you move through them.',
-      intro2: 'Three moments every founder faces. No theory — just instinct.',
+      intro1: 'You\'ve seen the worlds. Now I want to see how you move when it matters.',
+      intro2: 'Three moments every founder hits. I\'m not asking what you\'d do in theory — I\'m asking what you\'d actually do.',
       scenario1: 'Your product is ready. Day one. What\'s your first move?',
       scenario2: 'Your biggest competitor just launched something similar. What do you feel?',
       scenario3: 'Someone hands you $10,000 for your startup. No strings. First spend?',
-      afterPip2: 'It is not.',
-      afterPip3: '...we\'ll talk later. Moving on.',
+      afterPip2: 'It is absolutely not an option.',
+      afterPip3: '...we\'re coming back to that. Moving on.',
     },
     pip: {
       intro: 'Okay I actually know the answer to one of these. Probably. Maybe.',
@@ -173,14 +173,14 @@ export const lines = {
     quoteAttribution: 'Carl Jung',
     cedric: {
       intro: 'Every instinct so far was you reacting. This one is you choosing. Eight essences. You carry three. Pick what defines you — not what sounds impressive. The crystal will grow with the ones you pick and dim with the ones you leave behind.',
-      afterPip: '...I\'m genuinely moved, Pip.',
+      afterPip: 'That\'s... actually the nicest thing you\'ve ever said. I\'m a little choked up.',
       afterSelection: (name: string) => `${name}'s crystal is set. The shape won\'t change. But the light will.`,
-      afterPip2: 'Yours is a pebble, Pip. But a very charming pebble.',
+      afterPip2: 'Yours is a very charming pebble. Don\'t let anyone tell you otherwise.',
     },
     pip: {
-      intro: 'This is the part where your seed takes shape. Even I know to shut up for this one.',
-      afterCedric: 'Don\'t ruin it.',
-      afterSelection: 'It\'s... actually beautiful. Does mine look like that?',
+      intro: 'Okay this is the part where your crystal actually takes shape. I\'m going to be quiet. You\'re welcome.',
+      afterCedric: 'Literally don\'t ruin this. I\'m savoring it.',
+      afterSelection: 'It\'s... actually really beautiful. Does mine look like that? Tell me mine looks like that.',
     },
     orbs: [
       { id: 'Grit', icon: '\ud83d\udd25', colour: '#D4A843', label: 'Resilience, persistence, hustle' },
@@ -196,12 +196,12 @@ export const lines = {
 
   s07: {
     cedric: {
-      headlineIntro: 'Fast-forward ten years. Four futures. Swipe through them — choose the one that makes your heart race.',
-      constraintsIntro: 'Last ones. Quick.',
-      afterAll: 'The garden has seen enough.',
+      headlineIntro: 'Fast-forward ten years. Four futures. Pick the one that actually makes your chest feel something — not the one that sounds responsible.',
+      constraintsIntro: 'Last few. Just the honest numbers — what you actually have, not what you wish you had.',
+      afterAll: 'Alright. I\'ve got everything I need. Give me a second — the garden\'s running the match.',
     },
     pip: {
-      headlineIntro: 'Choose the one that gave you goosebumps. Not the one that sounds responsible.',
+      headlineIntro: 'Pick the one that gave you goosebumps. Not the one your mom would pick.',
     },
     headlines: [
       {
@@ -239,22 +239,22 @@ export const lines = {
 
   s08: {
     cedric: {
-      line1: 'The garden has seen enough.',
-      line2: 'Let\'s see what it found for you.',
+      line1: 'Hold on. Let me put it all together.',
+      line2: 'Alright. Here\'s what fits.',
     },
     pip: {
-      whisper: '...here we go.',
+      whisper: 'oh. oh this is it. this is the part.',
     },
   },
 
   s09: {
     cedric: {
-      reveal1: 'Three ideas. Matched to your instincts, not your assumptions.',
-      reveal2: 'The garden doesn\'t give you what you want. It gives you what fits.',
-      afterPip: 'Don\'t sound so surprised.',
+      reveal1: 'Three ideas. Matched to your actual instincts — not what you said you wanted. Read slowly.',
+      reveal2: 'Not what you asked for. What fits the way you actually think. There\'s a difference.',
+      afterPip: 'Don\'t sound so surprised. I\'ve been doing this a while.',
     },
     pip: {
-      reveal: 'WAIT. Are these... are these actually good?! These are actually good!',
+      reveal: 'WAIT. These are... these are actually good?? Like GOOD good??',
     },
     tiers: {
       nest: { emoji: '\ud83c\udfe0', label: 'Nest', description: 'Safest, highest feasibility + fit' },
@@ -262,41 +262,41 @@ export const lines = {
       wildvine: { emoji: '\ud83c\udf3f', label: 'Wildvine', description: 'Bold leap, different domain, highest novelty' },
       yourIdea: { emoji: '\ud83d\udd25', label: 'Your Idea', description: 'Your submitted idea with personality alignment' },
     },
-    crownConfirm: (name: string) => `Your seed has chosen. ${name} is yours.`,
-    crownCta: 'Crown This Idea — Make It Yours',
+    crownConfirm: (name: string) => `Alright. ${name}. That\'s yours now. Own it.`,
+    crownCta: 'Crown this idea — make it yours',
   },
 
   s10: {
     cedric: {
-      intro1: 'You\'ve chosen your idea. Now the garden chooses you.',
-      intro2: 'Every founder belongs to a house. It\'s not about the idea — it\'s about how your mind works. The garden has been watching since your first tap.',
-      narration1: 'Four houses. Each one has built empires, changed industries, redefined what\'s possible.',
-      narration2: 'Only one speaks your language.',
-      claim: 'Welcome home.',
-      lineageIntro: 'You\'re not the first to walk this path. Let me show you who came before.',
-      afterLineage: (house: string) => `They didn't know they were ${house} either. Not at first. You'll grow into it.`,
+      intro1: 'You picked your idea. Now we figure out who you actually are as a founder.',
+      intro2: 'Every founder fits into a house. Not because of their idea — because of how their mind moves. I\'ve been watching yours since your first tap.',
+      narration1: 'Four houses. Each one has built empires and broken rules. The people in each think differently.',
+      narration2: 'One of them thinks the way you do.',
+      claim: 'There. That\'s you.',
+      lineageIntro: 'You\'re in good company. Let me show you who else thinks like this.',
+      afterLineage: (house: string) => `They didn't know they were ${house} either — not at first. Neither did you. That's how it works.`,
     },
     pip: {
-      intro: 'This is my favourite part. Don\'t tell Cedric.',
-      claim: 'We did it! ...I mean YOU did it. But I was here!',
+      intro: 'This is my favorite part. Don\'t tell him.',
+      claim: 'WE DID IT. I mean you did it. But I was here for emotional support.',
       afterLineage1: (house: string) => `Does this mean I'm a ${house} too?`,
       // NOTE: afterLineage2 is actually Cedric's reply to Pip's question above,
       // placed here for conversation sequencing convenience.
-      afterLineage2: 'You\'re a plant, Pip. But... yes. Technically.',
+      afterLineage2: 'You\'re a plant, Pip. But... technically, yes.',
     },
-    continueButton: 'Meet Your Founder Card \u2192',
+    continueButton: 'See your founder card →',
   },
 
   s11: {
     cedric: {
-      intro: 'One last thing. The garden made this for you.',
-      mirrorPool: 'Here\'s what the garden sees in you.',
-      premium1: 'The garden showed you the surface. There\'s a deeper reading — your full founder psychology, the real numbers behind your idea, and a path to your first ten customers.',
-      premium2: 'When you\'re ready, I know someone who can walk you through it.',
-      final: (name: string) => `The garden doesn't give you answers, ${name}. It gives you a mirror. What you build with it — that's entirely yours.`,
+      intro: 'One last thing. Made this for you while you weren\'t looking.',
+      mirrorPool: 'Here\'s what I see. Take a minute with it.',
+      premium1: 'I showed you what fits. But knowing what fits and actually building it — those are different fights. If you want someone who\'s done this before, I know the guy.',
+      premium2: 'No pressure. The map is yours either way. But if you want a guide for the first thirty days, he\'s ready.',
+      final: (name: string) => `I don't give you answers, ${name}. I give you a mirror. What you build with what you see — that part is entirely yours.`,
     },
     pip: {
-      final: 'Go build something amazing. And come back and tell us about it. Please? I get bored.',
+      final: 'Go build it. Seriously. And come back and tell us when you ship — I genuinely want to know.',
     },
     card: {
       download: 'Download Founder Card',
