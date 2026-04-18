@@ -49,19 +49,22 @@ export const FounderTradingCard = forwardRef<HTMLDivElement, FounderTradingCardP
 
     const slug = `catalst.app/${house.id.replace(/s$/, '')}/${displayName.toLowerCase().replace(/\s+/g, '')}`;
 
-    // Gradient for the holographic border — house-tinted
+    // Holographic border — conic-gradient that rotates 8s so the foil
+    // reads as a real iridescent sweep, not a left-right pan. Stops cycle
+    // through house-hex + two contrast whites so the border shimmers with
+    // the user's color while staying legible as "foil".
     const foilGradient = useMemo(() => {
       const hex = house.hex;
-      // build 3 lighter stops + 2 contrast stops for iridescence
-      return `linear-gradient(
-        115deg,
-        ${hex} 0%,
-        #ffffff 15%,
-        ${hex} 30%,
-        #f3e8ff 50%,
-        ${hex} 70%,
-        #ffe4e6 85%,
-        ${hex} 100%
+      return `conic-gradient(from 0deg,
+        ${hex} 0deg,
+        #ffffff 45deg,
+        ${hex} 90deg,
+        #f3e8ff 135deg,
+        ${hex} 180deg,
+        #ffe4e6 225deg,
+        ${hex} 270deg,
+        #ffffff 315deg,
+        ${hex} 360deg
       )`;
     }, [house.hex]);
 
@@ -86,24 +89,28 @@ export const FounderTradingCard = forwardRef<HTMLDivElement, FounderTradingCardP
           background: '#0A0B10',
         }}
       >
-        {/* ── Holographic border (animated sweep) ── */}
-        <div
+        {/* ── Holographic border — conic-gradient rotating 8s ──
+            The border layer is a rotating conic fill; the inner cutout div
+            rides the same rotation mask, leaving the foil visible only on
+            the ~3px rim. CSS `conic-gradient` can't be background-animated,
+            so we rotate the whole layer — visually identical.  */}
+        <motion.div
           className="absolute inset-0 rounded-[28px] pointer-events-none"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
           style={{
             padding: 3,
             background: foilGradient,
-            backgroundSize: '300% 300%',
-            animation: 'holographicSweep 6s ease-in-out infinite',
           }}
-        >
-          {/* Inner black cutout so the gradient only shows at the border */}
-          <div
-            className="w-full h-full rounded-[25px]"
-            style={{
-              background: `linear-gradient(180deg, #0A0B10 0%, #14171E 30%, #0A0B10 100%)`,
-            }}
-          />
-        </div>
+        />
+        {/* Inner cutout sits on top of the rotating rim and hides everything
+            except the outer 3px — the rim reads as a shimmering foil edge. */}
+        <div
+          className="absolute inset-[3px] rounded-[25px] pointer-events-none"
+          style={{
+            background: `linear-gradient(180deg, #0A0B10 0%, #14171E 30%, #0A0B10 100%)`,
+          }}
+        />
 
         {/* ── House sigil watermark in background ── */}
         <div
@@ -167,8 +174,18 @@ export const FounderTradingCard = forwardRef<HTMLDivElement, FounderTradingCardP
             </div>
           </div>
 
+          {/* FOUNDER MATCH label — serif, uppercase, spaced — sits above the
+              hero percentage so the stat has a "title" rather than floating
+              in isolation. */}
+          <p
+            className="text-center text-[10px] font-serif font-semibold uppercase tracking-[0.42em] mt-3"
+            style={{ color: `${house.hex}CC`, textShadow: `0 0 8px ${house.hex}40` }}
+          >
+            Founder Match
+          </p>
+
           {/* Hero stat — match % */}
-          <div className="flex items-baseline justify-center mt-2 mb-1">
+          <div className="flex items-baseline justify-center mt-1 mb-1">
             <span
               className="font-serif font-black leading-none"
               style={{
@@ -182,9 +199,6 @@ export const FounderTradingCard = forwardRef<HTMLDivElement, FounderTradingCardP
             </span>
             <span className="text-ivory/60 text-[20px] ml-1.5 font-serif">%</span>
           </div>
-          <p className="text-center text-[9px] text-ivory/45 font-mono uppercase tracking-[0.3em] -mt-1">
-            match
-          </p>
 
           {/* Trait triangle */}
           <div className="my-3 flex justify-center">
@@ -291,14 +305,6 @@ export const FounderTradingCard = forwardRef<HTMLDivElement, FounderTradingCardP
           </div>
         </div>
 
-        {/* ── Keyframes for holographic sweep ── */}
-        <style>{`
-          @keyframes holographicSweep {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
-        `}</style>
       </div>
     );
   },
