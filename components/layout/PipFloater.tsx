@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useUIStore, firePipTimerExpiry } from '@/lib/store/uiStore';
 import { useJourneyStore } from '@/lib/store/journeyStore';
-import { PipSprite, type PipEmotion } from '@/components/characters/PipSprite';
+import { type PipEmotion } from '@/components/characters/PipSprite';
+import { PipWithPoof } from '@/components/characters/PipWithPoof';
 import { PipText } from '@/components/characters/PipText';
 
 /**
@@ -26,15 +27,28 @@ const RING_CIRC = 2 * Math.PI * RING_RADIUS;
 // emotion (eye/blush/aura geometry), not through color — explicit user call.
 const PIP_COLOR = '#4ade80';
 
-function derivePipEmotion(screen: string, text: string | undefined): PipEmotion {
-  if (!text) return 'idle';
-  const t = text.toLowerCase();
-  if (/creeps|scary|intense|wait|weirdly|chaos|bigger/.test(t)) return 'wideeye';
-  if (/yes|!!|actually good|finally|favorite|favourite|amazing/.test(t)) return 'happy';
-  if (/just saying|i was here|please|don.?t ruin/.test(t)) return 'shy';
-  if (/whatever that means|technically|i think/.test(t)) return 'tilt';
-  if (screen === 's10' || screen === 's11') return 'glow';
-  return 'happy';
+/**
+ * Stable per-screen baseline emotion. No keyword matching on message text —
+ * that fires on every queue update and restarts the sprite's animation,
+ * which read as a flicker. Screens that want dynamic emotion (e.g. S04's
+ * keep/edge reactions) render their own PipWithPoof locally.
+ */
+function screenBaselineEmotion(screen: string): PipEmotion {
+  switch (screen) {
+    case 's00': return 'idle';
+    case 's01': return 'happy';    // excited intro
+    case 's02': return 'idle';     // serious inkblot test
+    case 's03': return 'idle';     // word-pair tensions
+    case 's04': return 'happy';    // fun swipe
+    case 's05': return 'wideeye';  // dramatic scenarios
+    case 's06': return 'idle';     // crystal constellation
+    case 's07': return 'idle';     // chronicle constraints
+    case 's08': return 'glow';     // forge magic
+    case 's09': return 'glow';     // ideas reveal
+    case 's10': return 'glow';     // sorting ceremony
+    case 's11': return 'happy';    // trading card celebration
+    default:    return 'idle';
+  }
 }
 
 function usePipTimerProgress(): number | null {
@@ -93,7 +107,7 @@ export function PipFloater() {
   // screens where that beat reads better.
   const pipMsg = [...messages].reverse().find((m) => m.speaker === 'pip');
   const pipColor = PIP_COLOR;
-  const pipEmotion = derivePipEmotion(currentScreen, pipMsg?.text);
+  const pipEmotion = screenBaselineEmotion(currentScreen);
   const showText = !!pipMsg;
 
   const showRing = timerPct !== null;
@@ -152,9 +166,12 @@ export function PipFloater() {
             />
           </svg>
         )}
-        {/* Sprite — centered inside the ring's bounding box */}
+        {/* Sprite — centered inside the ring's bounding box. PipWithPoof
+            sparkle-poofs Pip in/out on every screen change so entries and
+            exits feel intentional instead of abrupt. 800ms delay lets
+            Cedric's chat bubble settle first. */}
         <div
-          className="absolute"
+          className="absolute flex items-center justify-center"
           style={{
             top: (RING_OUTER - SPRITE_SIZE) / 2,
             left: (RING_OUTER - SPRITE_SIZE) / 2,
@@ -162,7 +179,13 @@ export function PipFloater() {
             height: SPRITE_SIZE,
           }}
         >
-          <PipSprite emotion={pipEmotion} color={pipColor} size={SPRITE_SIZE} />
+          <PipWithPoof
+            emotion={pipEmotion}
+            color={pipColor}
+            size={SPRITE_SIZE}
+            enterDelay={800}
+            visible={true}
+          />
         </div>
       </div>
     </div>

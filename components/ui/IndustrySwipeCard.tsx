@@ -410,16 +410,16 @@ export function IndustrySwipeCard({
                 )}
               </div>
 
-              {/* WITTY PROMPT #1 */}
+              {/* WITTY PROMPT #1 — label stacked above text for breathing room */}
               {frontPrompt && (
-                <div className="flex items-start gap-2 px-5 py-3 border-y border-white/5">
+                <div className="flex flex-col gap-1.5 px-5 py-3 border-y border-white/5">
                   <p
-                    className="text-[9px] font-mono uppercase text-gold/60 mt-0.5 shrink-0 w-[76px] leading-[1.3]"
+                    className="text-[9px] font-mono uppercase text-gold/60 leading-[1.3]"
                     style={{ letterSpacing: '0.18em' }}
                   >
                     {frontPrompt.label}
                   </p>
-                  <p className="text-[12.5px] italic text-white/85 leading-snug flex-1">
+                  <p className="text-[13px] italic text-white/85 leading-snug">
                     &ldquo;{frontPrompt.text}&rdquo;
                   </p>
                 </div>
@@ -589,17 +589,17 @@ export function IndustrySwipeCard({
                 </div>
               )}
 
-              {/* SECOND WITTY PROMPT — rewards scrolling */}
+              {/* SECOND WITTY PROMPT — rewards scrolling; same stacked layout */}
               {bottomPrompt && (
                 <div className="mx-5 mb-3 pt-3 border-t border-white/[0.08]">
-                  <div className="flex items-start gap-2">
+                  <div className="flex flex-col gap-1.5">
                     <p
-                      className="text-[9px] font-mono uppercase text-gold/55 mt-0.5 shrink-0 w-[76px] leading-[1.3]"
+                      className="text-[9px] font-mono uppercase text-gold/55 leading-[1.3]"
                       style={{ letterSpacing: '0.18em' }}
                     >
                       {bottomPrompt.label}
                     </p>
-                    <p className="text-[13px] italic text-white/80 leading-snug flex-1">
+                    <p className="text-[13px] italic text-white/80 leading-snug">
                       &ldquo;{bottomPrompt.text}&rdquo;
                     </p>
                   </div>
@@ -636,9 +636,8 @@ export function IndustrySwipeCard({
               )}
             </AnimatePresence>
 
-            {/* Flip corner icon — replaces the old text footer. zIndex 50
-                puts it above the floating action circles (zIndex 20) that
-                live in the parent S04 card zone. */}
+            {/* Flip pill — icon + label. Reads clearly as "flip to the back."
+                zIndex 50 puts it above the floating action circles (z-20). */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -646,15 +645,18 @@ export function IndustrySwipeCard({
                 setFlipped((f) => !f);
               }}
               onPointerDown={(e) => e.stopPropagation()}
-              className="absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform hover:scale-110"
+              className="absolute bottom-3 right-3 h-8 px-3 rounded-full flex items-center gap-1.5 backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
               style={{
                 zIndex: 50,
-                background: 'rgba(12,14,18,0.50)',
-                border: '1px solid rgba(255,255,255,0.15)',
+                background: 'rgba(12,14,18,0.55)',
+                border: '1px solid rgba(255,255,255,0.18)',
               }}
               aria-label="Flip card for the deeper read"
             >
-              <FlipIcon />
+              <FlipIcon size={12} />
+              <span className="text-[11px] font-medium text-white/80 leading-none">
+                Read more
+              </span>
             </button>
           </div>
 
@@ -719,16 +721,16 @@ export function IndustrySwipeCard({
               </div>
             )}
 
-            {/* Back witty prompt — different pick than front, restores Hinge flavor */}
+            {/* Back witty prompt — different pick than front, stacked layout */}
             {backPrompt && (
-              <div className="shrink-0 flex items-start gap-2 px-5 py-2.5 border-b border-white/5">
+              <div className="shrink-0 flex flex-col gap-1.5 px-5 py-3 border-b border-white/5">
                 <p
-                  className="text-[9px] font-mono uppercase text-gold/60 mt-0.5 shrink-0 w-[76px] leading-[1.3]"
+                  className="text-[9px] font-mono uppercase text-gold/60 leading-[1.3]"
                   style={{ letterSpacing: '0.18em' }}
                 >
                   {backPrompt.label}
                 </p>
-                <p className="text-[12.5px] italic text-white/85 leading-snug flex-1 line-clamp-2">
+                <p className="text-[13px] italic text-white/85 leading-snug line-clamp-3">
                   &ldquo;{backPrompt.text}&rdquo;
                 </p>
               </div>
@@ -835,10 +837,9 @@ export function IndustrySwipeCard({
               )}
             </div>
 
-            {/* Flip-back corner icon — zIndex 50 so the click actually
-                registers above anything else layered on the card. Uses
-                onPointerDown stopPropagation in addition to onClick to
-                prevent Framer Motion's drag from eating the event. */}
+            {/* Flip-back pill — mirrors the front pill, bottom-LEFT on the
+                back face. stopPropagation on both onClick and onPointerDown
+                so Framer Motion's drag never eats the event. */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -846,15 +847,18 @@ export function IndustrySwipeCard({
                 setFlipped((f) => !f);
               }}
               onPointerDown={(e) => e.stopPropagation()}
-              className="absolute bottom-3 left-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform hover:scale-110"
+              className="absolute bottom-3 left-3 h-8 px-3 rounded-full flex items-center gap-1.5 backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
               style={{
                 zIndex: 50,
-                background: 'rgba(12,14,18,0.50)',
-                border: '1px solid rgba(255,255,255,0.15)',
+                background: 'rgba(12,14,18,0.55)',
+                border: '1px solid rgba(255,255,255,0.18)',
               }}
               aria-label="Back to pitch"
             >
-              <FlipIcon />
+              <FlipIcon size={12} />
+              <span className="text-[11px] font-medium text-white/80 leading-none">
+                Back
+              </span>
             </button>
           </div>
         </motion.div>

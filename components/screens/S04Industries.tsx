@@ -11,7 +11,8 @@ import { IDEAS } from '@/lib/scoring/engine';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { IndustrySwipeCard, type IndustryCardData } from '@/components/ui/IndustrySwipeCard';
 import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
-import { PipSprite, type PipEmotion } from '@/components/characters/PipSprite';
+import { type PipEmotion } from '@/components/characters/PipSprite';
+import { PipWithPoof } from '@/components/characters/PipWithPoof';
 
 /**
  * S04 — Industry Discovery (zero-scroll layout rebuild, Hinge-style actions).
@@ -84,9 +85,6 @@ export function S04Industries() {
   // Pip physically leans toward the card when he reacts. Auto-resets after
   // ~900ms so the sprite returns to its neutral pose between beats.
   const [pipLeaning, setPipLeaning] = useState(false);
-  // Delay Pip's entry so he materializes AFTER the first card has settled
-  // and Cedric's bubble is visible. Animated via AnimatePresence below.
-  const [pipMounted, setPipMounted] = useState(false);
   const dialogueSent = useRef(false);
   const hasPulsed = useRef(false);
   const firstKeepFired = useRef(false);
@@ -106,13 +104,6 @@ export function S04Industries() {
     if (leanTimer.current) clearTimeout(leanTimer.current);
     leanTimer.current = setTimeout(() => setPipLeaning(false), 900);
   }
-
-  // Pip enters ~1.2s after screen mount — lands after the first card has
-  // settled and Cedric's intro has started streaming.
-  useEffect(() => {
-    const t = setTimeout(() => setPipMounted(true), 1200);
-    return () => clearTimeout(t);
-  }, []);
 
   // Final cleanup on screen unmount — stops any pending timers so idle
   // lines never fire after the user has moved on to S06.
@@ -340,28 +331,27 @@ export function S04Industries() {
       <div className="flex-1 relative min-h-0 pt-3 pb-1.5">
         {/* Pip — anchored to the card's top-right corner. He extends above
             the card slightly (top: -10) so he visually "leans on its shoulder."
-            Entry animation drops him in 1.2s after screen mount so he
-            materializes intentionally instead of popping. */}
-        <AnimatePresence>
-          {pipMounted && (
-            <motion.div
-              key="pip-sprite"
-              className="absolute z-30 pointer-events-none"
-              style={{ top: -10, right: 12 }}
-              initial={{ opacity: 0, y: -16, scale: 0.6 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-            >
-              <motion.div
-                animate={pipLeaning ? { rotate: -8, x: -4 } : { rotate: 0, x: 0 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-              >
-                <PipSprite emotion={pipEmotion} color={PIP_COLOR} size={52} />
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            PipWithPoof handles the sparkle-burst entry (enterDelay 1200 lets
+            the first card settle first) and the clean scale-down exit on
+            screen change. The inner motion.div drives the lean-toward-card
+            reaction without re-triggering the entry animation. */}
+        <div
+          className="absolute z-30 pointer-events-none"
+          style={{ top: -10, right: 12 }}
+        >
+          <motion.div
+            animate={pipLeaning ? { rotate: -8, x: -4 } : { rotate: 0, x: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+          >
+            <PipWithPoof
+              emotion={pipEmotion}
+              color={PIP_COLOR}
+              size={52}
+              enterDelay={1200}
+              visible={true}
+            />
+          </motion.div>
+        </div>
 
         {/* Pip floating reaction bubble — slides in from Pip's left with a
             dotted connective line so the reaction reads as HIS reaction. */}

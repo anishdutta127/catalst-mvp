@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
 export type PipEmotion = 'idle' | 'happy' | 'wideeye' | 'tilt' | 'shy' | 'glow';
 
@@ -14,40 +14,45 @@ interface PipSpriteProps {
 /**
  * PipSprite — cute glowing seed-spirit. A luminous green sphere with big chibi
  * eyes. No body parts, no leaves. Eyes (and tiny blush) carry all expression.
+ *
+ * Exported as `React.memo` so re-renders of parents (chat queue, screen state)
+ * don't restart Pip's breathing loop. Combined with the per-emotion useMemos
+ * below, Framer Motion only sees NEW animate configs when `emotion` actually
+ * changes — fixes the "flicker on every message" bug.
  */
-export function PipSprite({ emotion = 'idle', color = '#4ade80', size = 48 }: PipSpriteProps) {
+function PipSpriteImpl({ emotion = 'idle', color = '#4ade80', size = 48 }: PipSpriteProps) {
   const uid = useMemo(() => Math.random().toString(36).slice(2, 9), []);
 
-  const colorLight = lightenColor(color, 0.6);
-  const colorDark = darkenColor(color, 0.5);
+  const colorLight = useMemo(() => lightenColor(color, 0.6), [color]);
+  const colorDark = useMemo(() => darkenColor(color, 0.5), [color]);
 
   // viewBox 50x50, body radius 16, eyes centered y=24, x=20 + x=30
-  const eyes = {
+  const eyes = useMemo(() => ({
     idle:    { rx: 4.5, ry: 4.7, pupilR: 2.2, pupilDx: 0,    pupilDy: 0 },
     happy:   { rx: 4.5, ry: 3.6, pupilR: 2.4, pupilDx: 0,    pupilDy: -0.5 },  // squint of joy + bigger pupils
     wideeye: { rx: 5.5, ry: 5.7, pupilR: 1.4, pupilDx: 0,    pupilDy: 0 },     // huge whites, tiny pupils
     tilt:    { rx: 4.5, ry: 4.7, pupilR: 2.2, pupilDx: 1.5,  pupilDy: 0.3 },   // looking sideways
     shy:     { rx: 4.5, ry: 2.0, pupilR: 1.4, pupilDx: -0.6, pupilDy: 0.6 },   // bashful squint, glance away
     glow:    { rx: 5.0, ry: 5.2, pupilR: 2.6, pupilDx: 0,    pupilDy: -0.4 },  // wide and excited
-  }[emotion];
+  }[emotion]), [emotion]);
 
-  const bodyAnim = {
+  const bodyAnim = useMemo(() => ({
     idle:    { scale: [1, 1.05, 1], y: [0, -1.5, 0] },
     happy:   { scale: [1, 1.12, 1], y: [0, -4, 0] },
     wideeye: { scale: [1, 1.02, 1], y: 0 },
     tilt:    { scale: 1,            y: 0, rotate: [-6, 6, -6] },
     shy:     { scale: 0.9,          y: 1 },
     glow:    { scale: [1, 1.15, 1], y: [0, -3, 0] },
-  }[emotion];
+  }[emotion]), [emotion]);
 
-  const bodyTransition = {
+  const bodyTransition = useMemo(() => ({
     idle:    { duration: 2.4, repeat: Infinity, ease: 'easeInOut' as const },
     happy:   { duration: 0.55, repeat: Infinity, ease: 'easeInOut' as const },
     wideeye: { duration: 0.3 },
     tilt:    { duration: 1.6, repeat: Infinity, ease: 'easeInOut' as const },
     shy:     { duration: 0.4 },
     glow:    { duration: 1.4, repeat: Infinity, ease: 'easeInOut' as const },
-  }[emotion];
+  }[emotion]), [emotion]);
 
   const auraIntensity = emotion === 'glow' ? 1 : emotion === 'happy' ? 0.85 : emotion === 'shy' ? 0.45 : 0.7;
   const showSparkles = emotion === 'glow' || emotion === 'happy';
@@ -57,7 +62,14 @@ export function PipSprite({ emotion = 'idle', color = '#4ade80', size = 48 }: Pi
     <motion.div
       animate={bodyAnim}
       transition={bodyTransition}
-      style={{ width: size, height: size, display: 'inline-block', position: 'relative' }}
+      style={{
+        width: size,
+        height: size,
+        display: 'inline-block',
+        position: 'relative',
+        // Hint the compositor so transform/opacity animations don't thrash.
+        willChange: 'transform, opacity',
+      }}
     >
       <svg viewBox="0 0 50 50" width="100%" height="100%" style={{ overflow: 'visible' }}>
         <defs>
@@ -146,6 +158,9 @@ export function PipSprite({ emotion = 'idle', color = '#4ade80', size = 48 }: Pi
     </motion.div>
   );
 }
+
+// Memoized export — only re-renders when emotion/color/size actually change.
+export const PipSprite = memo(PipSpriteImpl);
 
 function lightenColor(hex: string, amt: number): string {
   const { r, g, b } = parseHex(hex);
