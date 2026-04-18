@@ -34,12 +34,17 @@ export const lines = {
       pathB: {
         prompt: 'Alright, let\'s hear it. One sentence. No elevator pitch — just the raw thought.',
         afterSubmit: 'The garden will remember this. Let\'s see what your instincts say.',
+        // NEW v8 — dry undercut to Pip's pathB_submitReaction. Fires right before
+        // afterSubmit lands so the banter pair plays first, then the ritual line.
+        submitReply: 'Pip. "Vibed" is not a methodology.',
       },
     },
     pip: {
       entrance: 'That\'s his way of saying welcome! I think.',
       pathA: 'I had an idea once! Cedric said it was \'adorable.\'',
       pathB: 'Don\'t stress about making it perfect — Cedric\'s going to pull it apart anyway.',
+      // NEW v8 — Path B submit reaction. Pip vulnerable → Cedric dry.
+      pathB_submitReaction: "Ooh you wrote it down. Bold. I'd have just vibed.",
     },
     cards: {
       a: { emoji: '\ud83c\udf3f', title: 'Find me an idea', subtitle: 'Let the garden reveal what fits.' },
@@ -88,6 +93,8 @@ export const lines = {
       afterAllBlots: 'Three instincts. The reading is taking shape. We\'re just getting started.',
       blot3Intro: null,  // silence before blot 3 — the blot just appears
       beforeBlot3Response: 'That\'s the point.',
+      // NEW v8 — dry reply to Pip's entrance. Banter pair on mount.
+      entrance_reply: 'There is no wrong answer.',
     },
     pip: {
       intro: 'These things give me the creeps. But like... in a good way?',
@@ -97,6 +104,8 @@ export const lines = {
       afterBlot2b: '...I\'m just saying.',
       beforeBlot3: 'I... I don\'t know what I see in this one.',
       afterAllBlots: 'I felt something shift. Did you feel that?',
+      // NEW v8 — entrance beat that Cedric undercuts with entrance_reply.
+      entrance: 'Okay, shapes. Just point at what your gut says. No wrong answer. I think.',
     },
     blots: {
       blot1: {
@@ -131,11 +140,15 @@ export const lines = {
       intro: 'Four words. React. Don\'t think.',
       afterAll: 'The instincts don\'t lie. Even when we wish they would.',
       afterPip1: 'Plants don\'t sweat, Pip.',
+      // NEW v8 — reply to Pip's entrance. The first word is the honest one.
+      entrance_reply: 'The first word is the honest one.',
     },
     pip: {
       intro: 'Finally! Something I\'m built for — not thinking is kind of my whole thing.',
       afterAll: 'That was FOUR words?! It felt like forty. My leaves are sweating.',
       afterCedric: 'MINE DO.',
+      // NEW v8 — entrance beat, Cedric undercuts with entrance_reply.
+      entrance: 'Four words. Not four essays. I know you want to explain.',
     },
     words: [
       { word: 'POWER', left: 'Control', right: 'Freedom' },
@@ -302,6 +315,8 @@ export const lines = {
     },
     pip: {
       headlineIntro: 'Choose the one that gave you goosebumps. Not the one that sounds responsible.',
+      // NEW v8 — standalone reaction beat after scene loads. No Cedric reply.
+      reaction: "Oh we're doing a memory. Stay with it. He's about to say something profound.",
     },
     headlines: [
       {
@@ -498,6 +513,8 @@ export const lines = {
       claim: 'Welcome home.',
       lineageIntro: 'You\'re not the first to walk this path. Let me show you who came before.',
       afterLineage: (house: string) => `They didn't know they were ${house} either. Not at first. You'll grow into it.`,
+      // NEW v8 — dry reply to Pip's nudge about sharing the founder card.
+      nudge_reply: 'It was not up to you, Pip.',
     },
     pip: {
       intro: 'This is my favourite part. Don\'t tell Cedric.',
@@ -506,6 +523,8 @@ export const lines = {
       // NOTE: afterLineage2 is actually Cedric's reply to Pip's question above,
       // placed here for conversation sequencing convenience.
       afterLineage2: 'You\'re a plant, Pip. But... yes. Technically.',
+      // NEW v8 — challenge/share nudge; Cedric undercuts with nudge_reply.
+      nudge: "Share it. Don't share it. Up to you. I say share it.",
     },
     continueButton: 'Meet Your Founder Card \u2192',
   },
@@ -517,9 +536,13 @@ export const lines = {
       premium1: 'The garden showed you the surface. There\'s a deeper reading — your full founder psychology, the real numbers behind your idea, and a path to your first ten customers.',
       premium2: 'When you\'re ready, I know someone who can walk you through it.',
       final: (name: string) => `The garden doesn't give you answers, ${name}. It gives you a mirror. What you build with it — that's entirely yours.`,
+      // NEW v8 — deadpan reply to Pip's farewell. Single clipped line.
+      farewell_reply: 'Goodbye, traveler.',
     },
     pip: {
       final: 'Go build something amazing. And come back and tell us about it. Please? I get bored.',
+      // NEW v8 — closing-beat farewell, Cedric undercuts with farewell_reply.
+      farewell: 'We were here. You were here. Thank you for being here.',
     },
     card: {
       download: 'Download Founder Card',
