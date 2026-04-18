@@ -10,6 +10,38 @@ export interface OrbDef {
   label: string;
 }
 
+/**
+ * Blend 1–3 hex colors into a gem triplet (base/light/dark).
+ * Average the RGB channels, lift for `light`, cut for `dark`.
+ */
+function blendColors(
+  hexColors: string[],
+): { base: string; light: string; dark: string } {
+  const list = hexColors.length > 0 ? hexColors : ['#D4A843'];
+  const rgbs = list.map((h) => {
+    const hex = h.replace('#', '');
+    return {
+      r: parseInt(hex.slice(0, 2), 16),
+      g: parseInt(hex.slice(2, 4), 16),
+      b: parseInt(hex.slice(4, 6), 16),
+    };
+  });
+  const avg = rgbs.reduce(
+    (acc, c) => ({
+      r: acc.r + c.r / rgbs.length,
+      g: acc.g + c.g / rgbs.length,
+      b: acc.b + c.b / rgbs.length,
+    }),
+    { r: 0, g: 0, b: 0 },
+  );
+  const toHex = (n: number) =>
+    Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0');
+  const base = `#${toHex(avg.r)}${toHex(avg.g)}${toHex(avg.b)}`;
+  const light = `#${toHex(avg.r + 70)}${toHex(avg.g + 70)}${toHex(avg.b + 70)}`;
+  const dark = `#${toHex(avg.r * 0.38)}${toHex(avg.g * 0.38)}${toHex(avg.b * 0.38)}`;
+  return { base, light, dark };
+}
+
 interface CrystalViewportProps {
   allOrbs: OrbDef[];
   selectedOrbIds: string[]; // in selection order
@@ -81,11 +113,32 @@ function CrystalViewportImpl({
     [cx, cy, vertexDist],
   );
 
+  // Midpoints of each outer edge — used to carve the gem into 6 facets that
+  // meet at the center, giving the final crystal a diamond-cut look.
+  const edgeMidpoints = useMemo(
+    () => [
+      {
+        x: (triangleVertices[0].x + triangleVertices[1].x) / 2,
+        y: (triangleVertices[0].y + triangleVertices[1].y) / 2,
+      },
+      {
+        x: (triangleVertices[1].x + triangleVertices[2].x) / 2,
+        y: (triangleVertices[1].y + triangleVertices[2].y) / 2,
+      },
+      {
+        x: (triangleVertices[2].x + triangleVertices[0].x) / 2,
+        y: (triangleVertices[2].y + triangleVertices[0].y) / 2,
+      },
+    ],
+    [triangleVertices],
+  );
+
   const selectedColors = selectedOrbIds.map(
     (id) => allOrbs.find((o) => o.id === id)?.colour || '#D4A843',
   );
   const primaryColor = selectedColors[0] || '#D4A843';
   const full = count >= 3;
+  const gemColors = blendColors(selectedColors);
 
   return (
     <div
@@ -93,11 +146,13 @@ function CrystalViewportImpl({
       style={{ width: size, height: size }}
       data-testid="crystal-viewport"
     >
-      {/* Radial vignette — softens outside the ring so attention centers */}
+      {/* Radial vignette — stronger now so the crystal reads clearly against
+          the busy cave background. Cave art stays visible at the edges
+          (atmospheric) but doesn't fight the gem for attention. */}
       <div
         className="absolute inset-0 rounded-full"
         style={{
-          background: `radial-gradient(circle at 50% 50%, rgba(12,14,18,0) 0%, rgba(12,14,18,0.55) 72%, rgba(12,14,18,0.9) 100%)`,
+          background: `radial-gradient(circle at 50% 50%, rgba(12,14,18,0.95) 0%, rgba(12,14,18,0.75) 50%, rgba(12,14,18,0.1) 95%)`,
         }}
       />
 
@@ -180,30 +235,36 @@ function CrystalViewportImpl({
           />
         )}
 
-        {/* Light trails — selected orbs → center */}
-        {orbPositions.map((pos) => {
-          const selectedIdx = selectedOrbIds.indexOf(pos.id);
-          if (selectedIdx < 0) return null;
-          return (
-            <motion.line
-              key={`trail-${pos.id}`}
-              x1={pos.x}
-              y1={pos.y}
-              x2={cx}
-              y2={cy}
-              stroke={pos.colour}
-              strokeWidth="1.5"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 0.7 }}
-              transition={{
-                duration: 0.9,
-                delay: selectedIdx * 0.15,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              filter="url(#cv-glow)"
-            />
-          );
-        })}
+        {/* Light trails — selected orbs → center. Only shown during build-up
+            (count 1 or 2); once the gem completes the trails would cut through
+            the facets and look messy, so they fade out at count === 3. */}
+        <AnimatePresence>
+          {count > 0 && count < 3 &&
+            orbPositions.map((pos) => {
+              const selectedIdx = selectedOrbIds.indexOf(pos.id);
+              if (selectedIdx < 0) return null;
+              return (
+                <motion.line
+                  key={`trail-${pos.id}`}
+                  x1={pos.x}
+                  y1={pos.y}
+                  x2={cx}
+                  y2={cy}
+                  stroke={pos.colour}
+                  strokeWidth="1.5"
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 0.7 }}
+                  exit={{ opacity: 0, transition: { duration: 0.4 } }}
+                  transition={{
+                    duration: 0.9,
+                    delay: selectedIdx * 0.15,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                  filter="url(#cv-glow)"
+                />
+              );
+            })}
+        </AnimatePresence>
 
         {/* CRYSTAL — grows with selections */}
         <AnimatePresence mode="wait">
@@ -230,6 +291,22 @@ function CrystalViewportImpl({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.35 }}
             >
+              {/* Faint glowing strip between the two vertices — suggests the
+                  gem beginning to form before the triangle completes */}
+              <motion.line
+                x1={triangleVertices[0].x}
+                y1={triangleVertices[0].y}
+                x2={triangleVertices[1].x}
+                y2={triangleVertices[1].y}
+                stroke={selectedColors[0]}
+                strokeWidth="8"
+                strokeLinecap="round"
+                opacity="0.25"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              />
+              {/* Crisp connecting edge */}
               <motion.line
                 x1={triangleVertices[0].x}
                 y1={triangleVertices[0].y}
@@ -242,18 +319,19 @@ function CrystalViewportImpl({
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 filter="url(#cv-glow)"
               />
+              {/* Vertex orbs — outer halo + solid core + tiny white highlight */}
               {triangleVertices.slice(0, 2).map((v, i) => (
-                <motion.circle
+                <motion.g
                   key={`v2-vtx-${i}`}
-                  cx={v.x}
-                  cy={v.y}
-                  r={12}
-                  fill={selectedColors[i]}
                   initial={{ scale: 0 }}
-                  animate={{ scale: [0, 1.3, 1] }}
+                  animate={{ scale: [0, 1.25, 1] }}
                   transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-                  filter="url(#cv-glow)"
-                />
+                  style={{ transformOrigin: `${v.x}px ${v.y}px` }}
+                >
+                  <circle cx={v.x} cy={v.y} r="12" fill={selectedColors[i]} opacity="0.35" />
+                  <circle cx={v.x} cy={v.y} r="8" fill={selectedColors[i]} />
+                  <circle cx={v.x - 2} cy={v.y - 2} r="2" fill="white" opacity="0.7" />
+                </motion.g>
               ))}
             </motion.g>
           )}
@@ -261,61 +339,145 @@ function CrystalViewportImpl({
           {count === 3 && (
             <motion.g
               key="v3"
-              initial={{ scale: 0.7, opacity: 0 }}
+              initial={{ scale: 0, opacity: 0 }}
               animate={{
-                scale: celebrating ? [1, 1.22, 1.08] : [0.7, 1.15, 1],
+                scale: celebrating ? [1, 1.22, 1.08] : [0, 1.15, 1],
                 opacity: 1,
                 rotate: [0, 360],
               }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{
-                scale: { duration: celebrating ? 1.4 : 0.9, ease: [0.22, 1, 0.36, 1] },
-                opacity: { duration: 0.5 },
+                scale: {
+                  duration: celebrating ? 1.4 : 0.85,
+                  times: [0, 0.6, 1],
+                  ease: [0.34, 1.56, 0.64, 1],
+                },
+                opacity: { duration: 0.4 },
                 rotate: { duration: celebrating ? 10 : 22, repeat: Infinity, ease: 'linear' },
               }}
               style={{ transformOrigin: `${cx}px ${cy}px` }}
             >
-              {/* Base triangle with gradient facet */}
+              {/* Outer halo — pulses the gem's blended color outward */}
+              <motion.circle
+                cx={cx}
+                cy={cy}
+                r={vertexDist * 1.4}
+                fill={gemColors.base}
+                animate={{
+                  r: [vertexDist * 1.4, vertexDist * 1.7, vertexDist * 1.4],
+                  opacity: [0.15, 0.35, 0.15],
+                }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+              />
+
+              {/* GEM BODY — solid dark fill so the gem has weight and depth */}
               <polygon
                 points={triangleVertices.map((v) => `${v.x},${v.y}`).join(' ')}
-                fill="url(#cv-facet)"
-                stroke={primaryColor}
+                fill={gemColors.dark}
+                stroke={gemColors.base}
                 strokeWidth="1.5"
-                opacity="0.78"
+                opacity="0.95"
               />
-              {/* Internal facet lines (3 spokes to center) */}
+
+              {/* SIX FACETS — overlapping triangles (vertex → center → edge-mid),
+                  alternating base/light fills and varied opacity to simulate a
+                  diamond-cut surface catching light from different angles. */}
+              <polygon
+                points={`${triangleVertices[0].x},${triangleVertices[0].y} ${cx},${cy} ${edgeMidpoints[0].x},${edgeMidpoints[0].y}`}
+                fill={gemColors.base}
+                opacity="0.55"
+              />
+              <polygon
+                points={`${triangleVertices[1].x},${triangleVertices[1].y} ${cx},${cy} ${edgeMidpoints[0].x},${edgeMidpoints[0].y}`}
+                fill={gemColors.base}
+                opacity="0.35"
+              />
+              <polygon
+                points={`${triangleVertices[1].x},${triangleVertices[1].y} ${cx},${cy} ${edgeMidpoints[1].x},${edgeMidpoints[1].y}`}
+                fill={gemColors.light}
+                opacity="0.40"
+              />
+              <polygon
+                points={`${triangleVertices[2].x},${triangleVertices[2].y} ${cx},${cy} ${edgeMidpoints[1].x},${edgeMidpoints[1].y}`}
+                fill={gemColors.base}
+                opacity="0.50"
+              />
+              <polygon
+                points={`${triangleVertices[2].x},${triangleVertices[2].y} ${cx},${cy} ${edgeMidpoints[2].x},${edgeMidpoints[2].y}`}
+                fill={gemColors.light}
+                opacity="0.45"
+              />
+              <polygon
+                points={`${triangleVertices[0].x},${triangleVertices[0].y} ${cx},${cy} ${edgeMidpoints[2].x},${edgeMidpoints[2].y}`}
+                fill={gemColors.base}
+                opacity="0.35"
+              />
+
+              {/* FACET EDGES — thin bright lines along the cut seams */}
               {triangleVertices.map((v, i) => (
                 <line
-                  key={`facet-${i}`}
+                  key={`facet-edge-${i}`}
                   x1={v.x}
                   y1={v.y}
                   x2={cx}
                   y2={cy}
-                  stroke="white"
-                  strokeWidth="0.8"
+                  stroke={gemColors.light}
+                  strokeWidth="0.7"
+                  opacity="0.6"
+                />
+              ))}
+              {edgeMidpoints.map((m, i) => (
+                <line
+                  key={`edge-mid-${i}`}
+                  x1={m.x}
+                  y1={m.y}
+                  x2={cx}
+                  y2={cy}
+                  stroke={gemColors.light}
+                  strokeWidth="0.4"
                   opacity="0.4"
                 />
               ))}
-              {/* Vertex orbs */}
+
+              {/* HIGHLIGHT SHEEN — small bright triangle simulating a
+                  specular reflection off the top-left facet */}
+              <polygon
+                points={`${triangleVertices[0].x},${triangleVertices[0].y} ${
+                  cx - vertexDist * 0.15
+                },${cy - vertexDist * 0.2} ${cx + vertexDist * 0.1},${
+                  cy - vertexDist * 0.1
+                }`}
+                fill="white"
+                opacity="0.32"
+              />
+
+              {/* VERTEX ORBS — the three user-selected colors, larger and
+                  brighter than the build-up states, each with a tiny white
+                  highlight so they read as polished beads, not flat dots. */}
               {triangleVertices.map((v, i) => (
-                <circle
-                  key={`vtx-${i}`}
-                  cx={v.x}
-                  cy={v.y}
-                  r={12}
-                  fill={selectedColors[i]}
-                  filter="url(#cv-glow)"
-                />
+                <g key={`vtx-${i}`}>
+                  <circle
+                    cx={v.x}
+                    cy={v.y}
+                    r="14"
+                    fill={selectedColors[i]}
+                    opacity="0.4"
+                    filter="url(#cv-glow)"
+                  />
+                  <circle cx={v.x} cy={v.y} r="9" fill={selectedColors[i]} />
+                  <circle cx={v.x - 2} cy={v.y - 2} r="2.5" fill="white" opacity="0.75" />
+                </g>
               ))}
-              {/* Pulsing white core */}
+
+              {/* PULSING WHITE CORE — the gem's inner vitality */}
               <motion.circle
                 cx={cx}
                 cy={cy}
-                r={5}
+                r={6}
                 fill="white"
                 animate={{
-                  opacity: [0.5, 1, 0.5],
-                  r: celebrating ? [5, 12, 5] : [4, 8, 4],
+                  opacity: [0.7, 1, 0.7],
+                  r: celebrating ? [6, 12, 6] : [5, 8, 5],
                 }}
                 transition={{ duration: celebrating ? 1.0 : 1.8, repeat: Infinity, ease: 'easeInOut' }}
               />
