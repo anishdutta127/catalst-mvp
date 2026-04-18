@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { memo, useMemo } from 'react';
+import { memo, useId, useMemo } from 'react';
 
 export type PipEmotion = 'idle' | 'happy' | 'wideeye' | 'tilt' | 'shy' | 'glow';
 
@@ -21,7 +21,12 @@ interface PipSpriteProps {
  * changes — fixes the "flicker on every message" bug.
  */
 function PipSpriteImpl({ emotion = 'idle', color = '#4ade80', size = 48 }: PipSpriteProps) {
-  const uid = useMemo(() => Math.random().toString(36).slice(2, 9), []);
+  // SSR-safe unique id for the SVG gradient defs. Must be deterministic across
+  // server + client — Math.random() produced different values on each, causing
+  // React to bail out of hydration because the gradient id attributes didn't
+  // match. useId returns a stable ":r0:"-style token; strip the colons since
+  // they're not valid inside an SVG url(#…) reference.
+  const uid = useId().replace(/:/g, '');
 
   const colorLight = useMemo(() => lightenColor(color, 0.6), [color]);
   const colorDark = useMemo(() => darkenColor(color, 0.5), [color]);
