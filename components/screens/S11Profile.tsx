@@ -112,7 +112,23 @@ export function S11Profile() {
       }),
       5000,
     );
-  }, [enqueueMessage, displayName, houseId, crowned]);
+
+    // v8 closing banter: Pip's earnest farewell → Cedric's deadpan goodbye.
+    // Fires after the pip.final "go build something" line so the emotional
+    // arc lands in this order: intro → final → pip final → pip farewell →
+    // cedric farewell. Last thing the user hears is the signature double-act.
+    const farewellText = pathLine('s11.pip.farewell', lines.s11.pip.farewell, state.ideaMode);
+    const farewellReply = pathLine('s11.cedric.farewell_reply', lines.s11.cedric.farewell_reply, state.ideaMode);
+    setTimeout(
+      () => enqueueMessage({ speaker: 'pip', text: farewellText, type: 'dialogue' }),
+      7500,
+    );
+    const farewellMs = farewellText.length * 35;
+    setTimeout(
+      () => enqueueMessage({ speaker: 'cedric', text: farewellReply, type: 'dialogue' }),
+      7500 + farewellMs + 400,
+    );
+  }, [enqueueMessage, displayName, houseId, crowned, state.ideaMode]);
 
   // ── Share helpers used by the quick-share row ─────────────────────────
   const igCaption = useMemo(

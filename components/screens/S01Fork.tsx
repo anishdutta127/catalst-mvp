@@ -90,9 +90,35 @@ export function S01Fork() {
     setIdeaMode('directed');
     setUserIdeaText(ideaText.trim());
     setProcessing(true);
-    const text = lines.s01.cedric.pathB.afterSubmit;
-    enqueueMessage({ speaker: 'cedric', text, type: 'dialogue' });
-    setTimeout(() => advanceScreen(), text.length * 28 + 600);
+
+    // v8 banter beat: Pip reacts ("bold, I'd have just vibed") → Cedric
+    // undercuts ("'vibed' is not a methodology") → then the existing ritual
+    // afterSubmit lands. `directed` mode is set above so pathLine() picks the
+    // Path B variant for both Pip and the submitReply.
+    const pipText = pathLine(
+      's01.pip.pathB_submitReaction',
+      lines.s01.pip.pathB_submitReaction,
+      'directed',
+    );
+    const cedricReply = pathLine(
+      's01.cedric.pathB.submitReply',
+      lines.s01.cedric.pathB.submitReply,
+      'directed',
+    );
+    enqueueMessage({ speaker: 'pip', text: pipText, type: 'dialogue' });
+    const pipMs = pipText.length * 35;
+    setTimeout(() => {
+      enqueueMessage({ speaker: 'cedric', text: cedricReply, type: 'dialogue' });
+    }, pipMs + 400);
+
+    // Ritual afterSubmit + advance — delayed past the banter pair so nothing
+    // stacks on-screen at once.
+    const afterSubmit = lines.s01.cedric.pathB.afterSubmit;
+    const ritualDelay = pipMs + 400 + cedricReply.length * 28 + 500;
+    setTimeout(() => {
+      enqueueMessage({ speaker: 'cedric', text: afterSubmit, type: 'dialogue' });
+    }, ritualDelay);
+    setTimeout(() => advanceScreen(), ritualDelay + afterSubmit.length * 28 + 600);
   }
 
   function handlePathC() {

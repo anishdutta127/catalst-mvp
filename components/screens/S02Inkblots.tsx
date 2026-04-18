@@ -48,7 +48,21 @@ export function S02Inkblots() {
     // Cedric introduces; Pip's intro is held back until after the first blot
     // so the user isn't reading two characters AND fighting a timer at once.
     enqueueMessage({ speaker: 'cedric', text: lines.s02.cedric.intro, type: 'instruction' });
-  }, [enqueueMessage]);
+
+    // v8 banter beat: Pip pipes up on mount with a nervous self-undercut,
+    // Cedric replies deadpan. Timed ~1.6s after Cedric's instruction so the
+    // opener lands before the banter pair. Path-aware via pathLine.
+    const pipText = pathLine('s02.pip.entrance', lines.s02.pip.entrance, ideaMode);
+    const cedricReply = pathLine('s02.cedric.entrance_reply', lines.s02.cedric.entrance_reply, ideaMode);
+    const introMs = lines.s02.cedric.intro.length * 28;
+    setTimeout(() => {
+      enqueueMessage({ speaker: 'pip', text: pipText, type: 'dialogue' });
+    }, introMs + 600);
+    const pipMs = pipText.length * 35;
+    setTimeout(() => {
+      enqueueMessage({ speaker: 'cedric', text: cedricReply, type: 'dialogue' });
+    }, introMs + 600 + pipMs + 400);
+  }, [enqueueMessage, ideaMode]);
 
   useEffect(() => {
     timer.current.start();

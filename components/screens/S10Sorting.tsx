@@ -138,6 +138,18 @@ export function S10Sorting() {
           type: 'dialogue',
         });
       }, 1400);
+      // v8 banter beat: Pip nudges the user toward sharing their card,
+      // Cedric undercuts him ("it was not up to you, Pip."). Fires after
+      // afterLineage so the sequence reads as a single closing moment.
+      const nudgeText = pathLine('s10.pip.nudge', lines.s10.pip.nudge, ideaMode);
+      const nudgeReply = pathLine('s10.cedric.nudge_reply', lines.s10.cedric.nudge_reply, ideaMode);
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'pip', text: nudgeText, type: 'dialogue' });
+      }, 3800);
+      const nudgeMs = nudgeText.length * 35;
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'cedric', text: nudgeReply, type: 'dialogue' });
+      }, 3800 + nudgeMs + 400);
     }, 7200 + lineageDuration + 1200);
     // NOTE: auto-advance removed. The user now controls when to continue via
     // the "Continue to my profile →" CTA that appears during the complete

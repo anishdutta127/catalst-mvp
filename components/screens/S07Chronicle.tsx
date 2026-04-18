@@ -93,7 +93,16 @@ export function S07Chronicle() {
       const t = setTimeout(() => {
         setPipReaction(pathLine('s07.pip.headlineIntro', lines.s07.pip.headlineIntro, state.ideaMode));
       }, 2400);
-      return () => clearTimeout(t);
+      // v8: second Pip beat a few seconds later — "stay with it, he's about
+      // to say something profound." Fourth-wall break that earns its keep
+      // because S07 is where users start dwelling on headlines.
+      const t2 = setTimeout(() => {
+        setPipReaction(pathLine('s07.pip.reaction', lines.s07.pip.reaction, state.ideaMode));
+      }, 6000);
+      return () => {
+        clearTimeout(t);
+        clearTimeout(t2);
+      };
     }
     if (phase === 'constraints') {
       if (constraintsDialogueSent.current) return;

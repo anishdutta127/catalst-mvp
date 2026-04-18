@@ -43,7 +43,20 @@ export function S03Words() {
     enqueueMessage({ speaker: 'cedric', text: lines.s03.cedric.intro, type: 'instruction' });
     recordWordResponse(1, 'Stronger', 0); // TOGETHER baseline
     setTimeout(() => setStep(0), 1000);
-  }, [enqueueMessage, recordWordResponse]);
+
+    // v8 banter beat: Pip dares the user to be brief, Cedric re-grounds.
+    // Path-aware; directed variant plays off the user's own idea.
+    const pipText = pathLine('s03.pip.entrance', lines.s03.pip.entrance, ideaMode);
+    const cedricReply = pathLine('s03.cedric.entrance_reply', lines.s03.cedric.entrance_reply, ideaMode);
+    const introMs = lines.s03.cedric.intro.length * 28;
+    setTimeout(() => {
+      enqueueMessage({ speaker: 'pip', text: pipText, type: 'dialogue' });
+    }, introMs + 600);
+    const pipMs = pipText.length * 35;
+    setTimeout(() => {
+      enqueueMessage({ speaker: 'cedric', text: cedricReply, type: 'dialogue' });
+    }, introMs + 600 + pipMs + 400);
+  }, [enqueueMessage, recordWordResponse, ideaMode]);
 
   useEffect(() => {
     if (step >= 0) timer.current.start();
