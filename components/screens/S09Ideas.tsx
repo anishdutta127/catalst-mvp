@@ -12,6 +12,7 @@ import { IdeaDossier } from '@/components/ui/IdeaDossier';
 import { MysticVaultCard } from '@/components/ui/MysticVaultCard';
 import { PipWithPoof } from '@/components/characters/PipWithPoof';
 import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
+import { TAG_BY_ID } from '@/lib/tags';
 
 /**
  * S09 — Ideas Revealed (Batch 3 rebuild).
@@ -387,20 +388,28 @@ export function S09Ideas() {
                     {scored.idea.one_liner}
                   </p>
 
-                  {/* Tag row — own line, wraps if more tags arrive later.
-                      Separated from the CTA so overlap is structurally
-                      impossible regardless of tag count or length. */}
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <span
-                      className="text-[9.5px] px-2 py-0.5 rounded-full font-medium"
-                      style={{
-                        background: `${meta.color}18`,
-                        color: meta.color,
-                        border: `1px solid ${meta.color}35`,
-                      }}
-                    >
-                      {scored.idea.domain_primary?.replace(/_/g, ' ')}
-                    </span>
+                  {/* Tag row — up to 3 tags from the v8 vocabulary. Tier
+                      colouring carries the nest/spark/wildvine identity; each
+                      pill inherits it so the row reads as one cohesive group.
+                      Falls back gracefully (null-skip) on any stale tag id. */}
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {(scored.idea.tags ?? []).slice(0, 3).map((tagId) => {
+                      const def = TAG_BY_ID[tagId];
+                      if (!def) return null;
+                      return (
+                        <span
+                          key={tagId}
+                          className="text-[9.5px] px-2 py-0.5 rounded-full font-medium tracking-wide"
+                          style={{
+                            background: `${meta.color}18`,
+                            color: meta.color,
+                            border: `1px solid ${meta.color}35`,
+                          }}
+                        >
+                          {def.label}
+                        </span>
+                      );
+                    })}
                   </div>
 
                   {/* Spacer so the CTA pins to the bottom edge on taller cards. */}
