@@ -69,12 +69,16 @@ export function PipFloatingBubble({
   // Pip's top:-10 / right:12 anchor; `bottom` for bottom-right mode matches
   // S07's Pip anchored bottom-right just above the CTA.
   //
-  // right: 92 in top-right mode (was 72) — Pip's sprite is 52px wide at
-  // right:12, so its left edge is at right:64. 92 gives 28px clear gap,
-  // which lines up with the dotted tether length so the line reaches the
-  // sprite edge cleanly without crossing into Pip's body.
+  // right: 92 in top-right mode — Pip's sprite is 52px wide at right:12, so
+  // its left edge is at right:64. 92 gives a 28px gap that aligns with the
+  // horizontal dotted tether length.
+  //
+  // right: 72 in bottom-right mode — Pip's sprite is 48px wide at right:10
+  // (S07 anchor), so sprite left edge is at right:58. Bubble right edge at
+  // right:72 clears the sprite by 14px. maxWidth bumped 240 → 280 so longer
+  // ambient lines like the vow Pip beat don't wrap awkwardly.
   const positionStyle: React.CSSProperties = isBottom
-    ? { bottom: 68, right: 16, maxWidth: 240 }
+    ? { bottom: 68, right: 72, maxWidth: 280 }
     : { top: 4, right: 92, maxWidth: 220 };
 
   return (
@@ -93,64 +97,39 @@ export function PipFloatingBubble({
         }}
       >
         <p
-          className={`text-[12px] leading-snug italic ${isBottom ? 'text-left' : 'text-right'}`}
+          className="text-[12px] leading-snug italic text-right"
           style={{ color }}
         >
           {text}
         </p>
 
-        {/* Dotted connective tissue — points toward Pip. For top-right mode,
-            threads horizontally from the bubble's right edge (Pip is to the
-            right). For bottom-right mode, threads vertically downward from
-            the bubble's bottom edge (Pip is below). */}
-        {isBottom ? (
-          <svg
-            className="absolute"
-            aria-hidden
-            style={{
-              bottom: -22,
-              right: 14,
-              overflow: 'visible',
-            }}
-            width="12"
-            height="22"
-          >
-            <line
-              x1="6"
-              y1="0"
-              x2="6"
-              y2="20"
-              stroke={color}
-              strokeWidth="1.5"
-              strokeDasharray="2,3"
-              opacity="0.55"
-            />
-          </svg>
-        ) : (
-          <svg
-            className="absolute"
-            aria-hidden
-            style={{
-              right: -28,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              overflow: 'visible',
-            }}
-            width="28"
-            height="12"
-          >
-            <line
-              x1="0"
-              y1="6"
-              x2="26"
-              y2="6"
-              stroke={color}
-              strokeWidth="1.5"
-              strokeDasharray="2,3"
-              opacity="0.55"
-            />
-          </svg>
-        )}
+        {/* Dotted connective tether — points from bubble's right edge toward
+            Pip. In both top-right and bottom-right modes the bubble now sits
+            to the LEFT of Pip (with matching vertical ranges), so a short
+            horizontal dotted line reads naturally in either mode. */}
+        <svg
+          className="absolute"
+          aria-hidden
+          style={{
+            right: isBottom ? -16 : -28,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            overflow: 'visible',
+          }}
+          width={isBottom ? 16 : 28}
+          height="12"
+        >
+          <line
+            x1="0"
+            y1="6"
+            x2={isBottom ? 14 : 26}
+            y2="6"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeDasharray="2,3"
+            opacity="0.55"
+          />
+        </svg>
       </div>
     </motion.div>
   );

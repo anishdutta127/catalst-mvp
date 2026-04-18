@@ -3,7 +3,7 @@
 import { memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export type VesselKind = 'hourglass' | 'chalice' | 'blade';
+export type VesselKind = 'hourglass' | 'chest' | 'blade';
 
 interface VowVesselProps {
   kind: VesselKind;
@@ -63,7 +63,7 @@ function VowVesselImpl({
       }}
       className="relative flex flex-col items-center justify-end rounded-xl transition-colors"
       style={{
-        width: 92,
+        width: 96,
         height: 130,
         background: isActive
           ? `rgba(12, 14, 18, 0.55)`
@@ -75,10 +75,10 @@ function VowVesselImpl({
           : `1px solid rgba(255,255,255,0.10)`,
       }}
     >
-      {/* Vessel SVG — sized 60×90 inside a 92×130 frame, centered */}
-      <div style={{ width: 60, height: 90, marginBottom: 4 }}>
+      {/* Vessel SVG — 72×72 square viewBox inside a 96×130 frame */}
+      <div style={{ width: 72, height: 72, marginBottom: 4 }}>
         {kind === 'hourglass' && <HourglassSvg fillLevel={fillLevel} color={color} />}
-        {kind === 'chalice' && <ChaliceSvg fillLevel={fillLevel} color={color} />}
+        {kind === 'chest' && <ChestSvg fillLevel={fillLevel} color={color} />}
         {kind === 'blade' && <BladeSvg isAnswered={isAnswered} color={color} />}
       </div>
 
@@ -126,103 +126,126 @@ interface SvgProps {
 
 function HourglassSvg({ fillLevel, color }: SvgProps) {
   // fillLevel 0→1: sand moves from top bulb into bottom bulb.
-  // Top triangle shrinks upward as sand drains; bottom triangle grows upward.
-  const topBaseY = 12 + fillLevel * 12; // top of top-bulb sand drops as fill grows? actually:
-  // We model: top bulb has sand that shrinks (base rises / tip shifts)
-  // Top sand triangle: (14-fl*4, 12+fl*12) → (46+fl*4, 12+fl*12) → (30, 38)
-  // As fillLevel increases, the two base corners move inward horizontally
-  // (sand is draining) and downward vertically — so the triangle gets smaller.
+  // 72×72 viewBox — bulbs span roughly 14-58 horizontally, 10-62 vertically.
+  const topBaseY = 13 + fillLevel * 10;
+  const bottomBaseY = 60 - (1 - fillLevel) * 22;
+  const bottomInset = (1 - fillLevel) * 16;
   return (
-    <svg viewBox="0 0 60 90" width="100%" height="100%">
-      {/* Top bulb (empty outline) */}
+    <svg viewBox="0 0 72 72" width="100%" height="100%">
+      {/* Top bulb outline */}
       <path
-        d="M10 8 L50 8 L30 42 Z"
+        d="M14 10 L58 10 L36 34 Z"
         stroke={color}
         strokeWidth="1.5"
         fill="rgba(212,168,67,0.12)"
       />
-      {/* Bottom bulb */}
+      {/* Bottom bulb outline */}
       <path
-        d="M30 42 L50 82 L10 82 Z"
+        d="M36 34 L58 62 L14 62 Z"
         stroke={color}
         strokeWidth="1.5"
         fill="rgba(212,168,67,0.12)"
       />
-      {/* Sand in top bulb — shrinks as fill increases */}
+      {/* Sand in top bulb — recedes toward the neck as fill grows */}
       {fillLevel < 1 && (
         <path
-          d={`M${14 - fillLevel * 4} ${topBaseY} L${46 + fillLevel * 4} ${topBaseY} L30 38 Z`}
+          d={`M18 ${topBaseY} L54 ${topBaseY} L36 32 Z`}
           fill="#FCD34D"
           opacity="0.85"
         />
       )}
-      {/* Sand in bottom bulb — grows as fill increases */}
+      {/* Sand in bottom bulb — grows upward as fill rises */}
       {fillLevel > 0 && (
         <path
-          d={`M30 42 L${50 - (1 - fillLevel) * 14} ${78 - (1 - fillLevel) * 22} L${
-            10 + (1 - fillLevel) * 14
-          } ${78 - (1 - fillLevel) * 22} Z`}
+          d={`M36 34 L${58 - bottomInset} ${bottomBaseY} L${14 + bottomInset} ${bottomBaseY} Z`}
           fill="#FCD34D"
           opacity="0.9"
         />
       )}
-      {/* Frame tops/bottoms */}
-      <line x1="6" y1="8" x2="54" y2="8" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
-      <line
-        x1="6"
-        y1="82"
-        x2="54"
-        y2="82"
-        stroke={color}
-        strokeWidth="2.5"
-        strokeLinecap="round"
-      />
+      {/* Frame caps (top + bottom horizontal bars) */}
+      <line x1="10" y1="10" x2="62" y2="10" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
+      <line x1="10" y1="62" x2="62" y2="62" stroke={color} strokeWidth="2.5" strokeLinecap="round" />
     </svg>
   );
 }
 
-function ChaliceSvg({ fillLevel, color }: SvgProps) {
-  // Cup interior fills from bottom up. fillLevel 0 = empty cup, 1 = brimming.
-  const topY = 50 - fillLevel * 28;
-  const leftX = 16 - fillLevel * 4;
-  const rightX = 44 + fillLevel * 4;
-
+function ChestSvg({ fillLevel, color }: SvgProps) {
+  // Treasure chest — replaces the earlier chalice. Overflowing gold coins
+  // appear progressively above the lid as fillLevel rises, signalling
+  // "more capital to spend." Bootstrap = empty chest, well-funded =
+  // overflowing with coins above the lid.
   return (
-    <svg viewBox="0 0 60 90" width="100%" height="100%">
-      {/* Cup — outer outline */}
-      <path
-        d="M10 10 Q10 45 30 50 Q50 45 50 10 Z"
+    <svg viewBox="0 0 72 72" width="100%" height="100%">
+      {/* Chest body */}
+      <rect
+        x="10"
+        y="32"
+        width="52"
+        height="28"
+        rx="3"
         stroke={color}
         strokeWidth="1.5"
-        fill="rgba(212,168,67,0.10)"
+        fill="rgba(90,60,24,0.65)"
       />
-      {/* Liquid — shape fills from bottom of cup upward */}
-      {fillLevel > 0 && (
-        <path
-          d={`M${leftX} ${topY} Q30 ${topY + 2} ${rightX} ${topY} Q50 45 50 10 L10 10 Q10 45 ${leftX} ${topY} Z`}
+      {/* Chest lid (domed) */}
+      <path
+        d="M10 32 L10 26 Q10 14 22 14 L50 14 Q62 14 62 26 L62 32 Z"
+        stroke={color}
+        strokeWidth="1.5"
+        fill="rgba(90,60,24,0.75)"
+      />
+      {/* Lid seam */}
+      <line x1="10" y1="32" x2="62" y2="32" stroke={color} strokeWidth="1" opacity="0.6" />
+      {/* Vertical metal bands */}
+      <line x1="24" y1="14" x2="24" y2="60" stroke={color} strokeWidth="1.2" opacity="0.7" />
+      <line x1="48" y1="14" x2="48" y2="60" stroke={color} strokeWidth="1.2" opacity="0.7" />
+      {/* Center lock */}
+      <rect
+        x="32"
+        y="34"
+        width="8"
+        height="10"
+        rx="1"
+        stroke={color}
+        strokeWidth="1.2"
+        fill="rgba(90,60,24,0.9)"
+      />
+      <circle cx="36" cy="38" r="1.2" fill={color} />
+
+      {/* Inner glow in the chest once there's any fill */}
+      {fillLevel >= 0.5 && (
+        <rect
+          x="12"
+          y="36"
+          width="48"
+          height="20"
+          rx="2"
           fill="#FCD34D"
-          opacity="0.65"
+          opacity={0.08 + fillLevel * 0.12}
         />
       )}
-      {/* Stem */}
-      <line x1="30" y1="50" x2="30" y2="72" stroke={color} strokeWidth="2.5" />
-      {/* Base */}
-      <ellipse
-        cx="30"
-        cy="76"
-        rx="16"
-        ry="4"
-        stroke={color}
-        strokeWidth="1.5"
-        fill="rgba(212,168,67,0.12)"
-      />
-      {/* Three coin dots rising above the rim when well-funded */}
+
+      {/* Coin progression above the lid */}
+      {fillLevel >= 0.25 && <circle cx="20" cy="20" r="3" fill="#FCD34D" opacity="0.95" />}
+      {fillLevel >= 0.5 && (
+        <>
+          <circle cx="30" cy="16" r="3" fill="#FCD34D" opacity="0.95" />
+          <circle cx="52" cy="20" r="3" fill="#FCD34D" opacity="0.95" />
+        </>
+      )}
       {fillLevel >= 0.75 && (
-        <g>
-          <circle cx="24" cy="22" r="2.5" fill="#FCD34D" />
-          <circle cx="32" cy="18" r="2.5" fill="#FCD34D" />
-          <circle cx="38" cy="24" r="2.5" fill="#FCD34D" />
-        </g>
+        <>
+          <circle cx="42" cy="14" r="3" fill="#FCD34D" opacity="0.95" />
+          <circle cx="25" cy="12" r="2.5" fill="#FCD34D" opacity="0.85" />
+          <circle cx="47" cy="11" r="2.5" fill="#FCD34D" opacity="0.85" />
+        </>
+      )}
+      {fillLevel >= 1 && (
+        <>
+          <circle cx="36" cy="8" r="2.5" fill="#FCD34D" opacity="0.9" />
+          <circle cx="18" cy="10" r="2" fill="#FCD34D" opacity="0.8" />
+          <circle cx="55" cy="9" r="2" fill="#FCD34D" opacity="0.8" />
+        </>
       )}
     </svg>
   );
@@ -230,22 +253,32 @@ function ChaliceSvg({ fillLevel, color }: SvgProps) {
 
 function BladeSvg({ isAnswered, color }: { isAnswered: boolean; color: string }) {
   return (
-    <svg viewBox="0 0 60 90" width="100%" height="100%">
+    <svg viewBox="0 0 72 72" width="100%" height="100%">
       {/* Blade */}
       <path
-        d="M30 6 L36 20 L36 62 L30 68 L24 62 L24 20 Z"
+        d="M36 6 L44 20 L44 50 L36 56 L28 50 L28 20 Z"
         stroke={isAnswered ? '#FCD34D' : color}
         strokeWidth="1.5"
         fill={isAnswered ? 'rgba(252,211,77,0.45)' : 'rgba(212,168,67,0.08)'}
       />
       {/* Center fuller */}
-      <line x1="30" y1="6" x2="30" y2="68" stroke={color} strokeWidth="1" opacity="0.6" />
+      <line x1="36" y1="8" x2="36" y2="55" stroke={color} strokeWidth="1" opacity="0.6" />
       {/* Crossguard */}
-      <rect x="12" y="66" width="36" height="4" rx="2" fill={color} />
+      <rect x="16" y="54" width="40" height="5" rx="2" fill={color} />
       {/* Hilt */}
-      <rect x="26" y="70" width="8" height="14" rx="1" fill="#5a3c18" />
+      <rect x="32" y="59" width="8" height="9" rx="1" fill="#5a3c18" />
       {/* Pommel */}
-      <circle cx="30" cy="86" r="3.5" fill={color} />
+      <circle cx="36" cy="68" r="3" fill={color} />
+      {/* Etched glow when answered */}
+      {isAnswered && (
+        <path
+          d="M36 6 L44 20 L44 50 L36 56 L28 50 L28 20 Z"
+          fill="none"
+          stroke="#FCD34D"
+          strokeWidth="2.5"
+          opacity="0.4"
+        />
+      )}
     </svg>
   );
 }

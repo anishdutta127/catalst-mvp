@@ -647,7 +647,7 @@ function ConstraintsPhase({
           onClick={() => setActiveVow('hours')}
         />
         <VowVessel
-          kind="chalice"
+          kind="chest"
           label={vows.coin.label}
           isActive={activeVow === 'coin'}
           isAnswered={coinAnswered}
@@ -865,6 +865,25 @@ function VowChoiceTile({ icon, title, flavor, active, onClick, testId }: VowChoi
   );
 }
 
+/** Sample competitive-advantage starters — clickable chips below the edge
+ *  textarea so users who don't know what to write can pick one close to
+ *  their actual edge and edit. Diverse set covering skills, network,
+ *  distribution, audience, operational know-how, funding. */
+const SAMPLE_EDGES = [
+  "I've built 3 products from scratch",
+  'I speak 4 languages fluently',
+  'I know 20+ founders personally',
+  "I've worked in this industry for 8 years",
+  'I can cold-email any CEO and get a reply',
+  'I have a viral following on Twitter',
+  "I've sold products door-to-door",
+  'I can code in 5 languages',
+  'I know how to run growth experiments',
+  "I've raised money from investors before",
+  'I understand legal + compliance deeply',
+  "I've lived/worked in 3+ countries",
+] as const;
+
 interface EdgeTextareaProps {
   value: string;
   onChange: (s: string) => void;
@@ -930,6 +949,30 @@ function EdgeTextarea({ value, onChange, placeholders, maxLength, minStrong }: E
         >
           {count}/{maxLength}
         </p>
+      </div>
+
+      {/* Sample tags — tap-to-populate. Shown regardless of value so the user
+          can swap edge mid-way if they change their mind. Clicking REPLACES
+          the textarea content with the sample (user can edit after). */}
+      <div className="mt-3">
+        <p className="text-[9.5px] font-mono uppercase tracking-widest text-ivory/40 mb-2">
+          Not sure? Tap one that's close:
+        </p>
+        <div className="flex flex-wrap gap-1.5">
+          {SAMPLE_EDGES.map((sample) => (
+            <button
+              key={sample}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onChange(sample);
+              }}
+              className="px-2.5 py-1 rounded-full text-[11px] bg-white/[0.04] border border-white/10 text-ivory/70 hover:bg-white/[0.08] hover:border-white/20 hover:text-ivory/95 transition-colors"
+            >
+              {sample}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
