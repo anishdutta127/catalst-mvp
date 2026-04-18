@@ -178,12 +178,15 @@ export function S03Words() {
               </motion.div>
             </AnimatePresence>
 
-            {/* LARGE contrasting concept pills — flex-1 fills equally so the
-                 right pill can't overflow on narrow viewports. min-w-0 lets
-                 flex actually shrink the pill below its intrinsic content
-                 width; the previous 180px floor was forcing ~376px total
-                 width which cropped on 390px-wide devices. */}
-            <div className="flex gap-3 sm:gap-4 w-full max-w-lg px-4">
+            {/* LARGE contrasting concept pills — flex-1 fills the row and
+                 min-w-0 lets the pair shrink to viewport width. The shell
+                 already pads the activity zone (px-4), so we don't nest a
+                 second px-4 here — that was eating enough horizontal room
+                 on 360–390px phones to clip the right label ("Calculated")
+                 even at 15px. whitespace-nowrap keeps single words intact;
+                 mobile font-size drops a notch with a tiny negative
+                 tracking so the text never has to break. */}
+            <div className="flex gap-2.5 sm:gap-4 w-full max-w-lg">
               {[
                 { label: word.left, choice: word.left, testId: 'word-left' },
                 { label: word.right, choice: word.right, testId: 'word-right' },
@@ -202,7 +205,7 @@ export function S03Words() {
                     }}
                     whileTap={!selected ? { scale: 0.97 } : undefined}
                     transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                    className={`flex-1 min-w-0 h-16 px-3 rounded-2xl text-[15px] sm:text-[17px] font-semibold transition-colors ${
+                    className={`flex-1 min-w-0 h-16 px-2 sm:px-4 rounded-2xl text-[14px] sm:text-[17px] font-semibold whitespace-nowrap tracking-tight sm:tracking-normal transition-colors ${
                       isSelected
                         ? 'bg-gold text-dark shadow-[0_0_18px_rgba(212,168,67,0.45)]'
                         : 'bg-dark-surface/80 border-2 border-white/15 text-ivory hover:border-gold/50 hover:bg-dark-surface cursor-pointer backdrop-blur-sm'
