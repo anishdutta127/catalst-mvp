@@ -266,23 +266,9 @@ function CrystalViewportImpl({
         );
       })}
 
-      {/* Empty-state prompt — vanishes on first selection */}
-      <AnimatePresence>
-        {count === 0 && (
-          <motion.div
-            key="empty-hint"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-          >
-            <p className="text-[10px] font-mono text-ivory/40 uppercase tracking-[0.25em] text-center leading-relaxed">
-              tap an essence<br />to begin
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Empty-state prompt lives in S06Crystal above the viewport now —
+          having it here (overlaid on the center) collided with the halo
+          orb which sits at the same y-position. */}
     </div>
   );
 }

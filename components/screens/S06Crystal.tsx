@@ -91,6 +91,20 @@ export function S06Crystal() {
 
   return (
     <div className="flex flex-col h-full relative overflow-hidden">
+      {/* Instruction pill — sits ABOVE the viewport so it never collides
+          with the central halo orb. Fades out once the user taps their
+          first essence (the forming crystal is its own signal from then). */}
+      <div className="shrink-0 flex justify-center pt-3 pb-1 min-h-[24px]">
+        <motion.p
+          className="text-xs tracking-[0.25em] text-white/60 font-serif italic text-center"
+          style={{ textShadow: '0 1px 4px rgba(0,0,0,0.7)' }}
+          animate={{ opacity: count === 0 ? 1 : 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          Tap an essence to begin
+        </motion.p>
+      </div>
+
       {/* Crystal viewport — the hero */}
       <div className="flex-1 flex items-center justify-center min-h-[320px]">
         <CrystalViewport

@@ -19,10 +19,15 @@
  *
  * SVG 3D is unreliable (Safari in particular), so we use HTML wrappers for
  * the 3D transforms and SVG only for the 2D geometry.
+ *
+ * Proportions: "chibi gem" — wider at the girdle than tall. Zelda/Genshin
+ * silhouette, not Asscher step-cut. If this reads too sharp/dagger-like
+ * again, widen the girdle (±62 → ±70) before making the top taller.
  */
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { memo, useId, useMemo } from 'react';
+import { memo, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { darken, lighten } from '@/lib/color';
 import { easeOvershoot, easeSmooth } from '@/lib/motion';
 
@@ -45,44 +50,48 @@ export interface CrystalProps {
 
 const FALLBACK = '#D4A843';
 
-// ── Octahedral bipyramid profile ──────────────────────────────────────────
-// 8 vertices laid out in the viewBox [-100 -110 200 220]. Outer apex
-// pair drives the tall silhouette; girdle pair is the widest point; inner
-// rectangle defines the table + bowl where light concentrates.
+// ── Octahedral bipyramid profile (chibi proportions) ──────────────────────
+// ±62 at girdle, ±70 at apex — gem is slightly wider than tall at the
+// bulk, giving a friendlier "held by hand" silhouette vs. a sharp dagger.
+// Inner rectangle defines the table bowl where light concentrates.
 const V = {
-  top:  [0, -90] as const,
-  bot:  [0,  90] as const,
-  gl:   [-55, 0] as const, // girdle-left
-  gr:   [ 55, 0] as const, // girdle-right
-  tlt:  [-35, -25] as const, // table-left-top
-  trt:  [ 35, -25] as const, // table-right-top
-  tlb:  [-35,  25] as const, // table-left-bottom
-  trb:  [ 35,  25] as const, // table-right-bottom
+  top:  [0, -70] as const,
+  bot:  [0,  70] as const,
+  gl:   [-62, 0] as const, // girdle-left
+  gr:   [ 62, 0] as const, // girdle-right
+  tlt:  [-38, -22] as const, // table-left-top
+  trt:  [ 38, -22] as const, // table-right-top
+  tlb:  [-38,  22] as const, // table-left-bottom
+  trb:  [ 38,  22] as const, // table-right-bottom
 } as const;
 
 const pt = (v: readonly [number, number]) => `${v[0]},${v[1]}`;
 const facet = (verts: (readonly [number, number])[]) => verts.map(pt).join(' ');
 
+/** Full outer silhouette polygon (kite shape through girdle points). */
+const SILHOUETTE = facet([V.top, V.gr, V.bot, V.gl]);
+
 /**
  * Seven facets that make up the front-facing gem silhouette. Facet order
  * matters for paint order — later polygons draw on top of earlier ones.
- * Edges shared between two facets get drawn by the later one.
+ * `half` tags which stroke color palette the facet's edges borrow from
+ * (top → secondary orb, bottom → tertiary orb, girdle → midline).
  */
 const FACETS = [
   // 0. Crown-top-center — bright cap between the two upper inner verts.
-  { key: 'crown-top', points: facet([V.top, V.trt, V.tlt]), role: 'top' },
+  { key: 'crown-top', points: facet([V.top, V.trt, V.tlt]), role: 'top' as const, half: 'top' as const },
   // 1. Crown-left slant — apex → upper inner → girdle-left.
-  { key: 'crown-l', points: facet([V.top, V.tlt, V.gl]), role: 'girdleL' },
+  { key: 'crown-l', points: facet([V.top, V.tlt, V.gl]), role: 'girdleL' as const, half: 'top' as const },
   // 2. Crown-right slant — apex → girdle-right → upper inner.
-  { key: 'crown-r', points: facet([V.top, V.gr, V.trt]), role: 'girdleR' },
+  { key: 'crown-r', points: facet([V.top, V.gr, V.trt]), role: 'girdleR' as const, half: 'top' as const },
   // 3. Table (the big bright center quad the eye lands on).
-  { key: 'table', points: facet([V.tlt, V.trt, V.trb, V.tlb]), role: 'table' },
+  { key: 'table', points: facet([V.tlt, V.trt, V.trb, V.tlb]), role: 'table' as const, half: 'girdle' as const },
   // 4. Pavilion-left slant — girdle-left → lower inner → culet.
-  { key: 'pav-l', points: facet([V.gl, V.tlb, V.bot]), role: 'girdleL' },
+  { key: 'pav-l', points: facet([V.gl, V.tlb, V.bot]), role: 'girdleL' as const, half: 'bot' as const },
   // 5. Pavilion-bottom — deepest shadow, between the two lower inners + culet.
-  { key: 'pav-bot', points: facet([V.tlb, V.trb, V.bot]), role: 'bot' },
+  { key: 'pav-bot', points: facet([V.tlb, V.trb, V.bot]), role: 'bot' as const, half: 'bot' as const },
   // 6. Pavilion-right slant — lower inner → girdle-right → culet.
-  { key: 'pav-r', points: facet([V.trb, V.gr, V.bot]), role: 'girdleR' },
+  { key: 'pav-r', points: facet([V.trb, V.gr, V.bot]), role: 'girdleR' as const, half: 'bot' as const },
 ] as const;
 
 function CrystalImpl({
@@ -92,27 +101,22 @@ function CrystalImpl({
   mode = 'idle',
   floatIntensity = 1,
 }: CrystalProps) {
-  // SSR-safe unique id for SVG gradient/filter references. Without this,
-  // React 18 hydration produces mismatched IDs and the gradients fail to
-  // resolve on the first paint.
+  // SSR-safe unique id for SVG gradient/filter references.
   const rawId = useId();
   const uid = rawId.replace(/:/g, '');
 
   const primary = orbs[0] ?? FALLBACK;
-  const secondary = orbs[1] ?? primary;
-  // Tertiary currently unused — reserved for a future low-accent beat on
-  // the pavilion facets.
+  const secondary = orbs[1] ?? lighten(primary, 30);
+  const tertiary = orbs[2] ?? lighten(primary, 30);
 
-  // Derived palette — the whole gem's shading comes from the primary orb,
-  // with per-facet deltas (top lifts, bottom sinks, girdle shades right).
-  // Using the primary directly rather than a muddy 3-color blend preserves
-  // each user's pick instead of washing it to beige.
+  // Derived palette — shading from the primary with per-role deltas.
   const topLift = useMemo(() => lighten(primary, 35), [primary]);
   const topEdge = useMemo(() => lighten(primary, 50), [primary]);
   const topMid = primary;
   const darkMid = useMemo(() => darken(primary, 15), [primary]);
   const darkDeep = useMemo(() => darken(primary, 35), [primary]);
   const girdleDark = useMemo(() => darken(primary, 20), [primary]);
+  const girdleBand = useMemo(() => darken(primary, 15), [primary]);
   const coreGlow = useMemo(() => lighten(primary, 55), [primary]);
 
   const showHalo = count >= 1;
@@ -127,11 +131,35 @@ function CrystalImpl({
   const rotDuration = isBurst ? 2 : 14;
   const spinning = showGem;
 
-  // Idle float — bob + gentle screen-plane tilt. Disabled during burst so
-  // the scale pulse doesn't fight the drift.
+  // Idle float — bob + gentle screen-plane tilt.
   const floatY = isIdle && floatIntensity > 0 ? [0, -6 * floatIntensity, 0] : 0;
-  const floatRot =
-    isIdle && floatIntensity > 0 ? [-1.5, 1.5, -1.5] : 0;
+  const floatRot = isIdle && floatIntensity > 0 ? [-1.5, 1.5, -1.5] : 0;
+
+  // ── BURST CHOREOGRAPHY ──
+  // When count increases, fire a transient burst overlay keyed to the
+  // transition (0→1, 1→2, 2→3). Re-keying on each bump remounts the overlay
+  // so AnimatePresence plays its one-shot animation every time. The timer
+  // clears the burst back to null so it doesn't leak into steady-state.
+  const [burstTrigger, setBurstTrigger] = useState<{
+    toCount: 1 | 2 | 3;
+    key: number;
+  } | null>(null);
+  const prevCount = useRef(count);
+  useEffect(() => {
+    if (count > prevCount.current && count >= 1 && count <= 3) {
+      setBurstTrigger({ toCount: count, key: Date.now() });
+      const durations = { 1: 900, 2: 1100, 3: 1400 } as const;
+      const t = setTimeout(() => setBurstTrigger(null), durations[count]);
+      prevCount.current = count;
+      return () => clearTimeout(t);
+    }
+    prevCount.current = count;
+  }, [count]);
+
+  // Mount-only check so the screen vignette portal doesn't try to reach
+  // document on the server.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   return (
     <div
@@ -163,8 +191,7 @@ function CrystalImpl({
         }}
         style={{ transformStyle: 'preserve-3d' }}
       >
-        {/* HALO — always on when count >= 1. Bleeds the primary orb's color
-            into ambient light so even the seed state feels "theirs". */}
+        {/* HALO — always on when count >= 1. */}
         {showHalo && (
           <motion.div
             className="absolute rounded-full pointer-events-none"
@@ -182,29 +209,28 @@ function CrystalImpl({
           />
         )}
 
-        {/* SEED CORE — count === 1 only. Small bright bead at the center of
-            the halo so something is visibly "there" beyond the glow. */}
+        {/* SEED CORE — count === 1 only. Gets a scale pop on arrival via
+            the burst layer below, so no pop-animation here — just the
+            steady-state bead. */}
         {count === 1 && (
           <motion.div
             className="absolute rounded-full pointer-events-none"
             style={{
-              width: size * 0.22,
-              height: size * 0.22,
-              background: `radial-gradient(circle at 40% 35%, white 0%, ${topLift} 30%, ${primary} 65%, ${darkMid} 100%)`,
-              boxShadow: `0 0 24px ${primary}CC, inset 0 0 8px ${topLift}`,
+              width: size * 0.26,
+              height: size * 0.26,
+              background: `radial-gradient(circle at 40% 35%, white 0%, ${topLift} 28%, ${primary} 62%, ${darkMid} 100%)`,
+              boxShadow: `0 0 28px ${primary}DD, inset 0 0 10px ${topLift}`,
             }}
             initial={{ scale: 0 }}
-            animate={{ scale: [0, 1.1, 1], opacity: [0, 1, 0.95] }}
+            animate={{ scale: 1, opacity: 1 }}
             transition={{
-              scale: { duration: 0.7, times: [0, 0.7, 1], ease: easeOvershoot },
+              scale: { duration: 0.5, ease: easeOvershoot },
               opacity: { duration: 0.4 },
             }}
           />
         )}
 
-        {/* SPINE — count === 2. Tall narrow shard along the vertical axis,
-            with the primary color at the top anchor and secondary at the
-            bottom. pathLength sweeps it in so it reads as "gathering". */}
+        {/* SPINE — count === 2. */}
         <AnimatePresence>
           {showSpine && (
             <motion.svg
@@ -217,12 +243,12 @@ function CrystalImpl({
               initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.5, ease: easeOvershoot }}
+              transition={{ duration: 0.55, ease: easeOvershoot }}
             >
               <defs>
                 <linearGradient id={`spine-${uid}`} x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stopColor={primary} stopOpacity="1" />
-                  <stop offset="50%" stopColor={lighten(primary, 20)} stopOpacity="0.95" />
+                  <stop offset="50%" stopColor={lighten(primary, 20)} stopOpacity="1" />
                   <stop offset="100%" stopColor={secondary} stopOpacity="1" />
                 </linearGradient>
                 <filter id={`spineglow-${uid}`} x="-50%" y="-50%" width="200%" height="200%">
@@ -231,30 +257,29 @@ function CrystalImpl({
               </defs>
               {/* Outer glow aura */}
               <motion.ellipse
-                cx="0" cy="0" rx="14" ry="90"
+                cx="0" cy="0" rx="16" ry="72"
                 fill={primary}
-                opacity="0.4"
+                opacity="0.45"
                 filter={`url(#spineglow-${uid})`}
-                animate={{ opacity: [0.25, 0.55, 0.25], rx: [14, 18, 14] }}
+                animate={{ opacity: [0.3, 0.6, 0.3], rx: [14, 20, 14] }}
                 transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
               />
-              {/* Shard body — elongated kite */}
+              {/* Shard body — elongated kite using new proportions */}
               <motion.polygon
-                points="0,-90 10,0 0,90 -10,0"
+                points="0,-70 12,0 0,70 -12,0"
                 fill={`url(#spine-${uid})`}
-                stroke={topLift}
-                strokeWidth="1"
+                stroke={topEdge}
+                strokeWidth="1.5"
                 strokeLinejoin="round"
                 initial={{ pathLength: 0, opacity: 0 }}
-                animate={{ pathLength: 1, opacity: 0.98 }}
-                transition={{ duration: 0.9, ease: easeOvershoot }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 0.55, ease: easeOvershoot }}
               />
-              {/* Apex + base anchor beads — the two picked orb colors sit
-                  here so the user can literally see their choices locked in. */}
-              <circle cx={0} cy={-90} r={5} fill={primary} />
-              <circle cx={-1.5} cy={-91.5} r={1.8} fill="white" opacity="0.75" />
-              <circle cx={0} cy={90} r={5} fill={secondary} />
-              <circle cx={-1.5} cy={88.5} r={1.8} fill="white" opacity="0.75" />
+              {/* Apex + base anchor beads */}
+              <circle cx={0} cy={-70} r={5} fill={primary} />
+              <circle cx={-1.5} cy={-71.5} r={1.8} fill="white" opacity="0.8" />
+              <circle cx={0} cy={70} r={5} fill={secondary} />
+              <circle cx={-1.5} cy={68.5} r={1.8} fill="white" opacity="0.8" />
             </motion.svg>
           )}
         </AnimatePresence>
@@ -288,22 +313,21 @@ function CrystalImpl({
                 },
               }}
             >
-              {/* ── GEM BODY SVG — static in its own coord space, rotated
-                  by the parent 3D wrapper. ── */}
+              {/* ── GEM BODY SVG ── */}
               <svg
                 viewBox="-100 -110 200 220"
-                width={size * 0.7}
-                height={size * 0.77}
+                width={size * 0.78}
+                height={size * 0.72}
                 style={{ overflow: 'visible' }}
                 aria-hidden
               >
                 <defs>
-                  {/* Role-keyed gradients — each facet's `role` picks which
-                      gradient paints it. Keeps the facet array declarative. */}
+                  {/* Gradient stops control depth; polygon opacity stays at 1
+                      so the gem reads as a saturated solid. */}
                   <linearGradient id={`top-${uid}`} x1="50%" y1="0%" x2="50%" y2="100%">
                     <stop offset="0%" stopColor={topEdge} stopOpacity="1" />
-                    <stop offset="70%" stopColor={topLift} stopOpacity="0.95" />
-                    <stop offset="100%" stopColor={topMid} stopOpacity="0.95" />
+                    <stop offset="70%" stopColor={topLift} stopOpacity="1" />
+                    <stop offset="100%" stopColor={topMid} stopOpacity="1" />
                   </linearGradient>
                   <linearGradient id={`bot-${uid}`} x1="50%" y1="0%" x2="50%" y2="100%">
                     <stop offset="0%" stopColor={darkMid} stopOpacity="1" />
@@ -311,18 +335,18 @@ function CrystalImpl({
                   </linearGradient>
                   <linearGradient id={`girdleL-${uid}`} x1="100%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" stopColor={topMid} stopOpacity="1" />
-                    <stop offset="70%" stopColor={darkMid} stopOpacity="0.95" />
+                    <stop offset="70%" stopColor={darkMid} stopOpacity="1" />
                     <stop offset="100%" stopColor={girdleDark} stopOpacity="1" />
                   </linearGradient>
                   <linearGradient id={`girdleR-${uid}`} x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor={topMid} stopOpacity="1" />
-                    <stop offset="70%" stopColor={darkMid} stopOpacity="0.95" />
+                    <stop offset="70%" stopColor={darkMid} stopOpacity="1" />
                     <stop offset="100%" stopColor={girdleDark} stopOpacity="1" />
                   </linearGradient>
                   <linearGradient id={`table-${uid}`} x1="30%" y1="0%" x2="70%" y2="100%">
-                    <stop offset="0%" stopColor={topEdge} stopOpacity="0.95" />
-                    <stop offset="50%" stopColor={topLift} stopOpacity="0.9" />
-                    <stop offset="100%" stopColor={darkMid} stopOpacity="0.9" />
+                    <stop offset="0%" stopColor={topEdge} stopOpacity="1" />
+                    <stop offset="50%" stopColor={topLift} stopOpacity="1" />
+                    <stop offset="100%" stopColor={darkMid} stopOpacity="1" />
                   </linearGradient>
                   <radialGradient id={`core-${uid}`} cx="50%" cy="50%" r="50%">
                     <stop offset="0%" stopColor={coreGlow} stopOpacity="0.95" />
@@ -334,8 +358,7 @@ function CrystalImpl({
                   </filter>
                 </defs>
 
-                {/* Core glow — sits behind the facets, pulses gently. Gives
-                    the gem the "lit from within" read the spec asks for. */}
+                {/* Core glow behind facets — pulses gently. */}
                 <motion.circle
                   cx="0"
                   cy="0"
@@ -345,9 +368,30 @@ function CrystalImpl({
                   transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
                 />
 
-                {/* Facets — stagger in over ~700ms (100ms each). The
-                    easeOvershoot curve makes each one "click" into place
-                    instead of fading in flatly. */}
+                {/* BACK SILHOUETTE — darker gem mirror offset behind the front
+                    facets. Opacity 0.6 per spec — opaque enough to feel
+                    solid, translucent enough to hint at depth when the gem
+                    rotates and exposes this layer. */}
+                <polygon
+                  points={SILHOUETTE}
+                  fill={darkDeep}
+                  opacity="0.6"
+                  transform="translate(2,4)"
+                />
+
+                {/* SOLID BASE — full silhouette at primary color, 0.92 opacity.
+                    Sits BEHIND the gradient facets and ensures the gem reads
+                    saturated regardless of gradient-stop opacity. */}
+                <polygon
+                  points={SILHOUETTE}
+                  fill={primary}
+                  opacity="0.92"
+                />
+
+                {/* FACETS — 7 gradient-filled polygons, opacity 1. Staggered
+                    entry gives each one a "click into place" beat. Strokes
+                    are bolder and colored by orb slot so the gem visually
+                    ties back to the user's picks. */}
                 {FACETS.map((f, i) => {
                   const fill =
                     f.role === 'top'
@@ -360,23 +404,22 @@ function CrystalImpl({
                       ? `url(#girdleR-${uid})`
                       : `url(#table-${uid})`;
                   const stroke =
-                    f.role === 'top'
-                      ? topEdge
-                      : f.role === 'bot'
-                      ? darkDeep
-                      : f.role === 'table'
-                      ? topEdge
-                      : girdleDark;
+                    f.half === 'top'
+                      ? secondary
+                      : f.half === 'bot'
+                      ? tertiary
+                      : girdleBand;
+                  const strokeWidth = f.half === 'girdle' ? 1.25 : 2.25;
                   return (
                     <motion.polygon
                       key={f.key}
                       points={f.points}
                       fill={fill}
                       stroke={stroke}
-                      strokeWidth="0.8"
+                      strokeWidth={strokeWidth}
                       strokeLinejoin="round"
                       initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 0.95, scale: 1 }}
+                      animate={{ opacity: 1, scale: 1 }}
                       transition={{
                         delay: 0.1 + i * 0.1,
                         duration: 0.5,
@@ -387,28 +430,33 @@ function CrystalImpl({
                   );
                 })}
 
-                {/* Interior facet seams — thin edge lines from the apex/culet
-                    into the table corners. Sells the cut at any rotation. */}
-                <g opacity="0.35" stroke={topEdge} strokeWidth="0.4">
+                {/* GIRDLE BAND — horizontal line through the widest point. */}
+                <line
+                  x1={V.gl[0]}
+                  y1={V.gl[1]}
+                  x2={V.gr[0]}
+                  y2={V.gr[1]}
+                  stroke={girdleBand}
+                  strokeWidth="1.25"
+                  opacity="0.85"
+                />
+
+                {/* Interior seams — apex/culet to inner rectangle. */}
+                <g opacity="0.4" stroke={topEdge} strokeWidth="0.6">
                   <line x1={V.top[0]} y1={V.top[1]} x2={V.tlt[0]} y2={V.tlt[1]} />
                   <line x1={V.top[0]} y1={V.top[1]} x2={V.trt[0]} y2={V.trt[1]} />
                 </g>
-                <g opacity="0.30" stroke={darkMid} strokeWidth="0.4">
+                <g opacity="0.35" stroke={darkMid} strokeWidth="0.6">
                   <line x1={V.bot[0]} y1={V.bot[1]} x2={V.tlb[0]} y2={V.tlb[1]} />
                   <line x1={V.bot[0]} y1={V.bot[1]} x2={V.trb[0]} y2={V.trb[1]} />
                 </g>
               </svg>
 
-              {/* ── COUNTER-ROTATING SPECULAR LAYER ── */}
-              {/* This is the 3D-read make-or-break. Outer gem rotates +360Y
-                  over rotDuration; this layer rotates -360Y over the same
-                  window, inside the parent's preserve-3d. Net effect: the
-                  specular highlight stays fixed in screen-space like a
-                  real light source while the gem turns underneath.
-
-                  If the crystal ever flattens: (1) confirm the signs are
-                  opposite, (2) confirm durations match exactly, (3) confirm
-                  preserve-3d is set on BOTH this div and its parent. */}
+              {/* ── COUNTER-ROTATING SPECULAR LAYER ──
+                  Outer gem rotates +360Y over rotDuration; this layer rotates
+                  -360Y over the same window. The -360 SIGN and matching
+                  duration are the make-or-break — don't change one without
+                  the other. */}
               <motion.div
                 className="absolute inset-0 flex items-center justify-center pointer-events-none"
                 style={{ transformStyle: 'preserve-3d' }}
@@ -421,55 +469,52 @@ function CrystalImpl({
               >
                 <svg
                   viewBox="-100 -110 200 220"
-                  width={size * 0.7}
-                  height={size * 0.77}
+                  width={size * 0.78}
+                  height={size * 0.72}
                   style={{ overflow: 'visible' }}
                   aria-hidden
                 >
-                  {/* Primary specular — upper-left bright smear on the crown.
-                      Rotated -25° to hint at a bevel reflection. */}
+                  {/* Upper-left bright smear */}
                   <ellipse
                     cx={V.tlt[0] + 8}
                     cy={V.tlt[1] + 2}
-                    rx="14"
-                    ry="6"
+                    rx="16"
+                    ry="7"
                     fill="white"
-                    opacity="0.55"
+                    opacity="0.65"
                     transform={`rotate(-25 ${V.tlt[0] + 8} ${V.tlt[1] + 2})`}
                   />
-                  {/* Apex glint — small bright dot on the top point */}
+                  {/* Apex glint */}
                   <ellipse
                     cx={V.top[0] + 2}
                     cy={V.top[1] + 6}
-                    rx="3.5"
-                    ry="2.5"
+                    rx="4"
+                    ry="3"
                     fill="white"
-                    opacity="0.8"
+                    opacity="0.9"
                   />
-                  {/* Table sheen — soft horizontal on the bright table area */}
+                  {/* Table sheen */}
                   <ellipse
                     cx="-8"
                     cy="-5"
-                    rx="22"
-                    ry="4"
+                    rx="24"
+                    ry="5"
                     fill="white"
-                    opacity="0.3"
+                    opacity="0.35"
                     transform="rotate(-12 -8 -5)"
                   />
-                  {/* Girdle-right tiny glint */}
+                  {/* Girdle glint */}
                   <circle
                     cx={V.gr[0] - 5}
                     cy={V.gr[1] - 2}
-                    r="2"
+                    r="2.5"
                     fill="white"
-                    opacity="0.65"
+                    opacity="0.75"
                   />
                 </svg>
               </motion.div>
 
-              {/* SPARKLE MOTES — four twinkles on screen-space offsets (outside
-                  the counter-rotation so they drift with the gem). Classic
-                  secondary action — gives the scene a pulse beyond the spin. */}
+              {/* SPARKLE MOTES — four twinkles in screen-space offsets. */}
               {[
                 { x: -58, y: -48, d: 2.4, delay: 0 },
                 { x: 62, y: -42, d: 3.1, delay: 0.6 },
@@ -503,8 +548,23 @@ function CrystalImpl({
           )}
         </AnimatePresence>
 
-        {/* BURST FLASH — radial white/primary flash that fires at the peak
-            of the burst scale pulse (~500ms in). Quick on, fade out. */}
+        {/* ── BURST CHOREOGRAPHY ──
+            Each count bump fires a one-shot overlay keyed to the transition.
+            Keys differ per fire so AnimatePresence replays from initial
+            state. Burst mounts for ~1s, then auto-clears. */}
+        <AnimatePresence>
+          {burstTrigger && (
+            <BurstOverlay
+              key={burstTrigger.key}
+              toCount={burstTrigger.toCount}
+              primary={primary}
+              secondary={secondary}
+              size={size}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* BURST FLASH (S08 mode) — radial white/primary flash. */}
         <AnimatePresence>
           {isBurst && (
             <motion.div
@@ -526,7 +586,156 @@ function CrystalImpl({
           )}
         </AnimatePresence>
       </motion.div>
+
+      {/* ── SCREEN-LEVEL VIGNETTE PULSE (count === 3 only) ──
+          Portaled to document.body to escape the perspective containing
+          block — otherwise the fixed positioning would be scoped to this
+          Crystal's transformed box and the vignette wouldn't cover the
+          page. */}
+      {mounted && burstTrigger?.toCount === 3 &&
+        createPortal(
+          <motion.div
+            key={`vignette-${burstTrigger.key}`}
+            className="fixed inset-0 pointer-events-none z-[60]"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.3, 0] }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
+            style={{
+              background:
+                'radial-gradient(circle at 50% 50%, transparent 40%, rgba(0,0,0,0.85) 110%)',
+            }}
+            aria-hidden
+          />,
+          document.body,
+        )}
     </div>
+  );
+}
+
+/**
+ * BurstOverlay — one-shot choreography that plays on count increase.
+ * Contents vary by target count:
+ *   1: 4 sparkles + shockwave + halo scale pop anchor.
+ *   2: 6 sparkles + shockwave + spine completion pop anchor.
+ *   3: 10 sparkles + shockwave + radial glow pulse + scale pop anchor.
+ */
+function BurstOverlay({
+  toCount,
+  primary,
+  secondary,
+  size,
+}: {
+  toCount: 1 | 2 | 3;
+  primary: string;
+  secondary: string;
+  size: number;
+}) {
+  const sparkleCount = toCount === 1 ? 4 : toCount === 2 ? 6 : 10;
+  const shockwaveStart = toCount === 1 ? 30 : toCount === 2 ? 30 : 40;
+  const shockwaveEnd = toCount === 1 ? 140 : toCount === 2 ? 160 : 180;
+  const shockwaveDuration = toCount === 1 ? 0.8 : toCount === 2 ? 0.9 : 1.0;
+  const popScale =
+    toCount === 1
+      ? ([1, 1.18, 1] as const)
+      : toCount === 2
+      ? ([1, 1.15, 1] as const)
+      : ([0.92, 1.22, 1] as const);
+  const popDuration = toCount === 1 ? 0.45 : toCount === 2 ? 0.5 : 0.7;
+  const popDelay = toCount === 3 ? 0.2 : 0;
+
+  return (
+    <motion.div
+      className="absolute inset-0 pointer-events-none flex items-center justify-center"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      {/* Scale pop anchor — transparent div whose scale pulses; viewer reads
+          it through the halo/spine/gem layered above as a brief "squeeze".
+          Doesn't render visible content itself. */}
+      <motion.div
+        className="absolute"
+        style={{ width: size * 0.5, height: size * 0.5 }}
+        initial={{ scale: popScale[0] }}
+        animate={{ scale: [...popScale] as number[] }}
+        transition={{
+          duration: popDuration,
+          delay: popDelay,
+          times: [0, 0.5, 1],
+          ease: easeOvershoot,
+        }}
+      />
+
+      {/* Radial glow pulse (count 3 only) — primary-colored circle that
+          blooms out behind the gem. */}
+      {toCount === 3 && (
+        <motion.div
+          className="absolute rounded-full"
+          style={{
+            width: 100,
+            height: 100,
+            background: `radial-gradient(circle, ${primary}CC 0%, ${primary}55 45%, ${primary}00 80%)`,
+            filter: 'blur(6px)',
+          }}
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: [0, 0.6, 0], scale: [0.5, 2.4, 2.8] }}
+          transition={{ duration: 0.9, ease: 'easeOut' }}
+        />
+      )}
+
+      {/* Shockwave ring — thin colored ring expanding out + fading. */}
+      <motion.div
+        className="absolute rounded-full border-2"
+        style={{
+          width: shockwaveStart * 2,
+          height: shockwaveStart * 2,
+          borderColor: primary,
+          boxShadow: `0 0 16px ${primary}80`,
+        }}
+        initial={{
+          width: shockwaveStart * 2,
+          height: shockwaveStart * 2,
+          opacity: 0.7,
+        }}
+        animate={{
+          width: shockwaveEnd * 2,
+          height: shockwaveEnd * 2,
+          opacity: 0,
+        }}
+        transition={{ duration: shockwaveDuration, ease: 'easeOut' }}
+      />
+
+      {/* Sparkle particles — radial burst. */}
+      {Array.from({ length: sparkleCount }).map((_, i) => {
+        const angle = (i / sparkleCount) * Math.PI * 2;
+        // Stagger colors so primary + secondary both sparkle.
+        const color = i % 2 === 0 ? primary : secondary;
+        const distance = 80 + (i % 3) * 24;
+        return (
+          <motion.div
+            key={`sparkle-${i}`}
+            className="absolute rounded-full"
+            style={{
+              width: 5,
+              height: 5,
+              background: 'white',
+              boxShadow: `0 0 10px ${color}, 0 0 20px ${color}80`,
+            }}
+            initial={{ x: 0, y: 0, opacity: 1, scale: 0.6 }}
+            animate={{
+              x: Math.cos(angle) * distance,
+              y: Math.sin(angle) * distance,
+              opacity: [1, 1, 0],
+              scale: [0.6, 1.3, 0.2],
+            }}
+            transition={{
+              duration: 0.9 + (i % 3) * 0.1,
+              ease: 'easeOut',
+              delay: i * 0.02,
+            }}
+          />
+        );
+      })}
+    </motion.div>
   );
 }
 
