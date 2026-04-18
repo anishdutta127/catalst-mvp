@@ -46,6 +46,7 @@ const HOUSES = housesRaw as unknown as House[];
 export function S11Profile() {
   const state = useJourneyStore();
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
+  const openDeepDive = useUIStore((s) => s.openDeepDive);
 
   const [copied, setCopied] = useState<'share' | null>(null);
   const dialogueSent = useRef(false);
@@ -111,22 +112,6 @@ export function S11Profile() {
         type: 'dialogue',
       }),
       5000,
-    );
-
-    // v8 closing banter: Pip's earnest farewell → Cedric's deadpan goodbye.
-    // Fires after the pip.final "go build something" line so the emotional
-    // arc lands in this order: intro → final → pip final → pip farewell →
-    // cedric farewell. Last thing the user hears is the signature double-act.
-    const farewellText = pathLine('s11.pip.farewell', lines.s11.pip.farewell, state.ideaMode);
-    const farewellReply = pathLine('s11.cedric.farewell_reply', lines.s11.cedric.farewell_reply, state.ideaMode);
-    setTimeout(
-      () => enqueueMessage({ speaker: 'pip', text: farewellText, type: 'dialogue' }),
-      7500,
-    );
-    const farewellMs = farewellText.length * 35;
-    setTimeout(
-      () => enqueueMessage({ speaker: 'cedric', text: farewellReply, type: 'dialogue' }),
-      7500 + farewellMs + 400,
     );
   }, [enqueueMessage, displayName, houseId, crowned, state.ideaMode]);
 
@@ -211,7 +196,10 @@ export function S11Profile() {
                 background: `conic-gradient(from 140deg, ${houseColor}, ${houseColor}aa, #ffffff22, ${houseColor}, ${houseColor})`,
               }}
             />
-            <div className="relative rounded-[22px] bg-black/75 backdrop-blur-md p-4 sm:p-5 aspect-[9/16] overflow-hidden">
+            <div
+              className="relative rounded-[22px] bg-black/75 backdrop-blur-md p-4 sm:p-5 aspect-[9/16] overflow-hidden"
+              style={{ boxShadow: `0 0 40px ${houseColor}4D` }}
+            >
               {/* Row 1: house label + rarity tier */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -238,7 +226,7 @@ export function S11Profile() {
 
               {/* Row 3: pull quote — narrative, 14px+ on mobile per audit rule */}
               <blockquote
-                className="mt-4 text-[14px] leading-relaxed italic text-ivory/90 border-l-2 pl-3"
+                className="mt-4 text-[14px] italic text-ivory/90 border-l-2 pl-3 break-words whitespace-normal leading-snug line-clamp-3"
                 style={{ borderColor: houseColor }}
               >
                 &ldquo;{archetype.pullQuote}&rdquo;
@@ -269,11 +257,11 @@ export function S11Profile() {
               <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
                 <div>
                   <div className="text-[9px] tracking-widest opacity-60 mb-1">SIGNATURE MOVE</div>
-                  <div className="opacity-85 italic">{archetype.signatureMove}</div>
+                  <div className="opacity-85 italic break-words whitespace-normal leading-snug">{archetype.signatureMove}</div>
                 </div>
                 <div>
                   <div className="text-[9px] tracking-widest opacity-60 mb-1">KRYPTONITE</div>
-                  <div className="opacity-85 italic">{archetype.kryptonite}</div>
+                  <div className="opacity-85 italic break-words whitespace-normal leading-snug">{archetype.kryptonite}</div>
                 </div>
               </div>
 
@@ -313,7 +301,11 @@ export function S11Profile() {
               key={b.label}
               onClick={b.onClick}
               aria-label={b.label}
-              className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 grid place-items-center transition"
+              className="w-10 h-10 rounded-full grid place-items-center transition border"
+              style={{
+                background: `${houseColor}1F`,
+                borderColor: `${houseColor}4D`,
+              }}
             >
               <span aria-hidden className="text-base">{b.icon}</span>
             </button>
@@ -332,9 +324,11 @@ export function S11Profile() {
             {allIdeas.map((si) => {
               const isCrowned = si.idea.idea_id === state.crownedIdeaId;
               return (
-                <div
+                <button
                   key={si.idea.idea_id}
-                  className={`rounded-xl p-3 bg-white/5 backdrop-blur-sm ${
+                  type="button"
+                  onClick={() => openDeepDive(si.idea.idea_id)}
+                  className={`w-full text-left rounded-xl p-3 bg-white/5 backdrop-blur-sm transition-colors hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 ${
                     isCrowned ? 'border-2 border-gold/60' : 'border border-white/10'
                   }`}
                 >
@@ -351,10 +345,10 @@ export function S11Profile() {
                       {si.displayScore}%
                     </span>
                   </div>
-                  <p className="text-sm text-ivory/60 mt-1 line-clamp-1">
+                  <p className="text-sm text-ivory/60 mt-1 line-clamp-2 break-words whitespace-normal leading-snug">
                     {si.idea.one_liner}
                   </p>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -380,18 +374,6 @@ export function S11Profile() {
             variant="full"
           />
         </motion.div>
-
-        {/* ══════════ SKIP CTA ════════════════════════════════════════ */}
-        <motion.button
-          variants={fadeSlideUp}
-          onClick={() => {
-            const el = document.querySelector('[data-testid="vault-continue-cta"]') as HTMLButtonElement | null;
-            el?.click();
-          }}
-          className="block mx-auto mt-2 text-ivory/60 hover:text-ivory/90 underline-offset-4 hover:underline transition text-sm"
-        >
-          Maybe later — continue to my house →
-        </motion.button>
 
         <ScreenQuote screen="s11" />
 

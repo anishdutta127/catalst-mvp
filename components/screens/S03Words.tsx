@@ -46,16 +46,20 @@ export function S03Words() {
 
     // v8 banter beat: Pip dares the user to be brief, Cedric re-grounds.
     // Path-aware; directed variant plays off the user's own idea.
-    const pipText = pathLine('s03.pip.entrance', lines.s03.pip.entrance, ideaMode);
-    const cedricReply = pathLine('s03.cedric.entrance_reply', lines.s03.cedric.entrance_reply, ideaMode);
-    const introMs = lines.s03.cedric.intro.length * 28;
-    setTimeout(() => {
-      enqueueMessage({ speaker: 'pip', text: pipText, type: 'dialogue' });
-    }, introMs + 600);
-    const pipMs = pipText.length * 35;
-    setTimeout(() => {
-      enqueueMessage({ speaker: 'cedric', text: cedricReply, type: 'dialogue' });
-    }, introMs + 600 + pipMs + 400);
+    // Gated to non-open paths — on Path A (blank-slate user) the beat reads
+    // as noise.
+    if (ideaMode === 'directed' || ideaMode === 'shortcut') {
+      const pipText = pathLine('s03.pip.entrance', lines.s03.pip.entrance, ideaMode);
+      const cedricReply = pathLine('s03.cedric.entrance_reply', lines.s03.cedric.entrance_reply, ideaMode);
+      const introMs = lines.s03.cedric.intro.length * 28;
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'pip', text: pipText, type: 'dialogue' });
+      }, introMs + 600);
+      const pipMs = pipText.length * 35;
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'cedric', text: cedricReply, type: 'dialogue' });
+      }, introMs + 600 + pipMs + 400);
+    }
   }, [enqueueMessage, recordWordResponse, ideaMode]);
 
   useEffect(() => {

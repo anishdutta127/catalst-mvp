@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { memo, useMemo } from 'react';
-import { Crystal } from './Crystal';
+import { Gem } from '@/components/crystal/Gem';
 
 export interface OrbDef {
   id: string;
@@ -69,18 +69,11 @@ function CrystalViewportImpl({
     [allOrbs, cx, cy, ringRadius],
   );
 
-  const selectedColors = selectedOrbIds.map(
-    (id) => allOrbs.find((o) => o.id === id)?.colour || '#D4A843',
-  );
-  const primaryColor = selectedColors[0] || '#D4A843';
+  const primaryColor =
+    allOrbs.find((o) => o.id === selectedOrbIds[0])?.colour || '#D4A843';
   const full = count >= 3;
 
-  // Crystal render mode — while forming, no spin on intermediate states so
-  // the seed/spine read as "gathering". Once the gem completes, idle float
-  // + spin take over until the celebration beat.
-  const crystalMode: 'forming' | 'idle' = count === 3 ? 'idle' : 'forming';
-  const crystalCount: 1 | 2 | 3 = count === 0 ? 1 : (Math.min(count, 3) as 1 | 2 | 3);
-  const crystalSize = size * 0.58;
+  const gemSize = Math.round(size * 0.58);
 
   return (
     <div
@@ -88,30 +81,7 @@ function CrystalViewportImpl({
       style={{ width: size, height: size }}
       data-testid="crystal-viewport"
     >
-      {/* Radial vignette — stronger so the crystal reads clearly against the
-          busy cave background. Cave art stays visible at the edges (atmospheric)
-          but doesn't fight the gem for attention. */}
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: `radial-gradient(circle at 50% 50%, rgba(12,14,18,0.95) 0%, rgba(12,14,18,0.75) 50%, rgba(12,14,18,0.1) 95%)`,
-        }}
-      />
-
-      {/* Nebula glow — colors shift toward the primary selected orb */}
-      <motion.div
-        className="absolute inset-0 rounded-full pointer-events-none"
-        animate={{
-          background: [
-            `radial-gradient(circle at 50% 50%, ${primaryColor}18 0%, ${primaryColor}08 40%, rgba(12,14,18,0) 75%)`,
-            `radial-gradient(circle at 50% 50%, ${primaryColor}22 0%, ${primaryColor}0d 40%, rgba(12,14,18,0) 75%)`,
-            `radial-gradient(circle at 50% 50%, ${primaryColor}18 0%, ${primaryColor}08 40%, rgba(12,14,18,0) 75%)`,
-          ],
-        }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
-      />
-
-      {/* SVG layer — ring, radar polygon, trails, celebration burst. Crystal
+      {/* SVG layer — ring, radar polygon, trails, celebration burst. Gem
           itself is a DOM sibling below this (rendered after in source order
           so it layers on top of these chrome elements). */}
       <svg
@@ -225,8 +195,7 @@ function CrystalViewportImpl({
         )}
       </svg>
 
-      {/* THE CRYSTAL — centered, DOM-level so it can use CSS 3D transforms
-          (which SVG doesn't reliably support). Subtle scale pop on celebrate. */}
+      {/* THE GEM — centered, DOM-level. Subtle scale pop on celebrate. */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center pointer-events-none"
         animate={{ scale: celebrating ? [1, 1.12, 1.06] : 1 }}
@@ -236,13 +205,7 @@ function CrystalViewportImpl({
           ease: [0.34, 1.56, 0.64, 1],
         }}
       >
-        <Crystal
-          orbs={selectedColors}
-          count={crystalCount}
-          size={crystalSize}
-          mode={crystalMode}
-          floatIntensity={count === 3 ? 1 : 0}
-        />
+        <Gem pickedOrbs={selectedOrbIds.filter(Boolean)} size={gemSize} />
       </motion.div>
 
       {/* Interactive orb buttons — overlaid as DOM so they're tappable */}

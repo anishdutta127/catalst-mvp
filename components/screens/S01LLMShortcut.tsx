@@ -315,6 +315,7 @@ export function S01LLMShortcut() {
   const setCompetitiveAdvantage = useJourneyStore((s) => s.setCompetitiveAdvantage);
   const goToScreen           = useJourneyStore((s) => s.goToScreen);
   const enqueueMessage       = useUIStore((s) => s.enqueueMessage);
+  const clearAllMessages     = useUIStore((s) => s.clearAllMessages);
 
   const [pasted, setPasted] = useState('');
   const [parseError, setParseError] = useState<{ error: string; hints: string[] } | null>(null);
@@ -325,12 +326,22 @@ export function S01LLMShortcut() {
   useEffect(() => {
     if (dialogueSent.current) return;
     dialogueSent.current = true;
+    // Drop S01 Pip entrance / Cedric welcomes that linger in the queue —
+    // Path C is a distinct beat and should not replay the ritual intro.
+    clearAllMessages();
     enqueueMessage({
       speaker: 'cedric',
       text: "Paste this prompt into your ChatGPT or Claude. It knows you better than five minutes of quizzes ever could.",
       type: 'instruction',
     });
-  }, [enqueueMessage]);
+    setTimeout(() => {
+      enqueueMessage({
+        speaker: 'pip',
+        text: lines.s01_llm.pip.entrance,
+        type: 'dialogue',
+      });
+    }, 700);
+  }, [enqueueMessage, clearAllMessages]);
 
   async function handleCopy() {
     try {

@@ -41,7 +41,17 @@
       "Bash(npx eslint *)",
       "Bash(gstack --help)",
       "Bash(python *)",
-      "Bash(echo \"EXIT=$?\")"
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(git push *)",
+      "Bash(grep -c \"^  {$\\\\|id:\" ideas-PART1-CANDIDATES.ts)",
+      "Read(//tmp/**)",
+      "Bash(cygpath -w /tmp/catalst-dump.md)",
+      "Bash(mount)",
+      "Bash(pwd -W)",
+      "Bash(npx tsx *)",
+      "Bash(mv speakPath.ts lib/speakPath.ts)",
+      "Bash(mv line-variants.ts content/line-variants.ts)",
+      "Bash(git *)"
     ]
   }
 }

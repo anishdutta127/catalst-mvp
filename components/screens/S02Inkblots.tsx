@@ -52,16 +52,20 @@ export function S02Inkblots() {
     // v8 banter beat: Pip pipes up on mount with a nervous self-undercut,
     // Cedric replies deadpan. Timed ~1.6s after Cedric's instruction so the
     // opener lands before the banter pair. Path-aware via pathLine.
-    const pipText = pathLine('s02.pip.entrance', lines.s02.pip.entrance, ideaMode);
-    const cedricReply = pathLine('s02.cedric.entrance_reply', lines.s02.cedric.entrance_reply, ideaMode);
-    const introMs = lines.s02.cedric.intro.length * 28;
-    setTimeout(() => {
-      enqueueMessage({ speaker: 'pip', text: pipText, type: 'dialogue' });
-    }, introMs + 600);
-    const pipMs = pipText.length * 35;
-    setTimeout(() => {
-      enqueueMessage({ speaker: 'cedric', text: cedricReply, type: 'dialogue' });
-    }, introMs + 600 + pipMs + 400);
+    // Gated to non-open paths — on Path A the blank-slate user doesn't need
+    // the extra banter layer.
+    if (ideaMode === 'directed' || ideaMode === 'shortcut') {
+      const pipText = pathLine('s02.pip.entrance', lines.s02.pip.entrance, ideaMode);
+      const cedricReply = pathLine('s02.cedric.entrance_reply', lines.s02.cedric.entrance_reply, ideaMode);
+      const introMs = lines.s02.cedric.intro.length * 28;
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'pip', text: pipText, type: 'dialogue' });
+      }, introMs + 600);
+      const pipMs = pipText.length * 35;
+      setTimeout(() => {
+        enqueueMessage({ speaker: 'cedric', text: cedricReply, type: 'dialogue' });
+      }, introMs + 600 + pipMs + 400);
+    }
   }, [enqueueMessage, ideaMode]);
 
   useEffect(() => {

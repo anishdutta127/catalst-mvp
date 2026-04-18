@@ -53,6 +53,12 @@ export const lines = {
     ideaPlaceholder: 'e.g., An AI tool that helps restaurants manage food waste',
   },
 
+  s01_llm: {
+    pip: {
+      entrance: 'Okay quick version. He says trust the machine. I say trust me. Same thing.',
+    },
+  },
+
   /**
    * Ambient Pip lines — fire after ~15s of dwell on a screen if Pip hasn't
    * said anything else recently. Short, cheeky, teasing. Per-screen bank.
@@ -536,13 +542,9 @@ export const lines = {
       premium1: 'The garden showed you the surface. There\'s a deeper reading — your full founder psychology, the real numbers behind your idea, and a path to your first ten customers.',
       premium2: 'When you\'re ready, I know someone who can walk you through it.',
       final: (name: string) => `The garden doesn't give you answers, ${name}. It gives you a mirror. What you build with it — that's entirely yours.`,
-      // NEW v8 — deadpan reply to Pip's farewell. Single clipped line.
-      farewell_reply: 'Goodbye, traveler.',
     },
     pip: {
       final: 'Go build something amazing. And come back and tell us about it. Please? I get bored.',
-      // NEW v8 — closing-beat farewell, Cedric undercuts with farewell_reply.
-      farewell: 'We were here. You were here. Thank you for being here.',
     },
     card: {
       download: 'Download Founder Card',

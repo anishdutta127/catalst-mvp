@@ -30,6 +30,7 @@ export function S01Fork() {
   // breathing room before the user is asked to choose. Cascade-from-top entry.
   const [cardsRevealed, setCardsRevealed] = useState(false);
   const dialogueSent = useRef(false);
+  const introCompleted = useRef(false);
 
   useEffect(() => {
     if (dialogueSent.current) return;
@@ -65,6 +66,7 @@ export function S01Fork() {
     setTimeout(() => {
       if (!isStillHere()) return;
       setCardsRevealed(true);
+      introCompleted.current = true;
     }, pipAt + 700);
   }, [enqueueMessage, displayName]);
 
@@ -162,6 +164,7 @@ export function S01Fork() {
               onClick={() => {
                 setShowIdeaInput(false);
                 setIdeaText('');
+                if (!introCompleted.current) setCardsRevealed(true);
               }}
               data-testid="path-b-back"
               className="flex items-center gap-1 text-[11px] text-ivory/50 hover:text-gold transition-colors uppercase tracking-wider"

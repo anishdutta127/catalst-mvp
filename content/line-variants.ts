@@ -81,11 +81,4 @@ export const LINE_VARIANTS: Record<string, LineVariant> = {
     // default "It was not up to you, Pip." works for both paths
   },
 
-  // ── S11 — Closing ──────────────────────────────────────────
-  's11.pip.farewell': {
-    directed: "You came in with one idea. You leave with four cousins. Good trade.",
-  },
-  's11.cedric.farewell_reply': {
-    // default "Goodbye, traveler." works for both paths
-  },
 };
