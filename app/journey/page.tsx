@@ -13,6 +13,7 @@ import { JourneyShell } from '@/components/layout/JourneyShell';
 import { GoldButton } from '@/components/ui/GoldButton';
 import { S00Gateway } from '@/components/screens/S00Gateway';
 import { S01Fork } from '@/components/screens/S01Fork';
+import { S01LLMShortcut } from '@/components/screens/S01LLMShortcut';
 import { S02Inkblots } from '@/components/screens/S02Inkblots';
 import { S03Words } from '@/components/screens/S03Words';
 import { S04Industries } from '@/components/screens/S04Industries';
@@ -52,6 +53,7 @@ function PlaceholderScreen({ screenId }: { screenId: ScreenId }) {
 
 function S00Wrapper() { return <S00Gateway />; }
 function S01Wrapper() { return <S01Fork />; }
+function S01LLMWrapper() { return <S01LLMShortcut />; }
 function S02Wrapper() { return <S02Inkblots />; }
 function S03Wrapper() { return <S03Words />; }
 function S04Wrapper() { return <S04Industries />; }
@@ -67,7 +69,7 @@ function S11Wrapper() { return <S11Profile />; }
 const SCREEN_COMPONENTS: Record<ScreenId, React.ComponentType<{ screenId: ScreenId }>> = {
   s00: S00Wrapper,
   s01: S01Wrapper,
-  s01_llm: PlaceholderScreen,
+  s01_llm: S01LLMWrapper,
   s02: S02Wrapper,
   s03: S03Wrapper,
   s04: S04Wrapper,
@@ -83,7 +85,8 @@ const SCREEN_COMPONENTS: Record<ScreenId, React.ComponentType<{ screenId: Screen
 
 // ── Screens that manage their own CTA (no global CTA bar) ──
 const SELF_MANAGED_SCREENS = new Set<ScreenId>([
-  's00', 's01', 's02', 's03', 's04', 's06', 's07',
+  's00', 's01', 's01_llm',
+  's02', 's03', 's04', 's06', 's07',
   's08', 's09', 's10', 's11',
 ]);
 
