@@ -198,9 +198,9 @@ export function S11Profile() {
                 </h2>
               </div>
 
-              {/* Row 3: pull quote */}
+              {/* Row 3: pull quote — narrative, 14px+ on mobile per audit rule */}
               <blockquote
-                className="mt-4 text-[13px] leading-relaxed italic text-ivory/90 border-l-2 pl-3"
+                className="mt-4 text-[14px] leading-relaxed italic text-ivory/90 border-l-2 pl-3"
                 style={{ borderColor: houseColor }}
               >
                 &ldquo;{archetype.pullQuote}&rdquo;
@@ -313,7 +313,7 @@ export function S11Profile() {
                       {si.displayScore}%
                     </span>
                   </div>
-                  <p className="text-xs text-ivory/60 mt-1 line-clamp-1">
+                  <p className="text-sm text-ivory/60 mt-1 line-clamp-1">
                     {si.idea.one_liner}
                   </p>
                 </div>

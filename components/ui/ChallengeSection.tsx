@@ -65,7 +65,7 @@ export function ChallengeSection({
       <div className="text-center">
         <div className="text-[10px] tracking-[0.3em] opacity-70 mb-2">#CATALSTCHALLENGE</div>
         <h3 className="font-serif text-xl sm:text-2xl mb-3">Think you know three founders?</h3>
-        <p className="text-[13px] opacity-80 leading-relaxed mb-5 max-w-sm mx-auto">
+        <p className="text-sm opacity-80 leading-relaxed mb-5 max-w-sm mx-auto">
           Tag 3 friends who should start an AI business. First to ship earns bragging rights —
           and we&rsquo;ll be watching.
         </p>
