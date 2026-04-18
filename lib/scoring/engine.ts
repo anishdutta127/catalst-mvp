@@ -67,7 +67,9 @@ interface Signals {
 
 const INR_PER_USD = 83;
 
-/** 25 user-facing industries in S04 presentation order */
+/** 30 user-facing industries in S04 presentation order.
+ *  The five v8 entries are APPENDED so existing dwell-time indices stay
+ *  stable for users mid-session — never reorder, only extend at the end. */
 export const INDUSTRY_ORDER = [
   'ai_ml',
   'health_wellness',
@@ -94,6 +96,12 @@ export const INDUSTRY_ORDER = [
   'parenting',
   'cannabis',
   'web3',
+  // NEW in v8 — append only, do not reorder:
+  'saas_productivity',
+  'ecommerce_retail',
+  'govtech_civic',
+  'mental_health',
+  'hrtech_future_work',
 ] as const;
 
 export const DOMAIN_TO_INDUSTRY: Record<string, string> = {
