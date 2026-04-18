@@ -68,9 +68,14 @@ export function PipFloatingBubble({
   // screen's outer relative container — `top` for top-right mode matches
   // Pip's top:-10 / right:12 anchor; `bottom` for bottom-right mode matches
   // S07's Pip anchored bottom-right just above the CTA.
+  //
+  // right: 92 in top-right mode (was 72) — Pip's sprite is 52px wide at
+  // right:12, so its left edge is at right:64. 92 gives 28px clear gap,
+  // which lines up with the dotted tether length so the line reaches the
+  // sprite edge cleanly without crossing into Pip's body.
   const positionStyle: React.CSSProperties = isBottom
     ? { bottom: 68, right: 16, maxWidth: 240 }
-    : { top: 4, right: 72, maxWidth: 220 };
+    : { top: 4, right: 92, maxWidth: 220 };
 
   return (
     <motion.div
