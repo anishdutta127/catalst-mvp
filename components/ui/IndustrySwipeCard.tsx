@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion';
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'; // pie-only now that the back uses share charts instead of growth lines
 import { INDUSTRY_STATS, FALLBACK_STAT } from '@/content/industry-stats';
 
 interface HingePrompt {
@@ -19,6 +19,25 @@ interface QuickStats {
   three_year_growth_pct?: number;
   india_startups_count?: string;
   biggest_recent_exit?: string;
+}
+
+interface BackStatEntry {
+  value: string;
+  label: string;
+}
+
+interface BackStats {
+  funding_12m?: BackStatEntry;
+  india_share?: BackStatEntry;
+  median_to_a?: BackStatEntry;
+  profitable_co_count?: BackStatEntry;
+}
+
+interface SubcategoryShare {
+  name: string;
+  share_pct: number;
+  icon: string;
+  description: string;
 }
 
 export interface IndustryCardData {
@@ -49,6 +68,9 @@ export interface IndustryCardData {
   impact_potential?: string;
   india_scene?: string;
   quick_stats?: QuickStats;
+  // Batch 3 back redesign fields.
+  back_stats?: BackStats;
+  subcategory_shares?: SubcategoryShare[];
 }
 
 interface IndustrySwipeCardProps {
@@ -87,6 +109,17 @@ function hashString(s: string): number {
   return Math.abs(h);
 }
 
+/** Shift every RGB channel of a hex color by `amount` (−255..255), clamped.
+ *  Used to derive pie-segment colors from the industry's primary color so
+ *  the palette stays cohesive. */
+function adjustColor(hex: string, amount: number): string {
+  const h = hex.replace('#', '');
+  const r = Math.max(0, Math.min(255, parseInt(h.slice(0, 2), 16) + amount));
+  const g = Math.max(0, Math.min(255, parseInt(h.slice(2, 4), 16) + amount));
+  const b = Math.max(0, Math.min(255, parseInt(h.slice(4, 6), 16) + amount));
+  return '#' + [r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('');
+}
+
 /**
  * Synthesize a 5-point market-size series ending at marketSizeB in 2026,
  * compounding backward at cagrPct. The source JSON has no `growth_chart`
@@ -118,25 +151,6 @@ function FlipIcon({ size = 14 }: { size?: number }) {
       />
     </svg>
   );
-}
-
-function synthGrowthSeries(
-  marketSizeB: number | undefined,
-  cagrPct: number | undefined,
-): { year: number; value: number }[] {
-  if (!marketSizeB || !cagrPct || cagrPct <= 0) return [];
-  const years = 5;
-  const g = 1 + cagrPct / 100;
-  const endYear = 2026;
-  const out: { year: number; value: number }[] = [];
-  for (let i = 0; i < years; i++) {
-    const offset = years - 1 - i;
-    out.push({
-      year: endYear - offset,
-      value: Math.round((marketSizeB / Math.pow(g, offset)) * 10) / 10,
-    });
-  }
-  return out;
 }
 
 /**
@@ -175,6 +189,8 @@ export function IndustrySwipeCard({
   // Scroll hint — shown on mount, fades on first scroll. Re-armed each time
   // the card flips back to the front.
   const [scrollHintVisible, setScrollHintVisible] = useState(true);
+  // Which sub-category tab is active on the back's pie-chart section.
+  const [activeSubcat, setActiveSubcat] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(0);
@@ -207,23 +223,21 @@ export function IndustrySwipeCard({
     return raw ? truncateAtWord(raw, 100) : null;
   }, [industry.hinge_prompts]);
 
-  // Front/back/bottom witty prompts — three distinct picks from the Hinge
-  // bank, excluding "TOGETHER WE COULD" (reserved for Tile A). Deterministic
-  // from industry.id so nothing re-shuffles on flip or re-render. Falls back
-  // gracefully when the bank has fewer than 3 entries (non-core industries).
-  const { frontPrompt, backPrompt, bottomPrompt } = useMemo(() => {
+  // Front + bottom witty prompts — two distinct picks from the Hinge bank,
+  // excluding "TOGETHER WE COULD" (reserved for Tile A). Deterministic from
+  // industry.id so nothing re-shuffles on flip or re-render. The back card
+  // no longer uses a witty prompt (the new stats grid replaces it).
+  const { frontPrompt, bottomPrompt } = useMemo(() => {
     const bank = (industry.hinge_prompts || []).filter(
       (p) => p.label.toUpperCase() !== 'TOGETHER WE COULD',
     );
-    if (bank.length === 0) return { frontPrompt: null, backPrompt: null, bottomPrompt: null };
+    if (bank.length === 0) return { frontPrompt: null, bottomPrompt: null };
     const h = hashString(industry.id);
     const frontIdx = h % bank.length;
     const front = bank[frontIdx];
-    const remaining1 = bank.filter((_, i) => i !== frontIdx);
-    const back = remaining1.length > 0 ? remaining1[(h >> 3) % remaining1.length] : null;
-    const remaining2 = back ? remaining1.filter((p) => p.label !== back.label) : remaining1;
-    const bottom = remaining2.length > 0 ? remaining2[(h >> 5) % remaining2.length] : null;
-    return { frontPrompt: front, backPrompt: back, bottomPrompt: bottom };
+    const remaining = bank.filter((_, i) => i !== frontIdx);
+    const bottom = remaining.length > 0 ? remaining[(h >> 3) % remaining.length] : null;
+    return { frontPrompt: front, bottomPrompt: bottom };
   }, [industry.id, industry.hinge_prompts]);
 
   // TILE B + C — curated India company callouts
@@ -234,14 +248,6 @@ export function IndustrySwipeCard({
     return [...arr].sort((a, b) => b.cagr_pct - a.cagr_pct).slice(0, 3);
   }, [industry.sub_category_cagrs]);
   const topSubCagr = topCagrs[0] || null;
-
-  // Synthesized 5-point market-size series for the back sparkline. The source
-  // JSON has no `growth_chart` today — we compound backward from market_size_b
-  // at cagr_pct so the curve stays consistent with the displayed meta.
-  const growthSeries = useMemo(
-    () => synthGrowthSeries(industry.market_size_b, industry.cagr_pct),
-    [industry.market_size_b, industry.cagr_pct],
-  );
 
   // Hide the scroll hint after the user scrolls the front. Listens on the
   // scroll container directly (not window) so we don't fight sibling scrolls.
@@ -643,152 +649,237 @@ export function IndustrySwipeCard({
               </div>
             </div>
 
-            {/* Market-growth sparkline — synthesized from market_size_b + CAGR
-                (the source JSON has no explicit growth_chart). */}
-            {growthSeries.length > 0 && (
-              <div className="shrink-0 px-5 pt-3 pb-2 border-b border-white/5">
-                <p className="text-[9px] font-mono uppercase tracking-widest text-ivory/45 mb-1">
-                  Market growth (US$ B)
-                </p>
-                <div style={{ height: 56 }}>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart
-                      data={growthSeries}
-                      margin={{ top: 4, right: 4, bottom: 4, left: 4 }}
-                    >
-                      <Line
-                        type="monotone"
-                        dataKey="value"
-                        stroke={color}
-                        strokeWidth={2}
-                        dot={{ r: 2, fill: color }}
-                        isAnimationActive={false}
-                      />
-                      <XAxis dataKey="year" hide />
-                      <YAxis hide domain={['dataMin', 'dataMax']} />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="flex justify-between text-[9px] text-ivory/35 font-mono mt-0.5">
-                  {growthSeries.map((d) => (
-                    <span key={d.year}>{d.year}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Back witty prompt — different pick than front, stacked layout */}
-            {backPrompt && (
-              <div className="shrink-0 flex flex-col gap-1.5 px-5 py-3 border-b border-white/5">
-                <p
-                  className="text-[9px] font-mono uppercase text-gold/60 leading-[1.3]"
-                  style={{ letterSpacing: '0.18em' }}
-                >
-                  {backPrompt.label}
-                </p>
-                <p className="text-[13px] italic text-white/85 leading-snug line-clamp-3">
-                  &ldquo;{backPrompt.text}&rdquo;
-                </p>
-              </div>
-            )}
-
-            {/* 5-zone body */}
+            {/* Body — scrollable, replaces the old sparkline/witty/5-zone stack.
+                New order: hero stats grid → pie + legend → sub-cat tabs+desc →
+                AI disruption → what's happening → India scene. */}
             <div
-              className="flex-1 overflow-y-auto scrollbar-hide px-5 pt-4 pb-[120px] space-y-[14px] min-h-0"
+              className="flex-1 overflow-y-auto scrollbar-hide pb-[120px] min-h-0"
               style={{ touchAction: 'pan-y' }}
             >
-              {/* 1. AI disruption angle — full */}
-              {industry.ai_disruption_angle && (
-                <div className="bg-purple-500/10 border border-purple-500/25 rounded-xl p-3 flex items-start gap-2">
-                  <span className="text-[15px] mt-0.5">⚡</span>
-                  <div className="min-w-0">
-                    <p className="text-[9px] text-purple-300 uppercase tracking-widest mb-1 font-semibold">
-                      AI disruption angle
-                    </p>
-                    <p className="text-[12px] text-white/85 leading-relaxed">
-                      {industry.ai_disruption_angle}
-                    </p>
-                  </div>
+              {/* ── Zone 1: Hero stats grid (2×2) ── */}
+              {industry.back_stats && (
+                <div className="grid grid-cols-2 gap-2 px-5 pt-4 pb-3">
+                  {([
+                    industry.back_stats.funding_12m,
+                    industry.back_stats.india_share,
+                    industry.back_stats.median_to_a,
+                    industry.back_stats.profitable_co_count,
+                  ].filter(Boolean) as BackStatEntry[]).map((stat, i) => (
+                    <div
+                      key={i}
+                      className="rounded-xl px-3 py-2.5"
+                      style={{
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.10)',
+                      }}
+                    >
+                      <p className="text-[9.5px] font-mono uppercase tracking-wider text-ivory/50 leading-tight mb-1">
+                        {stat.label}
+                      </p>
+                      <p
+                        className="text-[18px] font-serif font-bold leading-tight"
+                        style={{ color }}
+                      >
+                        {stat.value}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               )}
 
-              {/* 2. Hottest sub-categories — full */}
-              {topCagrs.length > 0 && (
-                <div>
-                  <p className="text-[9px] text-white/40 uppercase tracking-widest mb-2 font-semibold">
-                    Hottest sub-categories
+              {/* ── Zone 2: Pie chart of sub-category market share ── */}
+              {industry.subcategory_shares && industry.subcategory_shares.length > 0 && (
+                <div className="px-5 pt-2 pb-3">
+                  <p className="text-[9.5px] font-mono uppercase tracking-widest text-ivory/50 mb-2">
+                    Sub-category market share
                   </p>
-                  <div className="space-y-1.5">
-                    {topCagrs.map((sc) => (
-                      <div key={sc.name} className="flex items-center gap-2">
-                        <span className="text-[11px] text-white/75 flex-1 truncate">{sc.name}</span>
-                        <div className="w-16 h-1 bg-white/5 rounded-full overflow-hidden">
-                          <div
-                            className="h-full rounded-full"
-                            style={{
-                              width: `${Math.min(100, sc.cagr_pct * 1.5)}%`,
-                              background: color,
+                  <div className="flex items-center gap-3">
+                    <div style={{ width: 110, height: 110 }} className="shrink-0">
+                      <ResponsiveContainer>
+                        <PieChart>
+                          <Pie
+                            data={industry.subcategory_shares}
+                            dataKey="share_pct"
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={22}
+                            outerRadius={52}
+                            paddingAngle={2}
+                            stroke="rgba(12,14,18,0.6)"
+                            strokeWidth={1}
+                            isAnimationActive={false}
+                          >
+                            {industry.subcategory_shares.map((_, i) => {
+                              const palette = [
+                                color,
+                                adjustColor(color, 40),
+                                adjustColor(color, -30),
+                                adjustColor(color, 20),
+                                adjustColor(color, -55),
+                              ];
+                              const fill = palette[i % palette.length];
+                              return (
+                                <Cell
+                                  key={i}
+                                  fill={fill}
+                                  fillOpacity={activeSubcat === i ? 1 : 0.78}
+                                />
+                              );
+                            })}
+                          </Pie>
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div className="flex-1 space-y-1.5 min-w-0">
+                      {industry.subcategory_shares.map((seg, i) => {
+                        const palette = [
+                          color,
+                          adjustColor(color, 40),
+                          adjustColor(color, -30),
+                          adjustColor(color, 20),
+                          adjustColor(color, -55),
+                        ];
+                        const fill = palette[i % palette.length];
+                        const active = activeSubcat === i;
+                        return (
+                          <button
+                            key={seg.name}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveSubcat(i);
                             }}
-                          />
-                        </div>
-                        <span className="text-[10px] font-mono w-9 text-right" style={{ color }}>
-                          {sc.cagr_pct}%
-                        </span>
-                      </div>
-                    ))}
+                            onPointerDown={(e) => e.stopPropagation()}
+                            className="flex items-center gap-2 w-full text-left rounded-md px-1 py-0.5 transition-colors"
+                            style={{
+                              background: active ? 'rgba(255,255,255,0.06)' : 'transparent',
+                            }}
+                          >
+                            <div
+                              className="w-2.5 h-2.5 rounded-sm shrink-0"
+                              style={{ background: fill }}
+                            />
+                            <span
+                              className={`text-[11px] flex-1 leading-tight truncate ${
+                                active ? 'text-ivory/95 font-medium' : 'text-ivory/70'
+                              }`}
+                            >
+                              {seg.name}
+                            </span>
+                            <span className="text-[10px] font-mono text-ivory/55 shrink-0">
+                              {seg.share_pct}%
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               )}
 
-              {/* 3. Behavior shift + Impact potential — 2-col row */}
-              {(industry.user_behavior_shift || industry.impact_potential) && (
-                <div className="grid grid-cols-2 gap-2">
-                  {industry.user_behavior_shift && (
-                    <div className="bg-white/4 border border-white/8 rounded-xl p-3">
-                      <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold">
-                        User behavior
+              {/* ── Zone 3: Sub-category icon tabs + description ── */}
+              {industry.subcategory_shares && industry.subcategory_shares.length > 0 && (
+                <div className="px-5 pb-4">
+                  <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-hide -mx-1 px-1">
+                    {industry.subcategory_shares.map((seg, i) => {
+                      const palette = [
+                        color,
+                        adjustColor(color, 40),
+                        adjustColor(color, -30),
+                        adjustColor(color, 20),
+                        adjustColor(color, -55),
+                      ];
+                      const fill = palette[i % palette.length];
+                      const active = activeSubcat === i;
+                      return (
+                        <button
+                          key={seg.name}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveSubcat(i);
+                          }}
+                          onPointerDown={(e) => e.stopPropagation()}
+                          className="shrink-0 flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-[11px] transition-all"
+                          style={{
+                            background: active
+                              ? `${fill}30`
+                              : 'rgba(255,255,255,0.03)',
+                            border: active
+                              ? `1.5px solid ${fill}`
+                              : '1px solid rgba(255,255,255,0.10)',
+                            color: active ? '#FFFFFF' : 'rgba(245,240,232,0.65)',
+                          }}
+                        >
+                          <span>{seg.icon}</span>
+                          <span className="font-medium">{seg.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`desc-${activeSubcat}`}
+                      initial={{ opacity: 0, y: 4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -4 }}
+                      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                      className="rounded-xl px-3.5 py-2.5 mt-1"
+                      style={{
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.10)',
+                      }}
+                    >
+                      <p className="text-[12px] text-ivory/85 leading-relaxed">
+                        {industry.subcategory_shares[activeSubcat]?.description}
                       </p>
-                      <p className="text-[11.5px] text-white/80 leading-snug">
-                        {industry.user_behavior_shift}
-                      </p>
-                    </div>
-                  )}
-                  {industry.impact_potential && (
-                    <div className="bg-white/4 border border-white/8 rounded-xl p-3">
-                      <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold">
-                        Impact ceiling
-                      </p>
-                      <p className="text-[11.5px] text-white/80 leading-snug">
-                        {industry.impact_potential}
-                      </p>
-                    </div>
-                  )}
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               )}
 
-              {/* 4. What's happening — full */}
+              {/* ── Zone 4: AI disruption angle (kept) ── */}
+              {industry.ai_disruption_angle && (
+                <div className="px-5 pb-4">
+                  <div className="bg-purple-500/10 border border-purple-500/25 rounded-xl p-3 flex items-start gap-2">
+                    <span className="text-[15px] mt-0.5">⚡</span>
+                    <div className="min-w-0">
+                      <p className="text-[9px] text-purple-300 uppercase tracking-widest mb-1 font-semibold">
+                        AI disruption angle
+                      </p>
+                      <p className="text-[12px] text-white/85 leading-relaxed">
+                        {industry.ai_disruption_angle}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ── Zone 5: What's happening (kept) ── */}
               {industry.recent_headline && (
-                <div className="bg-white/4 border border-white/8 rounded-xl p-3">
-                  <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold">
-                    What's happening
-                  </p>
-                  <p className="text-[12px] text-white/85 leading-snug flex items-start gap-1.5">
-                    <span className="shrink-0">📰</span>
-                    <span>{industry.recent_headline}</span>
-                  </p>
+                <div className="px-5 pb-4">
+                  <div className="bg-white/[0.04] border border-white/10 rounded-xl p-3">
+                    <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold">
+                      What's happening
+                    </p>
+                    <p className="text-[12px] text-white/85 leading-snug flex items-start gap-1.5">
+                      <span className="shrink-0">📰</span>
+                      <span>{industry.recent_headline}</span>
+                    </p>
+                  </div>
                 </div>
               )}
 
-              {/* 5. India scene — full */}
+              {/* ── Zone 6: India scene (kept) ── */}
               {industry.india_scene && (
-                <div className="bg-white/4 border border-white/8 rounded-xl p-3">
-                  <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold flex items-center gap-1.5">
-                    <span>🇮🇳</span>
-                    India scene
-                  </p>
-                  <p className="text-[12px] text-white/85 leading-snug">
-                    {industry.india_scene}
-                  </p>
+                <div className="px-5 pb-4">
+                  <div className="bg-white/[0.04] border border-white/10 rounded-xl p-3">
+                    <p className="text-[9px] text-white/40 uppercase tracking-widest mb-1.5 font-semibold flex items-center gap-1.5">
+                      <span>🇮🇳</span>
+                      India scene
+                    </p>
+                    <p className="text-[12px] text-white/85 leading-snug">
+                      {industry.india_scene}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>

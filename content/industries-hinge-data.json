@@ -102,7 +102,57 @@
         "three_year_growth_pct": 150,
         "india_startups_count": "240+",
         "biggest_recent_exit": "Sarvam — $41M Series A"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$14.2B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "8%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "18mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "12",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "AI agents",
+          "share_pct": 32,
+          "icon": "🤖",
+          "description": "Autonomous workflows replacing SaaS point tools. The hottest $40B segment."
+        },
+        {
+          "name": "Vertical AI",
+          "share_pct": 24,
+          "icon": "🎯",
+          "description": "Deep domain AI for healthcare, legal, finance. Distribution is the moat."
+        },
+        {
+          "name": "Dev tools",
+          "share_pct": 20,
+          "icon": "⚙️",
+          "description": "Cursor/Cognition-style AI-native IDEs. Developers pick the winners."
+        },
+        {
+          "name": "RAG infra",
+          "share_pct": 14,
+          "icon": "📚",
+          "description": "Retrieval and memory layers. Picks and shovels for AI apps."
+        },
+        {
+          "name": "On-device",
+          "share_pct": 10,
+          "icon": "📱",
+          "description": "Edge models under 3B params. Latency and privacy unlocks."
+        }
+      ]
     },
     "health_wellness": {
       "category": "health",
@@ -192,7 +242,57 @@
         "three_year_growth_pct": 52,
         "india_startups_count": "400+",
         "biggest_recent_exit": "Even Healthcare — $30M"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$6.8B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "11%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "22mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "38",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Digital therapeutics",
+          "share_pct": 28,
+          "icon": "💊",
+          "description": "FDA-cleared apps as prescriptions. Reimbursement-eligible."
+        },
+        {
+          "name": "Longevity & peptides",
+          "share_pct": 22,
+          "icon": "🧬",
+          "description": "Biomarkers, supplements, protocols. Bryan Johnson wave."
+        },
+        {
+          "name": "Mental health",
+          "share_pct": 20,
+          "icon": "🧠",
+          "description": "Therapy, AI coaches, mood tracking. Still underpenetrated."
+        },
+        {
+          "name": "Fitness tech",
+          "share_pct": 18,
+          "icon": "💪",
+          "description": "Smart strength, recovery, wearables. Beyond cardio."
+        },
+        {
+          "name": "Women's health",
+          "share_pct": 12,
+          "icon": "🌸",
+          "description": "Fertility, perimenopause, hormone tracking. Underinvested."
+        }
+      ]
     },
     "creator_media": {
       "category": "creative",
@@ -282,7 +382,57 @@
         "three_year_growth_pct": 73,
         "india_startups_count": "180+",
         "biggest_recent_exit": "Rigi — $75M Series B"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$3.1B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "14%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "16mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "22",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Creator tools",
+          "share_pct": 28,
+          "icon": "🎬",
+          "description": "Editing, automation, monetization SaaS for the 200M creators."
+        },
+        {
+          "name": "Short-form video",
+          "share_pct": 24,
+          "icon": "📱",
+          "description": "Shorts/Reels/TikTok native ad tech and platforms."
+        },
+        {
+          "name": "Newsletters",
+          "share_pct": 18,
+          "icon": "📧",
+          "description": "Substack economy. Direct subscriber relationships."
+        },
+        {
+          "name": "Podcasts",
+          "share_pct": 16,
+          "icon": "🎙️",
+          "description": "Discovery, monetization, hosting. Joe Rogan economy."
+        },
+        {
+          "name": "Livestreaming",
+          "share_pct": 14,
+          "icon": "📺",
+          "description": "Twitch-style creator commerce and coaching."
+        }
+      ]
     },
     "finance_payments": {
       "category": "finance",
@@ -372,7 +522,57 @@
         "three_year_growth_pct": 64,
         "india_startups_count": "300+",
         "biggest_recent_exit": "Jar — $50M Series B"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$9.4B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "13%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "20mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "45",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Payments infra",
+          "share_pct": 28,
+          "icon": "💳",
+          "description": "Stripe-level rails for emerging markets and verticals."
+        },
+        {
+          "name": "Lending & credit",
+          "share_pct": 24,
+          "icon": "💰",
+          "description": "Underserved segments with AI underwriting."
+        },
+        {
+          "name": "Wealth management",
+          "share_pct": 20,
+          "icon": "📈",
+          "description": "Robo + human hybrid, low-ticket investing."
+        },
+        {
+          "name": "Crypto & web3",
+          "share_pct": 16,
+          "icon": "⛓️",
+          "description": "Stablecoins for payments. Back-office tokenization."
+        },
+        {
+          "name": "Insurance",
+          "share_pct": 12,
+          "icon": "🛡️",
+          "description": "Parametric, embedded, micro-insurance. Bharat scale."
+        }
+      ]
     },
     "education_learning": {
       "category": "social",
@@ -462,7 +662,57 @@
         "three_year_growth_pct": 48,
         "india_startups_count": "500+",
         "biggest_recent_exit": "PhysicsWallah — $210M"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$2.9B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "18%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "24mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "28",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Upskilling",
+          "share_pct": 30,
+          "icon": "🎓",
+          "description": "Career-focused certifications. Outcome-linked pricing."
+        },
+        {
+          "name": "K-12 tutoring",
+          "share_pct": 22,
+          "icon": "📚",
+          "description": "PhysicsWallah economy. India's JEE/NEET prep."
+        },
+        {
+          "name": "AI tutors",
+          "share_pct": 20,
+          "icon": "🧑‍🏫",
+          "description": "Personalized learning paths. Khan Academy style."
+        },
+        {
+          "name": "Language learning",
+          "share_pct": 16,
+          "icon": "🌍",
+          "description": "Duolingo plus AI conversation practice."
+        },
+        {
+          "name": "Cohort-based",
+          "share_pct": 12,
+          "icon": "👥",
+          "description": "Maven-style live cohort courses for professionals."
+        }
+      ]
     },
     "food_agriculture": {
       "category": "other",
@@ -552,7 +802,57 @@
         "three_year_growth_pct": 40,
         "india_startups_count": "220+",
         "biggest_recent_exit": "Zepto — $665M Series F"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$4.6B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "9%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "26mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "18",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Quick commerce",
+          "share_pct": 30,
+          "icon": "🛵",
+          "description": "10-minute delivery. Zepto, Blinkit, Instamart wars."
+        },
+        {
+          "name": "Food service tech",
+          "share_pct": 20,
+          "icon": "🍳",
+          "description": "Ghost kitchens, AI menus, POS systems."
+        },
+        {
+          "name": "Alt-protein",
+          "share_pct": 20,
+          "icon": "🌱",
+          "description": "Cultivated meat, plant-based, fermentation."
+        },
+        {
+          "name": "AgTech",
+          "share_pct": 16,
+          "icon": "🚜",
+          "description": "Drones, soil sensors, micro-lending for farmers."
+        },
+        {
+          "name": "D2C food",
+          "share_pct": 14,
+          "icon": "🧃",
+          "description": "Clean labels, niche diets, specialty beverages."
+        }
+      ]
     },
     "climate_energy": {
       "category": "tech",
@@ -642,7 +942,57 @@
         "three_year_growth_pct": 82,
         "india_startups_count": "150+",
         "biggest_recent_exit": "Ather Energy IPO — $590M"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$11.2B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "7%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "28mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "9",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Solar & grid",
+          "share_pct": 30,
+          "icon": "☀️",
+          "description": "Residential and utility-scale solar. India's boom."
+        },
+        {
+          "name": "Battery storage",
+          "share_pct": 22,
+          "icon": "🔋",
+          "description": "Grid-scale and home batteries. LFP chemistry leads."
+        },
+        {
+          "name": "EVs",
+          "share_pct": 20,
+          "icon": "🚗",
+          "description": "2W, 3W, cars. Ather, Ola Electric, BYD."
+        },
+        {
+          "name": "Carbon capture",
+          "share_pct": 14,
+          "icon": "🌫️",
+          "description": "Direct-air capture and industrial CCS. Still early."
+        },
+        {
+          "name": "Climate software",
+          "share_pct": 14,
+          "icon": "📊",
+          "description": "Compliance, carbon accounting, ESG tooling."
+        }
+      ]
     },
     "gaming_entertainment": {
       "category": "creative",
@@ -732,7 +1082,57 @@
         "three_year_growth_pct": 64,
         "india_startups_count": "180+",
         "biggest_recent_exit": "Winzo — $65M Series C"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$5.3B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "12%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "20mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "25",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Mobile games",
+          "share_pct": 34,
+          "icon": "📱",
+          "description": "Hypercasual and midcore. India's #1 entertainment category."
+        },
+        {
+          "name": "Skill gaming",
+          "share_pct": 22,
+          "icon": "🎮",
+          "description": "Dream11, MPL, Winzo. Fantasy and skill-based."
+        },
+        {
+          "name": "UGC platforms",
+          "share_pct": 18,
+          "icon": "🌐",
+          "description": "Roblox / Fortnite-style user-generated game worlds."
+        },
+        {
+          "name": "OTT content",
+          "share_pct": 14,
+          "icon": "🎬",
+          "description": "Regional-language originals. Hotstar, JioCinema."
+        },
+        {
+          "name": "VR & AR",
+          "share_pct": 12,
+          "icon": "🥽",
+          "description": "Vision Pro and Quest. Enterprise and gaming converge."
+        }
+      ]
     },
     "fashion_beauty": {
       "category": "creative",
@@ -822,7 +1222,57 @@
         "three_year_growth_pct": 33,
         "india_startups_count": "280+",
         "biggest_recent_exit": "Foxtale — $30M Series C"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$3.8B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "10%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "22mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "42",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "D2C beauty",
+          "share_pct": 30,
+          "icon": "💄",
+          "description": "Nykaa / Foxtale model. Clean, aware, Instagram-first."
+        },
+        {
+          "name": "Fast fashion",
+          "share_pct": 22,
+          "icon": "👗",
+          "description": "SHEIN / Urbanic. China-India supply chains."
+        },
+        {
+          "name": "Premium Indian",
+          "share_pct": 18,
+          "icon": "👑",
+          "description": "Ethnic wear, fine jewelry. Luxury D2C."
+        },
+        {
+          "name": "Resale",
+          "share_pct": 16,
+          "icon": "♻️",
+          "description": "Depop / Poshmark. Gen Z-driven recommerce."
+        },
+        {
+          "name": "Beauty services",
+          "share_pct": 14,
+          "icon": "💅",
+          "description": "At-home salons. Urban Company economy."
+        }
+      ]
     },
     "sports_fitness": {
       "category": "health",
@@ -912,7 +1362,57 @@
         "three_year_growth_pct": 40,
         "india_startups_count": "120+",
         "biggest_recent_exit": "Cult.fit — $155M Series F"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$1.8B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "9%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "24mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "16",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Connected fitness",
+          "share_pct": 28,
+          "icon": "🚴",
+          "description": "Smart bikes, mirrors, strength. Peloton / Tonal."
+        },
+        {
+          "name": "Gym chains",
+          "share_pct": 22,
+          "icon": "🏋️",
+          "description": "Cult.fit, Anytime Fitness. Recurring-revenue spaces."
+        },
+        {
+          "name": "Fantasy sports",
+          "share_pct": 20,
+          "icon": "🏏",
+          "description": "Dream11 economy. Regulated, massive in India."
+        },
+        {
+          "name": "Wearables",
+          "share_pct": 18,
+          "icon": "⌚",
+          "description": "Oura, Whoop, Apple Watch. Recovery + sleep."
+        },
+        {
+          "name": "Youth sports",
+          "share_pct": 12,
+          "icon": "⚽",
+          "description": "Academies, coaching platforms. Kids-focused."
+        }
+      ]
     },
     "community_social": {
       "category": "social",
@@ -1002,7 +1502,57 @@
         "three_year_growth_pct": 55,
         "india_startups_count": "200+",
         "biggest_recent_exit": "ShareChat — $255M"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$2.2B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "11%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "22mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "12",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Creator groups",
+          "share_pct": 28,
+          "icon": "👥",
+          "description": "Skool / Circle / Discord. Paid communities."
+        },
+        {
+          "name": "Dating",
+          "share_pct": 24,
+          "icon": "💘",
+          "description": "Bumble / Hinge economics. Vernacular apps rising."
+        },
+        {
+          "name": "Pro networks",
+          "share_pct": 20,
+          "icon": "💼",
+          "description": "Not LinkedIn. Hyperniche professional networks."
+        },
+        {
+          "name": "Hobby social",
+          "share_pct": 16,
+          "icon": "🎨",
+          "description": "Strava-for-X. Niche consumer social apps."
+        },
+        {
+          "name": "IRL events",
+          "share_pct": 12,
+          "icon": "📅",
+          "description": "Meetup reboots. Real-world community commerce."
+        }
+      ]
     },
     "real_estate_home": {
       "category": "other",
@@ -1092,7 +1642,57 @@
         "three_year_growth_pct": 33,
         "india_startups_count": "140+",
         "biggest_recent_exit": "NoBroker — $210M Series E"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$3.4B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "7%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "26mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "19",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "PropTech discovery",
+          "share_pct": 28,
+          "icon": "🏠",
+          "description": "NoBroker, Housing, MagicBricks. Listings + payments."
+        },
+        {
+          "name": "Property mgmt",
+          "share_pct": 22,
+          "icon": "🔑",
+          "description": "Landlord / tenant SaaS. Rent, maintenance, compliance."
+        },
+        {
+          "name": "Co-living",
+          "share_pct": 20,
+          "icon": "🛏️",
+          "description": "Stanza Living, Zolo. Managed premium rentals."
+        },
+        {
+          "name": "Smart home",
+          "share_pct": 18,
+          "icon": "📡",
+          "description": "IoT, security, automation. Aqara / Matter ecosystems."
+        },
+        {
+          "name": "Construction tech",
+          "share_pct": 12,
+          "icon": "🔨",
+          "description": "Project mgmt, BIM, modular construction."
+        }
+      ]
     },
     "logistics_mobility": {
       "category": "build",
@@ -1182,7 +1782,57 @@
         "three_year_growth_pct": 52,
         "india_startups_count": "260+",
         "biggest_recent_exit": "Delhivery IPO — $670M"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$6.1B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "10%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "24mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "24",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Last-mile delivery",
+          "share_pct": 32,
+          "icon": "📦",
+          "description": "Delhivery, Shadowfax. Urban + quick commerce."
+        },
+        {
+          "name": "Freight & supply",
+          "share_pct": 24,
+          "icon": "🚛",
+          "description": "Digital freight brokerage, factoring."
+        },
+        {
+          "name": "Ride-hailing",
+          "share_pct": 18,
+          "icon": "🚕",
+          "description": "Ola / Uber plus 2W/auto mobility."
+        },
+        {
+          "name": "EV fleet",
+          "share_pct": 14,
+          "icon": "⚡",
+          "description": "EV-as-a-service for fleets and last-mile."
+        },
+        {
+          "name": "Warehouse automation",
+          "share_pct": 12,
+          "icon": "🏭",
+          "description": "Robotics and WMS. GreyOrange, Addverb."
+        }
+      ]
     },
     "legal_compliance": {
       "category": "tech",
@@ -1272,7 +1922,57 @@
         "three_year_growth_pct": 95,
         "india_startups_count": "90+",
         "biggest_recent_exit": "SpotDraft — $26M Series A"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$0.9B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "6%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "20mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "8",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Contract automation",
+          "share_pct": 30,
+          "icon": "📝",
+          "description": "SpotDraft, Juro-style CLM. AI-first."
+        },
+        {
+          "name": "RegTech",
+          "share_pct": 24,
+          "icon": "🏛️",
+          "description": "KYC, AML, compliance. Finance-adjacent heat."
+        },
+        {
+          "name": "Legal AI research",
+          "share_pct": 20,
+          "icon": "🔍",
+          "description": "Harvey-style AI research. Enterprise law."
+        },
+        {
+          "name": "Tax & payroll",
+          "share_pct": 16,
+          "icon": "📊",
+          "description": "ClearTax / Zoho. Small-business focused."
+        },
+        {
+          "name": "Legal marketplaces",
+          "share_pct": 10,
+          "icon": "⚖️",
+          "description": "LegalZoom-style. Self-serve legal."
+        }
+      ]
     },
     "hardware_robotics": {
       "category": "build",
@@ -1362,7 +2062,57 @@
         "three_year_growth_pct": 73,
         "india_startups_count": "110+",
         "biggest_recent_exit": "ideaForge IPO — $80M"
-      }
+      },
+      "back_stats": {
+        "funding_12m": {
+          "value": "$7.2B",
+          "label": "Funding deployed (12mo)"
+        },
+        "india_share": {
+          "value": "8%",
+          "label": "India's share of global"
+        },
+        "median_to_a": {
+          "value": "30mo",
+          "label": "Median time to Series A"
+        },
+        "profitable_co_count": {
+          "value": "11",
+          "label": "Profitable co's in category"
+        }
+      },
+      "subcategory_shares": [
+        {
+          "name": "Industrial robots",
+          "share_pct": 30,
+          "icon": "🤖",
+          "description": "Manufacturing, warehouse. India's mfg push."
+        },
+        {
+          "name": "Drones",
+          "share_pct": 22,
+          "icon": "🛩️",
+          "description": "ideaForge, Garuda. Defense, surveying, delivery."
+        },
+        {
+          "name": "Consumer hardware",
+          "share_pct": 18,
+          "icon": "🔌",
+          "description": "Smart home, wearables, audio."
+        },
+        {
+          "name": "Robotics SaaS",
+          "share_pct": 16,
+          "icon": "💻",
+          "description": "Software for physical robots. ROS ecosystem."
+        },
+        {
+          "name": "Humanoids",
+          "share_pct": 14,
+          "icon": "🧍",
+          "description": "Figure, Tesla Optimus. 5-10 year horizon."
+        }
+      ]
     }
   }
 }
