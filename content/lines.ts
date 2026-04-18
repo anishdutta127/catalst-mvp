@@ -306,31 +306,99 @@ export const lines = {
     headlines: [
       {
         id: 'achievement',
+        theme: {
+          category: 'LEGACY',
+          icon: '\ud83d\udc51',
+          color_primary: '#D4A843',
+          color_secondary: '#6B3F07',
+        },
         headline: (name: string) => `${name}'s Company Crosses $100M Valuation`,
-        story: 'From zero to centaur in 6 years — the startup that nobody believed in rewrites the playbook.',
-        stats: '\ud83d\udcca $100M+ valuation \u00b7 \ud83d\udc65 200-person team \u00b7 \ud83c\udf0e 12 countries',
-        quote: (name: string) => `"I didn't build this to prove anyone wrong. I built it to prove myself right." — ${name}, Founder & CEO`,
+        featured_stat: {
+          value: '$100M+',
+          context: 'valuation hit in year six — Forbes 30u30, Series C closed at $40M',
+        },
+        lead: 'From zero to centaur in six years. The startup nobody believed in rewrites the playbook for what\u2019s possible in this category.',
+        pull_quote: {
+          text: 'I didn\u2019t build this to prove anyone wrong. I built it to prove myself right.',
+          attribution: (name: string) => `${name}, Founder & CEO`,
+        },
+        support_stats: [
+          { icon: '\ud83d\udc65', text: '200-person team' },
+          { icon: '\ud83c\udf0d', text: '12 countries' },
+          { icon: '\ud83d\udcc8', text: 'Series C' },
+        ],
       },
       {
         id: 'autonomy',
+        theme: {
+          category: 'FREEDOM',
+          icon: '\ud83d\udd4a\ufe0f',
+          color_primary: '#0EA5E9',
+          color_secondary: '#0C4A6E',
+        },
         headline: (name: string) => `${name} Runs a Profitable Company From Anywhere in the World`,
-        story: 'No office. No investors. No permission. A one-person operation doing $2M/year.',
-        stats: '\ud83d\udcb0 $2M annual revenue \u00b7 \u23f0 25 hours/week \u00b7 \u2708\ufe0f 11 countries this year',
-        quote: (name: string) => `"Everyone told me to scale. I scaled my freedom instead." — ${name}, Founder`,
+        featured_stat: {
+          value: '$2M',
+          context: 'annual revenue — twenty-five hours a week, one person, eleven countries last year',
+        },
+        lead: 'No office. No investors. No permission. A one-person operation running lean in a category that everyone assumed needed scale.',
+        pull_quote: {
+          text: 'Everyone told me to scale. I scaled my freedom instead.',
+          attribution: (name: string) => `${name}, Founder`,
+        },
+        support_stats: [
+          { icon: '\u23f0', text: '25h/week' },
+          { icon: '\u2708\ufe0f', text: '11 countries' },
+          { icon: '\ud83d\udcb0', text: 'Fully bootstrapped' },
+        ],
       },
       {
         id: 'power',
+        theme: {
+          category: 'SCALE',
+          icon: '\u26a1',
+          color_primary: '#9333EA',
+          color_secondary: '#4C1D95',
+        },
         headline: (name: string) => `${name}'s Platform Reaches 10 Million Users Worldwide`,
-        story: 'What started as a side project now processes more daily active users than most countries have citizens.',
-        stats: '\ud83d\udc65 10M+ active users \u00b7 \ud83d\udcc8 40% quarter/quarter growth \u00b7 \ud83c\udfc6 #1 in category',
-        quote: (name: string) => `"We didn't chase users. We built something they couldn't imagine living without." — ${name}, CEO`,
+        featured_stat: {
+          value: '10M+',
+          context: 'active users in fourteen months — faster than most unicorns',
+        },
+        lead: 'What started as a side project now processes more daily active users than most countries have citizens.',
+        pull_quote: {
+          text: 'I signed up thinking it was a demo. Three months later my whole team runs on it.',
+          attribution: () => 'Priya Menon, Engineering Lead at a Fortune 500',
+        },
+        support_stats: [
+          { icon: '\ud83d\udcc8', text: '40% QoQ growth' },
+          { icon: '\ud83c\udfc6', text: '#1 in category' },
+          { icon: '\ud83c\udf10', text: '47 countries' },
+        ],
       },
       {
         id: 'affiliation',
+        theme: {
+          category: 'COMMUNITY',
+          icon: '\ud83c\udf31',
+          color_primary: '#EC4899',
+          color_secondary: '#831843',
+        },
         headline: (name: string) => `${name}'s Community Helped 50,000 First-Time Founders Launch`,
-        story: 'The network that turned "I have an idea" into "I have a company" — for 50,000 people and counting.',
-        stats: '\ud83e\udd1d 50,000 founders launched \u00b7 \ud83d\udcac 300,000 community members \u00b7 \ud83c\udf31 92% still active after 1yr',
-        quote: (name: string) => `"The best business model is one where your success is measured by other people's success." — ${name}, Founder`,
+        featured_stat: {
+          value: '50,000',
+          context: 'founders launched through the network — 80+ YC-accepted, 92% still active after a year',
+        },
+        lead: 'The network that turned "I have an idea" into "I have a company" — for fifty thousand people, and counting.',
+        pull_quote: {
+          text: 'This community didn\u2019t just teach me how to build. It taught me I belonged in the room.',
+          attribution: () => 'Arjun M., fintech founder, Series A closed last month',
+        },
+        support_stats: [
+          { icon: '\ud83d\udcac', text: '300K members' },
+          { icon: '\ud83c\udf31', text: '92% retention' },
+          { icon: '\ud83c\udfc5', text: '80+ YC launches' },
+        ],
       },
     ],
     timeBudgets: ['< 5h/week', '5-15h', '15-30h', '30h+'],

@@ -22,46 +22,22 @@ import { useAmbientPipLine } from '@/lib/ambient-pip';
  *      top, polished selection pills, one gold breathing CTA when ready.
  */
 
-/** Per-headline visual theme. id → color palette + category tag + year icon. */
-const HEADLINE_THEMES: Record<
-  string,
-  {
-    primary: string;
-    secondary: string;
-    accent: string;
-    category: string;
-    icon: string;
-  }
-> = {
-  achievement: {
-    primary: '#D4A843',
-    secondary: '#6B3F07',
-    accent: '#FAD890',
-    category: 'LEGACY',
-    icon: '👑',
-  },
-  autonomy: {
-    primary: '#0EA5E9',
-    secondary: '#0C4A6E',
-    accent: '#7DD3FC',
-    category: 'FREEDOM',
-    icon: '🕊️',
-  },
-  power: {
-    primary: '#9333EA',
-    secondary: '#4C1D95',
-    accent: '#C4B5FD',
-    category: 'SCALE',
-    icon: '⚡',
-  },
-  affiliation: {
-    primary: '#EC4899',
-    secondary: '#831843',
-    accent: '#FBCFE8',
-    category: 'COMMUNITY',
-    icon: '🌱',
-  },
-};
+/** Lighten a hex color toward white by `amt` (0–1). Used for accent tints. */
+function lighten(hex: string, amt: number): string {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  const blend = (c: number) => Math.round(c + (255 - c) * amt);
+  return (
+    '#' +
+    [blend(r), blend(g), blend(b)]
+      .map((n) => n.toString(16).padStart(2, '0'))
+      .join('')
+  );
+}
+
+type Headline = (typeof lines.s07.headlines)[number];
 
 type ConstraintGroup = {
   key: string;
@@ -200,8 +176,7 @@ interface HeadlinesPhaseProps {
 function HeadlinesPhase({ headlineIdx, setHeadlineIdx, displayName, onSelect }: HeadlinesPhaseProps) {
   const total = lines.s07.headlines.length;
   const current = lines.s07.headlines[headlineIdx];
-  const theme = HEADLINE_THEMES[current.id] ?? HEADLINE_THEMES.achievement;
-  const statsParts = current.stats.split(/\s+·\s+/).filter(Boolean);
+  const theme = current.theme;
 
   return (
     <motion.div
@@ -211,28 +186,15 @@ function HeadlinesPhase({ headlineIdx, setHeadlineIdx, displayName, onSelect }: 
       transition={{ duration: 0.3 }}
       className="flex flex-col h-full"
     >
-      {/* Progress ticker — "Future X of 4" */}
-      <div className="shrink-0 h-6 flex items-center justify-center">
-        <motion.p
-          key={`progress-${headlineIdx}`}
-          initial={{ opacity: 0, y: -2 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="text-[10px] font-mono uppercase tracking-[0.28em] text-ivory/55"
-        >
-          Future {headlineIdx + 1} of {total}
-        </motion.p>
-      </div>
-
-      {/* Swipeable future-card */}
-      <div className="flex-1 relative min-h-0 pt-2 pb-2">
+      {/* Swipeable magazine-style future-card */}
+      <div className="flex-1 relative min-h-0 pt-1 pb-2">
         <AnimatePresence mode="popLayout" initial={false}>
           <FutureCard
             key={current.id}
             hl={current}
-            theme={theme}
             displayName={displayName}
-            statsParts={statsParts}
+            headlineIdx={headlineIdx}
+            total={total}
             onSwipeLeft={() => setHeadlineIdx(Math.min(total - 1, headlineIdx + 1))}
             onSwipeRight={() => setHeadlineIdx(Math.max(0, headlineIdx - 1))}
           />
@@ -252,7 +214,6 @@ function HeadlinesPhase({ headlineIdx, setHeadlineIdx, displayName, onSelect }: 
         <div className="flex gap-1.5">
           {lines.s07.headlines.map((h, i) => {
             const active = i === headlineIdx;
-            const t = HEADLINE_THEMES[h.id] ?? HEADLINE_THEMES.achievement;
             return (
               <button
                 key={h.id}
@@ -261,8 +222,8 @@ function HeadlinesPhase({ headlineIdx, setHeadlineIdx, displayName, onSelect }: 
                 style={{
                   width: active ? 20 : 8,
                   height: 8,
-                  background: active ? t.primary : 'rgba(255,255,255,0.18)',
-                  boxShadow: active ? `0 0 6px ${t.primary}80` : 'none',
+                  background: active ? h.theme.color_primary : 'rgba(255,255,255,0.18)',
+                  boxShadow: active ? `0 0 6px ${h.theme.color_primary}80` : 'none',
                 }}
                 aria-label={`Go to future ${i + 1}`}
               />
@@ -288,7 +249,7 @@ function HeadlinesPhase({ headlineIdx, setHeadlineIdx, displayName, onSelect }: 
           data-testid={`headline-card-${headlineIdx}`}
           className="relative w-full h-12 rounded-2xl font-bold text-[14px] overflow-hidden flex items-center justify-center gap-2"
           style={{
-            background: theme.primary,
+            background: theme.color_primary,
             color: '#0C0E12',
           }}
         >
@@ -296,9 +257,9 @@ function HeadlinesPhase({ headlineIdx, setHeadlineIdx, displayName, onSelect }: 
             className="absolute inset-0 rounded-2xl pointer-events-none"
             animate={{
               boxShadow: [
-                `0 0 14px ${theme.primary}55`,
-                `0 0 28px ${theme.primary}aa`,
-                `0 0 14px ${theme.primary}55`,
+                `0 0 14px ${theme.color_primary}55`,
+                `0 0 28px ${theme.color_primary}aa`,
+                `0 0 14px ${theme.color_primary}55`,
               ],
             }}
             transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
@@ -312,25 +273,36 @@ function HeadlinesPhase({ headlineIdx, setHeadlineIdx, displayName, onSelect }: 
 }
 
 interface FutureCardProps {
-  hl: (typeof lines.s07.headlines)[number];
-  theme: (typeof HEADLINE_THEMES)[string];
+  hl: Headline;
   displayName: string;
-  statsParts: string[];
+  headlineIdx: number;
+  total: number;
   onSwipeLeft: () => void;
   onSwipeRight: () => void;
 }
 
+/**
+ * FutureCard — magazine-style feature article. Named regions:
+ *   • Category strip + "Future X / Y" counter at top
+ *   • Big serif headline hero
+ *   • Featured stat callout (huge number + context)
+ *   • Lead paragraph (1-2 sentences)
+ *   • Pull-quote (decorative " + large italic + attribution)
+ *   • Support-stat chips at the bottom
+ *
+ * Drag-to-swipe between futures with subtle rotate/fade feedback.
+ */
 function FutureCard({
   hl,
-  theme,
   displayName,
-  statsParts,
+  headlineIdx,
+  total,
   onSwipeLeft,
   onSwipeRight,
 }: FutureCardProps) {
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-6, 6]);
-  const opacity = useTransform(x, [-260, -60, 0, 60, 260], [0.3, 0.7, 1, 0.7, 0.3]);
+  const dragOpacity = useTransform(x, [-260, -60, 0, 60, 260], [0.3, 0.7, 1, 0.7, 0.3]);
 
   function handleDragEnd(_: unknown, info: { offset: { x: number } }) {
     const dx = info.offset.x;
@@ -343,6 +315,9 @@ function FutureCard({
     }
   }
 
+  const theme = hl.theme;
+  const pullQuoteAttribution = hl.pull_quote.attribution(displayName);
+
   return (
     <motion.div
       drag="x"
@@ -352,10 +327,11 @@ function FutureCard({
       style={{
         x,
         rotate,
-        opacity,
+        opacity: dragOpacity,
         touchAction: 'pan-y',
-        background: `linear-gradient(145deg, ${theme.secondary}ee 0%, #14171E 45%, #0C0E12 100%)`,
-        boxShadow: `0 14px 44px -10px ${theme.primary}55, 0 0 0 1px ${theme.primary}30`,
+        background: `linear-gradient(145deg, ${theme.color_primary}18 0%, ${theme.color_secondary}10 60%, #0C0E12 100%)`,
+        border: `1px solid ${theme.color_primary}25`,
+        boxShadow: `0 14px 44px -10px ${theme.color_primary}55`,
       }}
       initial={{ opacity: 0, scale: 0.94, y: 12 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -363,61 +339,95 @@ function FutureCard({
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="absolute inset-0 rounded-2xl overflow-hidden flex flex-col cursor-grab active:cursor-grabbing"
     >
-      {/* Masthead — category tag + year */}
-      <div className="shrink-0 flex items-center justify-between px-5 pt-4 pb-3 border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <span className="text-[16px] leading-none">{theme.icon}</span>
-          <span
-            className="text-[10px] font-mono uppercase font-semibold tracking-[0.22em]"
-            style={{ color: theme.accent }}
-          >
-            {theme.category}
+      {/* Scrollable content region — magazine-style layout */}
+      <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide">
+        {/* Category strip (left) + counter (right) */}
+        <div className="flex items-center justify-between px-5 pt-4 pb-3">
+          <div className="flex items-center gap-2">
+            <div
+              className="w-1 h-4 rounded-full"
+              style={{ background: theme.color_primary }}
+            />
+            <span className="text-[14px] leading-none">{theme.icon}</span>
+            <span
+              className="text-[10px] font-mono uppercase font-bold tracking-[0.22em]"
+              style={{ color: theme.color_primary }}
+            >
+              {theme.category}
+            </span>
+          </div>
+          <span className="text-[10px] font-mono text-ivory/40 tracking-widest">
+            FUTURE {headlineIdx + 1} / {total}
           </span>
         </div>
-        <span className="text-[10px] font-mono text-white/40 tracking-widest">2036</span>
-      </div>
 
-      {/* Headline */}
-      <div className="shrink-0 px-5 pt-4 pb-3">
-        <h3 className="text-[20px] sm:text-[22px] font-serif font-bold text-white leading-tight">
-          {hl.headline(displayName)}
-        </h3>
-      </div>
+        {/* Headline — hero */}
+        <div className="px-6 pb-4">
+          <h2 className="text-[24px] sm:text-[28px] font-serif font-bold text-ivory leading-[1.15]">
+            {hl.headline(displayName)}
+          </h2>
+        </div>
 
-      {/* Stats */}
-      <div className="shrink-0 px-5 pb-3 flex flex-wrap gap-2">
-        {statsParts.map((stat, i) => (
-          <span
-            key={i}
-            className="rounded-full px-2.5 py-1 text-[10.5px] font-medium"
-            style={{
-              background: `${theme.primary}18`,
-              border: `1px solid ${theme.primary}40`,
-              color: theme.accent,
-            }}
+        {/* Featured stat — big number callout */}
+        <div className="px-6 pb-4">
+          <div
+            className="flex items-baseline gap-3 py-3 border-t border-b"
+            style={{ borderColor: `${theme.color_primary}30` }}
           >
-            {stat}
+            <p
+              className="text-[34px] sm:text-[38px] font-serif font-bold leading-none shrink-0"
+              style={{ color: theme.color_primary }}
+            >
+              {hl.featured_stat.value}
+            </p>
+            <p className="text-[12px] text-ivory/75 leading-snug flex-1 pt-1">
+              {hl.featured_stat.context}
+            </p>
+          </div>
+        </div>
+
+        {/* Lead paragraph */}
+        <div className="px-6 pb-4">
+          <p className="text-[14px] text-ivory/85 leading-relaxed">{hl.lead}</p>
+        </div>
+
+        {/* Pull-quote — the emotional anchor */}
+        <div className="relative mx-6 mb-4 py-3 pl-5 pr-4">
+          <span
+            className="absolute -top-1 left-0 text-[56px] font-serif leading-none"
+            style={{ color: theme.color_primary, opacity: 0.35 }}
+            aria-hidden
+          >
+            &ldquo;
           </span>
-        ))}
-      </div>
-
-      {/* Story */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-5 pb-4 scrollbar-hide">
-        <p className="text-[13.5px] text-white/80 leading-relaxed">{hl.story}</p>
-      </div>
-
-      {/* Pull-quote footer */}
-      <div
-        className="shrink-0 px-5 py-4 border-t"
-        style={{ borderColor: `${theme.primary}35` }}
-      >
-        <div
-          className="pl-3 border-l-2"
-          style={{ borderColor: theme.primary }}
-        >
-          <p className="text-[12.5px] italic text-white/75 leading-snug">
-            {hl.quote(displayName)}
+          <p
+            className="text-[15px] italic font-serif text-ivory/95 leading-snug pl-6"
+            style={{ color: lighten(theme.color_primary, 0.7) }}
+          >
+            {hl.pull_quote.text}
           </p>
+          <p className="text-[10.5px] text-ivory/50 mt-2 pl-6 uppercase tracking-wider">
+            — {pullQuoteAttribution}
+          </p>
+        </div>
+
+        {/* Support-stat chips */}
+        <div className="px-6 pb-5">
+          <div className="flex gap-2 flex-wrap">
+            {hl.support_stats.map((s, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full"
+                style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  border: '1px solid rgba(255,255,255,0.10)',
+                }}
+              >
+                <span>{s.icon}</span>
+                <span className="text-ivory/80">{s.text}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </motion.div>
