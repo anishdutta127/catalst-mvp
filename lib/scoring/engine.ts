@@ -643,24 +643,48 @@ function handlePathB(
     displayScore: calibrateScore(yourRaw, 'your_idea'), matchTier: 'your_idea',
   };
 
-  const remaining = scored.filter(s => s.idea.idea_id !== closest.idea_id).sort((a, b) => b.rawScore - a.rawScore);
+  // yourIdea is the user-brought idea (always shown). nest / spark / wildvine
+  // must all be DIFFERENT ideas from yourIdea and from each other — previous
+  // revision returned `nest: yourIdea` which rendered two PromptCraft tiles
+  // side by side on S09.
+  const remaining = scored
+    .filter((s) => s.idea.idea_id !== closest.idea_id)
+    .sort((a, b) => b.rawScore - a.rawScore);
+
   if (remaining.length === 0) {
     return { nest: yourIdea, spark: yourIdea, wildvine: yourIdea, yourIdea, confidence: 50, conflicts };
   }
 
-  const sparkItem = remaining.find(s => s.rawScore > yourRaw && s.idea.domain_primary !== closest.domain_primary)
-    ?? remaining.find(s => s.idea.domain_primary !== closest.domain_primary) ?? remaining[0];
+  // NEST: highest-scoring idea in a DIFFERENT domain from the user's idea
+  // (if possible). If no cross-domain match, fall back to highest remaining.
+  const nestItem =
+    remaining.find((s) => s.idea.domain_primary !== closest.domain_primary)
+    ?? remaining[0];
 
-  const usedDomains = new Set([closest.domain_primary, sparkItem.idea.domain_primary]);
-  const wildItem = remaining
-    .filter(s => s !== sparkItem && !usedDomains.has(s.idea.domain_primary))
-    .sort((a, b) => b.idea.novelty_score - a.idea.novelty_score)[0]
-    ?? remaining.find(s => s !== sparkItem) ?? remaining[0];
+  // SPARK: next highest, different domain from BOTH yourIdea and nest.
+  const usedDomainsAfterNest = new Set([closest.domain_primary, nestItem.idea.domain_primary]);
+  const sparkItem =
+    remaining.find((s) => s !== nestItem && !usedDomainsAfterNest.has(s.idea.domain_primary))
+    ?? remaining.find((s) => s !== nestItem)
+    ?? nestItem;
+
+  // WILDVINE: highest novelty, different domain from all three where possible.
+  const usedDomains = new Set([
+    closest.domain_primary,
+    nestItem.idea.domain_primary,
+    sparkItem.idea.domain_primary,
+  ]);
+  const wildItem =
+    remaining
+      .filter((s) => s !== nestItem && s !== sparkItem && !usedDomains.has(s.idea.domain_primary))
+      .sort((a, b) => b.idea.novelty_score - a.idea.novelty_score)[0]
+    ?? remaining.find((s) => s !== nestItem && s !== sparkItem)
+    ?? sparkItem;
 
   return {
-    nest: yourIdea,
-    spark: { idea: sparkItem.idea, rawScore: sparkItem.rawScore, displayScore: calibrateScore(sparkItem.rawScore, 'spark'), matchTier: 'spark' },
-    wildvine: { idea: wildItem.idea, rawScore: wildItem.rawScore, displayScore: calibrateScore(wildItem.rawScore, 'wildvine'), matchTier: 'wildvine' },
+    nest:     { idea: nestItem.idea,  rawScore: nestItem.rawScore,  displayScore: calibrateScore(nestItem.rawScore, 'nest'),     matchTier: 'nest' },
+    spark:    { idea: sparkItem.idea, rawScore: sparkItem.rawScore, displayScore: calibrateScore(sparkItem.rawScore, 'spark'),    matchTier: 'spark' },
+    wildvine: { idea: wildItem.idea,  rawScore: wildItem.rawScore,  displayScore: calibrateScore(wildItem.rawScore, 'wildvine'), matchTier: 'wildvine' },
     yourIdea,
     confidence: computeConfidence(scored) + confBonus,
     conflicts,
