@@ -10,6 +10,7 @@ import { TIMER_DEFAULTS } from '@/lib/constants';
 import { ActivityTimer } from '@/components/ui/ActivityTimer';
 import { ProcessingSwirl } from '@/components/ui/ProcessingSwirl';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
+import { useAmbientPipLine } from '@/lib/ambient-pip';
 
 /**
  * S03 — Word Association (enriched).
@@ -29,6 +30,8 @@ export function S03Words() {
   const [processing, setProcessing] = useState(false);
   const timer = useRef(createTimer());
   const dialogueSent = useRef(false);
+
+  useAmbientPipLine('s03');
 
   useEffect(() => {
     if (dialogueSent.current) return;

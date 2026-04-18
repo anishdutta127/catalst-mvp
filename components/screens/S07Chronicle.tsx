@@ -8,6 +8,7 @@ import { lines } from '@/content/lines';
 import { finalRun } from '@/lib/scoring/orchestrator';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
+import { useAmbientPipLine } from '@/lib/ambient-pip';
 
 /**
  * S07 — Verdania Chronicle + Constraints.
@@ -92,6 +93,8 @@ export function S07Chronicle() {
   const dialogueSent = useRef(false);
   const constraintsDialogueSent = useRef(false);
   const displayName = state.displayName || 'Traveler';
+
+  useAmbientPipLine('s07');
 
   // Intro dialogue — once per phase.
   useEffect(() => {

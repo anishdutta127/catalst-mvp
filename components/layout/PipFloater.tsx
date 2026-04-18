@@ -37,12 +37,12 @@ function screenBaselineEmotion(screen: string): PipEmotion {
   switch (screen) {
     case 's00': return 'idle';
     case 's01': return 'happy';    // excited intro
-    case 's02': return 'idle';     // serious inkblot test
-    case 's03': return 'idle';     // word-pair tensions
+    case 's02': return 'tilt';     // curious head-tilt for inkblots
+    case 's03': return 'wideeye';  // surprised by word choices
     case 's04': return 'happy';    // fun swipe
     case 's05': return 'wideeye';  // dramatic scenarios
-    case 's06': return 'idle';     // crystal constellation
-    case 's07': return 'idle';     // chronicle constraints
+    case 's06': return 'glow';     // crystal magic
+    case 's07': return 'tilt';     // imagining futures
     case 's08': return 'glow';     // forge magic
     case 's09': return 'glow';     // ideas reveal
     case 's10': return 'glow';     // sorting ceremony
@@ -50,6 +50,11 @@ function screenBaselineEmotion(screen: string): PipEmotion {
     default:    return 'idle';
   }
 }
+
+/** Transient expression beats — Pip briefly looks surprised / tilts / smiles
+ *  every ~6.5–9s to keep him feeling alive, then returns to the screen
+ *  baseline after ~1.5s. */
+const EXPRESSION_BEATS: PipEmotion[] = ['tilt', 'wideeye', 'happy'];
 
 function usePipTimerProgress(): number | null {
   const pipTimer = useUIStore((s) => s.pipTimer);
@@ -104,10 +109,42 @@ export function PipFloater({ visible = true }: PipFloaterProps = {}) {
   const currentScreen = useJourneyStore((s) => s.currentScreen);
   const timerPct = usePipTimerProgress();
 
+  // Transient expression beats layered on top of the per-screen baseline.
+  // When non-null, overrides the baseline for ~1.5s then clears.
+  const [pipExpression, setPipExpression] = useState<PipEmotion | null>(null);
+
   // s00 hides Pip entirely (no sprite, no text). Also respects the caller's
   // visible flag so JourneyShell can toggle him in/out on screens that own
   // their own Pip (like S04) without unmounting the floater outright.
   const pipVisible = visible && currentScreen !== 's00';
+
+  // Expression beat cycle — fires a brief tilt / wideeye / happy every
+  // 6.5–9s while Pip is visible, so he doesn't feel static. Resets the beat
+  // to null after ~1.5s so the baseline reclaims control cleanly. The
+  // re-arm interval is re-chosen on each fire for natural variation.
+  useEffect(() => {
+    if (!pipVisible) return;
+    let clearTimer: ReturnType<typeof setTimeout> | null = null;
+    let cycleTimer: ReturnType<typeof setTimeout> | null = null;
+
+    const schedule = () => {
+      const delay = 6500 + Math.random() * 2500;
+      cycleTimer = setTimeout(() => {
+        const beat = EXPRESSION_BEATS[Math.floor(Math.random() * EXPRESSION_BEATS.length)];
+        setPipExpression(beat);
+        clearTimer = setTimeout(() => {
+          setPipExpression(null);
+          schedule();
+        }, 1500);
+      }, delay);
+    };
+    schedule();
+
+    return () => {
+      if (clearTimer) clearTimeout(clearTimer);
+      if (cycleTimer) clearTimeout(cycleTimer);
+    };
+  }, [pipVisible, currentScreen]);
 
   // Pip starts streaming as soon as a Pip message lands in the queue. Reading
   // order (Cedric first, Pip second) is enforced by *when* screens enqueue
@@ -115,7 +152,8 @@ export function PipFloater({ visible = true }: PipFloaterProps = {}) {
   // screens where that beat reads better.
   const pipMsg = [...messages].reverse().find((m) => m.speaker === 'pip');
   const pipColor = PIP_COLOR;
-  const pipEmotion = screenBaselineEmotion(currentScreen);
+  // Expression beat overrides the per-screen baseline when active.
+  const pipEmotion: PipEmotion = pipExpression ?? screenBaselineEmotion(currentScreen);
   const showText = !!pipMsg && pipVisible;
 
   const showRing = timerPct !== null;
@@ -191,8 +229,9 @@ export function PipFloater({ visible = true }: PipFloaterProps = {}) {
             emotion={pipEmotion}
             color={pipColor}
             size={SPRITE_SIZE}
-            enterDelay={300}
+            enterDelay={0}
             visible={pipVisible}
+            persistent={true}
           />
         </div>
       </div>

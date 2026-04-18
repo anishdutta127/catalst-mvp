@@ -48,6 +48,38 @@ export const lines = {
     ideaPlaceholder: 'e.g., An AI tool that helps restaurants manage food waste',
   },
 
+  /**
+   * Ambient Pip lines — fire after ~15s of dwell on a screen if Pip hasn't
+   * said anything else recently. Short, cheeky, teasing. Per-screen bank.
+   * Accessed via the useAmbientPipLine hook (lib/ambient-pip.ts).
+   */
+  ambientPip: {
+    s02: [
+      "What? Don't look at me. I'm just observing.",
+      "I already know what you're going to pick.",
+    ],
+    s03: [
+      'Four words and somehow still stressful.',
+      'Your instincts are ratting you out.',
+    ],
+    s05: [
+      'Awkward silence — say SOMETHING.',
+      'I can see you overthinking.',
+    ],
+    s06: [
+      "You're picking the ones that sound cool, aren't you.",
+      'I picked mine in 2 seconds. Just saying.',
+    ],
+    s07: [
+      'Future you is judging your choice.',
+      'Pick the one that gave you goosebumps. Trust me.',
+    ],
+    s09: [
+      "Don't pretend you don't have a favorite.",
+      "You're peeking at all three. We see you.",
+    ],
+  } as Record<string, string[]>,
+
   s02: {
     cedric: {
       intro: 'Three shapes. No right answers. Tell me what you see — not what it is.',

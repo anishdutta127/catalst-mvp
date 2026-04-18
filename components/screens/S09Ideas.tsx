@@ -10,6 +10,7 @@ import housesRaw from '@/content/houses.json';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { IdeaDossier } from '@/components/ui/IdeaDossier';
 import { MysticVaultCard } from '@/components/ui/MysticVaultCard';
+import { useAmbientPipLine } from '@/lib/ambient-pip';
 
 /**
  * S09 — Ideas Revealed (Batch 3 rebuild).
@@ -49,6 +50,8 @@ export function S09Ideas() {
   const [mode, setMode] = useState<'grid' | 'dossier'>('grid');
   const [activeIdeaId, setActiveIdeaId] = useState<string | null>(null);
   const dialogueSent = useRef(false);
+
+  useAmbientPipLine('s09');
 
   useEffect(() => {
     if (!matchedIdeas) { goToScreen('s08'); return; }

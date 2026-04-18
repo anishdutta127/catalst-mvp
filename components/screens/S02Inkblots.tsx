@@ -10,6 +10,7 @@ import { TIMER_DEFAULTS } from '@/lib/constants';
 import { ActivityTimer } from '@/components/ui/ActivityTimer';
 import { ProcessingSwirl } from '@/components/ui/ProcessingSwirl';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
+import { useAmbientPipLine } from '@/lib/ambient-pip';
 import Image from 'next/image';
 
 /**
@@ -36,6 +37,8 @@ export function S02Inkblots() {
   const [processing, setProcessing] = useState(false);
   const timer = useRef(createTimer());
   const dialogueSent = useRef(false);
+
+  useAmbientPipLine('s02');
 
   useEffect(() => {
     if (dialogueSent.current) return;

@@ -9,6 +9,7 @@ import { createTimer } from '@/lib/timing';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { CrystalViewport } from '@/components/ui/CrystalViewport';
 import type { OrbDef } from '@/components/ui/CrystalViewport';
+import { useAmbientPipLine } from '@/lib/ambient-pip';
 
 const ORBS = lines.s06.orbs as unknown as OrbDef[];
 const SLOT_LABELS = ['Dominant', 'Supporting', 'Balancing'] as const;
@@ -41,6 +42,8 @@ export function S06Crystal() {
   // Celebration state — on confirm, orbs + crystal play a finale beat before
   // advancing to the next screen.
   const [celebrating, setCelebrating] = useState(false);
+
+  useAmbientPipLine('s06');
 
   // Intro dialogue — Cedric first (gravitas), Pip later (quieter than usual).
   useEffect(() => {

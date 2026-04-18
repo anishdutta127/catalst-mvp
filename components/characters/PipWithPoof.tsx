@@ -12,6 +12,14 @@ interface PipWithPoofProps {
   enterDelay?: number;
   /** When true, Pip poofs IN. When false, he poofs OUT and unmounts cleanly. */
   visible?: boolean;
+  /**
+   * When true, skip the sparkle-poof and render a single long-lived sprite
+   * that only animates its breathing/color/emotion. Use for Pip instances
+   * that persist across screen changes (the chat-strip Pip) so he doesn't
+   * flash-remount on every navigation. Use `visible` to hide/show without
+   * remount (e.g. s00 or screens that own their own Pip).
+   */
+  persistent?: boolean;
 }
 
 /**
@@ -30,8 +38,38 @@ function PipWithPoofImpl({
   size = 44,
   enterDelay = 0,
   visible = true,
+  persistent = false,
 }: PipWithPoofProps) {
   const delaySec = enterDelay / 1000;
+
+  // PERSISTENT MODE — no sparkle burst, no AnimatePresence. Mounts ONCE with
+  // a soft scale-up, then stays forever. Hide/show via `visible` animates
+  // opacity + scale on the existing node instead of remounting. This is what
+  // the chat-strip Pip uses so he doesn't flash-remount on every screen change.
+  if (persistent) {
+    return (
+      <div
+        className="relative"
+        style={{ width: size, height: size * 1.15 }}
+      >
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center"
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{
+            opacity: visible ? 1 : 0,
+            scale: visible ? 1 : 0,
+          }}
+          transition={{
+            duration: 0.5,
+            ease: [0.34, 1.56, 0.64, 1] as [number, number, number, number],
+            delay: visible ? delaySec : 0,
+          }}
+        >
+          <PipSprite emotion={emotion} color={color} size={size} />
+        </motion.div>
+      </div>
+    );
+  }
 
   // Memoize the entry/exit configs so Framer doesn't think they "changed" on
   // every parent re-render — if the values aren't stable the entry animation
