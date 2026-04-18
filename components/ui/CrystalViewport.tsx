@@ -501,15 +501,16 @@ function CrystalViewportImpl({
           )}
 
           {count === 3 && (() => {
-            // Step-cut Asscher gem — concentric rotated squares viewed from a
-            // gently tilted angle. Entire assembly rocks on the X-axis so the
-            // top edge recedes / bottom edge comes forward over an 8s cycle,
-            // giving real 3D perception without needing hand-drawn facet shading.
+            // Step-cut Asscher gem with Disney-style personality + real 3D:
+            //   • Entrance squash+stretch ("anticipation → overshoot → settle")
+            //   • Drop shadow beneath that scales with the tilt (gem "floats")
+            //   • Back face offset behind the front face = visible thickness
+            //   • 8 slow-rotating light rays behind the gem (independent axis)
+            //   • 3 sparkles orbiting at different radii + phases
+            //   • X-axis rocking tilt (existing) + subtle breathing scale
+            //   • Center heartbeat + three orb accents anchored in screen space
             const gemSize = Math.min(W, H) * 1.1;
             const sizes = [1.0, 0.80, 0.60, 0.40] as const;
-            // Orb accents sit outside the rotating group at three fixed
-            // positions — Dominant top, Supporting left, Balancing right —
-            // so they don't distort with the tilt.
             const orbPositions = [
               { x: cx, y: cy - gemSize * 1.05 },
               { x: cx - gemSize * 1.05, y: cy },
@@ -520,22 +521,59 @@ function CrystalViewportImpl({
               <motion.g
                 key="v3-stepcut"
                 initial={{ scale: 0, opacity: 0 }}
+                // Disney-style entrance: tiny pre-squash → playful overshoot
+                // → slight undershoot bounce → settle. Classic squash+stretch
+                // cadence that makes the gem feel charmingly alive, not
+                // mechanically slotted in.
                 animate={{
-                  scale: celebrating ? [1, 1.18, 1.05] : [0, 1.2, 1],
+                  scale: celebrating ? [1, 1.22, 0.97, 1.08, 1.05] : [0, 1.3, 0.92, 1.08, 1],
                   opacity: 1,
                 }}
                 exit={{ scale: 0.7, opacity: 0 }}
                 transition={{
                   scale: {
-                    duration: celebrating ? 1.4 : 0.9,
-                    times: [0, 0.6, 1],
-                    ease: [0.34, 1.56, 0.64, 1],
+                    duration: celebrating ? 1.4 : 1.0,
+                    times: [0, 0.4, 0.6, 0.8, 1],
+                    ease: 'easeOut',
                   },
                   opacity: { duration: 0.4 },
                 }}
                 style={{ transformOrigin: `${cx}px ${cy}px` }}
               >
-                {/* Outer halo — soft, pulsing */}
+                {/* DROP SHADOW — elliptical shadow on the "ground" beneath
+                    the gem. Scales + fades in sync with the X-tilt so when
+                    the gem leans forward the shadow tightens (closer to
+                    surface) and when it leans back the shadow spreads. */}
+                <motion.ellipse
+                  cx={cx}
+                  cy={cy + gemSize * 1.6}
+                  fill="black"
+                  animate={{
+                    rx: [
+                      gemSize * 0.85,
+                      gemSize * 0.6,
+                      gemSize * 0.85,
+                      gemSize * 0.95,
+                      gemSize * 0.85,
+                    ],
+                    ry: [
+                      gemSize * 0.14,
+                      gemSize * 0.10,
+                      gemSize * 0.14,
+                      gemSize * 0.16,
+                      gemSize * 0.14,
+                    ],
+                    opacity: [0.32, 0.22, 0.32, 0.28, 0.32],
+                  }}
+                  transition={{
+                    duration: 8,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    times: [0, 0.25, 0.5, 0.75, 1],
+                  }}
+                />
+
+                {/* OUTER HALO — soft colored breath */}
                 <motion.circle
                   cx={cx}
                   cy={cy}
@@ -548,10 +586,38 @@ function CrystalViewportImpl({
                   transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
                 />
 
-                {/* TILTING GEM GROUP — X-axis rock (top edge recedes and comes
-                    forward, 8s cycle). Requires perspective on the outer <svg>
-                    element (set on the CrystalViewport wrapper) for the
-                    rotateX to read as real 3D tilt and not a vertical squish. */}
+                {/* LIGHT RAYS — 8 long faint rays emanating from center,
+                    rotating on a SEPARATE axis from the gem tilt so the
+                    magical "shining" effect isn't locked to the tilt rhythm. */}
+                <motion.g
+                  style={{ transformOrigin: `${cx}px ${cy}px`, transformBox: 'fill-box' }}
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
+                >
+                  {[...Array(8)].map((_, i) => {
+                    const a = (i / 8) * Math.PI * 2;
+                    const rInner = gemSize * 1.15;
+                    const rOuter = gemSize * 2.3;
+                    return (
+                      <line
+                        key={`ray-${i}`}
+                        x1={cx + Math.cos(a) * rInner}
+                        y1={cy + Math.sin(a) * rInner}
+                        x2={cx + Math.cos(a) * rOuter}
+                        y2={cy + Math.sin(a) * rOuter}
+                        stroke={gemColors.midLight}
+                        strokeWidth="1"
+                        strokeLinecap="round"
+                        opacity="0.18"
+                      />
+                    );
+                  })}
+                </motion.g>
+
+                {/* TILTING GEM GROUP — X-axis rock (top edge recedes / comes
+                    forward, 8s cycle) + subtle breathing scale layered on top.
+                    Gem group gets preserve-3d so the back layer + front layers
+                    sit at different z-depths and the tilt reads as thickness. */}
                 <motion.g
                   style={{
                     transformOrigin: `${cx}px ${cy}px`,
@@ -560,18 +626,41 @@ function CrystalViewportImpl({
                   }}
                   animate={{
                     rotateX: [0, 25, 0, -15, 0],
+                    scale: [1, 1.02, 1, 1.015, 1],
                   }}
                   transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: 'easeInOut',
-                    times: [0, 0.25, 0.5, 0.75, 1],
+                    rotateX: {
+                      duration: 8,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                      times: [0, 0.25, 0.5, 0.75, 1],
+                    },
+                    scale: {
+                      duration: 3.2,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    },
                   }}
                 >
-                  {/* Concentric squares — all rotated 45° around (cx, cy) so
-                      they form a diamond silhouette. Each step is brighter
-                      and smaller, simulating the stepped facets of an
-                      Asscher cut looking straight down. */}
+                  {/* BACK FACE — offset duplicate of the outer square sitting
+                      slightly below + behind the front. When the gem tilts
+                      forward (+25°) this face peeks out from below the top
+                      edge, selling the thickness of the gem. */}
+                  <g transform={`rotate(45 ${cx} ${cy})`}>
+                    <rect
+                      x={cx - gemSize * 0.98}
+                      y={cy - gemSize * 0.98 + 6}
+                      width={gemSize * 1.96}
+                      height={gemSize * 1.96}
+                      fill={gemColors.midDark}
+                      opacity="0.85"
+                      stroke={gemColors.base}
+                      strokeWidth="0.8"
+                      strokeLinejoin="miter"
+                    />
+                  </g>
+
+                  {/* FRONT FACE — concentric squares */}
                   <g transform={`rotate(45 ${cx} ${cy})`}>
                     {/* Outermost — darkest body */}
                     <rect
@@ -584,7 +673,7 @@ function CrystalViewportImpl({
                       strokeWidth="1.5"
                       strokeLinejoin="miter"
                     />
-                    {/* Second step — base fill at 75% */}
+                    {/* Second step — base fill */}
                     <rect
                       x={cx - gemSize * sizes[1]}
                       y={cy - gemSize * sizes[1]}
@@ -596,7 +685,7 @@ function CrystalViewportImpl({
                       strokeWidth="0.8"
                       strokeLinejoin="miter"
                     />
-                    {/* Third step — light fill at 65% */}
+                    {/* Third step — light fill */}
                     <rect
                       x={cx - gemSize * sizes[2]}
                       y={cy - gemSize * sizes[2]}
@@ -608,7 +697,7 @@ function CrystalViewportImpl({
                       strokeWidth="0.6"
                       strokeLinejoin="miter"
                     />
-                    {/* Fourth step — inner white frost at 35% */}
+                    {/* Fourth step — inner white frost */}
                     <rect
                       x={cx - gemSize * sizes[3]}
                       y={cy - gemSize * sizes[3]}
@@ -620,7 +709,7 @@ function CrystalViewportImpl({
                       strokeWidth="0.5"
                       strokeLinejoin="miter"
                     />
-                    {/* Center table — the bright "eye" of the gem */}
+                    {/* Center table — bright "eye" */}
                     <rect
                       x={cx - gemSize * 0.15}
                       y={cy - gemSize * 0.15}
@@ -631,9 +720,7 @@ function CrystalViewportImpl({
                       strokeLinejoin="miter"
                     />
 
-                    {/* Corner-to-inner facet lines — show the step-cut planes
-                        by drawing four diagonal lines from the outer corners
-                        to the inner square's corners. */}
+                    {/* Corner-to-inner facet lines */}
                     {[
                       { fx: cx - gemSize, fy: cy - gemSize, tx: cx - gemSize * sizes[3], ty: cy - gemSize * sizes[3] },
                       { fx: cx + gemSize, fy: cy - gemSize, tx: cx + gemSize * sizes[3], ty: cy - gemSize * sizes[3] },
@@ -652,8 +739,7 @@ function CrystalViewportImpl({
                       />
                     ))}
 
-                    {/* Specular highlight — small bright patch on upper-left
-                        of the inner table, simulating a light source */}
+                    {/* Specular highlight on upper-left inner step */}
                     <ellipse
                       cx={cx - gemSize * 0.08}
                       cy={cy - gemSize * 0.08}
@@ -665,9 +751,41 @@ function CrystalViewportImpl({
                   </g>
                 </motion.g>
 
-                {/* Pulsing white core — stays centered (outside the tilt
-                    group) so the heartbeat reads as a steady point of light
-                    regardless of gem orientation */}
+                {/* ORBITING SPARKLES — three tiny sparkles traveling arcs
+                    around the gem at different radii + phases. Classic Disney
+                    "secondary action" — their motion is independent of the
+                    gem's own rhythm, so the scene feels alive. */}
+                {[
+                  { radius: gemSize * 1.4, duration: 6.0, phase: 0 },
+                  { radius: gemSize * 1.7, duration: 8.5, phase: Math.PI * 0.7 },
+                  { radius: gemSize * 1.25, duration: 5.2, phase: Math.PI * 1.4 },
+                ].map((spark, i) => (
+                  <motion.g
+                    key={`spark-${i}`}
+                    style={{ transformOrigin: `${cx}px ${cy}px`, transformBox: 'fill-box' }}
+                    animate={{ rotate: [0 + (spark.phase * 180) / Math.PI, 360 + (spark.phase * 180) / Math.PI] }}
+                    transition={{ duration: spark.duration, repeat: Infinity, ease: 'linear' }}
+                  >
+                    <motion.circle
+                      cx={cx + spark.radius}
+                      cy={cy}
+                      r={1.8}
+                      fill="white"
+                      animate={{
+                        opacity: [0.2, 1, 0.9, 0.3, 0.2],
+                        r: [1.2, 2.4, 2.0, 1.4, 1.2],
+                      }}
+                      transition={{
+                        duration: spark.duration * 0.4,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                      style={{ filter: `drop-shadow(0 0 4px ${gemColors.midLight})` }}
+                    />
+                  </motion.g>
+                ))}
+
+                {/* PULSING WHITE CORE — stays centered, outside the tilt group */}
                 <motion.circle
                   cx={cx}
                   cy={cy}
@@ -684,9 +802,9 @@ function CrystalViewportImpl({
                   }}
                 />
 
-                {/* Three orb accents — Dominant top, Supporting left,
+                {/* THREE ORB ACCENTS — Dominant top, Supporting left,
                     Balancing right. OUTSIDE the tilt group so they stay
-                    fixed at the gem's corners in screen space. */}
+                    fixed in screen space at the gem's corners. */}
                 {orbPositions.map((p, i) => (
                   <g key={`orb-${i}`}>
                     <circle cx={p.x} cy={p.y} r="12" fill={selectedColors[i]} opacity="0.5" filter="url(#cv-glow)" />
