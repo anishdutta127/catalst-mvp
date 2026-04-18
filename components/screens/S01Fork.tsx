@@ -64,6 +64,10 @@ export function S01Fork() {
 
   function handlePathA() {
     setIdeaMode('open');
+    // Clear any leftover Path B idea text — otherwise a back-button + Path-A
+    // sequence would leak the prior draft into the scoring pipeline and
+    // trigger a phantom yourIdea tile on S09.
+    setUserIdeaText('');
     setProcessing(true);
     const text = lines.s01.cedric.pathA.response;
     enqueueMessage({ speaker: 'cedric', text, type: 'dialogue' });
@@ -87,6 +91,9 @@ export function S01Fork() {
 
   function handlePathC() {
     setIdeaMode('shortcut');
+    // Same reason as handlePathA — no Path B residue should reach the LLM
+    // shortcut flow.
+    setUserIdeaText('');
     goToScreen('s01_llm');
   }
 
