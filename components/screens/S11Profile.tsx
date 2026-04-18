@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
@@ -9,14 +9,16 @@ import { analytics } from '@/lib/analytics';
 import housesRaw from '@/content/houses.json';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { MysticVaultCard } from '@/components/ui/MysticVaultCard';
-import {
-  FounderTradingCard,
-  type CardRarityTier,
-} from '@/components/ui/FounderTradingCard';
+import { RadarChart, type RadarScores } from '@/components/ui/RadarChart';
 import { ChallengeSection } from '@/components/ui/ChallengeSection';
-import type { RadarScores } from '@/components/ui/RadarChart';
-import { computeFounderStats } from '@/lib/founder-stats';
-import { getArchetype } from '@/lib/archetypes';
+import {
+  getArchetype,
+  pickDominantMotive,
+  type FounderTwin,
+  type HouseSlug,
+} from '@/lib/archetypes';
+import { extractPersonality } from '@/lib/scoring/engine';
+import { buildForgeProfile } from '@/lib/scoring/buildProfile';
 import { staggerContainer, fadeSlideUp, easeOvershoot } from '@/lib/motion';
 
 interface LineageFigure { name: string; sharedTraitLine: string; quantified_impact?: string }
@@ -28,32 +30,29 @@ interface House {
 const HOUSES = housesRaw as unknown as House[];
 
 /**
- * S11 — Founder Profile (Batch 6 — share-artifact version).
+ * S11 — Founder Profile (v8 — trading-card + #CatalstChallenge).
  *
- * This screen exists to make the user *want* to share. Every element is in
- * service of the post-to-story loop:
+ * One shareable artifact on top, then top matches, then the viral-loop
+ * challenge, then the MysticVault pitch, then a soft skip. The trading-card
+ * JSX is inline (not a separate component) because its layout is unique to
+ * this screen and inlining keeps the row-by-row story readable.
  *
- *   1. FounderTradingCard — the 9:16 hero (archetype, twin, radar, stats)
- *   2. Quick share row — 4 × 44×44 circular buttons, frictionless
- *   3. Top 3 matched ideas — compact so they stay below the fold
- *   4. ChallengeSection — the viral #CatalstChallenge loop
- *   5. MysticVaultCard (full) — locked-feature tease
- *   6. Skip CTA — "Maybe later, continue to my house"
- *
- * Motion: page-wide staggerContainer (delayChildren 300ms, stagger 120ms).
- * Inner rows use fadeSlideUp. The card gets an extra spring entrance so it
- * "lands" instead of fading.
+ * Archetype assignment: house × dominant McClelland motive (achievement |
+ * affiliation | power). Extracted from the full ForgeProfile via the
+ * existing scoring engine, so every path (A/B/C) produces a real motive
+ * rather than a default.
  */
 export function S11Profile() {
   const state = useJourneyStore();
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
 
-  const [downloadError, setDownloadError] = useState('');
-  const [cardSaving, setCardSaving] = useState(false);
+  const [copied, setCopied] = useState<'share' | null>(null);
   const dialogueSent = useRef(false);
-  const cardRef = useRef<HTMLDivElement>(null);
 
+  // ── Resolve house / crowned / name ────────────────────────────────────
   const house = HOUSES.find((h) => h.id === state.houseId) || HOUSES[0];
+  const houseColor = house.hex;
+  const houseId = state.houseId;
   const crowned = state.matchedIdeas
     ? [state.matchedIdeas.nest, state.matchedIdeas.spark, state.matchedIdeas.wildvine]
         .find((s) => s.idea.idea_id === state.crownedIdeaId) || state.matchedIdeas.nest
@@ -63,186 +62,92 @@ export function S11Profile() {
     : [];
   const displayName = state.displayName || 'Founder';
 
-  // ── Archetype resolution ──────────────────────────────────────────────
-  // crystalOrbs stores capitalized IDs like 'Vision'. Archetype keys are
-  // lowercase. Dominant orb = index 0 (first pick).
-  const dominantEssence = (state.crystalOrbs[0] || '').toLowerCase();
-  const archetype = useMemo(
-    () => getArchetype(state.houseId, dominantEssence),
-    [state.houseId, dominantEssence],
-  );
+  // ── Archetype + radar scores via ForgeProfile → personality ───────────
+  const { archetype, radarScores, matchPct } = useMemo(() => {
+    const profile = buildForgeProfile(state);
+    const personality = extractPersonality(profile);
+    const motive = pickDominantMotive(personality.mcClelland);
+    const arch = getArchetype((houseId ?? 'architects') as HouseSlug, motive);
 
-  // ── Trait scores (radar) ──────────────────────────────────────────────
-  // We don't have a first-class trait score pipeline, so derive 0–100 values
-  // from the user's 3 crystal orbs + a small house bias + deterministic
-  // jitter. Dominant = +30, supporting = +20, balancing = +15, base 42.
-  const traitScores: RadarScores = useMemo(() => {
-    return deriveTraitScores(state.crystalOrbs, state.houseId);
-  }, [state.crystalOrbs, state.houseId]);
+    // Map scoring-engine signals to 6 display axes. Values 0-100.
+    const rs: RadarScores = {
+      scale:   Math.round(personality.mcClelland.nPow * 100),
+      impact:  Math.round(personality.mcClelland.nAff * 100 * 0.6 + personality.mcClelland.nPow * 100 * 0.4),
+      craft:   Math.round(personality.bigFive.C * 100),
+      empathy: Math.round(personality.bigFive.A * 100),
+      vision:  Math.round(personality.bigFive.O * 100),
+      grit:    Math.round((1 - personality.bigFive.N) * 100 * 0.5 + personality.boldness * 100 * 0.5),
+    };
 
-  const stats = useMemo(() => computeFounderStats({
-    houseId: state.houseId,
-    displayName,
-    matchPercent: crowned?.displayScore || 0,
-    noveltyScore: crowned?.idea.novelty_score,
-    crystalOrbs: state.crystalOrbs,
-    blotResponseTimes: state.blotResponseTimes,
-    wordResponseTimes: state.wordResponseTimes,
-    crystalSelectionTimes: state.crystalSelectionTimes,
-    industryName: crowned?.idea.domain_primary?.replace(/_/g, ' ') || 'your industry',
-  }), [state.houseId, displayName, crowned, state.crystalOrbs, state.blotResponseTimes, state.wordResponseTimes, state.crystalSelectionTimes]);
+    return {
+      archetype: arch,
+      radarScores: rs,
+      matchPct: crowned?.displayScore ?? 85,
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.houseId, state.crystalOrbs, state.blotResponses, state.wordResponses, state.industriesKept, crowned?.displayScore]);
 
-  // Collapse EPIC → RARE for the card tier display per Batch 6 spec.
-  const cardTier: CardRarityTier = useMemo(() => {
-    const t = stats.rarity.tier;
-    if (t === 'EPIC') return 'RARE';
-    return t as CardRarityTier;
-  }, [stats.rarity.tier]);
+  // "Sealed in" time — we don't track wall clock, so approximate from the
+  // number of completed screens (×0.8 min each). Honest enough for MVP.
+  const completedCount = state.completedScreens.length;
+  const sealedMinutes = Math.max(3, Math.round(completedCount * 0.8));
+  const sealedTime = `${sealedMinutes}m`;
 
-  // Percentage of users this archetype represents (the "Top X%" stat on
-  // the card). Lower pool = rarer = smaller top-X number.
-  const rarityPct = useMemo(() => {
-    const pool = stats.rarity.pool;
-    if (pool < 120) return 2;
-    if (pool < 200) return 5;
-    if (pool < 320) return 10;
-    if (pool < 460) return 18;
-    return 28;
-  }, [stats.rarity.pool]);
-
-  // "Sealed in" time — sum of response times across all instinct games +
-  // scenarios + crystal picks. Formatted as m:ss. Honest about what it
-  // measures: "time engaged with the decisions", not wall-clock time.
-  const journeyTime = useMemo(() => {
-    const total =
-      sumMs(state.blotResponseTimes) +
-      sumMs(state.wordResponseTimes) +
-      sumMs(state.scenarioResponseTimes) +
-      sumMs(state.crystalSelectionTimes);
-    return formatMs(total);
-  }, [
-    state.blotResponseTimes,
-    state.wordResponseTimes,
-    state.scenarioResponseTimes,
-    state.crystalSelectionTimes,
-  ]);
-
+  // ── Dialogue on mount ─────────────────────────────────────────────────
   useEffect(() => {
     if (dialogueSent.current) return;
     dialogueSent.current = true;
-    analytics.complete(state.houseId || 'unknown', crowned?.idea.idea_name || 'unknown');
+    analytics.complete(houseId || 'unknown', crowned?.idea.idea_name || 'unknown');
     enqueueMessage({ speaker: 'cedric', text: lines.s11.cedric.intro, type: 'dialogue' });
-    setTimeout(() => enqueueMessage({ speaker: 'cedric', text: lines.s11.cedric.final(displayName), type: 'dialogue' }), 3000);
-    setTimeout(() => enqueueMessage({ speaker: 'pip', text: lines.s11.pip.final, type: 'dialogue' }), 5000);
-  }, [enqueueMessage, displayName, state.houseId, crowned]);
+    setTimeout(
+      () => enqueueMessage({ speaker: 'cedric', text: lines.s11.cedric.final(displayName), type: 'dialogue' }),
+      3000,
+    );
+    setTimeout(
+      () => enqueueMessage({ speaker: 'pip', text: lines.s11.pip.final, type: 'dialogue' }),
+      5000,
+    );
+  }, [enqueueMessage, displayName, houseId, crowned]);
 
-  const generateMarkdown = useCallback(() => {
-    const whyYou = crowned ? (state.whyYouTexts[crowned.idea.idea_id] || 'Trust the match.') : '';
-    const qs = crowned?.idea.quickStart;
-    return `# ${crowned?.idea.idea_name || 'Your Idea'} — Your Catalst Founder Profile
-
-**House:** ${house.name}
-**Archetype:** ${archetype.name}
-**Founder twin:** ${archetype.twinGlobal.name} (${archetype.twinGlobal.company}) · and ${archetype.twinIndian.name} in India
-**Match:** ${crowned?.displayScore || 0}% in ${crowned?.idea.domain_primary?.replace(/_/g, ' ') || 'unknown'}
-**Rarity:** Top ${rarityPct}% — ${cardTier}
-**Sealed in:** ${journeyTime}
-
-> "${archetype.pullQuote}"
-
-## Your Top Idea
-${crowned?.idea.idea_name || ''} — ${crowned?.idea.one_liner || ''}
-
-${crowned?.idea.pain_to_promise || ''}
-
-## Why This Fits You
-${whyYou.replace('__loading__', 'Trust the match.')}
-
-## First Steps
-- Week 1: ${qs?.week1 || 'Validate the core assumption'}
-- MVP: ${qs?.mvp || 'Build the simplest version'}
-- First customers: ${qs?.firstCustomers || 'Talk to 10 people in the space'}
-
-## Signature Move
-${archetype.signatureMove}
-
-## Kryptonite
-${archetype.kryptonite}
-
----
-Generated by Catalst · catalst.app
-`;
-  }, [crowned, house, archetype, state.whyYouTexts, cardTier, rarityPct, journeyTime]);
-
-  function handleDownloadMd() {
-    try {
-      const md = generateMarkdown();
-      const blob = new Blob([md], { type: 'text/markdown' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `catalst-${house.id}-${displayName.toLowerCase().replace(/\s+/g, '-')}.md`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      analytics.cta('download');
-    } catch { setDownloadError('Download failed, try again'); }
-  }
-
-  async function handleSaveCard() {
-    if (!cardRef.current) return;
-    setCardSaving(true);
-    try {
-      const { toPng } = await import('html-to-image');
-      const dataUrl = await toPng(cardRef.current, { pixelRatio: 3, cacheBust: true });
-      const a = document.createElement('a');
-      a.href = dataUrl;
-      a.download = `catalst-${house.id}-${displayName.toLowerCase().replace(/\s+/g, '-')}.png`;
-      a.click();
-      analytics.cta('download');
-    } catch { setDownloadError('Card save failed, try again'); }
-    setCardSaving(false);
-  }
-
-  const shareCaption = useMemo(
+  // ── Share helpers used by the quick-share row ─────────────────────────
+  const igCaption = useMemo(
     () =>
-      `I'm ${archetype.name.toLowerCase()} on @catalst 🌱 ${house.name.replace('House of ', '')} house · founder twin: ${archetype.twinGlobal.name}. Tag 3 friends who should start an AI business. #CatalstChallenge`,
-    [archetype, house],
+      `I'm ${archetype.name.toLowerCase()} on @catalst 🌱 founder twin: ${archetype.twinGlobal.name}. Tag 3 friends who should start an AI business. #CatalstChallenge`,
+    [archetype],
   );
 
-  async function handleQuickShare(kind: 'instagram' | 'twitter' | 'whatsapp' | 'download') {
-    switch (kind) {
-      case 'instagram': {
-        try {
-          await navigator.clipboard.writeText(shareCaption);
-          setDownloadError('');
-        } catch { /* clipboard blocked — user can fall back to challenge section */ }
-        await handleSaveCard();
-        break;
-      }
-      case 'twitter': {
-        const t = encodeURIComponent(shareCaption);
-        window.open(`https://twitter.com/intent/tweet?text=${t}`, '_blank', 'noopener');
-        break;
-      }
-      case 'whatsapp': {
-        analytics.cta('whatsapp');
-        const msg = `just found out I'm ${archetype.name} on Catalst 👀 ${crowned?.displayScore || 0}% match with ${archetype.twinGlobal.name}. catalst.app`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
-        break;
-      }
-      case 'download': {
-        await handleSaveCard();
-        break;
-      }
+  async function copyCaption() {
+    try {
+      await navigator.clipboard.writeText(igCaption);
+      setCopied('share');
+      setTimeout(() => setCopied(null), 1600);
+    } catch {
+      // Fallback for older browsers.
+      const ta = document.createElement('textarea');
+      ta.value = igCaption;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      setCopied('share');
+      setTimeout(() => setCopied(null), 1600);
     }
+  }
+
+  function openWhatsApp() {
+    analytics.cta('whatsapp');
+    const msg = `just found out I'm ${archetype.name} on Catalst 👀 ${matchPct}% match with ${archetype.twinGlobal.name}. catalst.app`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+  }
+
+  function openTwitter() {
+    const t = encodeURIComponent(igCaption);
+    window.open(`https://twitter.com/intent/tweet?text=${t}`, '_blank', 'noopener,noreferrer');
   }
 
   return (
     <>
-      {/* Fixed vault backdrop — keeps the S11 frame distinct from the S10
-          particles that were fading out as this mounts. */}
+      {/* Vault backdrop — fixed gradient so S11 reads as its own chamber. */}
       <div
         className="fixed inset-0 bg-gradient-to-b from-black/55 via-black/30 to-black/65 pointer-events-none z-0"
         aria-hidden
@@ -254,73 +159,135 @@ Generated by Catalst · catalst.app
         animate="visible"
         className="relative z-10 max-w-md mx-auto px-4 py-6 space-y-5 overflow-y-auto"
       >
-        {/* Founder trading card — spring entrance, it's the hero. */}
+        {/* ══════════ FOUNDER TRADING CARD ══════════════════════════════ */}
         <motion.div
           initial={{ opacity: 0, scale: 0.92, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: easeOvershoot }}
-          className="flex justify-center"
         >
-          <FounderTradingCard
-            ref={cardRef}
-            displayName={displayName}
-            house={house}
-            archetype={archetype}
-            traitScores={traitScores}
-            rarityTier={cardTier}
-            rarityPct={rarityPct}
-            journeyTime={journeyTime}
-            matchPercent={crowned?.displayScore || 0}
-            crownedIdea={
-              crowned
-                ? {
-                    title: crowned.idea.idea_name,
-                    industry:
-                      crowned.idea.domain_primary?.replace(/_/g, ' ') || 'your industry',
-                  }
-                : null
-            }
-          />
+          <motion.div
+            className="rounded-3xl p-[2px]"
+            style={{
+              background: `conic-gradient(from 0deg, ${houseColor}, ${houseColor}aa, #ffffff22, ${houseColor}, ${houseColor})`,
+            }}
+            animate={{ rotate: [0, 360] }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
+          >
+            <div className="rounded-[22px] bg-black/75 backdrop-blur-md p-4 sm:p-5 aspect-[9/16] relative overflow-hidden">
+              {/* Row 1: house label + rarity tier */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <HouseCrest color={houseColor} name={house.name} />
+                  <span className="text-[10px] tracking-[0.25em] opacity-75">
+                    {house.name?.toUpperCase() ?? 'FOUNDER'}
+                  </span>
+                </div>
+                <span
+                  className="text-[10px] tracking-[0.25em] px-2 py-1 rounded-full border"
+                  style={{ borderColor: `${houseColor}60`, color: houseColor }}
+                >
+                  {archetype.rarity.toUpperCase()}
+                </span>
+              </div>
+
+              {/* Row 2: name + archetype */}
+              <div className="mt-5">
+                <h1 className="font-serif text-3xl leading-none text-ivory">{displayName}</h1>
+                <h2 className="font-serif italic text-lg mt-1" style={{ color: houseColor }}>
+                  {archetype.name}
+                </h2>
+              </div>
+
+              {/* Row 3: pull quote */}
+              <blockquote
+                className="mt-4 text-[13px] leading-relaxed italic text-ivory/90 border-l-2 pl-3"
+                style={{ borderColor: houseColor }}
+              >
+                &ldquo;{archetype.pullQuote}&rdquo;
+              </blockquote>
+
+              {/* Row 4: radar */}
+              <div className="my-5 flex justify-center">
+                <RadarChart scores={radarScores} color={houseColor} size={200} />
+              </div>
+
+              {/* Row 5: 3-stat pill row */}
+              <div className="grid grid-cols-3 gap-2 text-center">
+                <StatPill label="RARITY" value={archetype.rarity} color={houseColor} />
+                <StatPill label="SEALED IN" value={sealedTime} color={houseColor} />
+                <StatPill label="MATCH" value={`${matchPct}%`} color={houseColor} />
+              </div>
+
+              {/* Row 6: founder twin */}
+              <div className="mt-5">
+                <div className="text-[10px] tracking-[0.25em] opacity-65 mb-2">YOUR FOUNDER TWIN</div>
+                <FounderTwinInline twin={archetype.twinGlobal} color={houseColor} />
+                <div className="text-[10px] opacity-55 mt-2 text-center">
+                  · and {archetype.twinIndian.name.split(' ').slice(-1)[0]} in India
+                </div>
+              </div>
+
+              {/* Row 7: signature + kryptonite */}
+              <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
+                <div>
+                  <div className="text-[9px] tracking-widest opacity-60 mb-1">SIGNATURE MOVE</div>
+                  <div className="opacity-85 italic">{archetype.signatureMove}</div>
+                </div>
+                <div>
+                  <div className="text-[9px] tracking-widest opacity-60 mb-1">KRYPTONITE</div>
+                  <div className="opacity-85 italic">{archetype.kryptonite}</div>
+                </div>
+              </div>
+
+              {/* Row 8: crowned idea */}
+              {crowned && (
+                <div className="mt-5 rounded-xl border border-white/10 p-3">
+                  <div className="text-[9px] tracking-widest opacity-60">CROWNED IDEA</div>
+                  <div className="font-semibold text-base mt-1 text-ivory">
+                    {crowned.idea.idea_name}
+                  </div>
+                  <div className="text-xs opacity-70">
+                    in {crowned.idea.domain_primary.replace(/_/g, ' ')}
+                  </div>
+                </div>
+              )}
+
+              {/* Row 9: url + challenge badge */}
+              <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-[10px]">
+                <span className="tracking-widest opacity-50">#CATALSTCHALLENGE</span>
+                <span className="font-mono opacity-60">
+                  catalst.app/{houseId ?? 'founder'}/{displayName.toLowerCase()}
+                </span>
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
 
-        {/* Quick share row — 4 × 44×44 circular. Frictionless, right under
-            the card so the "just saw it, share it" loop is a single tap. */}
-        <motion.div
-          variants={fadeSlideUp}
-          className="flex justify-center gap-3"
-        >
-          <QuickShareButton
-            testId="share-instagram"
-            label="Instagram"
-            onClick={() => handleQuickShare('instagram')}
-            icon={<InstagramIcon />}
-          />
-          <QuickShareButton
-            testId="share-twitter"
-            label="X / Twitter"
-            onClick={() => handleQuickShare('twitter')}
-            icon={<XIcon />}
-          />
-          <QuickShareButton
-            testId="share-whatsapp"
-            label="WhatsApp"
-            onClick={() => handleQuickShare('whatsapp')}
-            icon={<WhatsAppIcon />}
-          />
-          <QuickShareButton
-            testId="share-download"
-            label={cardSaving ? 'Saving' : 'Download'}
-            onClick={() => handleQuickShare('download')}
-            disabled={cardSaving}
-            icon={<DownloadIcon />}
-          />
+        {/* ══════════ QUICK SHARE ROW ══════════════════════════════════ */}
+        <motion.div variants={fadeSlideUp} className="flex justify-center gap-3">
+          {[
+            { icon: '📸', label: 'Instagram', onClick: copyCaption },
+            { icon: '🐦', label: 'Twitter', onClick: openTwitter },
+            { icon: '💬', label: 'WhatsApp', onClick: openWhatsApp },
+            { icon: '⬇️', label: 'Download', onClick: copyCaption }, // future batch: html2canvas
+          ].map((b) => (
+            <button
+              key={b.label}
+              onClick={b.onClick}
+              aria-label={b.label}
+              className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 grid place-items-center transition"
+            >
+              <span aria-hidden className="text-base">{b.icon}</span>
+            </button>
+          ))}
         </motion.div>
-
-        {downloadError && (
-          <p className="text-xs text-rose-400/80 text-center -mt-3">{downloadError}</p>
+        {copied === 'share' && (
+          <p className="text-[11px] text-emerald-300/80 text-center -mt-3">
+            Caption copied — paste into your story.
+          </p>
         )}
 
-        {/* Top 3 matched ideas — compact so the viral loop stays above the fold. */}
+        {/* ══════════ TOP MATCHED IDEAS ═══════════════════════════════ */}
         <motion.section variants={fadeSlideUp}>
           <h2 className="font-serif text-lg text-ivory mb-3 px-1">Your Top Matches</h2>
           <div className="space-y-3">
@@ -355,30 +322,18 @@ Generated by Catalst · catalst.app
           </div>
         </motion.section>
 
-        {/* The #CatalstChallenge viral loop. */}
+        {/* ══════════ #CATALSTCHALLENGE ═══════════════════════════════ */}
         <motion.div variants={fadeSlideUp}>
           <ChallengeSection
-            houseColor={house.hex}
-            houseName={house.name}
-            archetype={archetype}
-            matchPercent={crowned?.displayScore || 0}
-            crownedIdeaName={crowned?.idea.idea_name}
-            onSaveCard={handleSaveCard}
+            houseColor={houseColor}
+            firstName={displayName.split(' ')[0]}
+            archetypeName={archetype.name}
+            matchPct={matchPct}
+            twinName={archetype.twinGlobal.name}
           />
         </motion.div>
 
-        {/* Markdown pack — secondary download (not on the critical path). */}
-        <motion.div variants={fadeSlideUp} className="pt-1">
-          <button
-            onClick={handleDownloadMd}
-            data-testid="download-md"
-            className="w-full h-10 rounded-xl bg-white/5 border border-white/10 text-ivory/65 text-[12px] hover:bg-white/10 transition flex items-center justify-center gap-1.5"
-          >
-            📄 Download full idea pack (.md)
-          </button>
-        </motion.div>
-
-        {/* Existing MysticVaultCard — team pitch. */}
+        {/* ══════════ MysticVaultCard (full) ══════════════════════════ */}
         <motion.div variants={fadeSlideUp} className="pt-4 border-t border-white/10">
           <MysticVaultCard
             matchPercent={crowned?.displayScore}
@@ -388,7 +343,7 @@ Generated by Catalst · catalst.app
           />
         </motion.div>
 
-        {/* Skip link — soft exit for users who don't want the vault pitch. */}
+        {/* ══════════ SKIP CTA ════════════════════════════════════════ */}
         <motion.button
           variants={fadeSlideUp}
           onClick={() => {
@@ -410,143 +365,59 @@ Generated by Catalst · catalst.app
   );
 }
 
-// ─── Helpers ─────────────────────────────────────────────────────────────
+// ═══════════ helpers (inline, file-local) ═══════════════════════════
 
-interface QuickShareButtonProps {
-  testId: string;
+function StatPill({
+  label,
+  value,
+  color,
+}: {
   label: string;
-  icon: React.ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
+  value: string;
+  color: string;
+}) {
+  return (
+    <div className="rounded-xl bg-white/5 border border-white/10 py-2">
+      <div className="text-[9px] tracking-widest opacity-60">{label}</div>
+      <div className="text-sm font-bold mt-1" style={{ color }}>{value}</div>
+    </div>
+  );
 }
 
-function QuickShareButton({ testId, label, icon, onClick, disabled }: QuickShareButtonProps) {
+function FounderTwinInline({ twin, color }: { twin: FounderTwin; color: string }) {
   return (
-    <motion.button
-      whileHover={{ scale: disabled ? 1 : 1.06 }}
-      whileTap={{ scale: disabled ? 1 : 0.92 }}
-      onClick={onClick}
-      disabled={disabled}
-      data-testid={testId}
-      aria-label={label}
-      className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm grid place-items-center transition disabled:opacity-50 disabled:cursor-not-allowed border border-white/15"
+    <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/10">
+      <div
+        className="w-12 h-12 rounded-full grid place-items-center font-serif text-lg font-bold shrink-0 text-white"
+        style={{ background: `linear-gradient(135deg, ${color}, ${color}aa)` }}
+      >
+        {twin.initials}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="font-semibold text-sm truncate text-ivory">{twin.name}</div>
+        <div className="text-xs opacity-70 truncate">{twin.company}</div>
+        <div className="text-xs italic opacity-60 mt-1 line-clamp-2">&ldquo;{twin.whyQuote}&rdquo;</div>
+      </div>
+    </div>
+  );
+}
+
+/** Small circular crest with the house initial. Extracted so the card row
+ *  stays readable; matches the style used elsewhere in the journey. */
+function HouseCrest({ color, name }: { color: string; name: string }) {
+  const initial = (name.match(/of (\w)/)?.[1] || name.charAt(0)).toUpperCase();
+  return (
+    <div
+      className="w-7 h-7 rounded-full flex items-center justify-center font-serif font-bold text-[13px] border"
+      style={{
+        color,
+        borderColor: `${color}80`,
+        background: `radial-gradient(circle at 35% 25%, ${color}35, ${color}08)`,
+        boxShadow: `0 0 10px ${color}55`,
+      }}
+      aria-hidden
     >
-      {icon}
-    </motion.button>
-  );
-}
-
-// ── Trait score derivation ───────────────────────────────────────────────
-
-// Orb → radar-axis contributions. Sum into a per-axis bonus based on
-// whether the orb was picked + which slot (dominant/supporting/balancing).
-// A single orb can contribute to multiple axes (e.g. Vision → scale + vision).
-const ORB_AXIS_WEIGHTS: Record<string, Partial<RadarScores>> = {
-  Grit: { grit: 1.0, impact: 0.4 },
-  Vision: { vision: 1.0, scale: 0.6 },
-  Craft: { craft: 1.0, impact: 0.2 },
-  Influence: { impact: 0.9, empathy: 0.3, scale: 0.4 },
-  Empathy: { empathy: 1.0, impact: 0.3 },
-  Analysis: { scale: 0.7, craft: 0.4, vision: 0.3 },
-  Freedom: { vision: 0.4, craft: 0.3 },
-  Stability: { scale: 0.5, grit: 0.4 },
-};
-
-// House bias — a small +/- per axis representing the house's archetype.
-const HOUSE_AXIS_BIAS: Record<string, Partial<RadarScores>> = {
-  architects: { craft: 8, scale: 6, vision: 4 },
-  vanguards: { grit: 8, impact: 7, scale: 3 },
-  alchemists: { empathy: 7, vision: 6, craft: 5 },
-  pathfinders: { vision: 7, grit: 6, empathy: 4 },
-};
-
-function deriveTraitScores(
-  crystalOrbs: string[],
-  houseId: string | null,
-): RadarScores {
-  const slotBoost = [30, 20, 15];
-  // Base of 42 gives every axis a visible presence on the radar, even when
-  // the user's picks don't touch it.
-  const axes: RadarScores = {
-    scale: 42,
-    impact: 42,
-    craft: 42,
-    empathy: 42,
-    vision: 42,
-    grit: 42,
-  };
-
-  crystalOrbs.slice(0, 3).forEach((orb, slot) => {
-    const weights = ORB_AXIS_WEIGHTS[orb] || {};
-    const boost = slotBoost[slot] ?? 10;
-    (Object.keys(axes) as (keyof RadarScores)[]).forEach((k) => {
-      const w = weights[k] ?? 0;
-      axes[k] += w * boost;
-    });
-  });
-
-  const bias = houseId ? HOUSE_AXIS_BIAS[houseId] || {} : {};
-  (Object.keys(axes) as (keyof RadarScores)[]).forEach((k) => {
-    axes[k] += bias[k] ?? 0;
-  });
-
-  // Clamp 5–95 so the polygon never touches the guide edges (uncanny) or
-  // collapses to a pinpoint.
-  (Object.keys(axes) as (keyof RadarScores)[]).forEach((k) => {
-    axes[k] = Math.max(5, Math.min(95, Math.round(axes[k])));
-  });
-
-  return axes;
-}
-
-// ── Time helpers ─────────────────────────────────────────────────────────
-
-function sumMs(arr: number[]): number {
-  return arr.reduce((acc, v) => acc + (Number.isFinite(v) && v > 0 ? v : 0), 0);
-}
-
-function formatMs(ms: number): string {
-  if (ms <= 0) return '0:00';
-  const secs = Math.round(ms / 1000);
-  const m = Math.floor(secs / 60);
-  const s = secs % 60;
-  return `${m}:${s.toString().padStart(2, '0')}`;
-}
-
-// ─── Inline SVG icons (lucide-react isn't a dep) ─────────────────────────
-
-function InstagramIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <rect x="3" y="3" width="18" height="18" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.5" cy="6.5" r="0.9" fill="white" stroke="none" />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="white" aria-hidden>
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z" />
-    </svg>
-  );
-}
-
-function WhatsAppIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-    </svg>
-  );
-}
-
-function DownloadIcon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="7 10 12 15 17 10" />
-      <line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
+      {initial}
+    </div>
   );
 }

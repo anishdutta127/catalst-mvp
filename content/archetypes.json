@@ -1,0 +1,152 @@
+{
+  "_comment": "Catalst v8 — Founder Archetype lookup. Keyed by `${houseSlug}-${dominantMotiveSlug}`. Dominant motive = highest among achievement|affiliation|power (computed in S11 from ForgeProfile). Fallback key: `${houseSlug}-any`.",
+  "_schemaVersion": "1.0",
+
+  "architects-achievement": {
+    "name": "The Master Builder",
+    "pullQuote": "You ship because the work outlasts the applause.",
+    "twinGlobal": { "name": "Jensen Huang", "company": "NVIDIA", "initials": "JH", "whyQuote": "Shares your first-principles build DNA" },
+    "twinIndian":  { "name": "Sridhar Vembu", "company": "Zoho",   "initials": "SV", "whyQuote": "Builds for decades, from a village" },
+    "signatureMove": "First-principles rebuilds",
+    "kryptonite":    "Perfectionism's gravity",
+    "rarity":        "Top 12%"
+  },
+  "architects-affiliation": {
+    "name": "The Systems Philosopher",
+    "pullQuote": "You see the lattice others miss.",
+    "twinGlobal": { "name": "Satya Nadella", "company": "Microsoft", "initials": "SN", "whyQuote": "Leads with systems and empathy" },
+    "twinIndian":  { "name": "Nikhil Kamath", "company": "Zerodha",  "initials": "NK", "whyQuote": "Builds for the long, quiet compound" },
+    "signatureMove": "Elegant architectures",
+    "kryptonite":    "Analysis paralysis",
+    "rarity":        "Top 8%"
+  },
+  "architects-power": {
+    "name": "The Blueprinter",
+    "pullQuote": "You draw in decades, not quarters.",
+    "twinGlobal": { "name": "Demis Hassabis",  "company": "DeepMind", "initials": "DH", "whyQuote": "Plays the longest game in tech" },
+    "twinIndian":  { "name": "Bhavish Aggarwal","company": "Ola / Krutrim", "initials": "BA", "whyQuote": "Stakes flags before the ground's ready" },
+    "signatureMove": "Long-horizon bets",
+    "kryptonite":    "Impatience with the present",
+    "rarity":        "Top 6%"
+  },
+  "architects-any": {
+    "name": "The Long-Game Player",
+    "pullQuote": "You compound when others quit.",
+    "twinGlobal": { "name": "Jeff Bezos",      "company": "Amazon",  "initials": "JB", "whyQuote": "Plays the decade, not the quarter" },
+    "twinIndian":  { "name": "Deepinder Goyal", "company": "Zomato", "initials": "DG", "whyQuote": "Rebuilds the stack when others optimize" },
+    "signatureMove": "10-year arcs",
+    "kryptonite":    "Forgetting to celebrate wins",
+    "rarity":        "Top 15%"
+  },
+
+  "vanguards-power": {
+    "name": "The Rally-Caller",
+    "pullQuote": "You turn rooms into movements.",
+    "twinGlobal": { "name": "Rihanna",        "company": "Fenty",   "initials": "RI", "whyQuote": "Converts attention into empire" },
+    "twinIndian":  { "name": "Falguni Nayar", "company": "Nykaa",   "initials": "FN", "whyQuote": "Built a market by naming it" },
+    "signatureMove": "Narrative warfare",
+    "kryptonite":    "Needing the crowd",
+    "rarity":        "Top 9%"
+  },
+  "vanguards-achievement": {
+    "name": "The Insurgent",
+    "pullQuote": "You turn systems against themselves.",
+    "twinGlobal": { "name": "Brian Chesky",  "company": "Airbnb", "initials": "BC", "whyQuote": "Hid a disruption inside a friendly brand" },
+    "twinIndian":  { "name": "Kunal Shah",   "company": "CRED",   "initials": "KS", "whyQuote": "Bends premium loyalty into a wedge" },
+    "signatureMove": "Stealth disruption",
+    "kryptonite":    "Burning bridges you'll need",
+    "rarity":        "Top 11%"
+  },
+  "vanguards-affiliation": {
+    "name": "The Movement Starter",
+    "pullQuote": "You don't build companies — you build flags.",
+    "twinGlobal": { "name": "Elon Musk",       "company": "SpaceX / X",  "initials": "EM", "whyQuote": "Turns product launches into public events" },
+    "twinIndian":  { "name": "Ritesh Agarwal", "company": "OYO",         "initials": "RA", "whyQuote": "Built a brand before he had the ops" },
+    "signatureMove": "Audacious timelines",
+    "kryptonite":    "Believing your own hype",
+    "rarity":        "Top 7%"
+  },
+  "vanguards-any": {
+    "name": "The Unstoppable",
+    "pullQuote": "You break doors others knock on.",
+    "twinGlobal": { "name": "Travis Kalanick",        "company": "Uber",  "initials": "TK", "whyQuote": "Ships before the regulators wake up" },
+    "twinIndian":  { "name": "Vijay Shekhar Sharma", "company": "Paytm", "initials": "VS", "whyQuote": "Rebuilds through every setback" },
+    "signatureMove": "Brute-force execution",
+    "kryptonite":    "The scar tissue accumulates",
+    "rarity":        "Top 10%"
+  },
+
+  "alchemists-affiliation": {
+    "name": "The Soul Reader",
+    "pullQuote": "You build for feelings others can't name.",
+    "twinGlobal": { "name": "Melanie Perkins", "company": "Canva",     "initials": "MP", "whyQuote": "Designs for how people actually feel" },
+    "twinIndian":  { "name": "Ghazal Alagh",   "company": "Mamaearth", "initials": "GA", "whyQuote": "Turned a new-mom insight into an empire" },
+    "signatureMove": "Emotional product design",
+    "kryptonite":    "Taking criticism personally",
+    "rarity":        "Top 5%"
+  },
+  "alchemists-power": {
+    "name": "The Reality Bender",
+    "pullQuote": "You make the impossible feel inevitable.",
+    "twinGlobal": { "name": "Sam Altman",       "company": "OpenAI",     "initials": "SA", "whyQuote": "Sells futures the rest of us haven't pictured" },
+    "twinIndian":  { "name": "Aravind Srinivas","company": "Perplexity", "initials": "AS", "whyQuote": "Reframes a habit the world didn't know it had" },
+    "signatureMove": "Reframe-then-ship",
+    "kryptonite":    "Mistaking vision for traction",
+    "rarity":        "Top 4%"
+  },
+  "alchemists-achievement": {
+    "name": "The Inventor-Poet",
+    "pullQuote": "You build tools that feel like spells.",
+    "twinGlobal": { "name": "Steve Jobs",    "company": "Apple",        "initials": "SJ", "whyQuote": "Made taste the moat" },
+    "twinIndian":  { "name": "Pranav Mistry","company": "TWO.AI",       "initials": "PM", "whyQuote": "Turns physics into product magic" },
+    "signatureMove": "Taste as strategy",
+    "kryptonite":    "Dismissing good-enough",
+    "rarity":        "Top 6%"
+  },
+  "alchemists-any": {
+    "name": "The Wanderer-Sage",
+    "pullQuote": "You build best when nobody owns you.",
+    "twinGlobal": { "name": "Naval Ravikant","company": "AngelList",   "initials": "NR", "whyQuote": "Treats leverage as a personal asset class" },
+    "twinIndian":  { "name": "Kailash Katkar","company": "Quick Heal", "initials": "KK", "whyQuote": "Built global-scale from outside the spotlight" },
+    "signatureMove": "Async / remote leverage",
+    "kryptonite":    "Allergic to structure",
+    "rarity":        "Top 9%"
+  },
+
+  "pathfinders-any": {
+    "name": "The Unclaimed",
+    "pullQuote": "You map territory others abandon.",
+    "twinGlobal": { "name": "Patrick Collison","company": "Stripe",    "initials": "PC", "whyQuote": "Picks the unsexy foundation to own" },
+    "twinIndian":  { "name": "Nithin Kamath",  "company": "Zerodha",   "initials": "NK", "whyQuote": "Built the category others thought was closed" },
+    "signatureMove": "Wandering into whitespace",
+    "kryptonite":    "Shipping before naming",
+    "rarity":        "Top 8%"
+  },
+  "pathfinders-power": {
+    "name": "The Mapmaker",
+    "pullQuote": "You see the path before it's a path.",
+    "twinGlobal": { "name": "Daniel Ek",         "company": "Spotify", "initials": "DE", "whyQuote": "Named a behavior before it had a market" },
+    "twinIndian":  { "name": "Byju Raveendran",  "company": "Byju's",  "initials": "BR", "whyQuote": "Built a category the market didn't know existed" },
+    "signatureMove": "Category creation",
+    "kryptonite":    "Leading people who can't see yet",
+    "rarity":        "Top 5%"
+  },
+  "pathfinders-achievement": {
+    "name": "The Expedition Leader",
+    "pullQuote": "You plant flags in places nobody went.",
+    "twinGlobal": { "name": "Elon Musk",     "company": "Tesla",            "initials": "EM", "whyQuote": "Takes on industries he wasn't supposed to" },
+    "twinIndian":  { "name": "Sachin Bansal","company": "Flipkart / Navi",  "initials": "SB", "whyQuote": "Reinvents himself for each new frontier" },
+    "signatureMove": "Brutal-terrain pioneering",
+    "kryptonite":    "Outrunning your team",
+    "rarity":        "Top 6%"
+  },
+  "pathfinders-affiliation": {
+    "name": "The Pattern Hunter",
+    "pullQuote": "You find the signal in the static.",
+    "twinGlobal": { "name": "Palmer Luckey", "company": "Anduril",                   "initials": "PL", "whyQuote": "Finds asymmetry where others see routine" },
+    "twinIndian":  { "name": "Kunal Bahl",  "company": "Snapdeal / Titan Capital",  "initials": "KB", "whyQuote": "Reads tides before the water moves" },
+    "signatureMove": "Pattern-matching at scale",
+    "kryptonite":    "Seeing ghosts",
+    "rarity":        "Top 7%"
+  }
+}
