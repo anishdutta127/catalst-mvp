@@ -1,82 +1,104 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { forwardRef, useMemo } from 'react';
-import type { FounderStats } from '@/lib/founder-stats';
-
-interface FounderTradingCardProps {
-  /** Display name — capitalized */
-  displayName: string;
-  /** House object — hex, name, id */
-  house: { id: string; name: string; hex: string; tagline: string };
-  /** Crystal orb names + colors, in selection order */
-  orbs: { name: string; color: string }[];
-  /** Crowned idea */
-  crownedIdeaName: string | undefined;
-  crownedIdeaDomain: string | undefined;
-  matchPercent: number;
-  /** Pre-computed stats */
-  stats: FounderStats;
-}
-
 /**
- * FounderTradingCard — 9:16 holographic card, designed to be screenshot-worthy.
+ * components/ui/FounderTradingCard.tsx
+ * ────────────────────────────────────
+ * The S11 share artifact — a 9:16 portrait card designed to be screenshotted
+ * and posted. Every row answers: "why would I share this?"
  *
  * Composition (top to bottom):
- *   - Holographic border (animated gradient sweep)
- *   - House sigil watermark (big, subtle, in background)
- *   - Tier badge: rarity tier + house name
- *   - Hero match % (huge typography)
- *   - Trait triangle (3 orbs with lines, house sigil in center)
- *   - Trait signature (3-letter code)
- *   - Smart stats grid (rarity, speed, novelty, fit)
- *   - Crowned idea + domain chip
- *   - Founder slug at bottom
+ *   Row 1 — tier badge + house crest
+ *   Row 2 — first name + archetype label
+ *   Row 3 — pull quote
+ *   Row 4 — 6-axis radar chart
+ *   Row 5 — 3-stat pill row (rarity, sealed-in, match %)
+ *   Row 6 — founder twin (expanded) + Indian twin note
+ *   Row 7 — signature move + kryptonite (the quirky texture)
+ *   Row 8 — crowned idea
+ *   Row 9 — #CATALSTCHALLENGE badge + catalst.app/slug footer
  *
- * Rendering uses forwardRef so html-to-image can capture it for download/share.
+ * Holographic border: conic-gradient rotating 8s (same pattern as prior
+ * batch). Reduced white stops from 55 → 33 alpha so the foil is less loud.
+ *
+ * The card is rendered with forwardRef so html-to-image can capture it for
+ * download/share.
  */
+
+import { forwardRef, useMemo } from 'react';
+import { motion } from 'framer-motion';
+import { RadarChart, type RadarScores } from './RadarChart';
+import { FounderTwinCard } from './FounderTwinCard';
+import type { Archetype } from '@/lib/archetypes';
+
+export type CardRarityTier = 'COMMON' | 'UNCOMMON' | 'RARE' | 'LEGENDARY';
+
+export interface FounderTradingCardProps {
+  /** Display name — first-name-only rendered on the card. */
+  displayName: string;
+  /** House object — hex, name, id, slug. */
+  house: { id: string; name: string; hex: string };
+  /** The matched archetype for this user (house × dominant essence). */
+  archetype: Archetype;
+  /** 6-axis trait scores 0–100. */
+  traitScores: RadarScores;
+  /** Rarity band for the top-right pill ("LEGENDARY" etc.). */
+  rarityTier: CardRarityTier;
+  /** Rarity display: "Top 5%" → displayed on the stats pill. */
+  rarityPct: number;
+  /** Formatted journey time (e.g. "4:32"). */
+  journeyTime: string;
+  /** Crowned-idea match percentage (0–100). */
+  matchPercent: number;
+  /** Crowned idea title + its industry tag. */
+  crownedIdea: { title: string; industry: string } | null;
+}
+
+// Compact rarity tier color map — used for the top-right pill only.
+const TIER_COLOR: Record<CardRarityTier, string> = {
+  LEGENDARY: '#F59E0B',
+  RARE:      '#A855F7',
+  UNCOMMON:  '#10B981',
+  COMMON:    '#6B7280',
+};
+
 export const FounderTradingCard = forwardRef<HTMLDivElement, FounderTradingCardProps>(
   function FounderTradingCard(props, ref) {
     const {
       displayName,
       house,
-      orbs,
-      crownedIdeaName,
-      crownedIdeaDomain,
+      archetype,
+      traitScores,
+      rarityTier,
+      rarityPct,
+      journeyTime,
       matchPercent,
-      stats,
+      crownedIdea,
     } = props;
 
-    const slug = `catalst.app/${house.id.replace(/s$/, '')}/${displayName.toLowerCase().replace(/\s+/g, '')}`;
+    const firstName = (displayName || 'Founder').split(' ')[0];
+    const houseSlug = house.id.replace(/s$/, '');
+    const urlSlug = `catalst.app/${houseSlug}/${firstName.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
 
-    // Holographic border — conic-gradient that rotates 8s so the foil
-    // reads as a real iridescent sweep, not a left-right pan. Stops cycle
-    // through house-hex + two contrast whites so the border shimmers with
-    // the user's color while staying legible as "foil".
+    const initial = (house.name.match(/of (\w)/)?.[1] || house.name.charAt(0)).toUpperCase();
+
+    // Indian-twin surname — the "and X in India" tail line.
+    const indianLast = archetype.twinIndian.name.split(' ').slice(-1)[0];
+
+    // Holographic foil — house-tinted conic gradient, rotating.
     const foilGradient = useMemo(() => {
       const hex = house.hex;
       return `conic-gradient(from 0deg,
         ${hex} 0deg,
-        #ffffff 45deg,
+        #ffffff55 45deg,
         ${hex} 90deg,
-        #f3e8ff 135deg,
+        #f3e8ff55 135deg,
         ${hex} 180deg,
-        #ffe4e6 225deg,
+        #ffe4e655 225deg,
         ${hex} 270deg,
-        #ffffff 315deg,
+        #ffffff55 315deg,
         ${hex} 360deg
       )`;
     }, [house.hex]);
-
-    const tierColor: Record<FounderStats['rarity']['tier'], string> = {
-      LEGENDARY: '#F59E0B',
-      EPIC:      '#A855F7',
-      RARE:      '#3B82F6',
-      UNCOMMON:  '#10B981',
-      COMMON:    '#6B7280',
-    };
-
-    const initial = (house.name.match(/of (\w)/)?.[1] || house.name.charAt(0)).toUpperCase();
 
     return (
       <div
@@ -85,54 +107,45 @@ export const FounderTradingCard = forwardRef<HTMLDivElement, FounderTradingCardP
         className="relative mx-auto rounded-[28px] overflow-hidden"
         style={{
           width: 340,
-          height: 604, // 9:16 ratio
+          aspectRatio: '9 / 16',
           background: '#0A0B10',
         }}
       >
-        {/* ── Holographic border — conic-gradient rotating 8s ──
-            The border layer is a rotating conic fill; the inner cutout div
-            rides the same rotation mask, leaving the foil visible only on
-            the ~3px rim. CSS `conic-gradient` can't be background-animated,
-            so we rotate the whole layer — visually identical.  */}
+        {/* Holographic border — rotating conic. */}
         <motion.div
           className="absolute inset-0 rounded-[28px] pointer-events-none"
           animate={{ rotate: 360 }}
           transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-          style={{
-            padding: 3,
-            background: foilGradient,
-          }}
+          style={{ padding: 2, background: foilGradient }}
         />
-        {/* Inner cutout sits on top of the rotating rim and hides everything
-            except the outer 3px — the rim reads as a shimmering foil edge. */}
         <div
-          className="absolute inset-[3px] rounded-[25px] pointer-events-none"
+          className="absolute inset-[2px] rounded-[26px] pointer-events-none"
           style={{
-            background: `linear-gradient(180deg, #0A0B10 0%, #14171E 30%, #0A0B10 100%)`,
+            background: `linear-gradient(180deg, #0A0B10 0%, #14171E 35%, #0A0B10 100%)`,
           }}
         />
 
-        {/* ── House sigil watermark in background ── */}
+        {/* House sigil watermark — giant faded initial behind content. */}
         <div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.04] select-none"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.05] select-none"
           aria-hidden
         >
           <span
             className="font-serif font-black"
             style={{
-              fontSize: 520,
+              fontSize: 480,
               color: house.hex,
               lineHeight: 1,
-              marginTop: -40,
+              marginTop: -30,
             }}
           >
             {initial}
           </span>
         </div>
 
-        {/* ── Subtle grid noise texture ── */}
+        {/* Noise texture — subtle grid of dots. */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.06]"
+          className="absolute inset-0 pointer-events-none opacity-[0.05]"
           style={{
             backgroundImage: `radial-gradient(circle at 20% 10%, white 1px, transparent 1.5px),
                               radial-gradient(circle at 75% 40%, white 1px, transparent 1.5px),
@@ -142,189 +155,173 @@ export const FounderTradingCard = forwardRef<HTMLDivElement, FounderTradingCardP
           }}
         />
 
-        {/* ── Content layer ── */}
-        <div className="relative h-full flex flex-col px-5 py-5 text-ivory">
-          {/* Top row — tier badge + house */}
-          <div className="flex items-start justify-between">
-            <div className="flex flex-col items-start gap-1">
-              <span
-                className="text-[9px] font-mono font-bold tracking-[0.2em] px-2 py-0.5 rounded-full"
+        {/* Content — densely packed into the 9:16 frame. */}
+        <div className="relative h-full flex flex-col px-5 py-5 text-ivory overflow-hidden">
+          {/* Row 1 — house crest + name · tier pill */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div
+                className="w-7 h-7 rounded-full flex items-center justify-center font-serif font-bold text-[13px] border"
                 style={{
-                  background: `${tierColor[stats.rarity.tier]}20`,
-                  border: `1px solid ${tierColor[stats.rarity.tier]}70`,
-                  color: tierColor[stats.rarity.tier],
+                  color: house.hex,
+                  borderColor: `${house.hex}80`,
+                  background: `radial-gradient(circle at 35% 25%, ${house.hex}35, ${house.hex}08)`,
+                  boxShadow: `0 0 10px ${house.hex}55`,
                 }}
-              >
-                {stats.rarity.tier}
-              </span>
-              <span className="text-[10px] text-ivory/55 uppercase tracking-[0.18em]">
-                {house.name.replace('House of ', '')}
-              </span>
-            </div>
-            <div
-              className="w-10 h-10 rounded-full flex items-center justify-center font-serif font-bold text-[18px] border-2"
-              style={{
-                color: house.hex,
-                borderColor: `${house.hex}80`,
-                background: `radial-gradient(circle at 35% 25%, ${house.hex}30, ${house.hex}08)`,
-                boxShadow: `0 0 14px ${house.hex}60`,
-              }}
-            >
-              {initial}
-            </div>
-          </div>
-
-          {/* FOUNDER MATCH label — serif, uppercase, spaced — sits above the
-              hero percentage so the stat has a "title" rather than floating
-              in isolation. */}
-          <p
-            className="text-center text-[10px] font-serif font-semibold uppercase tracking-[0.42em] mt-3"
-            style={{ color: `${house.hex}CC`, textShadow: `0 0 8px ${house.hex}40` }}
-          >
-            Founder Match
-          </p>
-
-          {/* Hero stat — match % */}
-          <div className="flex items-baseline justify-center mt-1 mb-1">
-            <span
-              className="font-serif font-black leading-none"
-              style={{
-                fontSize: 96,
-                color: house.hex,
-                textShadow: `0 0 32px ${house.hex}50`,
-                letterSpacing: '-0.04em',
-              }}
-            >
-              {matchPercent}
-            </span>
-            <span className="text-ivory/60 text-[20px] ml-1.5 font-serif">%</span>
-          </div>
-
-          {/* Trait triangle */}
-          <div className="my-3 flex justify-center">
-            <svg viewBox="0 0 120 100" width="120" height="100" style={{ overflow: 'visible' }}>
-              <defs>
-                <filter id="tc-glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
-              {/* Connecting lines */}
-              {orbs.length >= 2 && (
-                <line x1="60" y1="15" x2="20" y2="85" stroke={orbs[0].color} strokeWidth="1.2" opacity="0.55" />
-              )}
-              {orbs.length >= 2 && (
-                <line x1="60" y1="15" x2="100" y2="85" stroke={orbs[1].color} strokeWidth="1.2" opacity="0.55" />
-              )}
-              {orbs.length >= 3 && (
-                <line x1="20" y1="85" x2="100" y2="85" stroke={orbs[2].color} strokeWidth="1.2" opacity="0.55" />
-              )}
-
-              {/* House sigil in center */}
-              <text
-                x="60"
-                y="58"
-                textAnchor="middle"
-                fontSize="14"
-                fontFamily="serif"
-                fontWeight="bold"
-                fill={house.hex}
-                opacity="0.45"
+                aria-hidden
               >
                 {initial}
-              </text>
-
-              {/* Orb dots */}
-              {orbs[0] && (
-                <circle cx="60" cy="15" r="7" fill={orbs[0].color} filter="url(#tc-glow)" />
-              )}
-              {orbs[1] && (
-                <circle cx="20" cy="85" r="7" fill={orbs[1].color} filter="url(#tc-glow)" />
-              )}
-              {orbs[2] && (
-                <circle cx="100" cy="85" r="7" fill={orbs[2].color} filter="url(#tc-glow)" />
-              )}
-            </svg>
-          </div>
-
-          {/* Trait signature */}
-          <div className="flex items-center justify-center gap-1.5 mb-3">
-            <div className="h-[1px] flex-1 bg-ivory/10" />
-            <span className="text-[10px] font-mono font-bold tracking-[0.25em] text-ivory/70">
-              {stats.traitSignature}
-            </span>
-            <div className="h-[1px] flex-1 bg-ivory/10" />
-          </div>
-
-          {/* Smart stats grid — 2x2 */}
-          <div className="grid grid-cols-2 gap-1.5 mb-3">
-            <StatCell label="Rarity" value={`1/${stats.rarity.pool}`} color={house.hex} />
-            <StatCell label="Speed" value={`Top ${100 - stats.responseSpeedRank.percentile}%`} color={house.hex} />
-            <StatCell label="Novelty" value={stats.noveltyDecile.label.replace('Top ', 'Top ')} color={house.hex} />
-            <StatCell label="Fit" value={stats.industryFitRank.label.split(' match')[0]} color={house.hex} />
-          </div>
-
-          {/* Crowned idea */}
-          {crownedIdeaName && (
-            <div
-              className="rounded-xl px-3 py-2 mb-3 border"
+              </div>
+              <span className="text-[10px] tracking-[0.25em] text-ivory/75 uppercase">
+                {house.name.toUpperCase()}
+              </span>
+            </div>
+            <span
+              className="text-[10px] tracking-[0.25em] px-2 py-1 rounded-full border font-mono font-bold"
               style={{
-                background: `linear-gradient(90deg, ${house.hex}15, ${house.hex}05)`,
-                borderColor: `${house.hex}35`,
+                borderColor: `${TIER_COLOR[rarityTier]}70`,
+                color: TIER_COLOR[rarityTier],
+                background: `${TIER_COLOR[rarityTier]}18`,
               }}
             >
-              <p className="text-[8px] font-mono uppercase tracking-widest text-ivory/40 mb-0.5">
-                crowned idea
-              </p>
-              <p className="text-[13px] font-serif font-bold text-ivory leading-tight">
-                {crownedIdeaName}
-              </p>
-              {crownedIdeaDomain && (
-                <p className="text-[10px] text-ivory/55 mt-0.5 leading-tight">
-                  in {crownedIdeaDomain.replace(/_/g, ' ')}
-                </p>
-              )}
+              {rarityTier}
+            </span>
+          </div>
+
+          {/* Row 2 — first name + archetype */}
+          <div className="mt-4">
+            <h1
+              className="font-serif font-bold leading-none"
+              style={{ fontSize: 32, color: '#F5F0E8' }}
+            >
+              {firstName}
+            </h1>
+            <h2
+              className="font-serif italic text-[17px] mt-1"
+              style={{
+                color: house.hex,
+                textShadow: `0 0 14px ${house.hex}50`,
+              }}
+            >
+              {archetype.name}
+            </h2>
+          </div>
+
+          {/* Row 3 — pull quote */}
+          <blockquote
+            className="mt-3 text-[12.5px] leading-relaxed italic text-ivory/85 border-l-2 pl-3"
+            style={{ borderColor: house.hex }}
+          >
+            &ldquo;{archetype.pullQuote}&rdquo;
+          </blockquote>
+
+          {/* Row 4 — radar chart, centered */}
+          <div className="my-4 flex justify-center">
+            <RadarChart scores={traitScores} color={house.hex} size={200} />
+          </div>
+
+          {/* Row 5 — 3-stat pill row */}
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <StatPill label="RARITY" value={`Top ${rarityPct}%`} color={house.hex} />
+            <StatPill label="SEALED IN" value={journeyTime} color={house.hex} />
+            <StatPill label="MATCH" value={`${matchPercent}%`} color={house.hex} />
+          </div>
+
+          {/* Row 6 — founder twin (expanded) */}
+          <div className="mt-4">
+            <div className="text-[10px] tracking-[0.25em] text-ivory/60 mb-1.5">
+              YOUR FOUNDER TWIN
+            </div>
+            <FounderTwinCard twin={archetype.twinGlobal} color={house.hex} />
+            <div className="text-[10px] text-ivory/55 mt-1.5 text-center">
+              · and {indianLast} in India
+            </div>
+          </div>
+
+          {/* Row 7 — signature move + kryptonite */}
+          <div className="mt-4 grid grid-cols-2 gap-3 text-[11.5px]">
+            <div>
+              <div className="text-[9px] tracking-[0.2em] text-ivory/55 mb-1">
+                SIGNATURE MOVE
+              </div>
+              <div className="text-ivory/90 italic leading-snug">
+                {archetype.signatureMove}
+              </div>
+            </div>
+            <div>
+              <div className="text-[9px] tracking-[0.2em] text-ivory/55 mb-1">
+                KRYPTONITE
+              </div>
+              <div className="text-ivory/90 italic leading-snug">
+                {archetype.kryptonite}
+              </div>
+            </div>
+          </div>
+
+          {/* Row 8 — crowned idea */}
+          {crownedIdea && (
+            <div
+              className="mt-4 rounded-xl border border-white/10 p-3"
+              style={{
+                background: `linear-gradient(90deg, ${house.hex}12, ${house.hex}04)`,
+              }}
+            >
+              <div className="text-[9px] tracking-[0.2em] text-ivory/55">
+                CROWNED IDEA
+              </div>
+              <div className="font-serif font-bold text-[15px] leading-tight mt-1 text-ivory">
+                {crownedIdea.title}
+              </div>
+              <div className="text-[11px] text-ivory/70 mt-0.5">
+                in {crownedIdea.industry}
+              </div>
             </div>
           )}
 
-          {/* Spacer */}
+          {/* Row 9 — spacer-flex pushes footer to the bottom. */}
           <div className="flex-1" />
 
-          {/* Bottom — name + slug */}
-          <div className="text-center space-y-0.5">
-            <p className="text-[18px] font-serif font-bold" style={{ color: '#F5F0E8' }}>
-              {displayName}
-            </p>
-            <p className="text-[9px] font-mono text-ivory/40 tracking-wider">
-              {slug}
-            </p>
+          <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px]">
+            <span
+              className="tracking-[0.25em] font-mono"
+              style={{ color: `${house.hex}C0` }}
+            >
+              #CATALSTCHALLENGE
+            </span>
+            <span className="font-mono text-ivory/60 truncate ml-2">{urlSlug}</span>
           </div>
         </div>
-
       </div>
     );
   },
 );
 
-// ─ Sub-component ─────────────────────────────────────────────
+// ─── Sub-components ──────────────────────────────────────────────────────
 
-function StatCell({ label, value, color }: { label: string; value: string; color: string }) {
+function StatPill({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: string;
+  color: string;
+}) {
   return (
     <div
-      className="rounded-lg px-2 py-1.5"
+      className="rounded-xl py-2 px-1 bg-white/5 border border-white/10 backdrop-blur-sm"
       style={{
-        background: 'rgba(255,255,255,0.035)',
-        border: '1px solid rgba(255,255,255,0.08)',
+        boxShadow: `inset 0 0 0 1px ${color}10`,
       }}
     >
-      <p className="text-[8px] font-mono uppercase tracking-wider text-ivory/35">{label}</p>
-      <p className="text-[11px] font-serif font-bold leading-tight" style={{ color }}>
+      <div className="text-[9px] tracking-[0.18em] text-ivory/55 font-mono">{label}</div>
+      <div
+        className="text-[13px] font-bold mt-1 leading-tight"
+        style={{ color, textShadow: `0 0 8px ${color}40` }}
+      >
         {value}
-      </p>
+      </div>
     </div>
   );
 }
+
