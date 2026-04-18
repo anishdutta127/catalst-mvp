@@ -112,9 +112,11 @@ export function JourneyShell({
             </motion.div>
           </AnimatePresence>
 
-          {/* Pip lives in the activity zone, bottom-right — unless the screen
-              has taken Pip over (e.g. S04 anchors its own Pip top-right). */}
-          {!screenOwnsPip && <PipFloater />}
+          {/* Pip lives in the activity zone, bottom-right. Always rendered;
+              visibility toggles via prop so PipWithPoof plays its exit
+              animation on screens that own their own Pip (e.g. S04) instead
+              of vanishing mid-poof. */}
+          <PipFloater visible={!screenOwnsPip} />
         </div>
       </div>
 

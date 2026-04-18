@@ -180,16 +180,11 @@ export function S04Industries() {
     };
   }, [currentCard]);
 
-  // Pip emotion — mirrors the last beat so the sprite "reacts" alongside the
-  // floating bubble. idle before any action, wideeye on edge, glow once we
-  // cross the 2-keep threshold, happy on a fresh keep, idle on pass.
-  const pipEmotion: PipEmotion = useMemo(() => {
-    if (!lastAction) return 'idle';
-    if (lastAction.type === 'edge') return 'wideeye';
-    if (lastAction.type === 'keep' && industriesKept.length >= MIN_KEEPS_TO_CONTINUE) return 'glow';
-    if (lastAction.type === 'keep') return 'happy';
-    return 'idle';
-  }, [lastAction, industriesKept.length]);
+  // Pip emotion on S04 — stable 'happy' throughout. Per-swipe emotion changes
+  // were restarting the sprite's breathing loop each time and reading as a
+  // flicker. The reactions now come from the pipLeaning tilt + floating
+  // bubble, not from swapping emotion.
+  const pipEmotion: PipEmotion = 'happy';
 
   function handlePass() {
     if (!currentCard) return;
@@ -347,7 +342,7 @@ export function S04Industries() {
               emotion={pipEmotion}
               color={PIP_COLOR}
               size={52}
-              enterDelay={1200}
+              enterDelay={400}
               visible={true}
             />
           </motion.div>

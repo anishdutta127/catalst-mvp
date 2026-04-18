@@ -94,12 +94,20 @@ function usePipTimerProgress(): number | null {
   return pct;
 }
 
-export function PipFloater() {
+interface PipFloaterProps {
+  /** When false, PipWithPoof runs its exit animation instead of unmounting. */
+  visible?: boolean;
+}
+
+export function PipFloater({ visible = true }: PipFloaterProps = {}) {
   const messages = useUIStore((s) => s.messageQueue);
   const currentScreen = useJourneyStore((s) => s.currentScreen);
   const timerPct = usePipTimerProgress();
 
-  if (currentScreen === 's00') return null;
+  // s00 hides Pip entirely (no sprite, no text). Also respects the caller's
+  // visible flag so JourneyShell can toggle him in/out on screens that own
+  // their own Pip (like S04) without unmounting the floater outright.
+  const pipVisible = visible && currentScreen !== 's00';
 
   // Pip starts streaming as soon as a Pip message lands in the queue. Reading
   // order (Cedric first, Pip second) is enforced by *when* screens enqueue
@@ -108,7 +116,7 @@ export function PipFloater() {
   const pipMsg = [...messages].reverse().find((m) => m.speaker === 'pip');
   const pipColor = PIP_COLOR;
   const pipEmotion = screenBaselineEmotion(currentScreen);
-  const showText = !!pipMsg;
+  const showText = !!pipMsg && pipVisible;
 
   const showRing = timerPct !== null;
   const ringIsLow = showRing && timerPct < 0.25;
@@ -167,9 +175,9 @@ export function PipFloater() {
           </svg>
         )}
         {/* Sprite — centered inside the ring's bounding box. PipWithPoof
-            sparkle-poofs Pip in/out on every screen change so entries and
-            exits feel intentional instead of abrupt. 800ms delay lets
-            Cedric's chat bubble settle first. */}
+            sparkle-poofs Pip in/out based on `pipVisible`. 300ms delay is
+            short enough to feel immediate while still staggering behind
+            Cedric's chat bubble. */}
         <div
           className="absolute flex items-center justify-center"
           style={{
@@ -183,8 +191,8 @@ export function PipFloater() {
             emotion={pipEmotion}
             color={pipColor}
             size={SPRITE_SIZE}
-            enterDelay={800}
-            visible={true}
+            enterDelay={300}
+            visible={pipVisible}
           />
         </div>
       </div>
