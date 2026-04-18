@@ -71,6 +71,9 @@ export function S10Sorting() {
 
   const [phase, setPhase] = useState<Phase>('crests');
   const [lineageIdx, setLineageIdx] = useState(-1);
+  // Controls the "WELCOME HOME" banner — briefly flashes above the house
+  // name title right after the winner crest settles, then fades.
+  const [showWelcome, setShowWelcome] = useState(false);
   const dialogueSent = useRef(false);
 
   const winningHouse = HOUSES.find((h) => h.id === houseId) || HOUSES[0];
@@ -95,6 +98,10 @@ export function S10Sorting() {
     setTimeout(() => {
       setPhase('winner');
       enqueueMessage({ speaker: 'cedric', text: lines.s10.cedric.claim, type: 'dialogue' });
+      // Welcome-home banner briefly flashes above the house title, then
+      // fades out to cede attention to the radar + rules.
+      setTimeout(() => setShowWelcome(true), 400);
+      setTimeout(() => setShowWelcome(false), 3400);
     }, 4500);
     setTimeout(() => {
       setPhase('lineage');
@@ -107,9 +114,21 @@ export function S10Sorting() {
     setTimeout(() => {
       setPhase('complete');
       enqueueMessage({ speaker: 'pip', text: lines.s10.pip.claim, type: 'dialogue' });
+      // Personalised closing beat — "They didn't know they were X either.
+      // Not at first. You'll grow into it."
+      setTimeout(() => {
+        enqueueMessage({
+          speaker: 'cedric',
+          text: lines.s10.cedric.afterLineage(winningHouse.name.replace('House of ', '')),
+          type: 'dialogue',
+        });
+      }, 1400);
     }, 7200 + lineageDuration + 1200);
-    setTimeout(() => advanceScreen(), 7200 + lineageDuration + 4500);
-  }, [enqueueMessage, winningHouse, advanceScreen]);
+    // NOTE: auto-advance removed. The user now controls when to continue via
+    // the "Continue to my profile →" CTA that appears during the complete
+    // phase. Prevents the ceremony from cutting away before the user has
+    // had time to read the lineage + collective-impact content.
+  }, [enqueueMessage, winningHouse]);
 
   return (
     <div className="flex flex-col items-center gap-5 h-full overflow-y-auto pb-6 relative">
@@ -178,24 +197,85 @@ export function S10Sorting() {
                 key={house.id}
                 data-testid={isRevealed ? 'house-winner' : `house-crest-${house.id}`}
                 initial={false}
+                // Eliminated crests now dissolve with a small rotation + scale
+                // so the fade reads as the house "stepping back" rather than
+                // flatly dimming. Winner scales to 1.6 with a spring, no
+                // rotation so it feels grounded and triumphant.
                 animate={{
                   opacity: isEliminated ? 0 : 1,
-                  scale: isRevealed ? 1.6 : isEliminated ? 0.7 : 1,
+                  scale: isRevealed ? 1.6 : isEliminated ? 0.55 : 1,
+                  rotate: isEliminated ? (elimIdx % 2 === 0 ? -8 : 8) : 0,
+                  y: isEliminated ? 6 : 0,
                 }}
                 transition={{
-                  duration: 0.8,
-                  delay: isEliminated ? elimIdx * 0.55 : 0,
+                  duration: 0.9,
+                  delay: isEliminated ? elimIdx * 0.45 : 0,
                   type: isRevealed ? 'spring' : 'tween',
                   stiffness: 180,
                   damping: 18,
                 }}
-                className="flex flex-col items-center gap-2"
-                // CRITICAL FIX: explicit transform-origin keeps the winner centered
-                // during the scale-up (was offset before, causing jump).
+                className="relative flex flex-col items-center gap-2"
                 style={{ transformOrigin: 'center center' }}
               >
+                {/* Radial light-ray burst around the winner crest — fires once
+                    on the winner phase and leaves behind a soft pulsing halo. */}
+                {isRevealed && (
+                  <>
+                    <motion.div
+                      className="absolute pointer-events-none"
+                      style={{
+                        width: 88,
+                        height: 88,
+                        top: 0,
+                        left: '50%',
+                        marginLeft: -44,
+                      }}
+                      initial={{ opacity: 0, scale: 0.6 }}
+                      animate={{ opacity: [0, 0.75, 0], scale: [0.6, 2.2, 2.6] }}
+                      transition={{ duration: 1.2, ease: 'easeOut' }}
+                      aria-hidden
+                    >
+                      <svg viewBox="0 0 88 88" width="100%" height="100%" className="overflow-visible">
+                        {[...Array(12)].map((_, i) => {
+                          const a = (i / 12) * Math.PI * 2;
+                          return (
+                            <line
+                              key={i}
+                              x1={44 + Math.cos(a) * 46}
+                              y1={44 + Math.sin(a) * 46}
+                              x2={44 + Math.cos(a) * 68}
+                              y2={44 + Math.sin(a) * 68}
+                              stroke={house.hex}
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                            />
+                          );
+                        })}
+                      </svg>
+                    </motion.div>
+                    {/* Persistent halo behind the crest — breathes softly */}
+                    <motion.div
+                      className="absolute rounded-full pointer-events-none"
+                      style={{
+                        width: 110,
+                        height: 110,
+                        top: -11,
+                        left: '50%',
+                        marginLeft: -55,
+                        background: `radial-gradient(circle, ${house.hex}40 0%, ${house.hex}00 70%)`,
+                      }}
+                      animate={{
+                        opacity: [0.5, 0.85, 0.5],
+                        scale: [1, 1.1, 1],
+                      }}
+                      transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+                      aria-hidden
+                    />
+                  </>
+                )}
+
                 <div
-                  className={`w-[88px] h-[88px] rounded-full flex items-center justify-center text-[28px] font-serif font-bold border-2 transition-all ${
+                  className={`relative w-[88px] h-[88px] rounded-full flex items-center justify-center text-[28px] font-serif font-bold border-2 transition-all ${
                     isRevealed ? 'shadow-[0_0_32px_var(--glow)]' : ''
                   }`}
                   style={{
@@ -216,15 +296,35 @@ export function S10Sorting() {
         </div>
       </div>
 
-      {/* ── Winner title ── */}
+      {/* ── Winner title + Welcome Home banner ── */}
       <AnimatePresence>
         {(phase === 'winner' || phase === 'lineage' || phase === 'complete') && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, type: 'spring' }}
-            className="text-center z-10 mt-3"
+            className="text-center z-10 mt-3 relative"
           >
+            {/* WELCOME HOME banner — flashes above the house title for ~3s
+                right after the winner crest settles, then fades. Uses the
+                lines.s10.cedric.claim energy. */}
+            <AnimatePresence>
+              {showWelcome && (
+                <motion.p
+                  initial={{ opacity: 0, y: 6, letterSpacing: '0.4em' }}
+                  animate={{ opacity: 1, y: 0, letterSpacing: '0.28em' }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                  className="text-[11px] font-mono uppercase font-bold mb-2"
+                  style={{
+                    color: winningHouse.hex,
+                    textShadow: `0 0 12px ${winningHouse.hex}90`,
+                  }}
+                >
+                  Welcome home
+                </motion.p>
+              )}
+            </AnimatePresence>
             <h2
               className="text-4xl sm:text-5xl font-serif font-bold"
               style={{ color: winningHouse.hex, textShadow: `0 0 24px ${winningHouse.hex}60` }}
@@ -374,6 +474,48 @@ export function S10Sorting() {
             <p className="text-[13px] italic leading-relaxed" style={{ color: `${winningHouse.hex}D0` }}>
               &ldquo;{winningHouse.collective_impact}&rdquo;
             </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Continue CTA — appears on complete so the user controls when to
+          move on. Gold breathing pulse matches S06 Forge / S07 Reveal /
+          S09 Crown so the journey's "continue" moments share a language. */}
+      <AnimatePresence>
+        {phase === 'complete' && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 2.8, ease: [0.22, 1, 0.36, 1] }}
+            className="z-10 w-full max-w-sm px-4 mt-4"
+          >
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => advanceScreen()}
+              data-testid="s10-continue"
+              className="relative w-full h-12 rounded-2xl bg-gold text-dark font-bold text-[14px] flex items-center justify-center gap-2 overflow-hidden"
+            >
+              <motion.span
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                animate={{
+                  boxShadow: [
+                    '0 0 14px rgba(212,168,67,0.40)',
+                    '0 0 28px rgba(212,168,67,0.80)',
+                    '0 0 14px rgba(212,168,67,0.40)',
+                  ],
+                }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <span className="relative">Continue to my profile</span>
+              <motion.span
+                className="relative"
+                animate={{ x: [0, 3, 0] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                →
+              </motion.span>
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
