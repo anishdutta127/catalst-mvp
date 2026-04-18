@@ -7,7 +7,8 @@ import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
 import industriesRaw from '@/content/industries.json';
 import { filterByIndustryOnly } from '@/lib/scoring/orchestrator';
-import { IDEAS } from '@/lib/scoring/engine';
+import { IDEAS, DOMAIN_TO_INDUSTRY } from '@/lib/scoring/engine';
+import { TAGS_BY_CATEGORY, type Category } from '@/lib/tags';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { IndustrySwipeCard, type IndustryCardData } from '@/components/ui/IndustrySwipeCard';
 import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
@@ -78,6 +79,12 @@ export function S04Industries() {
   const enqueueMessage   = useUIStore((s) => s.enqueueMessage);
 
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  // v8: second-level tag filter. When `tagMode === 'subtag'`, the chip row
+  // transforms in place to show sub-tags for the active category (with a
+  // `◂ back` chip as the first entry). `activeSubtag` cannot be set without
+  // `activeCategory` — we never let subtag mode exist without a parent.
+  const [tagMode, setTagMode] = useState<'category' | 'subtag'>('category');
+  const [activeSubtag, setActiveSubtag] = useState<string | null>(null);
   const [lastAction, setLastAction] = useState<{ type: 'keep' | 'pass' | 'edge'; id: string } | null>(null);
   const [nudge, setNudge] = useState('');
   const [isPulsing, setIsPulsing] = useState(false);
@@ -145,13 +152,35 @@ export function S04Industries() {
     [industriesKept, industriesPassed, industriesEdged],
   );
 
+  // Industry → union of tags across its ideas. Depends only on IDEAS so this
+  // memoises once per mount and keeps the deck filter cheap.
+  const tagsByIndustry = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    for (const idea of IDEAS) {
+      const industry = DOMAIN_TO_INDUSTRY[idea.domain_primary];
+      if (!industry) continue;
+      if (!map.has(industry)) map.set(industry, new Set());
+      for (const t of idea.tags ?? []) map.get(industry)!.add(t);
+    }
+    return map;
+  }, []);
+
   const deck = useMemo(() => {
     const unseen = INDUSTRIES.filter((i) => !seenIds.has(i.id));
+    // Subtag mode — soft-cut to industries carrying this tag. "Soft" because
+    // after the matches run out the user still sees the rest of the deck,
+    // rather than hitting an empty state mid-session.
+    if (activeSubtag) {
+      const matches = unseen.filter((i) => tagsByIndustry.get(i.id)?.has(activeSubtag));
+      const rest = unseen.filter((i) => !matches.includes(i));
+      return [...matches, ...rest];
+    }
+    // Category mode — soft sort, in-category first (unchanged pre-v8).
     if (!activeCategory) return unseen;
     const inCat = unseen.filter((i) => i.category === activeCategory);
     const outCat = unseen.filter((i) => i.category !== activeCategory);
     return [...inCat, ...outCat];
-  }, [seenIds, activeCategory]);
+  }, [seenIds, activeCategory, activeSubtag, tagsByIndustry]);
 
   const currentCard = deck[0];
   const nextCard = deck[1];
@@ -269,41 +298,106 @@ export function S04Industries() {
 
   return (
     <div className="relative flex flex-col h-full">
-      {/* ════════ [A] Filter strip — 44px tap-target on mobile, 36px compact ≥sm ════════ */}
+      {/* ════════ [A] Filter strip — same 44px/36px strip, transforms between
+          category and subtag mode in place. ════════ */}
       <div className="shrink-0 h-11 sm:h-9 flex overflow-x-auto scrollbar-none rounded-lg border border-white/5 bg-white/[0.02]">
-        {CATEGORIES.map((c, i) => {
-          const active = activeCategory === c.id;
-          return (
-            <button
-              key={c.label}
-              onClick={() => setActiveCategory(c.id)}
-              data-testid={`category-${c.label.toLowerCase()}`}
-              className={`relative flex-1 min-w-[56px] flex items-center justify-center transition-colors ${
-                i > 0 ? 'border-l border-white/5' : ''
-              }`}
-              style={{ background: active ? `${c.tint}18` : `${c.tint}06` }}
-            >
-              <span
-                className={`text-[10px] font-medium tracking-[0.1em] uppercase transition-colors ${
-                  active ? 'text-gold' : 'text-ivory/45'
+        {tagMode === 'category' ? (
+          CATEGORIES.map((c, i) => {
+            const active = activeCategory === c.id;
+            return (
+              <button
+                key={c.label}
+                onClick={() => {
+                  if (active && c.id) {
+                    // Re-tap on the active named category → drill into sub-tags.
+                    // `c.id` guard prevents the All chip (id === null) from
+                    // entering subtag mode — nothing to drill into.
+                    setTagMode('subtag');
+                  } else {
+                    setActiveCategory(c.id);
+                    setActiveSubtag(null);
+                  }
+                }}
+                data-testid={`category-${c.label.toLowerCase()}`}
+                className={`relative flex-1 min-w-[56px] flex items-center justify-center transition-colors ${
+                  i > 0 ? 'border-l border-white/5' : ''
                 }`}
+                style={{ background: active ? `${c.tint}18` : `${c.tint}06` }}
               >
-                {c.label}
+                <span
+                  className={`text-[10px] font-medium tracking-[0.1em] uppercase transition-colors ${
+                    active ? 'text-gold' : 'text-ivory/45'
+                  }`}
+                >
+                  {c.label}
+                </span>
+                {active && (
+                  <motion.div
+                    layoutId="s04-cat-underline"
+                    className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full"
+                    style={{
+                      background: '#D4A843',
+                      boxShadow: '0 0 8px rgba(212,168,67,0.7)',
+                    }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 26 }}
+                  />
+                )}
+              </button>
+            );
+          })
+        ) : (
+          // ──── Subtag mode ─────────────────────────────────────────────
+          <>
+            {/* Back chip — always first, pops back to the category row. */}
+            <button
+              key="back"
+              onClick={() => {
+                setTagMode('category');
+                setActiveSubtag(null);
+              }}
+              data-testid="subtag-back"
+              className="relative flex-none min-w-[64px] px-2 flex items-center justify-center transition-colors border-r border-white/5"
+              style={{ background: 'rgba(212,168,67,0.08)' }}
+            >
+              <span className="text-[10px] font-medium tracking-[0.1em] uppercase text-gold">
+                ◂ {CATEGORIES.find((c) => c.id === activeCategory)?.label ?? 'Back'}
               </span>
-              {active && (
-                <motion.div
-                  layoutId="s04-cat-underline"
-                  className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full"
-                  style={{
-                    background: '#D4A843',
-                    boxShadow: '0 0 8px rgba(212,168,67,0.7)',
-                  }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-                />
-              )}
             </button>
-          );
-        })}
+
+            {/* Subtag chips from TAGS_BY_CATEGORY[activeCategory]. */}
+            {(activeCategory ? TAGS_BY_CATEGORY[activeCategory as Category] : []).map((tag) => {
+              const active = activeSubtag === tag.id;
+              return (
+                <button
+                  key={tag.id}
+                  onClick={() => setActiveSubtag(active ? null : tag.id)}
+                  data-testid={`subtag-${tag.id}`}
+                  className={`relative flex-1 min-w-[72px] flex items-center justify-center transition-colors border-l border-white/5`}
+                  style={{ background: active ? 'rgba(212,168,67,0.16)' : 'rgba(255,255,255,0.02)' }}
+                >
+                  <span
+                    className={`text-[10px] font-medium tracking-[0.1em] uppercase transition-colors whitespace-nowrap px-1 ${
+                      active ? 'text-gold' : 'text-ivory/55'
+                    }`}
+                  >
+                    {tag.label}
+                  </span>
+                  {active && (
+                    <motion.div
+                      layoutId="s04-subtag-underline"
+                      className="absolute bottom-0 left-2 right-2 h-[2px] rounded-full"
+                      style={{
+                        background: '#D4A843',
+                        boxShadow: '0 0 8px rgba(212,168,67,0.7)',
+                      }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 26 }}
+                    />
+                  )}
+                </button>
+              );
+            })}
+          </>
+        )}
       </div>
 
       {/* ════════ [B] Counter + undo — 24px ════════ */}
