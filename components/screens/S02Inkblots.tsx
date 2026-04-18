@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
+import { pathLine } from '@/lib/speakPath';
 import { createTimer } from '@/lib/timing';
 import { TIMER_DEFAULTS } from '@/lib/constants';
 import { ActivityTimer } from '@/components/ui/ActivityTimer';
@@ -30,6 +31,7 @@ const BLOT_IMAGES = ['/blots/blot-1.png', '/blots/blot-2.png', '/blots/blot-3.pn
 export function S02Inkblots() {
   const recordBlotResponse = useJourneyStore((s) => s.recordBlotResponse);
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
+  const ideaMode = useJourneyStore((s) => s.ideaMode);
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
 
   const [currentBlot, setCurrentBlot] = useState(0);
@@ -63,7 +65,11 @@ export function S02Inkblots() {
     // so the first question isn't drowning in dialogue.
     if (currentBlot === 0) {
       setTimeout(() => {
-        enqueueMessage({ speaker: 'pip', text: lines.s02.pip.intro, type: 'dialogue' });
+        enqueueMessage({
+          speaker: 'pip',
+          text: pathLine('s02.pip.intro', lines.s02.pip.intro, ideaMode),
+          type: 'dialogue',
+        });
       }, 250);
     }
 

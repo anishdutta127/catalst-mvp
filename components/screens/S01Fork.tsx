@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
+import { pathLine } from '@/lib/speakPath';
 import { ProcessingSwirl } from '@/components/ui/ProcessingSwirl';
 
 /**
@@ -19,6 +20,7 @@ export function S01Fork() {
   const setUserIdeaText = useJourneyStore((s) => s.setUserIdeaText);
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
   const goToScreen = useJourneyStore((s) => s.goToScreen);
+  const ideaMode = useJourneyStore((s) => s.ideaMode);
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
 
   const [showIdeaInput, setShowIdeaInput] = useState(false);
@@ -53,7 +55,11 @@ export function S01Fork() {
     const pipAt = stream1 + READ_PAUSE + Math.floor(stream2 * 0.5);
     setTimeout(() => {
       if (!isStillHere()) return;
-      enqueueMessage({ speaker: 'pip', text: lines.s01.pip.entrance, type: 'dialogue' });
+      enqueueMessage({
+        speaker: 'pip',
+        text: pathLine('s01.pip.entrance', lines.s01.pip.entrance, ideaMode),
+        type: 'dialogue',
+      });
     }, pipAt);
     // Reveal the path cards a beat after Pip starts talking.
     setTimeout(() => {

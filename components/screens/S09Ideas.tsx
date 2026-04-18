@@ -13,6 +13,7 @@ import { MysticVaultCard } from '@/components/ui/MysticVaultCard';
 import { PipWithPoof } from '@/components/characters/PipWithPoof';
 import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
 import { TAG_BY_ID } from '@/lib/tags';
+import { pathLine } from '@/lib/speakPath';
 
 /**
  * S09 — Ideas Revealed (Batch 3 rebuild).
@@ -88,6 +89,7 @@ export function S09Ideas() {
   const sessionId = useJourneyStore((s) => s.sessionId);
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
   const goToScreen = useJourneyStore((s) => s.goToScreen);
+  const ideaMode = useJourneyStore((s) => s.ideaMode);
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
 
   const [mode, setMode] = useState<'grid' | 'dossier'>('grid');
@@ -121,7 +123,10 @@ export function S09Ideas() {
     enqueueMessage({ speaker: 'cedric', text: lines.s09.cedric.reveal1, type: 'dialogue' });
     // Pip's reveal routes to LOCAL pipReaction — PipFloater is hidden on s09
     // (screenOwnsPip), so an enqueueMessage here would silently disappear.
-    const t = setTimeout(() => setPipReaction(lines.s09.pip.reveal), 2000);
+    const t = setTimeout(
+      () => setPipReaction(pathLine('s09.pip.reveal', lines.s09.pip.reveal, ideaMode)),
+      2000,
+    );
     return () => clearTimeout(t);
   }, [enqueueMessage, matchedIdeas]);
 

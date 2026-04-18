@@ -9,6 +9,7 @@ import industriesRaw from '@/content/industries.json';
 import { filterByIndustryOnly } from '@/lib/scoring/orchestrator';
 import { IDEAS, DOMAIN_TO_INDUSTRY } from '@/lib/scoring/engine';
 import { TAGS_BY_CATEGORY, type Category } from '@/lib/tags';
+import { pathLine } from '@/lib/speakPath';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { IndustrySwipeCard, type IndustryCardData } from '@/components/ui/IndustrySwipeCard';
 import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
@@ -76,6 +77,7 @@ export function S04Industries() {
   const passIndustry     = useJourneyStore((s) => s.passIndustry);
   const edgeIndustry     = useJourneyStore((s) => s.edgeIndustry);
   const advanceScreen    = useJourneyStore((s) => s.advanceScreen);
+  const ideaMode         = useJourneyStore((s) => s.ideaMode);
   const enqueueMessage   = useUIStore((s) => s.enqueueMessage);
 
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -129,7 +131,7 @@ export function S04Industries() {
     dialogueSent.current = true;
     enqueueMessage({ speaker: 'cedric', text: lines.s04.cedric.intro, type: 'instruction' });
     const t = setTimeout(() => {
-      setPipReaction(lines.s04.pip.intro);
+      setPipReaction(pathLine('s04.pip.intro', lines.s04.pip.intro, ideaMode));
       triggerPipLean();
     }, 2500);
     return () => clearTimeout(t);
@@ -232,7 +234,7 @@ export function S04Industries() {
     if (!firstKeepFired.current && prevKeepCount === 0) {
       firstKeepFired.current = true;
       setTimeout(() => {
-        setPipReaction(lines.s04.pip.afterFirstKeep);
+        setPipReaction(pathLine('s04.pip.afterFirstKeep', lines.s04.pip.afterFirstKeep, ideaMode));
         triggerPipLean();
       }, 180);
     }
@@ -242,7 +244,7 @@ export function S04Industries() {
     if (!thresholdFired.current && prevKeepCount === 1) {
       thresholdFired.current = true;
       setTimeout(() => {
-        setPipReaction(lines.s04.pip.atThreshold);
+        setPipReaction(pathLine('s04.pip.atThreshold', lines.s04.pip.atThreshold, ideaMode));
         triggerPipLean();
       }, 850);
     }
@@ -262,7 +264,7 @@ export function S04Industries() {
     if (!firstEdgeFired.current) {
       firstEdgeFired.current = true;
       setTimeout(() => {
-        setPipReaction(lines.s04.pip.afterFirstEdge);
+        setPipReaction(pathLine('s04.pip.afterFirstEdge', lines.s04.pip.afterFirstEdge, ideaMode));
         triggerPipLean();
       }, 180);
     }

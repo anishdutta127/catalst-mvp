@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
+import { pathLine } from '@/lib/speakPath';
 import { createTimer } from '@/lib/timing';
 import { TIMER_DEFAULTS } from '@/lib/constants';
 import { ActivityTimer } from '@/components/ui/ActivityTimer';
@@ -23,6 +24,7 @@ const VISIBLE_INDICES = [0, 2, 3];
 export function S03Words() {
   const recordWordResponse = useJourneyStore((s) => s.recordWordResponse);
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
+  const ideaMode = useJourneyStore((s) => s.ideaMode);
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
 
   const [step, setStep] = useState(-1);
@@ -58,7 +60,11 @@ export function S03Words() {
     // talked at AND timed at the same time on word 1.
     if (step === 0) {
       setTimeout(() => {
-        enqueueMessage({ speaker: 'pip', text: lines.s03.pip.intro, type: 'dialogue' });
+        enqueueMessage({
+          speaker: 'pip',
+          text: pathLine('s03.pip.intro', lines.s03.pip.intro, ideaMode),
+          type: 'dialogue',
+        });
       }, 250);
     }
 

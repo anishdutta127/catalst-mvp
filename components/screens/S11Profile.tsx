@@ -19,6 +19,7 @@ import {
 } from '@/lib/archetypes';
 import { extractPersonality } from '@/lib/scoring/engine';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
+import { pathLine } from '@/lib/speakPath';
 import { staggerContainer, fadeSlideUp, easeOvershoot } from '@/lib/motion';
 
 interface LineageFigure { name: string; sharedTraitLine: string; quantified_impact?: string }
@@ -104,7 +105,11 @@ export function S11Profile() {
       3000,
     );
     setTimeout(
-      () => enqueueMessage({ speaker: 'pip', text: lines.s11.pip.final, type: 'dialogue' }),
+      () => enqueueMessage({
+        speaker: 'pip',
+        text: pathLine('s11.pip.final', lines.s11.pip.final, state.ideaMode),
+        type: 'dialogue',
+      }),
       5000,
     );
   }, [enqueueMessage, displayName, houseId, crowned]);

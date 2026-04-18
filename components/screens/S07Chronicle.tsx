@@ -7,6 +7,7 @@ import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
 import { finalRun } from '@/lib/scoring/orchestrator';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
+import { pathLine } from '@/lib/speakPath';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { PipWithPoof } from '@/components/characters/PipWithPoof';
 import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
@@ -90,7 +91,7 @@ export function S07Chronicle() {
       // Pip's intro goes to LOCAL state — the chat-strip PipFloater is
       // hidden on S07 so enqueueing would silence this line.
       const t = setTimeout(() => {
-        setPipReaction(lines.s07.pip.headlineIntro);
+        setPipReaction(pathLine('s07.pip.headlineIntro', lines.s07.pip.headlineIntro, state.ideaMode));
       }, 2400);
       return () => clearTimeout(t);
     }
