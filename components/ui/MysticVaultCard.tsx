@@ -12,6 +12,13 @@ interface MysticVaultCardProps {
   houseName?: string;
   /** Show the expanded/always-open version (at S11). Default: collapsible/teaser (at S09). */
   variant?: 'teaser' | 'full';
+  /**
+   * Called when the user clicks the secondary "continue to my house" CTA.
+   * When omitted, that CTA is hidden (use this on S11 where there's
+   * nowhere further to advance to). When provided, renders below the
+   * WhatsApp CTA as a "Maybe later" escape hatch.
+   */
+  onContinue?: () => void;
 }
 
 const DEFAULT_WHATSAPP = '919686917041';
@@ -36,6 +43,7 @@ export function MysticVaultCard({
   ideaName,
   houseName,
   variant = 'teaser',
+  onContinue,
 }: MysticVaultCardProps) {
   const defaultMsg = [
     'Hi Anish! I just completed my Catalst journey.',
@@ -103,9 +111,10 @@ export function MysticVaultCard({
           <span className="text-[9px] uppercase tracking-widest text-blue-100/50">optional · 30 min · ₹500</span>
         </div>
 
-        {/* Hero: avatar + headline */}
+        {/* Hero: garden mark + headline */}
         <div className="flex items-start gap-4">
-          {/* Avatar with rotating glow ring */}
+          {/* Catalst sprout mark (replaces personal initials — this is a
+              TEAM pitch, not a founder-bragging card) with rotating glow */}
           <div className="relative shrink-0" style={{ width: 64, height: 64 }}>
             <motion.div
               animate={{ rotate: 360 }}
@@ -118,11 +127,11 @@ export function MysticVaultCard({
               }}
             />
             <div
-              className="absolute inset-[3px] rounded-full flex items-center justify-center text-2xl border-2 border-white/30"
+              className="absolute inset-[3px] rounded-full flex items-center justify-center text-[26px] border-2 border-white/30 leading-none"
               style={{ background: 'linear-gradient(135deg, #1E3A8A, #312E81)' }}
+              aria-hidden
             >
-              {/* Replace with actual photo once available */}
-              AD
+              🌱
             </div>
           </div>
           <div className="flex-1 min-w-0">
@@ -130,33 +139,42 @@ export function MysticVaultCard({
               Build this idea with us in 7 days.
             </h3>
             <p className="text-blue-100/75 text-[12px] leading-snug mt-1">
-              Anish Dutta · PM · AI Builder · Mumbai
+              The team that ships: AI builders + designers + operators.
             </p>
           </div>
         </div>
 
-        {/* Bio strip */}
+        {/* Team positioning — emphasis on the squad, not a solo founder */}
         <p className="text-blue-50/85 text-[13px] leading-relaxed">
-          I've built Catalst through 7 iterations over 2 years. I work with a team of Claude Code experts, business strategists, technical engineers, and designers to ship founder MVPs fast.
+          We&rsquo;re a team of AI-native builders — Claude Code engineers,
+          MidJourney designers, video editors, product strategists. We
+          ship founder MVPs fast using the full AI toolchain, and
+          we&rsquo;ve done it repeatedly at Catalst.
         </p>
 
-        {/* Trust chips */}
+        {/* Capability chips — team roles, not personal credentials */}
         <div className="flex flex-wrap gap-1.5">
-          {['Masters\' Union · Merit Scholar', 'IIT Bombay · Agentic AI', 'GSL · Product Mgr', 'RVCE · CS Eng'].map((c) => (
+          {[
+            { icon: '⚡', label: 'Claude Code engineers' },
+            { icon: '🎨', label: 'MidJourney designers' },
+            { icon: '🎥', label: 'Video editors' },
+            { icon: '📊', label: 'Product strategists' },
+          ].map((c) => (
             <span
-              key={c}
-              className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-blue-100/85 border border-white/15 backdrop-blur-sm"
+              key={c.label}
+              className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-blue-100/85 border border-white/15 backdrop-blur-sm"
             >
-              {c}
+              <span>{c.icon}</span>
+              <span>{c.label}</span>
             </span>
           ))}
         </div>
 
-        {/* Value props */}
+        {/* Value props — team-positioned */}
         <div className="grid grid-cols-3 gap-2">
           {[
             { icon: '⚡', label: '7-day MVP', sub: 'Real product, not a demo' },
-            { icon: '🎯', label: '₹500 · 30 min', sub: 'Strategy call with me' },
+            { icon: '🎯', label: '₹500 · 30 min', sub: 'Strategy call with our team' },
             { icon: '💬', label: 'Direct access', sub: 'WhatsApp, not ticket queue' },
           ].map((v) => (
             <div
@@ -207,10 +225,22 @@ export function MysticVaultCard({
             }}
           />
           <span className="relative text-white font-bold text-[15px] flex items-center justify-center gap-2">
-            💬 Message Anish on WhatsApp
+            💬 Message the team on WhatsApp
             <span className="text-white/80 font-normal text-[12px]">→</span>
           </span>
         </motion.a>
+
+        {/* Secondary CTA — "Maybe later" escape hatch. Only rendered when the
+            caller passes onContinue; on S11 (no further screen) it's hidden. */}
+        {onContinue && (
+          <button
+            onClick={onContinue}
+            data-testid="vault-continue-cta"
+            className="w-full h-10 rounded-xl bg-transparent border border-white/15 text-blue-100/60 text-[12px] hover:bg-white/5 hover:text-blue-50/90 hover:border-white/25 transition-all"
+          >
+            Maybe later — continue to my house →
+          </button>
+        )}
 
         {/* LinkedIn link */}
         <div className="flex items-center justify-center gap-3 pt-1">

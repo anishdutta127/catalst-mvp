@@ -240,6 +240,7 @@ export function S09Ideas() {
               ideaName={crowned.scored.idea.idea_name}
               houseName={house?.name}
               variant="teaser"
+              onContinue={() => advanceScreen()}
             />
           </div>
         )}
@@ -440,6 +441,7 @@ export function S09Ideas() {
             ideaName={crowned.scored.idea.idea_name}
             houseName={house?.name}
             variant="teaser"
+            onContinue={() => advanceScreen()}
           />
         )}
       </div>
