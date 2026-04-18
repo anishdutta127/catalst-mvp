@@ -39,7 +39,10 @@ export function JourneyShell({
   // Screens that anchor their own Pip (sprite + reaction bubbles) inside the
   // activity zone. The shell suppresses the default PipFloater for these so
   // we never get two Pips visible at once.
-  const screenOwnsPip = currentScreen === 's04';
+  //   s04 — Pip on the card's top-right corner
+  //   s07 — Pip anchored bottom-right above the CTA (chronicle card hero
+  //         headline takes the top half; Pip would collide there)
+  const screenOwnsPip = currentScreen === 's04' || currentScreen === 's07';
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-dark flex flex-col">

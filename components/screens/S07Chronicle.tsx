@@ -8,7 +8,8 @@ import { lines } from '@/content/lines';
 import { finalRun } from '@/lib/scoring/orchestrator';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
-import { useAmbientPipLine } from '@/lib/ambient-pip';
+import { PipWithPoof } from '@/components/characters/PipWithPoof';
+import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
 
 /**
  * S07 — Verdania Chronicle + Constraints.
@@ -66,11 +67,29 @@ export function S07Chronicle() {
   const [selectedResource, setSelectedResource] = useState('');
   const [selectedAdvantage, setSelectedAdvantage] = useState('');
   const [revealing, setRevealing] = useState(false);
+  // Pip lives locally on S07 (bottom-right, above CTA) so his bubble can't
+  // collide with the chronicle card's big hero headline. Reactions land in
+  // pipReaction state and render via PipFloatingBubble with direction="bottom-right".
+  const [pipReaction, setPipReaction] = useState<string | null>(null);
+  const ambientFiredRef = useRef(false);
   const dialogueSent = useRef(false);
   const constraintsDialogueSent = useRef(false);
   const displayName = state.displayName || 'Traveler';
 
-  useAmbientPipLine('s07');
+  // Ambient Pip dwell line — fires once after 15s if nothing else has
+  // happened. Local state (not messageQueue) because PipFloater is hidden
+  // on this screen.
+  useEffect(() => {
+    if (ambientFiredRef.current) return;
+    const bank = lines.ambientPip.s07;
+    if (!bank || bank.length === 0) return;
+    const t = setTimeout(() => {
+      if (ambientFiredRef.current) return;
+      ambientFiredRef.current = true;
+      setPipReaction(bank[Math.floor(Math.random() * bank.length)]);
+    }, 15000);
+    return () => clearTimeout(t);
+  }, []);
 
   // Intro dialogue — once per phase.
   useEffect(() => {
@@ -82,8 +101,10 @@ export function S07Chronicle() {
         text: lines.s07.cedric.headlineIntro,
         type: 'instruction',
       });
+      // Pip's intro goes to LOCAL state — the chat-strip PipFloater is
+      // hidden on S07 so enqueueing would silence this line.
       const t = setTimeout(() => {
-        enqueueMessage({ speaker: 'pip', text: lines.s07.pip.headlineIntro, type: 'dialogue' });
+        setPipReaction(lines.s07.pip.headlineIntro);
       }, 2400);
       return () => clearTimeout(t);
     }
@@ -157,6 +178,34 @@ export function S07Chronicle() {
             setSelectedAdvantage={setSelectedAdvantage}
             onComplete={handleComplete}
             revealing={revealing}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Pip — anchored BOTTOM-RIGHT, above the CTA. Keeps him out of the
+          chronicle card's hero headline area which takes the upper half. */}
+      <div
+        className="absolute z-30 pointer-events-none"
+        style={{ bottom: 78, right: 10 }}
+      >
+        <PipWithPoof
+          emotion="tilt"
+          color="#4ade80"
+          size={48}
+          enterDelay={1000}
+          visible={true}
+        />
+      </div>
+
+      {/* Reaction bubble — grows UPWARD from above Pip (bottom-right anchor) */}
+      <AnimatePresence>
+        {pipReaction && (
+          <PipFloatingBubble
+            key={pipReaction}
+            text={pipReaction}
+            color="#4ade80"
+            direction="bottom-right"
+            onComplete={() => setPipReaction(null)}
           />
         )}
       </AnimatePresence>
@@ -329,9 +378,14 @@ function FutureCard({
         rotate,
         opacity: dragOpacity,
         touchAction: 'pan-y',
-        background: `linear-gradient(145deg, ${theme.color_primary}18 0%, ${theme.color_secondary}10 60%, #0C0E12 100%)`,
-        border: `1px solid ${theme.color_primary}25`,
-        boxShadow: `0 14px 44px -10px ${theme.color_primary}55`,
+        // Higher base opacity + backdrop blur so the cave/palace art can't
+        // fight the text for attention. Theme color still tints the top so
+        // each future's mood (LEGACY / FREEDOM / SCALE / COMMUNITY) reads.
+        background: `linear-gradient(145deg, ${theme.color_primary}28 0%, ${theme.color_secondary}1A 50%, rgba(8, 10, 14, 0.92) 100%)`,
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: `1px solid ${theme.color_primary}35`,
+        boxShadow: `0 8px 32px rgba(0,0,0,0.4), inset 0 0 0 1px ${theme.color_primary}20`,
       }}
       initial={{ opacity: 0, scale: 0.94, y: 12 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -386,29 +440,33 @@ function FutureCard({
           </div>
         </div>
 
+        {/* Pull-quote — hoisted ABOVE the lead so it's always in the top
+            half of the card (guarantees the emotional anchor is visible
+            without scrolling on all four slides, not just the last). */}
+        {hl.pull_quote && (
+          <div className="relative mx-6 mb-4 py-3 pl-5 pr-4">
+            <span
+              className="absolute -top-1 left-0 text-[56px] font-serif leading-none"
+              style={{ color: theme.color_primary, opacity: 0.35 }}
+              aria-hidden
+            >
+              &ldquo;
+            </span>
+            <p
+              className="text-[15px] italic font-serif leading-snug pl-6"
+              style={{ color: lighten(theme.color_primary, 0.75) }}
+            >
+              {hl.pull_quote.text}
+            </p>
+            <p className="text-[10.5px] text-ivory/55 mt-2 pl-6 uppercase tracking-wider">
+              — {pullQuoteAttribution}
+            </p>
+          </div>
+        )}
+
         {/* Lead paragraph */}
         <div className="px-6 pb-4">
           <p className="text-[14px] text-ivory/85 leading-relaxed">{hl.lead}</p>
-        </div>
-
-        {/* Pull-quote — the emotional anchor */}
-        <div className="relative mx-6 mb-4 py-3 pl-5 pr-4">
-          <span
-            className="absolute -top-1 left-0 text-[56px] font-serif leading-none"
-            style={{ color: theme.color_primary, opacity: 0.35 }}
-            aria-hidden
-          >
-            &ldquo;
-          </span>
-          <p
-            className="text-[15px] italic font-serif text-ivory/95 leading-snug pl-6"
-            style={{ color: lighten(theme.color_primary, 0.7) }}
-          >
-            {hl.pull_quote.text}
-          </p>
-          <p className="text-[10.5px] text-ivory/50 mt-2 pl-6 uppercase tracking-wider">
-            — {pullQuoteAttribution}
-          </p>
         </div>
 
         {/* Support-stat chips */}
