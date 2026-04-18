@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# data-patch backups (v8-data-patch.ts writes these alongside content/*.json)
+*.pre-v8.bak

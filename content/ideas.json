@@ -11991,7 +11991,7 @@
   },
   {
     "idea_id": "CAT-0066",
-    "idea_name": "InteriorAI",
+    "idea_name": "RoomRender",
     "one_liner": "AI room redesign: upload a photo of your room, see it transformed",
     "domain_primary": "real_estate",
     "sub_domain": [
@@ -13095,7 +13095,7 @@
   },
   {
     "idea_id": "CAT-0072",
-    "idea_name": "RunCrew",
+    "idea_name": "PaceMate",
     "one_liner": "Social running app that matches runners by pace and neighbourhood",
     "domain_primary": "community_social",
     "sub_domain": [
@@ -16602,7 +16602,7 @@
   },
   {
     "idea_id": "CAT-0091",
-    "idea_name": "InsureSimple",
+    "idea_name": "PolicyParse",
     "one_liner": "AI insurance advisor that explains policies in plain language and finds gaps",
     "domain_primary": "fintech",
     "sub_domain": [
@@ -29712,7 +29712,7 @@
   },
   {
     "idea_id": "CAT-0162",
-    "idea_name": "SkillBridge",
+    "idea_name": "ChowkWork",
     "one_liner": "Gig platform matching blue-collar workers to daily jobs with instant UPI payment",
     "domain_primary": "community_social",
     "sub_domain": [
@@ -31193,7 +31193,7 @@
   },
   {
     "idea_id": "CAT-0170",
-    "idea_name": "WasteWorth",
+    "idea_name": "ScrapMatch",
     "one_liner": "Marketplace connecting waste generators with recyclers for specific waste streams",
     "domain_primary": "sustainability",
     "sub_domain": [
@@ -39383,7 +39383,7 @@
   },
   {
     "idea_id": "CAT-0215",
-    "idea_name": "LangBridge",
+    "idea_name": "BhashaBridge",
     "one_liner": "Real-time Indian language translation API and widget that lets any website or app serve users in 12+ Indian languages instantly",
     "domain_primary": "ai_automation",
     "sub_domain": [
@@ -42295,7 +42295,7 @@
   },
   {
     "idea_id": "CAT-0231",
-    "idea_name": "PromptCraft",
+    "idea_name": "AIAkademi",
     "one_liner": "AI skills academy teaching prompt engineering, AI tool mastery, and AI-augmented workflows for Indian professionals transitioning careers",
     "domain_primary": "education",
     "sub_domain": [
