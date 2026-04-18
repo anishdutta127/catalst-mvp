@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 
@@ -38,6 +38,17 @@ export function S00Gateway() {
   const setDisplayName = useJourneyStore((s) => s.setDisplayName);
   const advanceScreen = useJourneyStore((s) => s.advanceScreen);
   const [name, setName] = useState('');
+
+  useEffect(() => {
+    // Cold-start guard: a fresh /journey landing on S00 should never carry
+    // residual Path B text from a previous session's close-without-reset.
+    // Zustand has no `persist` middleware here, but hot-reload and browser
+    // tab reuse can still surface stale in-memory state.
+    const s = useJourneyStore.getState();
+    if (s.currentScreen === 's00' && (s.userIdeaText || s.ideaMode === 'directed')) {
+      useJourneyStore.setState({ userIdeaText: '', ideaMode: null });
+    }
+  }, []);
 
   const handleAdvance = () => {
     if (name.trim().length >= 2) {
