@@ -264,8 +264,15 @@ export function IndustrySwipeCard({
   }, [flipped]);
 
   function handleDragEnd(_: unknown, info: { offset: { x: number; y: number } }) {
-    const { x: dx } = info.offset;
-    const SWIPE_THRESHOLD = 100;
+    const { x: dx, y: dy } = info.offset;
+    const SWIPE_THRESHOLD = 120;
+    // Direction-bail: if the gesture was dominantly vertical, the user was
+    // trying to scroll the card contents — not swipe-through. Snap back
+    // without triggering pass/keep even if |dx| crossed the threshold.
+    if (Math.abs(dy) > Math.abs(dx)) {
+      x.set(0);
+      return;
+    }
     if (dx < -SWIPE_THRESHOLD) {
       setExitDirection('left');
       setTimeout(onPass, 200);
@@ -292,7 +299,7 @@ export function IndustrySwipeCard({
       key={cardKey}
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.7}
+      dragElastic={0.35}
       onDragEnd={handleDragEnd}
       style={{ x, rotate }}
       initial={{ opacity: 0, scale: 0.92, y: 30 }}

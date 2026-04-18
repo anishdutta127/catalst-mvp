@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { toPng } from 'html-to-image';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { useUIStore } from '@/lib/store/uiStore';
 import { lines } from '@/content/lines';
@@ -21,6 +22,8 @@ import { extractPersonality } from '@/lib/scoring/engine';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
 import { pathLine } from '@/lib/speakPath';
 import { staggerContainer, fadeSlideUp, easeOvershoot } from '@/lib/motion';
+
+type ShareStatus = 'idle' | 'copied' | 'downloading' | 'downloaded' | 'error';
 
 interface LineageFigure { name: string; sharedTraitLine: string; quantified_impact?: string }
 interface House {
@@ -48,8 +51,12 @@ export function S11Profile() {
   const enqueueMessage = useUIStore((s) => s.enqueueMessage);
   const openDeepDive = useUIStore((s) => s.openDeepDive);
 
-  const [copied, setCopied] = useState<'share' | null>(null);
+  const [shareStatus, setShareStatus] = useState<ShareStatus>('idle');
   const dialogueSent = useRef(false);
+  // Captured for the PNG snapshot. We ref the card-face div so the export
+  // includes the gold border but not the breathing halo (which extends
+  // beyond its box and would look weird as a frozen blur in a share image).
+  const cardRef = useRef<HTMLDivElement>(null);
 
   // ── Resolve house / crowned / name ────────────────────────────────────
   const house = HOUSES.find((h) => h.id === state.houseId) || HOUSES[0];
@@ -122,33 +129,90 @@ export function S11Profile() {
     [archetype],
   );
 
-  async function copyCaption() {
+  // Silent clipboard helper used by every share button — fires-and-forgets
+  // with a fallback for older browsers. Returns a promise so the caller can
+  // sequence a toast after the copy settles.
+  async function copyCaption(): Promise<void> {
     try {
       await navigator.clipboard.writeText(igCaption);
-      setCopied('share');
-      setTimeout(() => setCopied(null), 1600);
     } catch {
-      // Fallback for older browsers.
       const ta = document.createElement('textarea');
       ta.value = igCaption;
       document.body.appendChild(ta);
       ta.select();
       document.execCommand('copy');
       document.body.removeChild(ta);
-      setCopied('share');
-      setTimeout(() => setCopied(null), 1600);
     }
   }
 
-  function openWhatsApp() {
-    analytics.cta('whatsapp');
-    const msg = `just found out I'm ${archetype.name} on Catalst 👀 ${matchPct}% match with ${archetype.twinGlobal.name}. catalst.app`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
+  /**
+   * Snapshot the founder card as a PNG and trigger a browser download.
+   * Waits for fonts to settle so the Playfair display + mono fonts render
+   * sharp in the export. 2× pixelRatio hits "HD" for the IG story aspect.
+   */
+  async function downloadCard() {
+    if (!cardRef.current || shareStatus === 'downloading') return;
+    analytics.cta('download');
+    setShareStatus('downloading');
+    try {
+      // Let any in-flight webfonts finish before we rasterise.
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+      const dataUrl = await toPng(cardRef.current, {
+        pixelRatio: 2,
+        cacheBust: true,
+        backgroundColor: '#0C0E12',
+      });
+      const safeName = displayName.replace(/[^a-z0-9]+/gi, '-').toLowerCase() || 'founder';
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = `catalst-${safeName}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setShareStatus('downloaded');
+      setTimeout(() => setShareStatus('idle'), 2200);
+    } catch (err) {
+      console.error('[S11] download failed:', err);
+      setShareStatus('error');
+      setTimeout(() => setShareStatus('idle'), 2200);
+    }
   }
 
-  function openTwitter() {
-    const t = encodeURIComponent(igCaption);
-    window.open(`https://twitter.com/intent/tweet?text=${t}`, '_blank', 'noopener,noreferrer');
+  function flashCopied() {
+    setShareStatus('copied');
+    setTimeout(() => setShareStatus((s) => (s === 'copied' ? 'idle' : s)), 1800);
+  }
+
+  async function shareTwitter() {
+    analytics.cta('twitter');
+    await copyCaption();
+    flashCopied();
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(igCaption)}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
+  }
+
+  async function shareInstagram() {
+    analytics.cta('instagram');
+    // IG has no web-intent for posting, so we copy + toast. User pastes
+    // the caption into the story they'll attach their downloaded card to.
+    await copyCaption();
+    flashCopied();
+  }
+
+  async function shareLinkedIn() {
+    analytics.cta('linkedin');
+    await copyCaption();
+    flashCopied();
+    window.open(
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://catalst.app')}`,
+      '_blank',
+      'noopener,noreferrer',
+    );
   }
 
   return (
@@ -197,6 +261,7 @@ export function S11Profile() {
               }}
             />
             <div
+              ref={cardRef}
               className="relative rounded-[22px] bg-black/75 backdrop-blur-md p-4 sm:p-5 aspect-[9/16] overflow-hidden"
               style={{ boxShadow: `0 0 40px ${houseColor}4D` }}
             >
@@ -289,33 +354,64 @@ export function S11Profile() {
           </div>
         </motion.div>
 
-        {/* ══════════ QUICK SHARE ROW ══════════════════════════════════ */}
-        <motion.div variants={fadeSlideUp} className="flex justify-center gap-3">
-          {[
-            { icon: '📸', label: 'Instagram', onClick: copyCaption },
-            { icon: '🐦', label: 'Twitter', onClick: openTwitter },
-            { icon: '💬', label: 'WhatsApp', onClick: openWhatsApp },
-            { icon: '⬇️', label: 'Download', onClick: copyCaption }, // future batch: html2canvas
-          ].map((b) => (
-            <button
-              key={b.label}
-              onClick={b.onClick}
-              aria-label={b.label}
-              className="w-10 h-10 rounded-full grid place-items-center transition border"
-              style={{
-                background: `${houseColor}1F`,
-                borderColor: `${houseColor}4D`,
-              }}
-            >
-              <span aria-hidden className="text-base">{b.icon}</span>
-            </button>
-          ))}
+        {/* ══════════ SHARE ROW ═════════════════════════════════════════
+            Primary: download the card as a PNG (IG-story ready). Secondary:
+            three branded platform buttons — each silently copies the caption
+            so whichever share surface opens, the user can paste it. */}
+        <motion.div variants={fadeSlideUp} className="space-y-2.5">
+          <button
+            type="button"
+            onClick={downloadCard}
+            disabled={shareStatus === 'downloading'}
+            aria-label="Download founder card"
+            className="w-full h-12 rounded-2xl font-semibold text-[14px] flex items-center justify-center gap-2 transition-colors disabled:opacity-70"
+            style={{
+              background: houseColor,
+              color: '#0C0E12',
+              boxShadow: `0 6px 22px ${houseColor}55`,
+            }}
+          >
+            <DownloadIcon size={17} />
+            <span>
+              {shareStatus === 'downloading'
+                ? 'Preparing image…'
+                : shareStatus === 'downloaded'
+                ? 'Saved to your device'
+                : shareStatus === 'error'
+                ? 'Download failed — try again'
+                : 'Download founder card'}
+            </span>
+          </button>
+
+          <div className="grid grid-cols-3 gap-2">
+            {[
+              { key: 'twitter',   label: 'Share on X',         onClick: shareTwitter,   Icon: XIcon },
+              { key: 'instagram', label: 'Share on Instagram', onClick: shareInstagram, Icon: InstagramIcon },
+              { key: 'linkedin',  label: 'Share on LinkedIn',  onClick: shareLinkedIn,  Icon: LinkedInIcon },
+            ].map(({ key, label, onClick, Icon }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={onClick}
+                aria-label={label}
+                className="h-11 rounded-xl flex items-center justify-center transition-colors border"
+                style={{
+                  background: `${houseColor}14`,
+                  borderColor: `${houseColor}55`,
+                  color: houseColor,
+                }}
+              >
+                <Icon size={18} />
+              </button>
+            ))}
+          </div>
+
+          {shareStatus === 'copied' && (
+            <p className="text-[11px] text-emerald-300/85 text-center">
+              Caption copied — paste when you post.
+            </p>
+          )}
         </motion.div>
-        {copied === 'share' && (
-          <p className="text-[11px] text-emerald-300/80 text-center -mt-3">
-            Caption copied — paste into your story.
-          </p>
-        )}
 
         {/* ══════════ TOP MATCHED IDEAS ═══════════════════════════════ */}
         <motion.section variants={fadeSlideUp}>
@@ -419,6 +515,68 @@ function FounderTwinInline({ twin, color }: { twin: FounderTwin; color: string }
         <div className="text-xs italic opacity-60 mt-1 line-clamp-2">&ldquo;{twin.whyQuote}&rdquo;</div>
       </div>
     </div>
+  );
+}
+
+// ─── Share-row icons (inline SVG — no extra deps, vibes match brand) ─────
+//
+// We standardise at a 24-unit viewBox so `size` scales all four icons
+// consistently, and inherit `currentColor` on stroke/fill so each button's
+// house-tinted text color flows through without extra props.
+
+function DownloadIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" y1="15" x2="12" y2="3" />
+    </svg>
+  );
+}
+
+function XIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+function InstagramIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
+function LinkedInIcon({ size = 18 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.063 2.063 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
   );
 }
 
