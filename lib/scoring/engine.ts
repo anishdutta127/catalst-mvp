@@ -138,18 +138,43 @@ export const DOMAIN_TO_INDUSTRY: Record<string, string> = {
   crypto: 'web3',
 };
 
+// Budget buckets — INR where the user-facing labels now live. The legacy
+// $-bucket labels stay registered so orchestrator test paths and any old
+// saved sessions continue to score correctly.
 const RESOURCE_USD: Record<string, number> = {
+  // Legacy labels (pre-Three-Vows)
   'Bootstrapping ($0-1K)': 1_000,
   'Small budget ($1-10K)': 10_000,
   'Funded ($10K+)': 100_000,
+  // Three Vows labels — 4 tiers, INR-native
+  'Bootstrap': 1_000,
+  '< ₹8L': 10_000,
+  '₹8L - ₹80L': 100_000,
+  '₹80L+': 500_000,
 };
 
+// Hours per week of runway — used for feasibility scoring + the solo-viable
+// bonus. New vow keys are registered alongside the legacy pill labels.
 const TIME_COMFORT: Record<string, number> = {
+  // Legacy labels
   '< 5h/week': 4,
   '5-15h': 8,
   '15-30h': 12,
   '30h+': 16,
+  // Three Vows labels
+  '5-10 hrs': 6,
+  '10-20 hrs': 12,
+  '20-40 hrs': 24,
+  'Full-time': 40,
 };
+
+/** The "lowest commitment" time value across both the legacy pill set and the
+ *  new Three-Vows set. Used by eliminateIdeas + soloBonus to detect
+ *  after-work-founder mode regardless of which UI set the value. */
+const LOWEST_TIME_VALUES = new Set(['< 5h/week', '5-10 hrs']);
+
+/** Same for budget — any "bootstrap" bucket across either set. */
+const BOOTSTRAP_RESOURCE_VALUES = new Set(['Bootstrapping ($0-1K)', 'Bootstrap']);
 
 // ── McClelland: Blot → Need Deltas ─────────────────────────
 
@@ -383,7 +408,7 @@ export function eliminateIdeas(ideas: Idea[], p: ForgeProfile): Idea[] {
       if (passedSet.has(ind) && dwellFor(ind, p.industry_dwell_times) < 1000) return false;
     }
     if (idea.budget_floor_inr / INR_PER_USD > budgetUSD) return false;
-    if (idea.time_floor_weeks > 8 && p.time_budget === '< 5h/week') return false;
+    if (idea.time_floor_weeks > 8 && LOWEST_TIME_VALUES.has(p.time_budget)) return false;
     return true;
   });
 }
@@ -442,7 +467,7 @@ function scoreFeasibility(p: ForgeProfile, idea: Idea): number {
   const budgetUSD = RESOURCE_USD[p.resource_level] ?? 10_000;
   const ideaUSD = idea.budget_floor_inr / INR_PER_USD;
   const budgetFit = ideaUSD <= budgetUSD * 0.5 ? 3.5 : ideaUSD <= budgetUSD ? 1.75 : 0.5;
-  const soloBonus = idea.solo_viable && (p.time_budget === '< 5h/week' || p.resource_level === 'Bootstrapping ($0-1K)') ? 1 : 0;
+  const soloBonus = idea.solo_viable && (LOWEST_TIME_VALUES.has(p.time_budget) || BOOTSTRAP_RESOURCE_VALUES.has(p.resource_level)) ? 1 : 0;
   return clamp(timeFit + budgetFit + soloBonus, 1, 8);
 }
 

@@ -10,6 +10,7 @@ import { buildForgeProfile } from '@/lib/scoring/buildProfile';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { PipWithPoof } from '@/components/characters/PipWithPoof';
 import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
+import { VowVessel } from '@/components/ui/VowVessel';
 
 /**
  * S07 — Verdania Chronicle + Constraints.
@@ -39,21 +40,6 @@ function lighten(hex: string, amt: number): string {
 }
 
 type Headline = (typeof lines.s07.headlines)[number];
-
-type ConstraintGroup = {
-  key: string;
-  label: string;
-  icon: string;
-  options: readonly string[];
-};
-
-const ADVANTAGES = [
-  'Technical skill',
-  'Industry network',
-  'Distribution',
-  'Brand/Content',
-  'Capital',
-] as const;
 
 export function S07Chronicle() {
   const state = useJourneyStore();
@@ -111,11 +97,11 @@ export function S07Chronicle() {
     if (phase === 'constraints') {
       if (constraintsDialogueSent.current) return;
       constraintsDialogueSent.current = true;
-      // Clear stale headline-intro out of the chat strip before the new line
+      // Clear stale headline-intro out of the chat strip before the vow intro
       useUIStore.getState().clearAllMessages();
       enqueueMessage({
         speaker: 'cedric',
-        text: lines.s07.cedric.constraintsIntro,
+        text: lines.s07.vows.intro,
         type: 'instruction',
       });
     }
@@ -178,6 +164,10 @@ export function S07Chronicle() {
             setSelectedAdvantage={setSelectedAdvantage}
             onComplete={handleComplete}
             revealing={revealing}
+            onCedricBeat={(text) =>
+              enqueueMessage({ speaker: 'cedric', text, type: 'dialogue' })
+            }
+            onPipReaction={setPipReaction}
           />
         )}
       </AnimatePresence>
@@ -492,7 +482,9 @@ function FutureCard({
   );
 }
 
-// ─── Phase 2: Constraints ──────────────────────────────────────────────────
+// ─── Phase 2: Constraints — THE THREE VOWS ────────────────────────────────
+
+type VowKey = 'hours' | 'coin' | 'edge';
 
 interface ConstraintsPhaseProps {
   selectedTime: string;
@@ -503,8 +495,25 @@ interface ConstraintsPhaseProps {
   setSelectedAdvantage: (s: string) => void;
   onComplete: () => void;
   revealing: boolean;
+  /** Fire a Cedric dialogue line into the chat strip. */
+  onCedricBeat: (text: string) => void;
+  /** Fire a Pip line into the local floating bubble. */
+  onPipReaction: (text: string) => void;
 }
 
+/**
+ * ConstraintsPhase — THE THREE VOWS
+ *
+ * The founder commits three things before the match: hours (phial of sand),
+ * coin (chalice), edge (blade). Each vessel is a tap-target; when active
+ * the question + choices render in a glass-morph panel below. Cedric beats
+ * fire after each vow, a Pip ambient at 15s of total dwell, Pip reaction
+ * after the edge line. One gold breathing "Seal your vows" CTA at the
+ * bottom, which runs the scoring pipeline.
+ *
+ * All three stored values remain scoring-compatible (engine.ts now recognises
+ * both the legacy pill labels and the new vow labels in its lookup tables).
+ */
 function ConstraintsPhase({
   selectedTime,
   setSelectedTime,
@@ -514,16 +523,103 @@ function ConstraintsPhase({
   setSelectedAdvantage,
   onComplete,
   revealing,
+  onCedricBeat,
+  onPipReaction,
 }: ConstraintsPhaseProps) {
-  const groups: ConstraintGroup[] = [
-    { key: 'time', label: 'Time to launch', icon: '⏱', options: lines.s07.timeBudgets },
-    { key: 'resource', label: 'Budget range', icon: '💰', options: lines.s07.resourceLevels },
-    { key: 'advantage', label: 'Your edge', icon: '⚔️', options: ADVANTAGES },
-  ];
+  const vows = lines.s07.vows;
 
-  const filledRequired = (selectedTime ? 1 : 0) + (selectedResource ? 1 : 0);
-  const filledAll = filledRequired + (selectedAdvantage ? 1 : 0);
-  const canComplete = !!selectedTime && !!selectedResource;
+  // Which vow the user is currently answering. Auto-advances after each fill,
+  // but the user can tap any vessel to re-edit.
+  const [activeVow, setActiveVow] = useState<VowKey>('hours');
+
+  // Refs so the Cedric beats / Pip reactions fire ONCE each, even if the
+  // user re-picks the same vow (swapping answer shouldn't re-trigger beats).
+  const beat1Fired = useRef(false);
+  const beat2Fired = useRef(false);
+  const beat3Fired = useRef(false);
+  const ambientFired = useRef(false);
+  const pipEdgeFired = useRef(false);
+
+  // Derive fillLevels for the three vessels from the selected values. For
+  // hours + coin, fill = choiceIndex / (n - 1). For edge, fill = 1 if the
+  // user's text is strong (>= minStrong chars), else 0.
+  const hoursIdx = vows.hours.choices.findIndex((c) => c.value === selectedTime);
+  const coinIdx = vows.coin.choices.findIndex((c) => c.value === selectedResource);
+  const hoursFill = hoursIdx >= 0 ? hoursIdx / (vows.hours.choices.length - 1) : 0;
+  const coinFill = coinIdx >= 0 ? coinIdx / (vows.coin.choices.length - 1) : 0;
+  const edgeTrimmed = selectedAdvantage.trim();
+  const edgeStrong = edgeTrimmed.length >= vows.edge.minStrong;
+  const edgeFill = edgeStrong ? 1 : 0;
+
+  const hoursAnswered = !!selectedTime;
+  const coinAnswered = !!selectedResource;
+  const edgeAnswered = edgeStrong;
+  const filledCount =
+    (hoursAnswered ? 1 : 0) + (coinAnswered ? 1 : 0) + (edgeAnswered ? 1 : 0);
+  const canComplete = hoursAnswered && coinAnswered && edgeAnswered;
+
+  // Cedric beats — one per completed vow. filledCount is the trigger so
+  // order-agnostic: if the user answers Edge first, the "one down" beat
+  // fires when the first vow of any kind is filled.
+  useEffect(() => {
+    if (filledCount >= 1 && !beat1Fired.current) {
+      beat1Fired.current = true;
+      onCedricBeat(vows.cedricBeats.afterFirst);
+    }
+    if (filledCount >= 2 && !beat2Fired.current) {
+      beat2Fired.current = true;
+      onCedricBeat(vows.cedricBeats.afterSecond);
+    }
+    if (filledCount >= 3 && !beat3Fired.current) {
+      beat3Fired.current = true;
+      onCedricBeat(vows.cedricBeats.afterThird);
+    }
+  }, [filledCount, onCedricBeat, vows]);
+
+  // Pip reaction when the edge vow is first sealed (separate from the
+  // Cedric beat so both voices can chime in).
+  useEffect(() => {
+    if (edgeAnswered && !pipEdgeFired.current) {
+      pipEdgeFired.current = true;
+      setTimeout(() => onPipReaction(vows.pip.afterEdge), 900);
+    }
+  }, [edgeAnswered, onPipReaction, vows]);
+
+  // Ambient Pip line — fires once at 15s of dwell on this phase if the
+  // edge vow hasn't been answered yet (at which point he says something
+  // more specific). Cleans up on unmount.
+  useEffect(() => {
+    if (ambientFired.current) return;
+    const t = setTimeout(() => {
+      if (ambientFired.current || edgeAnswered) return;
+      ambientFired.current = true;
+      onPipReaction(vows.pip.ambient);
+    }, 15000);
+    return () => clearTimeout(t);
+  }, [onPipReaction, vows, edgeAnswered]);
+
+  // When a vessel is filled, auto-advance to the next empty one. Skip if
+  // the user has just re-tapped an already-answered vow to re-edit.
+  function handleHoursSelect(value: string) {
+    const alreadyAnswered = selectedTime === value;
+    setSelectedTime(value);
+    if (!alreadyAnswered && !coinAnswered) setActiveVow('coin');
+    else if (!alreadyAnswered && !edgeAnswered) setActiveVow('edge');
+  }
+
+  function handleCoinSelect(value: string) {
+    const alreadyAnswered = selectedResource === value;
+    setSelectedResource(value);
+    if (!alreadyAnswered && !edgeAnswered) setActiveVow('edge');
+    else if (!alreadyAnswered && !hoursAnswered) setActiveVow('hours');
+  }
+
+  const activeQuestion =
+    activeVow === 'hours'
+      ? vows.hours.question
+      : activeVow === 'coin'
+      ? vows.coin.question
+      : vows.edge.question;
 
   return (
     <motion.div
@@ -533,111 +629,130 @@ function ConstraintsPhase({
       transition={{ duration: 0.3 }}
       className="flex flex-col h-full"
     >
-      {/* Progress header */}
-      <div className="shrink-0 flex items-center justify-between px-1 pt-1 pb-3">
-        <p className="text-[10px] font-mono uppercase tracking-[0.25em] text-ivory/55">
-          The practicalities
+      {/* Header */}
+      <div className="shrink-0 text-center pt-1 pb-3">
+        <p className="text-[10px] font-mono uppercase tracking-[0.32em] text-gold/65">
+          {vows.header}
         </p>
-        <div className="flex gap-1.5 items-center">
-          {[0, 1, 2].map((i) => (
-            <motion.div
-              key={i}
-              animate={{
-                width: i < filledAll ? 18 : 8,
-                background:
-                  i < filledRequired
-                    ? '#D4A843'
-                    : i < filledAll
-                    ? '#D4A843aa'
-                    : 'rgba(255,255,255,0.18)',
-              }}
-              transition={{ duration: 0.3 }}
-              className="h-1.5 rounded-full"
-            />
-          ))}
+      </div>
+
+      {/* Three vessels in a row */}
+      <div className="shrink-0 flex items-start justify-center gap-3 pb-4">
+        <VowVessel
+          kind="hourglass"
+          label={vows.hours.label}
+          isActive={activeVow === 'hours'}
+          isAnswered={hoursAnswered}
+          fillLevel={hoursFill}
+          onClick={() => setActiveVow('hours')}
+        />
+        <VowVessel
+          kind="chalice"
+          label={vows.coin.label}
+          isActive={activeVow === 'coin'}
+          isAnswered={coinAnswered}
+          fillLevel={coinFill}
+          onClick={() => setActiveVow('coin')}
+        />
+        <VowVessel
+          kind="blade"
+          label={vows.edge.label}
+          isActive={activeVow === 'edge'}
+          isAnswered={edgeAnswered}
+          fillLevel={edgeFill}
+          onClick={() => setActiveVow('edge')}
+        />
+      </div>
+
+      {/* Answer panel — glass-morph, swaps based on active vow */}
+      <div
+        className="flex-1 min-h-0 overflow-y-auto scrollbar-hide rounded-2xl mx-1"
+        style={{
+          background: 'rgba(12, 14, 18, 0.72)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid rgba(212,168,67,0.25)',
+        }}
+      >
+        <div className="px-5 py-4">
+          <p className="text-[13.5px] font-serif italic text-ivory/90 leading-relaxed mb-4">
+            {activeQuestion}
+          </p>
+
+          <AnimatePresence mode="wait">
+            {activeVow === 'hours' && (
+              <motion.div
+                key="hours-choices"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-2 gap-2"
+              >
+                {vows.hours.choices.map((c) => (
+                  <VowChoiceTile
+                    key={c.value}
+                    icon="⏳"
+                    title={c.value}
+                    flavor={c.flavor}
+                    active={selectedTime === c.value}
+                    onClick={() => handleHoursSelect(c.value)}
+                    testId={`vow-hours-${c.value}`}
+                  />
+                ))}
+              </motion.div>
+            )}
+
+            {activeVow === 'coin' && (
+              <motion.div
+                key="coin-choices"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-2 gap-2"
+              >
+                {vows.coin.choices.map((c) => (
+                  <VowChoiceTile
+                    key={c.value}
+                    icon="🪙"
+                    title={c.value}
+                    flavor={c.flavor}
+                    active={selectedResource === c.value}
+                    onClick={() => handleCoinSelect(c.value)}
+                    testId={`vow-coin-${c.value}`}
+                  />
+                ))}
+              </motion.div>
+            )}
+
+            {activeVow === 'edge' && (
+              <motion.div
+                key="edge-choices"
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -4 }}
+                transition={{ duration: 0.3 }}
+              >
+                <EdgeTextarea
+                  value={selectedAdvantage}
+                  onChange={setSelectedAdvantage}
+                  placeholders={vows.edge.placeholders}
+                  maxLength={vows.edge.maxLength}
+                  minStrong={vows.edge.minStrong}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
-      {/* Three constraint groups */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide px-1 space-y-4">
-        {groups.map((g) => {
-          const selected =
-            g.key === 'time'
-              ? selectedTime
-              : g.key === 'resource'
-              ? selectedResource
-              : selectedAdvantage;
-          const setter =
-            g.key === 'time'
-              ? setSelectedTime
-              : g.key === 'resource'
-              ? setSelectedResource
-              : setSelectedAdvantage;
-          const required = g.key !== 'advantage';
-
-          return (
-            <div key={g.key}>
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-[14px] leading-none">{g.icon}</span>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-ivory/70">
-                    {g.label}
-                  </p>
-                  {!required && (
-                    <span className="text-[9px] font-mono uppercase tracking-widest text-ivory/35">
-                      optional
-                    </span>
-                  )}
-                </div>
-                <AnimatePresence>
-                  {selected && (
-                    <motion.span
-                      key="check"
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0 }}
-                      transition={{ type: 'spring', stiffness: 380, damping: 24 }}
-                      className="text-[10px] font-mono font-bold"
-                      style={{ color: '#D4A843' }}
-                    >
-                      ✓
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {g.options.map((opt) => {
-                  const active = selected === opt;
-                  return (
-                    <motion.button
-                      key={opt}
-                      onClick={() => setter(opt)}
-                      data-testid={`${g.key === 'time' ? 'time' : g.key === 'resource' ? 'resource' : 'advantage'}-${opt}`}
-                      whileTap={{ scale: 0.96 }}
-                      animate={{
-                        background: active ? '#D4A843' : 'rgba(255,255,255,0.04)',
-                        color: active ? '#0C0E12' : 'rgba(245,240,232,0.75)',
-                        borderColor: active ? '#D4A843' : 'rgba(255,255,255,0.12)',
-                      }}
-                      transition={{ duration: 0.2 }}
-                      className="px-3.5 py-2 rounded-full text-[12px] font-medium border"
-                    >
-                      {opt}
-                    </motion.button>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Gold breathing CTA when required fields are filled */}
+      {/* Seal the vows CTA — gold breathing pulse when all three are filled */}
       <div className="shrink-0 px-1 pt-3 pb-1 h-[58px]">
-        <AnimatePresence>
-          {canComplete && !revealing && (
+        <AnimatePresence mode="wait">
+          {canComplete && !revealing ? (
             <motion.button
-              key="reveal"
+              key="seal"
               initial={{ opacity: 0, y: 12, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6 }}
@@ -659,7 +774,7 @@ function ConstraintsPhase({
                 }}
                 transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
               />
-              <span className="relative">Generate my 3 ideas</span>
+              <span className="relative">{vows.sealCta}</span>
               <motion.span
                 className="relative"
                 animate={{ x: [0, 3, 0] }}
@@ -668,10 +783,7 @@ function ConstraintsPhase({
                 →
               </motion.span>
             </motion.button>
-          )}
-        </AnimatePresence>
-        <AnimatePresence>
-          {revealing && (
+          ) : revealing ? (
             <motion.p
               key="revealing"
               initial={{ opacity: 0, y: 6 }}
@@ -682,11 +794,143 @@ function ConstraintsPhase({
             >
               The garden is narrowing…
             </motion.p>
+          ) : (
+            <motion.div
+              key="seal-idle"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="w-full h-12 rounded-2xl flex items-center justify-center border"
+              style={{
+                borderColor: 'rgba(255,255,255,0.10)',
+                background: 'rgba(255,255,255,0.02)',
+              }}
+            >
+              <span className="text-[12px] font-mono uppercase tracking-[0.25em] text-ivory/35">
+                {vows.sealCtaIdle}
+              </span>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
 
       <ScreenQuote screen="s07" />
     </motion.div>
+  );
+}
+
+// ─── Vow subcomponents ────────────────────────────────────────────────────
+
+interface VowChoiceTileProps {
+  icon: string;
+  title: string;
+  flavor: string;
+  active: boolean;
+  onClick: () => void;
+  testId?: string;
+}
+
+function VowChoiceTile({ icon, title, flavor, active, onClick, testId }: VowChoiceTileProps) {
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      data-testid={testId}
+      whileTap={{ scale: 0.97 }}
+      animate={{
+        background: active ? 'rgba(212,168,67,0.14)' : 'rgba(255,255,255,0.04)',
+        borderColor: active ? 'rgba(212,168,67,0.75)' : 'rgba(255,255,255,0.12)',
+      }}
+      transition={{ duration: 0.2 }}
+      className="flex flex-col items-start text-left px-3 py-2.5 rounded-xl border"
+    >
+      <div className="flex items-center gap-1.5 mb-1">
+        <span className="text-[13px]" style={{ opacity: active ? 1 : 0.7 }}>
+          {icon}
+        </span>
+        <p
+          className="text-[14px] font-semibold leading-none"
+          style={{ color: active ? '#FFFFFF' : 'rgba(245,240,232,0.90)' }}
+        >
+          {title}
+        </p>
+      </div>
+      <p
+        className="text-[11px] italic leading-snug"
+        style={{ color: active ? 'rgba(245,240,232,0.75)' : 'rgba(245,240,232,0.45)' }}
+      >
+        {flavor}
+      </p>
+    </motion.button>
+  );
+}
+
+interface EdgeTextareaProps {
+  value: string;
+  onChange: (s: string) => void;
+  placeholders: readonly string[];
+  maxLength: number;
+  minStrong: number;
+}
+
+/**
+ * EdgeTextarea — stone-inscription-styled textarea for the Edge vow. Placeholder
+ * cycles through the example bank every 3s while empty + unfocused to nudge
+ * the user with concrete shapes of what a good edge looks like.
+ */
+function EdgeTextarea({ value, onChange, placeholders, maxLength, minStrong }: EdgeTextareaProps) {
+  const [placeholderIdx, setPlaceholderIdx] = useState(0);
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    if (value.length > 0 || focused) return;
+    const t = setInterval(() => {
+      setPlaceholderIdx((i) => (i + 1) % placeholders.length);
+    }, 3000);
+    return () => clearInterval(t);
+  }, [value, focused, placeholders.length]);
+
+  const count = value.length;
+  const strong = count >= minStrong;
+  const nearMax = count >= maxLength * 0.85;
+
+  return (
+    <div>
+      <textarea
+        value={value}
+        maxLength={maxLength}
+        onChange={(e) => onChange(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
+        placeholder={placeholders[placeholderIdx]}
+        data-testid="vow-edge-input"
+        className="w-full rounded-xl resize-none outline-none transition-colors"
+        style={{
+          background: 'rgba(255,255,255,0.04)',
+          border: `1px solid ${
+            strong ? 'rgba(212,168,67,0.55)' : 'rgba(255,255,255,0.15)'
+          }`,
+          padding: '14px 16px',
+          minHeight: 80,
+          color: 'rgba(245,240,232,0.95)',
+          fontSize: 14,
+          fontFamily: 'Georgia, "Times New Roman", serif',
+          lineHeight: 1.55,
+        }}
+      />
+      <div className="flex items-center justify-between mt-1.5 px-1">
+        <p className="text-[10px] italic text-ivory/40">
+          {strong ? 'Etched.' : `at least ${minStrong} characters`}
+        </p>
+        <p
+          className="text-[10px] font-mono"
+          style={{
+            color: nearMax ? 'rgba(212,168,67,0.8)' : 'rgba(245,240,232,0.40)',
+          }}
+        >
+          {count}/{maxLength}
+        </p>
+      </div>
+    </div>
   );
 }

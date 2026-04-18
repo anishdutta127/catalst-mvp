@@ -403,6 +403,61 @@ export const lines = {
     ],
     timeBudgets: ['< 5h/week', '5-15h', '15-30h', '30h+'],
     resourceLevels: ['Bootstrapping ($0-1K)', 'Small budget ($1-10K)', 'Funded ($10K+)'],
+
+    // The Three Vows — replaces the old pill-form constraint copy. The scoring
+    // engine recognises both the legacy pill values (above) and these new
+    // vow values, so data captured on either UI version is score-compatible.
+    vows: {
+      intro:
+        'Before the match. Three vows. What you can give, what you can risk, what only you carry. Tell me honestly — the match only works if the vows are true.',
+      header: 'The Vows',
+      sealCta: 'Seal your vows',
+      sealCtaIdle: 'Speak all three first',
+
+      hours: {
+        label: 'Hours',
+        question: 'How many hours per week will you give this?',
+        choices: [
+          { value: '5-10 hrs', flavor: 'the after-work founder' },
+          { value: '10-20 hrs', flavor: 'the serious side-hustler' },
+          { value: '20-40 hrs', flavor: 'the half-committed' },
+          { value: 'Full-time', flavor: 'all in' },
+        ],
+      },
+      coin: {
+        label: 'Coin',
+        question: 'What treasure do you carry into this?',
+        choices: [
+          { value: 'Bootstrap', flavor: 'savings + sweat' },
+          { value: '< ₹8L', flavor: 'seed from friends & family' },
+          { value: '₹8L - ₹80L', flavor: 'angel / pre-seed raised or saved' },
+          { value: '₹80L+', flavor: 'well-funded or institutionally backed' },
+        ],
+      },
+      edge: {
+        label: 'Edge',
+        question: "What's the one thing YOU can do that nobody else in this match can? Don't be modest — be specific.",
+        placeholders: [
+          'I speak 4 languages fluently.',
+          "I've spent 8 years in K-12 schools.",
+          'I can cold-email any CEO and get a reply.',
+        ],
+        maxLength: 140,
+        minStrong: 20,
+      },
+
+      cedricBeats: {
+        afterFirst: 'One down. The next is heavier.',
+        afterSecond: 'Two in. The last one matters most — the one you almost want to hide.',
+        afterThird: "That's rare. Now I have what I need.",
+      },
+      pip: {
+        ambient:
+          "He's being dramatic about 'vows' but honestly the edge one is hard. Take your time.",
+        afterEdge:
+          "Oh that's a GOOD one. Cedric's impressed. He doesn't show it.",
+      },
+    },
   },
 
   s08: {
