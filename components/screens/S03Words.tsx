@@ -82,7 +82,16 @@ export function S03Words() {
     handleChoice(lines.s03.words[wordIdx].left);
   }, [step, handleChoice]);
 
-  if (step < 0) {
+  const wordIdx = VISIBLE_INDICES[step];
+  const word = lines.s03.words[wordIdx];
+
+  // "Preparing" is the correct fallback while we wait for step to move past
+  // -1 OR when an out-of-bounds step yields no word. Previously this bucket
+  // fell through into ProcessingSwirl, which was rendering its sparkle burst
+  // in the middle of the screen as an orphan visual when the screen was
+  // actually just still loading. The swirl is now reserved ONLY for the
+  // legitimate post-step-2 processing beat.
+  if (step < 0 || !word) {
     return (
       <div className="flex items-center justify-center h-full">
         <p className="text-xs font-mono text-ivory/30 uppercase tracking-widest">preparing...</p>
@@ -90,12 +99,7 @@ export function S03Words() {
     );
   }
 
-  const wordIdx = VISIBLE_INDICES[step];
-  const word = lines.s03.words[wordIdx];
-  // Show the swirl whenever there's nothing to render in the activity branch.
-  // Belt-and-braces against any out-of-bounds step transient — the activity
-  // JSX deref's `word.word` and previously crashed if word was undefined.
-  const showSwirl = processing || !word;
+  const showSwirl = processing;
 
   return (
     <div className="flex flex-col items-center h-full relative">

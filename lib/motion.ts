@@ -135,31 +135,32 @@ export const staggerContainer = (delayChildren = 0, stagger = 0.06): Variants =>
 
 // ─── Screen-level transitions ─────────────────────────────────────────────
 
-/** The outermost per-screen transition used by JourneyShell. Combines opacity
- *  + slight y-offset + a soft focus-in/out blur so the shift reads as "focus
- *  changed" rather than "screen swapped." */
+/**
+ * The outermost per-screen transition used by JourneyShell. Previously
+ * included a blur-in/out via `filter: blur(4px)` — but filter on a
+ * `overflow-y-auto` scroll container broke rendering on S03 (content stayed
+ * invisible under the stuck hidden-state opacity), so it's been simplified
+ * to opacity + y only. Still feels like a focus shift, just without the
+ * browser-risky filter prop.
+ */
 export const screenTransition: Variants = {
   hidden: {
     opacity: 0,
-    y: 16,
-    filter: 'blur(4px)',
+    y: 12,
   },
   visible: {
     opacity: 1,
     y: 0,
-    filter: 'blur(0px)',
     transition: {
-      duration: 0.55,
+      duration: 0.4,
       ease: easeSmooth,
-      filter: { duration: 0.35, ease: easeSmooth },
     },
   },
   exit: {
     opacity: 0,
-    y: -8,
-    filter: 'blur(3px)',
+    y: -6,
     transition: {
-      duration: 0.3,
+      duration: 0.25,
       ease: easeExit,
     },
   },
