@@ -8,20 +8,25 @@ import { lines } from '@/content/lines';
 import { finalRun } from '@/lib/scoring/orchestrator';
 import { buildForgeProfile } from '@/lib/scoring/buildProfile';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
+import { Crystal } from '@/components/ui/Crystal';
 
 /**
  * S08 — The Forge.
  *
- * Pokemon-evolution transition. The user's crystal (their 3-orb diamond from
- * S06) sits ALONE center-screen — no surrounding dock, no ring of other
- * orbs. Over ~6.5s it glows brighter and brighter, peaks, then bursts into
- * three shooting particles that hand off to S09's idea reveal.
+ * Pokemon-evolution transition. The user's crystal (their 3-orb bipyramid
+ * forged on S06) sits ALONE center-screen — no surrounding dock, no ring
+ * of other orbs. Over ~6.5s it glows brighter and brighter, peaks, then
+ * bursts into three shooting particles that hand off to S09's idea reveal.
+ *
+ * The gem itself is the shared <Crystal/> component (same one S06 renders
+ * inside its viewport). S08 wraps it with its own halo/flash/particle
+ * overlays so the stage ceremony reads as S08's moment, not a reuse of S06.
  *
  * Stages (time-gated):
- *   forming  0.0–1.5s  — diamond renders in its S06 state
- *   glowing  1.5–4.0s  — halo grows from 1× to 2×, core pulses faster
- *   peak     4.0–5.5s  — halo floods the viewport, inner core near-white
- *   burst    5.5–6.5s  — flash + 3 particles shoot out in 3 directions
+ *   forming  0.0–1.5s  — gem renders in idle mode
+ *   glowing  1.5–4.0s  — outer halo grows, breathing halo intensifies
+ *   peak     4.0–5.5s  — halo floods viewport, gem lifts and brightens
+ *   burst    5.5–6.5s  — flash + 3 particles shoot out, gem fades
  *   advance  6.8s+     — nav to S09
  *
  * Safety net: scoring pipeline runs once, polls every 400ms for matchedIdeas,
@@ -29,6 +34,8 @@ import { ScreenQuote } from '@/components/ui/ScreenQuote';
  * the user never gets stuck on this screen.
  */
 
+// Capitalized orb-ID → hex map. Matches `lines.s06.orbs[].id` casing so
+// crystalOrbs (stored in capitalized form by S06) maps correctly.
 const ORB_COLORS: Record<string, string> = {
   Grit: '#D4A843',
   Vision: '#F0D060',
@@ -44,49 +51,6 @@ const TIMEOUT_MS = 15000;
 const POLL_MS = 400;
 
 type ForgeStage = 'forming' | 'glowing' | 'peak' | 'burst';
-
-// ─── Color helpers (local to S08, same logic as CrystalViewport) ─────────
-
-function hexToRgb(hex: string): { r: number; g: number; b: number } {
-  const h = hex.replace('#', '');
-  const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
-  return {
-    r: parseInt(full.slice(0, 2), 16),
-    g: parseInt(full.slice(2, 4), 16),
-    b: parseInt(full.slice(4, 6), 16),
-  };
-}
-
-function rgbToHex(r: number, g: number, b: number): string {
-  const toHex = (n: number) =>
-    Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0');
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-}
-
-function blendForgeColors(orbIds: string[]): { base: string; light: string; dark: string } {
-  const list = orbIds.length > 0 ? orbIds : ['Grit'];
-  const weights =
-    list.length === 1 ? [1] : list.length === 2 ? [0.65, 0.35] : [0.6, 0.22, 0.18];
-  const rgbs = list.map((id) => hexToRgb(ORB_COLORS[id] || '#D4A843'));
-  const blended = rgbs.reduce(
-    (acc, c, i) => ({
-      r: acc.r + c.r * weights[i],
-      g: acc.g + c.g * weights[i],
-      b: acc.b + c.b * weights[i],
-    }),
-    { r: 0, g: 0, b: 0 },
-  );
-  // Warmth bias — same as CrystalViewport.
-  const warmR = Math.min(255, blended.r + (255 - blended.r) * 0.15 * 0.3);
-  const warmG = Math.min(255, blended.g + (180 - blended.g) * 0.15 * 0.2);
-  return {
-    base: rgbToHex(warmR, warmG, blended.b),
-    light: rgbToHex(warmR + 50, warmG + 50, blended.b + 40),
-    dark: rgbToHex(warmR * 0.45, warmG * 0.45, blended.b * 0.5),
-  };
-}
-
-// ─── Component ────────────────────────────────────────────────────────────
 
 export function S08Forge() {
   const matchedIdeas = useJourneyStore((s) => s.matchedIdeas);
@@ -188,48 +152,62 @@ export function S08Forge() {
     setTimeout(() => advanceScreen(), 600);
   }
 
-  const gemColors = useMemo(() => blendForgeColors(crystalOrbs), [crystalOrbs]);
-  const primaryColor = (crystalOrbs[0] && ORB_COLORS[crystalOrbs[0]]) || '#D4A843';
-  const orbColors = crystalOrbs.slice(0, 3).map((o) => ORB_COLORS[o] || '#D4A843');
+  // Resolve the selected orb colors from capitalized orb IDs in the store.
+  const selectedColors = useMemo(
+    () =>
+      crystalOrbs
+        .map((id) => ORB_COLORS[id])
+        .filter((c): c is string => Boolean(c)),
+    [crystalOrbs],
+  );
+  const primaryColor = selectedColors[0] || '#D4A843';
 
-  // Diamond geometry (matches S06 crystal proportions). viewBox 320×320,
-  // center at 160,160. Width ~60, height ~90 → brilliant-cut proportions.
-  const CX = 160;
-  const CY = 160;
-  const W = 60;
-  const H = 90;
-
-  // Halo radius per stage — grows dramatically into peak, floods at burst.
-  const haloRadius =
-    stage === 'forming' ? 110 : stage === 'glowing' ? 180 : stage === 'peak' ? 320 : 240;
-  const haloOpacity =
-    stage === 'forming' ? 0.20 : stage === 'glowing' ? 0.40 : stage === 'peak' ? 0.70 : 0.15;
-
-  // Crystal scale per stage — lifts slightly into peak, shrinks on burst.
+  // Stage-driven crystal scale/opacity. Lifts into peak, collapses on burst.
   const crystalScale =
-    stage === 'forming' ? 0.9 : stage === 'glowing' ? 1.0 : stage === 'peak' ? 1.15 : 0.7;
+    stage === 'forming' ? 0.9 : stage === 'glowing' ? 1.0 : stage === 'peak' ? 1.15 : 0.6;
   const crystalOpacity = stage === 'burst' ? 0 : 1;
+
+  // Outer halo scale grows dramatically through stages. Rendered as a DOM
+  // radial-gradient so it can stretch beyond the viewport without clipping.
+  const haloScale =
+    stage === 'forming' ? 0.7 : stage === 'glowing' ? 1.1 : stage === 'peak' ? 2.0 : 1.6;
+  const haloOpacity =
+    stage === 'forming' ? 0.25 : stage === 'glowing' ? 0.45 : stage === 'peak' ? 0.75 : 0.2;
 
   return (
     <div className="flex items-center justify-center h-full relative overflow-hidden">
       {/* Backdrop radial — subtle ambient light in the primary color. */}
       <motion.div
         className="absolute inset-0 pointer-events-none"
-        animate={{
-          opacity: stage === 'burst' ? 0 : 1,
-        }}
+        animate={{ opacity: stage === 'burst' ? 0 : 1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
         style={{
           background: `radial-gradient(circle at 50% 50%, ${primaryColor}2A 0%, transparent 60%)`,
         }}
       />
 
-      {/* Main diamond — standalone, no ring or orb dock around it */}
-      <motion.svg
-        viewBox="0 0 320 320"
-        width={320}
-        height={320}
-        className="relative overflow-visible"
+      {/* Outer halo — grows through stages, floods at peak. Sits BEHIND the
+          crystal (z-order via source position). */}
+      <motion.div
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          width: 360,
+          height: 360,
+          background: `radial-gradient(circle, ${primaryColor}88 0%, ${primaryColor}33 40%, ${primaryColor}00 72%)`,
+          filter: 'blur(16px)',
+        }}
+        animate={{
+          scale: haloScale,
+          opacity: haloOpacity,
+        }}
+        transition={{ duration: 1.2, ease: 'easeInOut' }}
+      />
+
+      {/* The crystal itself — shared component, centered. S08 drives its
+          entrance + exit via the scale/opacity wrappers above; Crystal's
+          own idle rotation + float keep it alive between stages. */}
+      <motion.div
+        className="relative"
         animate={{
           scale: crystalScale,
           opacity: crystalOpacity,
@@ -239,151 +217,14 @@ export function S08Forge() {
           opacity: { duration: 0.8, ease: 'easeOut' },
         }}
       >
-        {/* Halo — grows through stages, floods at peak */}
-        <motion.circle
-          cx={CX}
-          cy={CY}
-          fill={gemColors.base}
-          animate={{
-            r: haloRadius,
-            opacity: haloOpacity,
-          }}
-          transition={{ duration: 1.2, ease: 'easeInOut' }}
+        <Crystal
+          orbs={selectedColors.length > 0 ? selectedColors : [primaryColor]}
+          count={3}
+          mode="idle"
+          size={300}
+          floatIntensity={0.6}
         />
-
-        {/* Secondary breathing halo — only visible in forming/glowing */}
-        {(stage === 'forming' || stage === 'glowing') && (
-          <motion.circle
-            cx={CX}
-            cy={CY}
-            r={H * 1.2}
-            fill={primaryColor}
-            animate={{
-              opacity: [0.2, 0.45, 0.2],
-              r: [H * 1.2, H * 1.5, H * 1.2],
-            }}
-            transition={{
-              duration: stage === 'glowing' ? 1.4 : 2.4,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          />
-        )}
-
-        {/* Rotating diamond group — slow Y-axis spin same as S06 */}
-        <motion.g
-          animate={{ rotateY: 360 }}
-          transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
-          style={{ transformOrigin: `${CX}px ${CY}px`, transformBox: 'fill-box' }}
-        >
-          {/* Crown (top half) with rounded joins */}
-          <path
-            d={`M ${CX} ${CY - H} Q ${CX - W * 0.35} ${CY - H * 0.6} ${CX - W * 0.7} ${CY - H * 0.35} Q ${CX - W * 0.92} ${CY - H * 0.18} ${CX - W} ${CY} L ${CX + W} ${CY} Q ${CX + W * 0.92} ${CY - H * 0.18} ${CX + W * 0.7} ${CY - H * 0.35} Q ${CX + W * 0.35} ${CY - H * 0.6} ${CX} ${CY - H} Z`}
-            fill={gemColors.dark}
-            stroke={gemColors.light}
-            strokeWidth="1"
-            strokeLinejoin="round"
-          />
-
-          {/* Pavilion (bottom half) */}
-          <path
-            d={`M ${CX - W} ${CY} Q ${CX - W * 0.55} ${CY + H * 0.9} ${CX} ${CY + H * 1.2} Q ${CX + W * 0.55} ${CY + H * 0.9} ${CX + W} ${CY} Z`}
-            fill={gemColors.dark}
-            stroke={gemColors.light}
-            strokeWidth="1"
-            strokeLinejoin="round"
-          />
-
-          {/* Crown facet shading */}
-          <path
-            d={`M ${CX} ${CY - H} L ${CX - W * 0.7} ${CY - H * 0.35} L ${CX - W} ${CY} Z`}
-            fill={gemColors.base}
-            opacity="0.45"
-          />
-          <path
-            d={`M ${CX} ${CY - H} L ${CX + W * 0.7} ${CY - H * 0.35} L ${CX + W} ${CY} Z`}
-            fill={gemColors.light}
-            opacity="0.35"
-          />
-
-          {/* Pavilion facet shading */}
-          <path
-            d={`M ${CX - W} ${CY} L ${CX} ${CY + H * 1.2} L ${CX} ${CY} Z`}
-            fill={gemColors.base}
-            opacity="0.55"
-          />
-          <path
-            d={`M ${CX} ${CY} L ${CX} ${CY + H * 1.2} L ${CX + W} ${CY} Z`}
-            fill={gemColors.light}
-            opacity="0.4"
-          />
-
-          {/* Girdle line */}
-          <line
-            x1={CX - W}
-            y1={CY}
-            x2={CX + W}
-            y2={CY}
-            stroke={gemColors.light}
-            strokeWidth="0.8"
-            opacity="0.6"
-          />
-
-          {/* Sparkle highlight on crown */}
-          <ellipse
-            cx={CX - W * 0.2}
-            cy={CY - H * 0.5}
-            rx={W * 0.15}
-            ry={H * 0.28}
-            fill="white"
-            opacity="0.35"
-            transform={`rotate(-15 ${CX - W * 0.2} ${CY - H * 0.5})`}
-          />
-
-          {/* Three orb accents */}
-          {orbColors.map((c, i) => {
-            const positions = [
-              { x: CX, y: CY - H }, // Dominant at top
-              { x: CX - W, y: CY }, // Supporting at girdle-left
-              { x: CX + W, y: CY }, // Balancing at girdle-right
-            ];
-            const p = positions[i];
-            if (!p) return null;
-            return (
-              <g key={`orb-${i}`}>
-                <circle cx={p.x} cy={p.y} r="12" fill={c} opacity="0.45" />
-                <circle cx={p.x} cy={p.y} r="6" fill={c} />
-                <circle cx={p.x - 1.5} cy={p.y - 1.5} r="1.8" fill="white" opacity="0.75" />
-              </g>
-            );
-          })}
-        </motion.g>
-
-        {/* Inner white core — pulses faster as we approach peak. Stays
-            centered (not inside rotating group) so it reads as a steady
-            heartbeat. */}
-        <motion.circle
-          cx={CX}
-          cy={CY}
-          fill="white"
-          animate={{
-            opacity: stage === 'peak' ? [0.8, 1, 0.8] : stage === 'glowing' ? [0.5, 0.85, 0.5] : [0.4, 0.7, 0.4],
-            r:
-              stage === 'forming'
-                ? [3, 5, 3]
-                : stage === 'glowing'
-                ? [5, 9, 5]
-                : stage === 'peak'
-                ? [9, 18, 9]
-                : [9, 4, 0],
-          }}
-          transition={{
-            duration: stage === 'peak' ? 0.8 : stage === 'glowing' ? 1.2 : 2.0,
-            repeat: stage === 'burst' ? 0 : Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-      </motion.svg>
+      </motion.div>
 
       {/* Burst particles — 3 shooting in 3 directions on burst stage.
           These visually become the three matched ideas on S09. */}
@@ -396,7 +237,7 @@ export function S08Forge() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {orbColors.map((c, i) => {
+            {(selectedColors.length > 0 ? selectedColors : [primaryColor, primaryColor, primaryColor]).slice(0, 3).map((c, i) => {
               const angle = (i / 3) * 360 - 90; // start at top, evenly spaced
               const rad = (angle * Math.PI) / 180;
               const dist = 260;
