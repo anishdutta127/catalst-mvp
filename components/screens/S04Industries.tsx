@@ -269,8 +269,8 @@ export function S04Industries() {
 
   return (
     <div className="relative flex flex-col h-full">
-      {/* ════════ [A] Filter strip — 36px wavelength bar ════════ */}
-      <div className="shrink-0 h-9 flex overflow-x-auto scrollbar-none rounded-lg border border-white/5 bg-white/[0.02]">
+      {/* ════════ [A] Filter strip — 44px tap-target on mobile, 36px compact ≥sm ════════ */}
+      <div className="shrink-0 h-11 sm:h-9 flex overflow-x-auto scrollbar-none rounded-lg border border-white/5 bg-white/[0.02]">
         {CATEGORIES.map((c, i) => {
           const active = activeCategory === c.id;
           return (
