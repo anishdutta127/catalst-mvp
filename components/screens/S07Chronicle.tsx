@@ -527,10 +527,16 @@ function ConstraintsPhase({
   onPipReaction,
 }: ConstraintsPhaseProps) {
   const vows = lines.s07.vows;
+  // Used by EdgeTextarea to surface industry-specific sample edges first.
+  const industriesKept = useJourneyStore((s) => s.industriesKept);
 
   // Which vow the user is currently answering. Auto-advances after each fill,
   // but the user can tap any vessel to re-edit.
   const [activeVow, setActiveVow] = useState<VowKey>('hours');
+  // Whether the user explicitly skipped the edge vow. Counts as "answered"
+  // for vessel fill + seal-CTA unlock purposes, but blocks the Pip
+  // "that's a GOOD one" reaction which only fires on a real edge.
+  const [edgeSkipped, setEdgeSkipped] = useState(false);
 
   // Refs so the Cedric beats / Pip reactions fire ONCE each, even if the
   // user re-picks the same vow (swapping answer shouldn't re-trigger beats).
@@ -549,11 +555,13 @@ function ConstraintsPhase({
   const coinFill = coinIdx >= 0 ? coinIdx / (vows.coin.choices.length - 1) : 0;
   const edgeTrimmed = selectedAdvantage.trim();
   const edgeStrong = edgeTrimmed.length >= vows.edge.minStrong;
-  const edgeFill = edgeStrong ? 1 : 0;
+  // "Answered" includes explicit skip so the user isn't forced to write
+  // something they don't yet have words for.
+  const edgeAnswered = edgeStrong || edgeSkipped;
+  const edgeFill = edgeAnswered ? 1 : 0;
 
   const hoursAnswered = !!selectedTime;
   const coinAnswered = !!selectedResource;
-  const edgeAnswered = edgeStrong;
   const filledCount =
     (hoursAnswered ? 1 : 0) + (coinAnswered ? 1 : 0) + (edgeAnswered ? 1 : 0);
   const canComplete = hoursAnswered && coinAnswered && edgeAnswered;
@@ -576,14 +584,15 @@ function ConstraintsPhase({
     }
   }, [filledCount, onCedricBeat, vows]);
 
-  // Pip reaction when the edge vow is first sealed (separate from the
-  // Cedric beat so both voices can chime in).
+  // Pip reaction when the edge vow is first sealed with a REAL edge (not
+  // a skip). Skips don't get the "that's a GOOD one" reaction — that line
+  // would feel hollow if the user deliberately chose not to declare.
   useEffect(() => {
-    if (edgeAnswered && !pipEdgeFired.current) {
+    if (edgeStrong && !pipEdgeFired.current) {
       pipEdgeFired.current = true;
       setTimeout(() => onPipReaction(vows.pip.afterEdge), 900);
     }
-  }, [edgeAnswered, onPipReaction, vows]);
+  }, [edgeStrong, onPipReaction, vows]);
 
   // Ambient Pip line — fires once at 15s of dwell on this phase if the
   // edge vow hasn't been answered yet (at which point he says something
@@ -736,10 +745,22 @@ function ConstraintsPhase({
               >
                 <EdgeTextarea
                   value={selectedAdvantage}
-                  onChange={setSelectedAdvantage}
+                  onChange={(s) => {
+                    setSelectedAdvantage(s);
+                    // Typing anything cancels a prior skip. Intentional —
+                    // if the user now has words, treat the vow as truly
+                    // declared rather than skipped.
+                    if (s.length > 0 && edgeSkipped) setEdgeSkipped(false);
+                  }}
                   placeholders={vows.edge.placeholders}
                   maxLength={vows.edge.maxLength}
                   minStrong={vows.edge.minStrong}
+                  industriesKept={industriesKept}
+                  skipped={edgeSkipped}
+                  onSkip={() => {
+                    setSelectedAdvantage('');
+                    setEdgeSkipped(true);
+                  }}
                 />
               </motion.div>
             )}
@@ -865,24 +886,55 @@ function VowChoiceTile({ icon, title, flavor, active, onClick, testId }: VowChoi
   );
 }
 
-/** Sample competitive-advantage starters — clickable chips below the edge
- *  textarea so users who don't know what to write can pick one close to
- *  their actual edge and edit. Diverse set covering skills, network,
- *  distribution, audience, operational know-how, funding. */
-const SAMPLE_EDGES = [
-  "I've built 3 products from scratch",
-  'I speak 4 languages fluently',
-  'I know 20+ founders personally',
-  "I've worked in this industry for 8 years",
-  'I can cold-email any CEO and get a reply',
-  'I have a viral following on Twitter',
-  "I've sold products door-to-door",
-  'I can code in 5 languages',
-  'I know how to run growth experiments',
-  "I've raised money from investors before",
-  'I understand legal + compliance deeply',
-  "I've lived/worked in 3+ countries",
+/**
+ * Sample competitive-advantage starters — clickable chips below the edge
+ * textarea. Split into universal starters (every founder can relate) and
+ * industry-specific lines that get mixed in first when the user's kept
+ * industries match the key. Universal-first ordering means even a user who
+ * didn't pick an industry still sees approachable options.
+ */
+const UNIVERSAL_EDGES = [
+  "I've built products before",
+  'I know people in this space',
+  "I've worked with this industry for years",
+  "I'm good at convincing people",
+  'I can sell to customers directly',
+  "I've raised money from investors",
+  'I code well',
+  'I can write and speak publicly',
+  "I've lived/worked abroad",
+  'I have strong social media presence',
+  "I'm a subject matter expert",
+  "I've shipped things fast before",
 ] as const;
+
+const INDUSTRY_EDGES: Record<string, readonly string[]> = {
+  ai_ml: ["I understand how LLMs actually work", "I've shipped an AI product before"],
+  health_wellness: ["I've worked in healthcare", "I'm a certified practitioner"],
+  creator_media: ['I have a following on social media', "I've worked in media/content"],
+  finance_payments: ["I've worked in banking/fintech", 'I understand compliance deeply'],
+  education_learning: ["I've taught students for years", "I've worked in edtech"],
+  food_agriculture: ["I've worked with farmers/supply chain", "I'm a chef or F&B operator"],
+  climate_energy: ["I've worked in climate/sustainability", 'I understand the energy grid'],
+  gaming_entertainment: ["I've shipped a game before", 'I have a gamer community'],
+  fashion_beauty: ["I've worked with D2C brands", 'I have an eye for trend cycles'],
+  sports_fitness: ['I train/coach athletes', "I've built a fitness community"],
+  community_social: ["I've built an engaged community online", "I'm a skilled moderator"],
+  real_estate_home: ["I've worked in real estate/proptech", 'I understand local housing markets'],
+  logistics_mobility: ["I've worked in logistics/ops", 'I understand supply-chain routing'],
+  legal_compliance: ["I've worked in law/compliance", 'I understand regulatory filings'],
+  hardware_robotics: ["I've built physical products", 'I understand manufacturing'],
+};
+
+/** Pick 2-3 industry-specific edges based on the user's kept industries. */
+function getIndustrySpecificSamples(industriesKept: readonly string[]): string[] {
+  const specific: string[] = [];
+  for (const ind of industriesKept.slice(0, 3)) {
+    const bank = INDUSTRY_EDGES[ind];
+    if (bank) specific.push(...bank);
+  }
+  return specific.slice(0, 3);
+}
 
 interface EdgeTextareaProps {
   value: string;
@@ -890,14 +942,28 @@ interface EdgeTextareaProps {
   placeholders: readonly string[];
   maxLength: number;
   minStrong: number;
+  industriesKept: readonly string[];
+  skipped: boolean;
+  onSkip: () => void;
 }
 
 /**
  * EdgeTextarea — stone-inscription-styled textarea for the Edge vow. Placeholder
  * cycles through the example bank every 3s while empty + unfocused to nudge
- * the user with concrete shapes of what a good edge looks like.
+ * the user with concrete shapes of what a good edge looks like. Sample chips
+ * below the textarea are industry-aware (user's kept industries show up first)
+ * and a "Skip this vow" link lets users who don't know bypass the requirement.
  */
-function EdgeTextarea({ value, onChange, placeholders, maxLength, minStrong }: EdgeTextareaProps) {
+function EdgeTextarea({
+  value,
+  onChange,
+  placeholders,
+  maxLength,
+  minStrong,
+  industriesKept,
+  skipped,
+  onSkip,
+}: EdgeTextareaProps) {
   const [placeholderIdx, setPlaceholderIdx] = useState(0);
   const [focused, setFocused] = useState(false);
 
@@ -939,7 +1005,11 @@ function EdgeTextarea({ value, onChange, placeholders, maxLength, minStrong }: E
       />
       <div className="flex items-center justify-between mt-1.5 px-1">
         <p className="text-[10px] italic text-ivory/40">
-          {strong ? 'Etched.' : `at least ${minStrong} characters`}
+          {skipped
+            ? 'Skipped — that\u2019s okay.'
+            : strong
+            ? 'Etched.'
+            : `at least ${minStrong} characters`}
         </p>
         <p
           className="text-[10px] font-mono"
@@ -951,29 +1021,72 @@ function EdgeTextarea({ value, onChange, placeholders, maxLength, minStrong }: E
         </p>
       </div>
 
-      {/* Sample tags — tap-to-populate. Shown regardless of value so the user
-          can swap edge mid-way if they change their mind. Clicking REPLACES
-          the textarea content with the sample (user can edit after). */}
-      <div className="mt-3">
-        <p className="text-[9.5px] font-mono uppercase tracking-widest text-ivory/40 mb-2">
-          Not sure? Tap one that's close:
-        </p>
-        <div className="flex flex-wrap gap-1.5">
-          {SAMPLE_EDGES.map((sample) => (
-            <button
-              key={sample}
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                onChange(sample);
-              }}
-              className="px-2.5 py-1 rounded-full text-[11px] bg-white/[0.04] border border-white/10 text-ivory/70 hover:bg-white/[0.08] hover:border-white/20 hover:text-ivory/95 transition-colors"
-            >
-              {sample}
-            </button>
-          ))}
-        </div>
-      </div>
+      {/* Sample tags — industry-specific first (2-3 from the user's kept
+          industries), universal afterward. Tapping REPLACES the textarea
+          content with the sample. Clears the skipped state implicitly via
+          parent's onChange handler (typing cancels skip). */}
+      {!skipped && (() => {
+        const industrySamples = getIndustrySpecificSamples(industriesKept);
+        const universalSamples = UNIVERSAL_EDGES.slice(0, 8 - industrySamples.length);
+        return (
+          <div className="mt-3">
+            <p className="text-[9.5px] font-mono uppercase tracking-widest text-ivory/40 mb-2">
+              Not sure? Tap one that&rsquo;s close:
+            </p>
+            <div className="flex flex-wrap gap-1.5">
+              {industrySamples.map((sample) => (
+                <button
+                  key={`ind-${sample}`}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onChange(sample);
+                  }}
+                  // Industry-specific chips get a subtle gold tint so they
+                  // stand out as more personally relevant than universals.
+                  className="px-2.5 py-1 rounded-full text-[11px] transition-colors"
+                  style={{
+                    background: 'rgba(212,168,67,0.10)',
+                    border: '1px solid rgba(212,168,67,0.30)',
+                    color: 'rgba(250,216,144,0.95)',
+                  }}
+                >
+                  {sample}
+                </button>
+              ))}
+              {universalSamples.map((sample) => (
+                <button
+                  key={`univ-${sample}`}
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onChange(sample);
+                  }}
+                  className="px-2.5 py-1 rounded-full text-[11px] bg-white/[0.04] border border-white/10 text-ivory/70 hover:bg-white/[0.08] hover:border-white/20 hover:text-ivory/95 transition-colors"
+                >
+                  {sample}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Skip link — gives the user an escape hatch. Counts as "answered"
+          for CTA-unlock purposes but skips Pip's afterEdge reaction. */}
+      {!skipped && (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onSkip();
+          }}
+          data-testid="vow-edge-skip"
+          className="mt-3 text-[11px] text-ivory/50 hover:text-ivory/85 transition-colors underline underline-offset-2"
+        >
+          Skip — I&rsquo;m still figuring this out
+        </button>
+      )}
     </div>
   );
 }
