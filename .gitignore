@@ -41,5 +41,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# data-patch backups (v8-data-patch.ts writes these alongside content/*.json)
-*.pre-v8.bak
+# data-patch backups (v8*.ts scripts write these alongside content/*.json)
+*.pre-v8*.bak

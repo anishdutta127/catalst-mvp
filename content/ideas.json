@@ -182,7 +182,12 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "video",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0002",
@@ -368,7 +373,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0003",
@@ -553,7 +562,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "ai-agents"
+    ]
   },
   {
     "idea_id": "CAT-0004",
@@ -738,7 +751,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "community"
+    ]
   },
   {
     "idea_id": "CAT-0005",
@@ -923,7 +940,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "community"
+    ]
   },
   {
     "idea_id": "CAT-0006",
@@ -1108,7 +1129,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0007",
@@ -1292,7 +1317,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0008",
@@ -1477,7 +1506,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0009",
@@ -1661,7 +1694,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0010",
@@ -1845,7 +1882,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0011",
@@ -2029,7 +2070,12 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "civic",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0012",
@@ -2213,7 +2259,12 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "dev-tools",
+      "ev-mobility"
+    ]
   },
   {
     "idea_id": "CAT-0013",
@@ -2397,7 +2448,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0014",
@@ -2583,7 +2638,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0015",
@@ -2767,7 +2826,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0016",
@@ -2951,7 +3014,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0017",
@@ -3135,7 +3202,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "payments",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0018",
@@ -3320,7 +3391,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0019",
@@ -3505,7 +3580,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "ev-mobility"
+    ]
   },
   {
     "idea_id": "CAT-0020",
@@ -3690,7 +3769,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "hr-tech"
+    ]
   },
   {
     "idea_id": "CAT-0021",
@@ -3874,7 +3958,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0022",
@@ -4058,7 +4146,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "legal-tech"
+    ]
   },
   {
     "idea_id": "CAT-0023",
@@ -4242,7 +4334,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "food-bev",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0024",
@@ -4426,7 +4522,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "food-bev",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0025",
@@ -4611,7 +4711,13 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "ev-mobility",
+      "events",
+      "dating"
+    ]
   },
   {
     "idea_id": "CAT-0026",
@@ -4795,7 +4901,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0027",
@@ -4979,7 +5089,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "mental-health"
+    ]
   },
   {
     "idea_id": "CAT-0028",
@@ -5163,7 +5277,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "fitness"
+    ]
   },
   {
     "idea_id": "CAT-0029",
@@ -5348,7 +5466,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce"
+    ]
   },
   {
     "idea_id": "CAT-0030",
@@ -5534,7 +5656,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce"
+    ]
   },
   {
     "idea_id": "CAT-0031",
@@ -5718,7 +5844,11 @@
         }
       ],
       "honest_risk": "Real estate transactions are high-stakes and slow. Sales cycles are 3-18 months. You need very deep pockets or a niche that transacts faster (rental, fractional, commercial). Burn rate vs sales cycle length is the make-or-break calculation."
-    }
+    },
+    "tags": [
+      "real-estate",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0032",
@@ -5903,7 +6033,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "construction",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0033",
@@ -6087,7 +6222,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0034",
@@ -6271,7 +6410,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "edu-parenting",
+      "wearables"
+    ]
   },
   {
     "idea_id": "CAT-0035",
@@ -6456,7 +6599,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "ai-voice"
+    ]
   },
   {
     "idea_id": "CAT-0036",
@@ -6641,7 +6788,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "video"
+    ]
   },
   {
     "idea_id": "CAT-0037",
@@ -6825,7 +6976,11 @@
         }
       ],
       "honest_risk": "Travel is highly commoditised on price. If your value is just 'better itineraries', users will take your plan and book on MakeMyTrip. Your moat must be relationships with local suppliers that give you inventory unavailable anywhere else."
-    }
+    },
+    "tags": [
+      "travel",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0038",
@@ -7009,7 +7164,11 @@
         }
       ],
       "honest_risk": "Content is capital-intensive and hit-driven. One miss on a flagship show can consume 12 months of runway. Build a content testing framework (short form → long form) before betting on expensive productions."
-    }
+    },
+    "tags": [
+      "entertainment",
+      "content"
+    ]
   },
   {
     "idea_id": "CAT-0039",
@@ -7193,7 +7352,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0040",
@@ -7377,7 +7540,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "design"
+    ]
   },
   {
     "idea_id": "CAT-0041",
@@ -7562,7 +7729,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0042",
@@ -7746,7 +7917,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "legal-tech"
+    ]
   },
   {
     "idea_id": "CAT-0043",
@@ -7930,7 +8105,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "ai-voice"
+    ]
   },
   {
     "idea_id": "CAT-0044",
@@ -8114,7 +8293,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "events"
+    ]
   },
   {
     "idea_id": "CAT-0045",
@@ -8298,7 +8482,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "mental-health",
+      "sleep"
+    ]
   },
   {
     "idea_id": "CAT-0046",
@@ -8482,7 +8671,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "civic"
+    ]
   },
   {
     "idea_id": "CAT-0047",
@@ -8666,7 +8859,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0048",
@@ -8851,7 +9048,13 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "edu-k12",
+      "edu-tutor",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0049",
@@ -9035,7 +9238,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0050",
@@ -9219,7 +9426,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0051",
@@ -9403,7 +9614,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0052",
@@ -9588,7 +9803,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "ai-agents"
+    ]
   },
   {
     "idea_id": "CAT-0053",
@@ -9772,7 +9991,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "dating"
+    ]
   },
   {
     "idea_id": "CAT-0054",
@@ -9957,7 +10180,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0055",
@@ -10143,7 +10370,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "community"
+    ]
   },
   {
     "idea_id": "CAT-0056",
@@ -10327,7 +10558,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0057",
@@ -10512,7 +10747,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "agritech"
+    ]
   },
   {
     "idea_id": "CAT-0058",
@@ -10697,7 +10936,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "agritech"
+    ]
   },
   {
     "idea_id": "CAT-0059",
@@ -10882,7 +11125,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "drones",
+      "agritech"
+    ]
   },
   {
     "idea_id": "CAT-0060",
@@ -11067,7 +11315,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "food-bev",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0061",
@@ -11251,7 +11503,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0062",
@@ -11435,7 +11691,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce"
+    ]
   },
   {
     "idea_id": "CAT-0063",
@@ -11619,7 +11879,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "logistics"
+    ]
   },
   {
     "idea_id": "CAT-0064",
@@ -11803,7 +12068,12 @@
         }
       ],
       "honest_risk": "Real estate transactions are high-stakes and slow. Sales cycles are 3-18 months. You need very deep pockets or a niche that transacts faster (rental, fractional, commercial). Burn rate vs sales cycle length is the make-or-break calculation."
-    }
+    },
+    "tags": [
+      "real-estate",
+      "drones",
+      "construction"
+    ]
   },
   {
     "idea_id": "CAT-0065",
@@ -11987,7 +12257,11 @@
         }
       ],
       "honest_risk": "Real estate transactions are high-stakes and slow. Sales cycles are 3-18 months. You need very deep pockets or a niche that transacts faster (rental, fractional, commercial). Burn rate vs sales cycle length is the make-or-break calculation."
-    }
+    },
+    "tags": [
+      "real-estate",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0066",
@@ -12171,7 +12445,11 @@
         }
       ],
       "honest_risk": "Real estate transactions are high-stakes and slow. Sales cycles are 3-18 months. You need very deep pockets or a niche that transacts faster (rental, fractional, commercial). Burn rate vs sales cycle length is the make-or-break calculation."
-    }
+    },
+    "tags": [
+      "real-estate",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0067",
@@ -12355,7 +12633,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce"
+    ]
   },
   {
     "idea_id": "CAT-0068",
@@ -12539,7 +12821,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "beauty"
+    ]
   },
   {
     "idea_id": "CAT-0069",
@@ -12723,7 +13010,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "logistics",
+      "fashion"
+    ]
   },
   {
     "idea_id": "CAT-0070",
@@ -12907,7 +13199,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "fitness"
+    ]
   },
   {
     "idea_id": "CAT-0071",
@@ -13091,7 +13387,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0072",
@@ -13275,7 +13575,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "sports"
+    ]
   },
   {
     "idea_id": "CAT-0073",
@@ -13459,7 +13763,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "legal-tech"
+    ]
   },
   {
     "idea_id": "CAT-0074",
@@ -13643,7 +13951,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0075",
@@ -13828,7 +14140,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "legal-tech"
+    ]
   },
   {
     "idea_id": "CAT-0076",
@@ -14013,7 +14329,12 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "space",
+      "agritech"
+    ]
   },
   {
     "idea_id": "CAT-0077",
@@ -14198,7 +14519,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "space"
+    ]
   },
   {
     "idea_id": "CAT-0078",
@@ -14382,7 +14707,12 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "dev-tools",
+      "ev-mobility"
+    ]
   },
   {
     "idea_id": "CAT-0079",
@@ -14567,7 +14897,13 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "dev-tools",
+      "ev-mobility",
+      "design"
+    ]
   },
   {
     "idea_id": "CAT-0080",
@@ -14751,7 +15087,12 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "ai-coding",
+      "manufacturing"
+    ]
   },
   {
     "idea_id": "CAT-0081",
@@ -14935,7 +15276,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "mental-health"
+    ]
   },
   {
     "idea_id": "CAT-0082",
@@ -15119,7 +15464,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "mental-health"
+    ]
   },
   {
     "idea_id": "CAT-0083",
@@ -15304,7 +15653,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "mental-health"
+    ]
   },
   {
     "idea_id": "CAT-0084",
@@ -15489,7 +15842,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "mental-health"
+    ]
   },
   {
     "idea_id": "CAT-0085",
@@ -15674,7 +16031,12 @@
         }
       ],
       "honest_risk": "Content is capital-intensive and hit-driven. One miss on a flagship show can consume 12 months of runway. Build a content testing framework (short form → long form) before betting on expensive productions."
-    }
+    },
+    "tags": [
+      "entertainment",
+      "content",
+      "gaming"
+    ]
   },
   {
     "idea_id": "CAT-0086",
@@ -15859,7 +16221,13 @@
         }
       ],
       "honest_risk": "Content is capital-intensive and hit-driven. One miss on a flagship show can consume 12 months of runway. Build a content testing framework (short form → long form) before betting on expensive productions."
-    }
+    },
+    "tags": [
+      "entertainment",
+      "content",
+      "gaming",
+      "food-bev"
+    ]
   },
   {
     "idea_id": "CAT-0087",
@@ -16044,7 +16412,13 @@
         }
       ],
       "honest_risk": "Content is capital-intensive and hit-driven. One miss on a flagship show can consume 12 months of runway. Build a content testing framework (short form → long form) before betting on expensive productions."
-    }
+    },
+    "tags": [
+      "entertainment",
+      "content",
+      "gaming",
+      "dev-tools"
+    ]
   },
   {
     "idea_id": "CAT-0088",
@@ -16229,7 +16603,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "hr-tech"
+    ]
   },
   {
     "idea_id": "CAT-0089",
@@ -16413,7 +16792,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "hr-tech"
+    ]
   },
   {
     "idea_id": "CAT-0090",
@@ -16598,7 +16982,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "payments",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0091",
@@ -16782,7 +17170,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "insurance",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0092",
@@ -16966,7 +17358,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "insurance",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0093",
@@ -17150,7 +17546,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0094",
@@ -17335,7 +17735,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "ev-mobility"
+    ]
   },
   {
     "idea_id": "CAT-0095",
@@ -17519,7 +17923,12 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "edu-tutor",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0096",
@@ -17704,7 +18113,13 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "video",
+      "content",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0097",
@@ -17888,7 +18303,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "dating",
+      "energy"
+    ]
   },
   {
     "idea_id": "CAT-0098",
@@ -18073,7 +18493,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "wearables",
+      "neobank"
+    ]
   },
   {
     "idea_id": "CAT-0099",
@@ -18257,7 +18682,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "pets",
+      "wearables"
+    ]
   },
   {
     "idea_id": "CAT-0100",
@@ -18441,7 +18870,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "pets",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0101",
@@ -18626,7 +19059,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0102",
@@ -18811,7 +19248,12 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "wearables",
+      "civic"
+    ]
   },
   {
     "idea_id": "CAT-0103",
@@ -18996,7 +19438,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "edu-parenting",
+      "ai-voice",
+      "video",
+      "elder-care"
+    ]
   },
   {
     "idea_id": "CAT-0104",
@@ -19180,7 +19628,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "elder-care",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0105",
@@ -19365,7 +19818,11 @@
         }
       ],
       "honest_risk": "Travel is highly commoditised on price. If your value is just 'better itineraries', users will take your plan and book on MakeMyTrip. Your moat must be relationships with local suppliers that give you inventory unavailable anywhere else."
-    }
+    },
+    "tags": [
+      "travel",
+      "logistics"
+    ]
   },
   {
     "idea_id": "CAT-0106",
@@ -19549,7 +20006,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "food-bev",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0107",
@@ -19734,7 +20195,13 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "edu-k12",
+      "ai-coding",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0108",
@@ -19919,7 +20386,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0109",
@@ -20104,7 +20575,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "edu-k12"
+    ]
   },
   {
     "idea_id": "CAT-0110",
@@ -20289,7 +20764,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0111",
@@ -20473,7 +20952,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0112",
@@ -20657,7 +21140,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "longevity"
+    ]
   },
   {
     "idea_id": "CAT-0113",
@@ -20841,7 +21329,11 @@
         }
       ],
       "honest_risk": "Real estate transactions are high-stakes and slow. Sales cycles are 3-18 months. You need very deep pockets or a niche that transacts faster (rental, fractional, commercial). Burn rate vs sales cycle length is the make-or-break calculation."
-    }
+    },
+    "tags": [
+      "real-estate",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0114",
@@ -21025,7 +21517,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0115",
@@ -21209,7 +21705,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0116",
@@ -21394,7 +21894,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "hr-tech"
+    ]
   },
   {
     "idea_id": "CAT-0117",
@@ -21579,7 +22084,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0118",
@@ -21763,7 +22272,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "ai-agents"
+    ]
   },
   {
     "idea_id": "CAT-0119",
@@ -21947,7 +22460,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0120",
@@ -22131,7 +22648,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0121",
@@ -22316,7 +22837,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce",
+      "ai-voice",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0122",
@@ -22501,7 +23028,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "mental-health"
+    ]
   },
   {
     "idea_id": "CAT-0123",
@@ -22685,7 +23216,12 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "ai-content",
+      "legal-tech"
+    ]
   },
   {
     "idea_id": "CAT-0124",
@@ -22869,7 +23405,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce",
+      "manufacturing"
+    ]
   },
   {
     "idea_id": "CAT-0125",
@@ -23054,7 +23595,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "legal-tech",
+      "insurance",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0126",
@@ -23239,7 +23786,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0127",
@@ -23424,7 +23975,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0128",
@@ -23609,7 +24164,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "fitness"
+    ]
   },
   {
     "idea_id": "CAT-0129",
@@ -23793,7 +24352,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0130",
@@ -23978,7 +24541,12 @@
         }
       ],
       "honest_risk": "Content is capital-intensive and hit-driven. One miss on a flagship show can consume 12 months of runway. Build a content testing framework (short form → long form) before betting on expensive productions."
-    }
+    },
+    "tags": [
+      "entertainment",
+      "content",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0131",
@@ -24163,7 +24731,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0132",
@@ -24348,7 +24920,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0133",
@@ -24532,7 +25108,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "food-bev",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0134",
@@ -24716,7 +25296,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "pets",
+      "edu-parenting"
+    ]
   },
   {
     "idea_id": "CAT-0135",
@@ -24901,7 +25485,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0136",
@@ -25086,7 +25674,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce",
+      "manufacturing"
+    ]
   },
   {
     "idea_id": "CAT-0137",
@@ -25271,7 +25864,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0138",
@@ -25455,7 +26052,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "content"
+    ]
   },
   {
     "idea_id": "CAT-0139",
@@ -25640,7 +26241,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "edu-parenting",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0140",
@@ -25825,7 +26430,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "spiritual"
+    ]
   },
   {
     "idea_id": "CAT-0141",
@@ -26010,7 +26620,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "logistics"
+    ]
   },
   {
     "idea_id": "CAT-0142",
@@ -26194,7 +26809,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "food-bev",
+      "nutrition"
+    ]
   },
   {
     "idea_id": "CAT-0143",
@@ -26379,7 +26998,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0144",
@@ -26564,7 +27187,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0145",
@@ -26749,7 +27376,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "nutrition"
+    ]
   },
   {
     "idea_id": "CAT-0146",
@@ -26933,7 +27564,13 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "dev-tools",
+      "ev-mobility",
+      "ai-coding"
+    ]
   },
   {
     "idea_id": "CAT-0147",
@@ -27118,7 +27755,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0148",
@@ -27303,7 +27944,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0149",
@@ -27488,7 +28133,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0150",
@@ -27673,7 +28322,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0151",
@@ -27858,7 +28511,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0152",
@@ -28043,7 +28700,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0153",
@@ -28228,7 +28890,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "logistics"
+    ]
   },
   {
     "idea_id": "CAT-0154",
@@ -28413,7 +29080,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "manufacturing"
+    ]
   },
   {
     "idea_id": "CAT-0155",
@@ -28598,7 +29269,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce",
+      "manufacturing"
+    ]
   },
   {
     "idea_id": "CAT-0156",
@@ -28783,7 +29459,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "lending",
+      "payments"
+    ]
   },
   {
     "idea_id": "CAT-0157",
@@ -28968,7 +29648,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "edu-parenting",
+      "video"
+    ]
   },
   {
     "idea_id": "CAT-0158",
@@ -29153,7 +29837,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0159",
@@ -29338,7 +30026,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0160",
@@ -29523,7 +30215,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0161",
@@ -29708,7 +30404,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "neobank",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0162",
@@ -29893,7 +30593,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "payments"
+    ]
   },
   {
     "idea_id": "CAT-0163",
@@ -30078,7 +30782,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "food-bev",
+      "design"
+    ]
   },
   {
     "idea_id": "CAT-0164",
@@ -30263,7 +30971,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "pets",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0165",
@@ -30448,7 +31160,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "mental-health"
+    ]
   },
   {
     "idea_id": "CAT-0166",
@@ -30633,7 +31349,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0167",
@@ -30819,7 +31539,13 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "edu-k12",
+      "edu-tutor",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0168",
@@ -31004,7 +31730,12 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "sustainability",
+      "agritech"
+    ]
   },
   {
     "idea_id": "CAT-0169",
@@ -31189,7 +31920,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "legal-tech"
+    ]
   },
   {
     "idea_id": "CAT-0170",
@@ -31374,7 +32109,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0171",
@@ -31555,7 +32294,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0172",
@@ -31737,7 +32480,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce",
+      "fashion",
+      "design"
+    ]
   },
   {
     "idea_id": "CAT-0173",
@@ -31919,7 +32668,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "civic"
+    ]
   },
   {
     "idea_id": "CAT-0174",
@@ -32101,7 +32854,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0175",
@@ -32283,7 +33040,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0176",
@@ -32465,7 +33226,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "fitness",
+      "edu-language",
+      "space"
+    ]
   },
   {
     "idea_id": "CAT-0177",
@@ -32647,7 +33414,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sports",
+      "fitness",
+      "video"
+    ]
   },
   {
     "idea_id": "CAT-0178",
@@ -32829,7 +33601,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "agritech",
+      "space"
+    ]
   },
   {
     "idea_id": "CAT-0179",
@@ -33011,7 +33787,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "legal-tech",
+      "civic"
+    ]
   },
   {
     "idea_id": "CAT-0180",
@@ -33193,7 +33973,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "fashion",
+      "beauty"
+    ]
   },
   {
     "idea_id": "CAT-0181",
@@ -33375,7 +34159,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "hr-tech",
+      "video",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0182",
@@ -33557,7 +34346,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "elder-care"
+    ]
   },
   {
     "idea_id": "CAT-0183",
@@ -33739,7 +34532,12 @@
         }
       ],
       "honest_risk": "Gaming is winner-takes-most at the platform level. Unless you have a distribution moat (celebrity tie-in, franchise IP, telco partnership), you will not out-market BGMI or Dream11. Build for a specific niche first."
-    }
+    },
+    "tags": [
+      "gaming",
+      "ev-mobility",
+      "ai-coding"
+    ]
   },
   {
     "idea_id": "CAT-0184",
@@ -33920,7 +34718,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "events",
+      "wearables"
+    ]
   },
   {
     "idea_id": "CAT-0185",
@@ -34101,7 +34903,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "cybersec",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0186",
@@ -34283,7 +35089,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0187",
@@ -34465,7 +35275,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "logistics",
+      "hardware",
+      "food-bev"
+    ]
   },
   {
     "idea_id": "CAT-0188",
@@ -34647,7 +35462,11 @@
         }
       ],
       "honest_risk": "Travel is highly commoditised on price. If your value is just 'better itineraries', users will take your plan and book on MakeMyTrip. Your moat must be relationships with local suppliers that give you inventory unavailable anywhere else."
-    }
+    },
+    "tags": [
+      "travel",
+      "spiritual"
+    ]
   },
   {
     "idea_id": "CAT-0189",
@@ -34829,7 +35648,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0190",
@@ -35011,7 +35834,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "construction",
+      "real-estate"
+    ]
   },
   {
     "idea_id": "CAT-0191",
@@ -35193,7 +36020,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "ev-mobility",
+      "payments"
+    ]
   },
   {
     "idea_id": "CAT-0192",
@@ -35375,7 +36206,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0193",
@@ -35557,7 +36392,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "insurance",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0194",
@@ -35739,7 +36578,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "wealth",
+      "crypto"
+    ]
   },
   {
     "idea_id": "CAT-0195",
@@ -35921,7 +36764,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "manufacturing",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0196",
@@ -36103,7 +36950,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0197",
@@ -36285,7 +37136,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "home-services",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0198",
@@ -36467,7 +37322,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "civic",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0199",
@@ -36649,7 +37508,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "content"
+    ]
   },
   {
     "idea_id": "CAT-0200",
@@ -36831,7 +37694,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "biotech",
+      "real-estate"
+    ]
   },
   {
     "idea_id": "CAT-0201",
@@ -37013,7 +37880,13 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "ai-voice",
+      "video",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0202",
@@ -37195,7 +38068,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0203",
@@ -37377,7 +38254,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce",
+      "payments",
+      "logistics"
+    ]
   },
   {
     "idea_id": "CAT-0204",
@@ -37559,7 +38442,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "mental-health"
+    ]
   },
   {
     "idea_id": "CAT-0205",
@@ -37741,7 +38628,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "longevity",
+      "d2c",
+      "design"
+    ]
   },
   {
     "idea_id": "CAT-0206",
@@ -37923,7 +38816,11 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "insurance",
+      "lending"
+    ]
   },
   {
     "idea_id": "CAT-0207",
@@ -38105,7 +39002,11 @@
         }
       ],
       "honest_risk": "Real estate transactions are high-stakes and slow. Sales cycles are 3-18 months. You need very deep pockets or a niche that transacts faster (rental, fractional, commercial). Burn rate vs sales cycle length is the make-or-break calculation."
-    }
+    },
+    "tags": [
+      "real-estate",
+      "design"
+    ]
   },
   {
     "idea_id": "CAT-0208",
@@ -38287,7 +39188,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "civic"
+    ]
   },
   {
     "idea_id": "CAT-0209",
@@ -38469,7 +39374,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "pets",
+      "video",
+      "telemedicine",
+      "edu-parenting"
+    ]
   },
   {
     "idea_id": "CAT-0210",
@@ -38651,7 +39562,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "hr-tech",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0211",
@@ -38833,7 +39748,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sports",
+      "fitness",
+      "saas",
+      "payments"
+    ]
   },
   {
     "idea_id": "CAT-0212",
@@ -39015,7 +39936,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "agritech",
+      "drones"
+    ]
   },
   {
     "idea_id": "CAT-0213",
@@ -39197,7 +40122,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce"
+    ]
   },
   {
     "idea_id": "CAT-0214",
@@ -39379,7 +40308,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "spiritual",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0215",
@@ -39561,7 +40494,11 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0216",
@@ -39743,7 +40680,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "edu-parenting",
+      "ev-mobility",
+      "wearables"
+    ]
   },
   {
     "idea_id": "CAT-0217",
@@ -39925,7 +40867,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "commerce",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0218",
@@ -40107,7 +41053,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "agritech"
+    ]
   },
   {
     "idea_id": "CAT-0219",
@@ -40289,7 +41239,13 @@
         }
       ],
       "honest_risk": "Fintech in India means SEBI, RBI, and IRDAI involvement. A regulatory mis-step can shut you down overnight. Build with a compliance-first culture from day one — not as an afterthought."
-    }
+    },
+    "tags": [
+      "ai-voice",
+      "insurance",
+      "lending",
+      "civic"
+    ]
   },
   {
     "idea_id": "CAT-0220",
@@ -40471,7 +41427,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "wealth"
+    ]
   },
   {
     "idea_id": "CAT-0221",
@@ -40653,7 +41613,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "events",
+      "ev-mobility",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0222",
@@ -40835,7 +41800,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "nutrition",
+      "food-bev"
+    ]
   },
   {
     "idea_id": "CAT-0223",
@@ -41017,7 +41987,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "mental-health"
+    ]
   },
   {
     "idea_id": "CAT-0224",
@@ -41199,7 +42173,13 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "d2c",
+      "commerce",
+      "payments",
+      "logistics"
+    ]
   },
   {
     "idea_id": "CAT-0225",
@@ -41381,7 +42361,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas",
+      "real-estate"
+    ]
   },
   {
     "idea_id": "CAT-0226",
@@ -41563,7 +42548,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "energy"
+    ]
   },
   {
     "idea_id": "CAT-0227",
@@ -41745,7 +42734,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sports",
+      "fitness",
+      "community"
+    ]
   },
   {
     "idea_id": "CAT-0228",
@@ -41927,7 +42921,11 @@
         }
       ],
       "honest_risk": "Content is capital-intensive and hit-driven. One miss on a flagship show can consume 12 months of runway. Build a content testing framework (short form → long form) before betting on expensive productions."
-    }
+    },
+    "tags": [
+      "entertainment",
+      "content"
+    ]
   },
   {
     "idea_id": "CAT-0229",
@@ -42109,7 +43107,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "agritech",
+      "logistics",
+      "food-bev"
+    ]
   },
   {
     "idea_id": "CAT-0230",
@@ -42291,7 +43294,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "hr-tech",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0231",
@@ -42473,7 +43480,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "ai-agents"
+    ]
   },
   {
     "idea_id": "CAT-0232",
@@ -42655,7 +43666,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "food-bev",
+      "longevity",
+      "d2c"
+    ]
   },
   {
     "idea_id": "CAT-0233",
@@ -42837,7 +43853,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "fashion",
+      "beauty",
+      "sustainability"
+    ]
   },
   {
     "idea_id": "CAT-0234",
@@ -43019,7 +44040,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "hardware"
+    ]
   },
   {
     "idea_id": "CAT-0235",
@@ -43201,7 +44226,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "edu-language"
+    ]
   },
   {
     "idea_id": "CAT-0236",
@@ -43383,7 +44412,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0237",
@@ -43565,7 +44598,13 @@
         }
       ],
       "honest_risk": "Gaming is winner-takes-most at the platform level. Unless you have a distribution moat (celebrity tie-in, franchise IP, telco partnership), you will not out-market BGMI or Dream11. Build for a specific niche first."
-    }
+    },
+    "tags": [
+      "gaming",
+      "community",
+      "esports",
+      "sports"
+    ]
   },
   {
     "idea_id": "CAT-0238",
@@ -43747,7 +44786,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0239",
@@ -43929,7 +44972,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "home-services",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0240",
@@ -44111,7 +45158,12 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "space",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0241",
@@ -44293,7 +45345,11 @@
         }
       ],
       "honest_risk": "Platform dependency is existential. If Instagram changes its algorithm or TikTok gets banned in a market, your tool's value collapses. Build for cross-platform from day one."
-    }
+    },
+    "tags": [
+      "content",
+      "design"
+    ]
   },
   {
     "idea_id": "CAT-0242",
@@ -44475,7 +45531,11 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "edu-tutor"
+    ]
   },
   {
     "idea_id": "CAT-0243",
@@ -44657,7 +45717,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "pets",
+      "insurance",
+      "edu-parenting"
+    ]
   },
   {
     "idea_id": "CAT-0244",
@@ -44839,7 +45904,12 @@
         }
       ],
       "honest_risk": "Content is capital-intensive and hit-driven. One miss on a flagship show can consume 12 months of runway. Build a content testing framework (short form → long form) before betting on expensive productions."
-    }
+    },
+    "tags": [
+      "entertainment",
+      "content",
+      "video"
+    ]
   },
   {
     "idea_id": "CAT-0245",
@@ -45021,7 +46091,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "wearables"
+    ]
   },
   {
     "idea_id": "CAT-0246",
@@ -45203,7 +46277,12 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "edu-language",
+      "pets"
+    ]
   },
   {
     "idea_id": "CAT-0247",
@@ -45385,7 +46464,13 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "space",
+      "mental-health",
+      "agritech"
+    ]
   },
   {
     "idea_id": "CAT-0248",
@@ -45567,7 +46652,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0249",
@@ -45749,7 +46838,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "energy"
+    ]
   },
   {
     "idea_id": "CAT-0250",
@@ -45931,7 +47024,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "productivity",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0251",
@@ -46113,7 +47210,11 @@
         }
       ],
       "honest_risk": "Real estate transactions are high-stakes and slow. Sales cycles are 3-18 months. You need very deep pockets or a niche that transacts faster (rental, fractional, commercial). Burn rate vs sales cycle length is the make-or-break calculation."
-    }
+    },
+    "tags": [
+      "real-estate",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0252",
@@ -46295,7 +47396,12 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "sustainability",
+      "agritech",
+      "community"
+    ]
   },
   {
     "idea_id": "CAT-0253",
@@ -46477,7 +47583,13 @@
         }
       ],
       "honest_risk": "Content is capital-intensive and hit-driven. One miss on a flagship show can consume 12 months of runway. Build a content testing framework (short form → long form) before betting on expensive productions."
-    }
+    },
+    "tags": [
+      "entertainment",
+      "content",
+      "ev-mobility",
+      "events"
+    ]
   },
   {
     "idea_id": "CAT-0254",
@@ -46659,7 +47771,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0255",
@@ -46841,7 +47957,13 @@
         }
       ],
       "honest_risk": "Market is crowded and moving fast — Anthropic, OpenAI, and Google are all building automation layers into their platforms. The moat must be vertical depth or distribution, not just AI capability."
-    }
+    },
+    "tags": [
+      "ai-agents",
+      "ai-voice",
+      "edu-language",
+      "logistics"
+    ]
   },
   {
     "idea_id": "CAT-0256",
@@ -47023,7 +48145,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "fashion",
+      "beauty"
+    ]
   },
   {
     "idea_id": "CAT-0257",
@@ -47205,7 +48331,11 @@
         }
       ],
       "honest_risk": "Communities need critical mass to be valuable — but you need value to attract members. The chicken-and-egg problem kills most community businesses. Solve it with curation: invite-only + handpicked founding members."
-    }
+    },
+    "tags": [
+      "community",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0258",
@@ -47387,7 +48517,11 @@
         }
       ],
       "honest_risk": "Real estate transactions are high-stakes and slow. Sales cycles are 3-18 months. You need very deep pockets or a niche that transacts faster (rental, fractional, commercial). Burn rate vs sales cycle length is the make-or-break calculation."
-    }
+    },
+    "tags": [
+      "real-estate",
+      "legal-tech"
+    ]
   },
   {
     "idea_id": "CAT-0259",
@@ -47569,7 +48703,11 @@
         }
       ],
       "honest_risk": "Productivity tools have massive churn risk. Users try and abandon. You need a habit-forming mechanic — not just features — or you'll see 80% churn at month 3."
-    }
+    },
+    "tags": [
+      "telemedicine",
+      "saas"
+    ]
   },
   {
     "idea_id": "CAT-0260",
@@ -47751,6 +48889,10 @@
         }
       ],
       "honest_risk": "EdTech is a trust business. One batch with poor outcomes and you lose the word-of-mouth flywheel forever. Start with a cohort size you can actually serve well — even if that's just 10 people."
-    }
+    },
+    "tags": [
+      "edu-skilling",
+      "saas"
+    ]
   }
 ]
