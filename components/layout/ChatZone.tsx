@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useUIStore } from '@/lib/store/uiStore';
 import { useJourneyStore } from '@/lib/store/journeyStore';
 import { CedricBubble } from '@/components/characters/CedricBubble';
+import { easeSmooth } from '@/lib/motion';
 
 interface ChatZoneProps {
   /**
@@ -42,10 +43,11 @@ export function ChatZone(_props: ChatZoneProps = {}) {
           {cedricMsg && (
             <motion.div
               key={cedricMsg.id}
-              initial={{ opacity: 0, y: 3 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, transition: { duration: 0.12 } }}
-              transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+              layout
+              initial={{ opacity: 0, y: 8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -4, transition: { duration: 0.2 } }}
+              transition={{ duration: 0.4, ease: easeSmooth }}
               className="w-full"
             >
               <CedricBubble

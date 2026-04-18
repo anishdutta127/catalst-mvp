@@ -418,6 +418,9 @@ export function S04Industries() {
             drag gestures still reach the card underneath. */}
         <div className="absolute z-20 left-0 right-0 bottom-4 flex justify-center gap-6 pointer-events-none">
           <motion.button
+            initial={{ opacity: 0, scale: 0, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.3 }}
             whileTap={{ scale: 0.9 }}
             onClick={handlePass}
             disabled={!currentCard}
@@ -436,6 +439,9 @@ export function S04Industries() {
           </motion.button>
 
           <motion.button
+            initial={{ opacity: 0, scale: 0, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.38 }}
             whileTap={edgeAvailable && currentCard ? { scale: 0.9 } : undefined}
             onClick={handleEdge}
             disabled={!edgeAvailable || !currentCard}
@@ -468,6 +474,9 @@ export function S04Industries() {
           </motion.button>
 
           <motion.button
+            initial={{ opacity: 0, scale: 0, y: 8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.46 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleKeep}
             disabled={!currentCard}
@@ -509,6 +518,8 @@ export function S04Industries() {
           data-testid="continue-btn"
           disabled={!canContinue}
           animate={isPulsing ? { scale: [1, 1.03, 1] } : { scale: 1 }}
+          whileHover={canContinue ? { scale: 1.02 } : undefined}
+          whileTap={canContinue ? { scale: 0.97 } : undefined}
           transition={{ duration: isPulsing ? 0.4 : 0.2, times: isPulsing ? [0, 0.5, 1] : undefined }}
           className={`w-full h-12 rounded-2xl font-semibold text-[14px] transition-colors duration-300 ${
             canContinue

@@ -194,17 +194,22 @@ export function S06Crystal() {
         </div>
       </div>
 
-      {/* Counter */}
-      <div className="shrink-0 text-center py-1.5">
-        <motion.p
-          className="text-[10px] font-mono uppercase tracking-[0.28em]"
-          animate={{
-            color: count === 3 ? '#D4A843' : 'rgba(245,240,232,0.4)',
-          }}
-          transition={{ duration: 0.4 }}
-        >
-          {count} of 3 chosen
-        </motion.p>
+      {/* Counter — key'd on count so it re-mounts on every pick, giving each
+          increment a subtle slide-in beat instead of just color-shifting. */}
+      <div className="shrink-0 text-center py-1.5 h-5 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={count}
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -3 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[10px] font-mono uppercase tracking-[0.28em]"
+            style={{ color: count === 3 ? '#D4A843' : 'rgba(245,240,232,0.4)' }}
+          >
+            {count} of 3 chosen
+          </motion.p>
+        </AnimatePresence>
       </div>
 
       {/* Confirm CTA — appears with a breathing gold pulse when ready */}

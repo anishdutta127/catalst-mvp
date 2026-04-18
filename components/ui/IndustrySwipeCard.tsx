@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion';
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'; // pie-only now that the back uses share charts instead of growth lines
+import { staggerContainer, fadeSlideUp } from '@/lib/motion';
 import { INDUSTRY_STATS, FALLBACK_STAT } from '@/content/industry-stats';
 
 interface HingePrompt {
@@ -334,7 +335,7 @@ export function IndustrySwipeCard({
         <motion.div
           className="relative w-full h-full"
           animate={{ rotateY: flipped ? 180 : 0 }}
-          transition={{ duration: 0.7, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           style={{ transformStyle: 'preserve-3d' }}
         >
           {/* ═══════════════ FRONT ═══════════════ */}
@@ -431,14 +432,20 @@ export function IndustrySwipeCard({
                 </div>
               )}
 
-              {/* BENTO — auto height now that parent scrolls */}
-              <div
+              {/* BENTO — auto height now that parent scrolls. Children
+                  cascade in with a gentle 60ms stagger so the bento feels
+                  composed rather than dropped in all at once. */}
+              <motion.div
                 className="grid gap-2.5 px-5 pt-[14px] pb-2"
                 style={{ gridTemplateColumns: '1fr 1fr' }}
+                variants={staggerContainer(0.1, 0.06)}
+                initial="hidden"
+                animate="visible"
               >
                 {/* TILE A — 💡 OPPORTUNITY */}
                 {opportunityText && (
-                  <div
+                  <motion.div
+                    variants={fadeSlideUp}
                     className="rounded-xl min-w-0"
                     style={{
                       gridColumn: '1 / -1',
@@ -459,11 +466,12 @@ export function IndustrySwipeCard({
                     <p className="text-[13px] text-ivory/90 leading-snug font-semibold">
                       {opportunityText}
                     </p>
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* TILE B — 🔥 TRENDING */}
-                <div
+                <motion.div
+                  variants={fadeSlideUp}
                   className="rounded-xl px-3 py-2 min-w-0"
                   style={{
                     background: 'rgba(255,255,255,0.04)',
@@ -479,10 +487,11 @@ export function IndustrySwipeCard({
                   <p className="text-[10.5px] text-ivory/65 leading-snug mt-1 line-clamp-3">
                     {stats.trending.stat}
                   </p>
-                </div>
+                </motion.div>
 
                 {/* TILE C — 👀 TO WATCH */}
-                <div
+                <motion.div
+                  variants={fadeSlideUp}
                   className="rounded-xl px-3 py-2 min-w-0"
                   style={{
                     background: 'rgba(255,255,255,0.04)',
@@ -498,11 +507,12 @@ export function IndustrySwipeCard({
                   <p className="text-[10.5px] text-ivory/65 leading-snug mt-1 line-clamp-3">
                     {stats.watch.why}
                   </p>
-                </div>
+                </motion.div>
 
                 {/* TILE D — HOTTEST SUB-SPACE */}
                 {topSubCagr && (
-                  <div
+                  <motion.div
+                    variants={fadeSlideUp}
                     className="rounded-xl px-3 py-2 min-w-0"
                     style={{
                       gridColumn: '1 / -1',
@@ -537,9 +547,9 @@ export function IndustrySwipeCard({
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
 
               {/* QUICK STATS ROW — 3 mini tiles, only when we have data */}
               {industry.quick_stats && (

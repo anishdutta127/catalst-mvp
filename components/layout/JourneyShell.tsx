@@ -7,6 +7,7 @@ import { ChatZone } from './ChatZone';
 import { PipFloater } from './PipFloater';
 import { useUIStore } from '@/lib/store/uiStore';
 import { SCREEN_BACKGROUNDS, type ScreenId } from '@/lib/constants';
+import { screenTransition } from '@/lib/motion';
 
 interface JourneyShellProps {
   currentScreen: ScreenId;
@@ -102,10 +103,10 @@ export function JourneyShell({
           <AnimatePresence mode="wait">
             <motion.div
               key={currentScreen}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6, transition: { duration: 0.15 } }}
-              transition={{ type: 'spring', stiffness: 280, damping: 30 }}
+              variants={screenTransition}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
               className="w-full h-full overflow-y-auto"
             >
               {children}
