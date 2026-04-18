@@ -98,6 +98,15 @@ body {
   border-radius: 2px;
 }
 
+/* Utility — hide scrollbar on opt-in elements (e.g. swipe-card scroll zone). */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* ── Selection ─────────────────────────────────────────────── */
 
 ::selection {

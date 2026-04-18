@@ -192,7 +192,12 @@
     ],
     "user_behavior_shift": "Developers now reach for an LLM API before writing a for-loop. AI-native has overtaken AI-assisted.",
     "impact_potential": "Verticalized AI tools hit $100M+ ARR in under 3 years. Margins 80%+.",
-    "india_scene": "India's AI funding doubled in 2025 — Sarvam and Krutrim raised on tokenizer IP alone."
+    "india_scene": "India's AI funding doubled in 2025 — Sarvam and Krutrim raised on tokenizer IP alone.",
+    "quick_stats": {
+      "three_year_growth_pct": 150,
+      "india_startups_count": "240+",
+      "biggest_recent_exit": "Sarvam — $41M Series A"
+    }
   },
   {
     "id": "health_wellness",
@@ -388,7 +393,12 @@
     ],
     "user_behavior_shift": "Indians under 35 now treat health as a subscription — they'd rather pay monthly than visit a hospital.",
     "impact_potential": "Preventive-care subscriptions unlock 5x LTV vs episodic care. Insurance-adjacent plays hit $50M ARR quickly.",
-    "india_scene": "Ayushman Bharat covers 500M+. Health-tech layered on government rails is a wedge, not a niche."
+    "india_scene": "Ayushman Bharat covers 500M+. Health-tech layered on government rails is a wedge, not a niche.",
+    "quick_stats": {
+      "three_year_growth_pct": 52,
+      "india_startups_count": "400+",
+      "biggest_recent_exit": "Even Healthcare — $30M"
+    }
   },
   {
     "id": "creator_media",
@@ -585,7 +595,12 @@
     ],
     "user_behavior_shift": "Creators expect tools that live inside their workflow — not another dashboard. Monetization = messaging + payments in one pane.",
     "impact_potential": "Creator SaaS hits $100M ARR with 50K paying creators. 90% gross margins, network effects compound.",
-    "india_scene": "India has 80M+ creators and only ~0.3% monetize. The tooling gap is the opportunity."
+    "india_scene": "India has 80M+ creators and only ~0.3% monetize. The tooling gap is the opportunity.",
+    "quick_stats": {
+      "three_year_growth_pct": 73,
+      "india_startups_count": "180+",
+      "biggest_recent_exit": "Rigi — $75M Series B"
+    }
   },
   {
     "id": "finance_payments",
@@ -783,7 +798,12 @@
     ],
     "user_behavior_shift": "UPI normalized zero-friction payments. Users now expect rent, SIPs, and insurance to feel like Zepto checkout.",
     "impact_potential": "Embedded finance takes 30-50bps on billions in GMV. Infra plays hit $100M+ ARR with 5% of the market.",
-    "india_scene": "UPI processes 15B+ transactions/month. India is now the proving ground for the next wave of global fintech."
+    "india_scene": "UPI processes 15B+ transactions/month. India is now the proving ground for the next wave of global fintech.",
+    "quick_stats": {
+      "three_year_growth_pct": 64,
+      "india_startups_count": "300+",
+      "biggest_recent_exit": "Jar — $50M Series B"
+    }
   },
   {
     "id": "education_learning",
@@ -980,7 +1000,12 @@
     ],
     "user_behavior_shift": "Students expect a Socratic tutor 24/7. YouTube + Claude has replaced the coaching class for ambitious Tier-2 kids.",
     "impact_potential": "B2C edtech margins are thin — but B2B-to-schools + upskilling routes clear ₹500Cr+ revenue profitably.",
-    "india_scene": "Post-BYJU's collapse the category is reforming. PhysicsWallah, Camp K12, Vedantu — all building for profitability now."
+    "india_scene": "Post-BYJU's collapse the category is reforming. PhysicsWallah, Camp K12, Vedantu — all building for profitability now.",
+    "quick_stats": {
+      "three_year_growth_pct": 48,
+      "india_startups_count": "500+",
+      "biggest_recent_exit": "PhysicsWallah — $210M"
+    }
   },
   {
     "id": "food_agriculture",
@@ -1177,7 +1202,12 @@
     ],
     "user_behavior_shift": "Quick commerce reset expectations — users want groceries in 10 min and meals in 20. Ghost kitchens + D2C brands are the winners.",
     "impact_potential": "Vertical farming + alt-protein can hit 20% gross margin at scale. D2C food brands hit ₹500Cr+ with sound unit economics.",
-    "india_scene": "India eats differently by state. Regional D2C brands (ID Fresh, Slurrp Farm) are beating pan-India plays."
+    "india_scene": "India eats differently by state. Regional D2C brands (ID Fresh, Slurrp Farm) are beating pan-India plays.",
+    "quick_stats": {
+      "three_year_growth_pct": 40,
+      "india_startups_count": "220+",
+      "biggest_recent_exit": "Zepto — $665M Series F"
+    }
   },
   {
     "id": "climate_energy",
@@ -1374,7 +1404,12 @@
     ],
     "user_behavior_shift": "Corporates have hard net-zero deadlines. Procurement now buys carbon-tracked steel, cement, and logistics — the premium is tolerated.",
     "impact_potential": "Climate-tech deals in India hit $1B+ in 2025. Infra plays (green hydrogen, battery storage) unlock $10B+ TAM.",
-    "india_scene": "India committed to 500GW renewables by 2030. The supply chain — EPC, materials, storage — is the wedge."
+    "india_scene": "India committed to 500GW renewables by 2030. The supply chain — EPC, materials, storage — is the wedge.",
+    "quick_stats": {
+      "three_year_growth_pct": 82,
+      "india_startups_count": "150+",
+      "biggest_recent_exit": "Ather Energy IPO — $590M"
+    }
   },
   {
     "id": "gaming_entertainment",
@@ -1569,7 +1604,12 @@
     ],
     "user_behavior_shift": "Indian players now pay for gaming at scale — UPI micro-transactions flipped mobile gaming from free-to-play to sustainable monetization.",
     "impact_potential": "Mobile gaming + fantasy caps at ₹10k Cr revenue. AAA mobile and original IP plays are the breakout routes.",
-    "india_scene": "100M+ daily gamers in India. Real-money gaming got regulated, so skill gaming + entertainment is where the growth lives."
+    "india_scene": "100M+ daily gamers in India. Real-money gaming got regulated, so skill gaming + entertainment is where the growth lives.",
+    "quick_stats": {
+      "three_year_growth_pct": 64,
+      "india_startups_count": "180+",
+      "biggest_recent_exit": "Winzo — $65M Series C"
+    }
   },
   {
     "id": "fashion_beauty",
@@ -1766,7 +1806,12 @@
     ],
     "user_behavior_shift": "Gen-Z shops on Instagram, not websites. Content is the storefront; DMs close the sale.",
     "impact_potential": "D2C beauty can hit ₹500Cr ARR in 4 years. Category king in any niche (clean, skinimalism) gets acquired at 10x revenue.",
-    "india_scene": "India's beauty market doubled in 3 years. Foxtale, Pilgrim, Plum — all raced from zero to category leader post-2021."
+    "india_scene": "India's beauty market doubled in 3 years. Foxtale, Pilgrim, Plum — all raced from zero to category leader post-2021.",
+    "quick_stats": {
+      "three_year_growth_pct": 33,
+      "india_startups_count": "280+",
+      "biggest_recent_exit": "Foxtale — $30M Series C"
+    }
   },
   {
     "id": "sports_fitness",
@@ -1963,7 +2008,12 @@
     ],
     "user_behavior_shift": "Fitness is now biometric — users want an Oura/Whoop equivalent, not a gym membership.",
     "impact_potential": "Wearable + subscription stacks unlock $300+ ARPU. Corporate wellness is a sticky B2B wedge.",
-    "india_scene": "Cult.fit did the gym. Ultrahuman is doing the wearable. The next wave is Indian-built metabolic IP."
+    "india_scene": "Cult.fit did the gym. Ultrahuman is doing the wearable. The next wave is Indian-built metabolic IP.",
+    "quick_stats": {
+      "three_year_growth_pct": 40,
+      "india_startups_count": "120+",
+      "biggest_recent_exit": "Cult.fit — $155M Series F"
+    }
   },
   {
     "id": "community_social",
@@ -2160,7 +2210,12 @@
     ],
     "user_behavior_shift": "People are leaving big social networks for small paid communities — Discord, WhatsApp groups, Circle spaces.",
     "impact_potential": "Creator-led communities hit ₹10Cr+ ARR with 10K paying members. Platform fees 5-10% scale into $B+ category.",
-    "india_scene": "Koo's pivot opened space. Rigi and Convosight proved paid communities work. India's online social spend is still tiny."
+    "india_scene": "Koo's pivot opened space. Rigi and Convosight proved paid communities work. India's online social spend is still tiny.",
+    "quick_stats": {
+      "three_year_growth_pct": 55,
+      "india_startups_count": "200+",
+      "biggest_recent_exit": "ShareChat — $255M"
+    }
   },
   {
     "id": "real_estate_home",
@@ -2357,7 +2412,12 @@
     ],
     "user_behavior_shift": "Buyers research entirely online before a site visit. Virtual tours, drone videos, financing calculators — all expected before first contact.",
     "impact_potential": "Proptech in India caps around $5B revenue, but interiors, financing, and rentals each crack $500M+ revenue plays.",
-    "india_scene": "NoBroker IPO pipeline + Square Yards growth shows proptech can profit. The unlock is transaction enablement, not listings."
+    "india_scene": "NoBroker IPO pipeline + Square Yards growth shows proptech can profit. The unlock is transaction enablement, not listings.",
+    "quick_stats": {
+      "three_year_growth_pct": 33,
+      "india_startups_count": "140+",
+      "biggest_recent_exit": "NoBroker — $210M Series E"
+    }
   },
   {
     "id": "logistics_mobility",
@@ -2554,7 +2614,12 @@
     ],
     "user_behavior_shift": "10-min delivery reset the ceiling. Anything over 30 min feels slow. Intercity and B2B logistics are next.",
     "impact_potential": "Logistics in India is a $200B market. EV + quick commerce + B2B freight each unlock $1B+ revenue plays.",
-    "india_scene": "Zepto, Porter, Delhivery — three models all scaling. Logistics is India's biggest inefficiency and biggest startup category."
+    "india_scene": "Zepto, Porter, Delhivery — three models all scaling. Logistics is India's biggest inefficiency and biggest startup category.",
+    "quick_stats": {
+      "three_year_growth_pct": 52,
+      "india_startups_count": "260+",
+      "biggest_recent_exit": "Delhivery IPO — $670M"
+    }
   },
   {
     "id": "legal_compliance",
@@ -2751,7 +2816,12 @@
     ],
     "user_behavior_shift": "SMB owners now expect AI-generated compliance docs in seconds. GST filings, ESI, contracts — all instant.",
     "impact_potential": "GST + labour-compliance SaaS hits ₹100Cr ARR with 50K SMBs. Legal AI (contracts) unlocks $100M+ for tooling.",
-    "india_scene": "India has 60M SMBs with manual compliance. SpotDraft + Cleartax proved the model; next wave is vertical AI per workflow."
+    "india_scene": "India has 60M SMBs with manual compliance. SpotDraft + Cleartax proved the model; next wave is vertical AI per workflow.",
+    "quick_stats": {
+      "three_year_growth_pct": 95,
+      "india_startups_count": "90+",
+      "biggest_recent_exit": "SpotDraft — $26M Series A"
+    }
   },
   {
     "id": "hardware_robotics",
@@ -2948,7 +3018,12 @@
     ],
     "user_behavior_shift": "Factories are automating aggressively post-2023 labour shortages. Robotic arms and drones aren't sci-fi for mid-market manufacturers anymore.",
     "impact_potential": "Hardware has tougher capex, but category leaders (ideaForge, Pristine) unlock ₹500Cr+ via government + export contracts.",
-    "india_scene": "Make-in-India + PLI subsidies shifted the math. Indian hardware unicorns are finally viable — ideaForge IPO proved the category."
+    "india_scene": "Make-in-India + PLI subsidies shifted the math. Indian hardware unicorns are finally viable — ideaForge IPO proved the category.",
+    "quick_stats": {
+      "three_year_growth_pct": 73,
+      "india_startups_count": "110+",
+      "biggest_recent_exit": "ideaForge IPO — $80M"
+    }
   },
   {
     "id": "pet_care",

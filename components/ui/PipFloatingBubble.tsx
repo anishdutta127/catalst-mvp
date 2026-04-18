@@ -13,10 +13,10 @@ interface PipFloatingBubbleProps {
 
 /**
  * PipFloatingBubble — transient reaction bubble that sits to the LEFT of Pip's
- * sprite. Positions absolutely relative to the nearest positioned ancestor, so
- * the caller must render it inside a relatively-positioned container (e.g.
- * S04's outer `<div className="relative ...">` which is itself scoped to the
- * 720px activity column).
+ * sprite, with a dotted connective line threading toward him so the reaction
+ * reads as HIS reaction. Positions absolutely relative to the nearest
+ * positioned ancestor (on S04 that's the card zone wrapper, so the bubble
+ * sits next to Pip at the card's top-right corner).
  *
  * Exists for "heat-of-the-moment" beats triggered by user actions (first keep,
  * first edge, threshold-crossed) that should pop next to Pip instead of
@@ -40,21 +40,22 @@ export function PipFloatingBubble({
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 8, scale: 0.95 }}
+      initial={{ opacity: 0, x: 10, scale: 0.95 }}
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: 8, scale: 0.95 }}
       transition={{ duration: 0.25 }}
       className="absolute z-40 pointer-events-none"
       style={{
-        // Sprite sits at top:4 / right:4, size 48px, so the bubble starts
-        // 16px to the left of the sprite's left edge.
-        top: 16,
-        right: 68,
-        maxWidth: 240,
+        // Pip now sits at top:-10 / right:12, size 52px (card zone coords).
+        // His left edge is at right: 64, so the bubble's right edge anchors
+        // at right: 72 (8px gap for the dotted tether to breathe).
+        top: 4,
+        right: 72,
+        maxWidth: 220,
       }}
     >
       <div
-        className="rounded-xl px-3.5 py-2.5 backdrop-blur-md"
+        className="relative rounded-xl px-3.5 py-2.5 backdrop-blur-md"
         style={{
           background: 'rgba(12, 14, 18, 0.85)',
           border: `1px solid ${color}60`,
@@ -67,6 +68,33 @@ export function PipFloatingBubble({
         >
           {text}
         </p>
+
+        {/* Dotted connective tissue — threads from the bubble's right edge
+            toward Pip so the reaction reads as HIS reaction. Uses overflow:
+            visible so the line can extend past the svg's nominal bounds. */}
+        <svg
+          className="absolute"
+          aria-hidden
+          style={{
+            right: -28,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            overflow: 'visible',
+          }}
+          width="28"
+          height="12"
+        >
+          <line
+            x1="0"
+            y1="6"
+            x2="26"
+            y2="6"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeDasharray="2,3"
+            opacity="0.55"
+          />
+        </svg>
       </div>
     </motion.div>
   );

@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion';
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import { INDUSTRY_STATS, FALLBACK_STAT } from '@/content/industry-stats';
 
 interface HingePrompt {
@@ -12,6 +13,12 @@ interface HingePrompt {
 interface SubCagr {
   name: string;
   cagr_pct: number;
+}
+
+interface QuickStats {
+  three_year_growth_pct?: number;
+  india_startups_count?: string;
+  biggest_recent_exit?: string;
 }
 
 export interface IndustryCardData {
@@ -37,10 +44,11 @@ export interface IndustryCardData {
   example_startups_india?: string[];
   trending_global?: string[];
   trending_startups?: string[];
-  // New richer back-of-card fields (Batch 2 hinge-data enrichment).
+  // Batch 2 hinge-data enrichment fields.
   user_behavior_shift?: string;
   impact_potential?: string;
   india_scene?: string;
+  quick_stats?: QuickStats;
 }
 
 interface IndustrySwipeCardProps {
@@ -80,6 +88,32 @@ function hashString(s: string): number {
 }
 
 /**
+ * Synthesize a 5-point market-size series ending at marketSizeB in 2026,
+ * compounding backward at cagrPct. The source JSON has no `growth_chart`
+ * field today, so we generate a directionally-correct sparkline from the
+ * market size + CAGR we already store. If either is missing, returns []
+ * and the sparkline won't render.
+ */
+function synthGrowthSeries(
+  marketSizeB: number | undefined,
+  cagrPct: number | undefined,
+): { year: number; value: number }[] {
+  if (!marketSizeB || !cagrPct || cagrPct <= 0) return [];
+  const years = 5;
+  const g = 1 + cagrPct / 100;
+  const endYear = 2026;
+  const out: { year: number; value: number }[] = [];
+  for (let i = 0; i < years; i++) {
+    const offset = years - 1 - i;
+    out.push({
+      year: endYear - offset,
+      value: Math.round((marketSizeB / Math.pow(g, offset)) * 10) / 10,
+    });
+  }
+  return out;
+}
+
+/**
  * IndustrySwipeCard — S04 swipe card with a bento front and a rich back.
  *
  * Front stack (auto / auto / auto / flex / auto vertical split):
@@ -112,6 +146,10 @@ export function IndustrySwipeCard({
 }: IndustrySwipeCardProps) {
   const [flipped, setFlipped] = useState(false);
   const [exitDirection, setExitDirection] = useState<'left' | 'right' | 'up' | null>(null);
+  // Scroll hint — shown on mount, fades on first scroll. Re-armed each time
+  // the card flips back to the front.
+  const [scrollHintVisible, setScrollHintVisible] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -143,20 +181,23 @@ export function IndustrySwipeCard({
     return raw ? truncateAtWord(raw, 100) : null;
   }, [industry.hinge_prompts]);
 
-  // Front/back witty prompts — two distinct picks from the Hinge bank,
-  // excluding "TOGETHER WE COULD" (reserved for Tile A). Deterministic from
-  // industry.id so front/back don't re-shuffle on flip or re-render.
-  const { frontPrompt, backPrompt } = useMemo(() => {
+  // Front/back/bottom witty prompts — three distinct picks from the Hinge
+  // bank, excluding "TOGETHER WE COULD" (reserved for Tile A). Deterministic
+  // from industry.id so nothing re-shuffles on flip or re-render. Falls back
+  // gracefully when the bank has fewer than 3 entries (non-core industries).
+  const { frontPrompt, backPrompt, bottomPrompt } = useMemo(() => {
     const bank = (industry.hinge_prompts || []).filter(
       (p) => p.label.toUpperCase() !== 'TOGETHER WE COULD',
     );
-    if (bank.length === 0) return { frontPrompt: null, backPrompt: null };
+    if (bank.length === 0) return { frontPrompt: null, backPrompt: null, bottomPrompt: null };
     const h = hashString(industry.id);
     const frontIdx = h % bank.length;
     const front = bank[frontIdx];
-    const remaining = bank.filter((_, i) => i !== frontIdx);
-    const back = remaining.length > 0 ? remaining[(h >> 3) % remaining.length] : null;
-    return { frontPrompt: front, backPrompt: back };
+    const remaining1 = bank.filter((_, i) => i !== frontIdx);
+    const back = remaining1.length > 0 ? remaining1[(h >> 3) % remaining1.length] : null;
+    const remaining2 = back ? remaining1.filter((p) => p.label !== back.label) : remaining1;
+    const bottom = remaining2.length > 0 ? remaining2[(h >> 5) % remaining2.length] : null;
+    return { frontPrompt: front, backPrompt: back, bottomPrompt: bottom };
   }, [industry.id, industry.hinge_prompts]);
 
   // TILE B + C — curated India company callouts
@@ -167,6 +208,34 @@ export function IndustrySwipeCard({
     return [...arr].sort((a, b) => b.cagr_pct - a.cagr_pct).slice(0, 3);
   }, [industry.sub_category_cagrs]);
   const topSubCagr = topCagrs[0] || null;
+
+  // Synthesized 5-point market-size series for the back sparkline. The source
+  // JSON has no `growth_chart` today — we compound backward from market_size_b
+  // at cagr_pct so the curve stays consistent with the displayed meta.
+  const growthSeries = useMemo(
+    () => synthGrowthSeries(industry.market_size_b, industry.cagr_pct),
+    [industry.market_size_b, industry.cagr_pct],
+  );
+
+  // Hide the scroll hint after the user scrolls the front. Listens on the
+  // scroll container directly (not window) so we don't fight sibling scrolls.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      if (el.scrollTop > 8) setScrollHintVisible(false);
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Re-arm the scroll hint + reset scrollTop whenever we flip back to front.
+  useEffect(() => {
+    if (!flipped) {
+      setScrollHintVisible(true);
+      if (scrollRef.current) scrollRef.current.scrollTop = 0;
+    }
+  }, [flipped]);
 
   function handleDragEnd(_: unknown, info: { offset: { x: number; y: number } }) {
     const { x: dx, y: dy } = info.offset;
@@ -210,7 +279,6 @@ export function IndustrySwipeCard({
       exit={exitAnim}
       transition={{ type: 'spring', stiffness: 280, damping: 22 }}
       className="absolute inset-0 cursor-grab active:cursor-grabbing"
-      onTap={() => setFlipped((f) => !f)}
     >
       {/* Drag overlays */}
       <motion.div style={{ opacity: passOpacity }} className="absolute top-5 left-5 z-20 pointer-events-none">
@@ -288,155 +356,271 @@ export function IndustrySwipeCard({
               </div>
             </div>
 
-            {/* ─── HOOK — italic tagline ─── */}
-            <div className="shrink-0 flex items-center px-5 py-2">
-              {hookText && (
-                <p className="text-[13px] italic text-ivory/85 leading-snug line-clamp-1">
-                  {hookText}
-                </p>
-              )}
-            </div>
-
-            {/* ─── WITTY PROMPT — Hinge-style quote row ─── */}
-            {frontPrompt && (
-              <div className="shrink-0 flex items-start gap-2 px-5 py-2.5 border-y border-white/5">
-                <p
-                  className="text-[9px] font-mono uppercase text-gold/60 mt-0.5 shrink-0 w-[76px] leading-[1.3]"
-                  style={{ letterSpacing: '0.18em' }}
-                >
-                  {frontPrompt.label}
-                </p>
-                <p className="text-[12.5px] italic text-white/85 leading-snug flex-1 line-clamp-2">
-                  &ldquo;{frontPrompt.text}&rdquo;
-                </p>
-              </div>
-            )}
-
-            {/* ─── BENTO GRID — explicit grid positions (fixes overlap bug) ─── */}
+            {/* ─── SCROLLABLE BODY — everything below the hero scrolls ─── */}
             <div
-              className="flex-1 grid gap-2 px-4 pt-2 pb-2 min-h-0 overflow-hidden"
+              ref={scrollRef}
+              className="relative flex-1 min-h-0 overflow-y-auto overflow-x-hidden scrollbar-hide"
               style={{
-                gridTemplateColumns: '1fr 1fr',
-                gridTemplateRows: 'auto minmax(0, 1fr) auto',
+                // Allow vertical pan so the browser scrolls naturally inside
+                // the card while Framer Motion still captures horizontal drag.
+                touchAction: 'pan-y',
+                // Soft bottom fade so content blends behind the action circles
+                // instead of cutting off abruptly.
+                maskImage:
+                  'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)',
+                WebkitMaskImage:
+                  'linear-gradient(to bottom, black 0%, black 85%, transparent 100%)',
               }}
             >
-              {/* TILE A — 💡 OPPORTUNITY (gold-tinted, row 1, full width) */}
-              {opportunityText && (
-                <div
-                  className="rounded-xl min-w-0"
-                  style={{
-                    gridColumn: '1 / -1',
-                    gridRow: '1',
-                    background: 'rgba(212,168,67,0.10)',
-                    border: '1px solid rgba(212,168,67,0.30)',
-                    padding: '10px 12px',
-                  }}
-                >
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <span className="text-[14px] leading-none">💡</span>
-                    <p
-                      className="text-[10px] font-mono uppercase font-semibold"
-                      style={{ color: GOLD_70, letterSpacing: '0.18em' }}
-                    >
-                      Opportunity
-                    </p>
-                  </div>
-                  <p className="text-[13px] text-ivory/90 leading-snug font-semibold line-clamp-2">
-                    {opportunityText}
+              {/* HOOK — italic tagline */}
+              <div className="flex items-center px-5 py-2">
+                {hookText && (
+                  <p className="text-[13px] italic text-ivory/85 leading-snug line-clamp-2">
+                    {hookText}
+                  </p>
+                )}
+              </div>
+
+              {/* WITTY PROMPT #1 */}
+              {frontPrompt && (
+                <div className="flex items-start gap-2 px-5 py-2.5 border-y border-white/5">
+                  <p
+                    className="text-[9px] font-mono uppercase text-gold/60 mt-0.5 shrink-0 w-[76px] leading-[1.3]"
+                    style={{ letterSpacing: '0.18em' }}
+                  >
+                    {frontPrompt.label}
+                  </p>
+                  <p className="text-[12.5px] italic text-white/85 leading-snug flex-1">
+                    &ldquo;{frontPrompt.text}&rdquo;
                   </p>
                 </div>
               )}
 
-              {/* TILE B — 🔥 TRENDING (row 2, col 1) */}
+              {/* BENTO — auto height now that parent scrolls */}
               <div
-                className="rounded-xl px-3 py-2 min-w-0 min-h-0 overflow-hidden"
-                style={{
-                  gridColumn: '1',
-                  gridRow: '2',
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.10)',
-                }}
+                className="grid gap-2 px-4 pt-3 pb-2"
+                style={{ gridTemplateColumns: '1fr 1fr' }}
               >
-                <p className="text-[10px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none">
-                  🔥 Trending
-                </p>
-                <p className="text-[13px] font-semibold text-ivory/95 leading-tight mt-1 truncate">
-                  {stats.trending.company}
-                </p>
-                <p className="text-[10.5px] text-ivory/65 leading-snug mt-1 line-clamp-2">
-                  {stats.trending.stat}
-                </p>
-              </div>
+                {/* TILE A — 💡 OPPORTUNITY */}
+                {opportunityText && (
+                  <div
+                    className="rounded-xl min-w-0"
+                    style={{
+                      gridColumn: '1 / -1',
+                      background: 'rgba(212,168,67,0.10)',
+                      border: '1px solid rgba(212,168,67,0.30)',
+                      padding: '10px 12px',
+                    }}
+                  >
+                    <div className="flex items-center gap-1.5 mb-1">
+                      <span className="text-[14px] leading-none">💡</span>
+                      <p
+                        className="text-[10px] font-mono uppercase font-semibold"
+                        style={{ color: GOLD_70, letterSpacing: '0.18em' }}
+                      >
+                        Opportunity
+                      </p>
+                    </div>
+                    <p className="text-[13px] text-ivory/90 leading-snug font-semibold">
+                      {opportunityText}
+                    </p>
+                  </div>
+                )}
 
-              {/* TILE C — 👀 TO WATCH (row 2, col 2) */}
-              <div
-                className="rounded-xl px-3 py-2 min-w-0 min-h-0 overflow-hidden"
-                style={{
-                  gridColumn: '2',
-                  gridRow: '2',
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.10)',
-                }}
-              >
-                <p className="text-[10px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none">
-                  👀 To Watch
-                </p>
-                <p className="text-[13px] font-semibold text-ivory/95 leading-tight mt-1 truncate">
-                  {stats.watch.company}
-                </p>
-                <p className="text-[10.5px] text-ivory/65 leading-snug mt-1 line-clamp-2">
-                  {stats.watch.why}
-                </p>
-              </div>
-
-              {/* TILE D — HOTTEST SUB-SPACE (row 3, full width, inline bar) */}
-              {topSubCagr && (
+                {/* TILE B — 🔥 TRENDING */}
                 <div
                   className="rounded-xl px-3 py-2 min-w-0"
                   style={{
-                    gridColumn: '1 / -1',
-                    gridRow: '3',
                     background: 'rgba(255,255,255,0.04)',
                     border: '1px solid rgba(255,255,255,0.10)',
                   }}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="shrink-0 min-w-0 max-w-[45%]">
-                      <p className="text-[9.5px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none">
-                        Hottest Sub-Space
-                      </p>
-                      <p className="text-[13px] text-ivory/90 font-semibold leading-tight mt-1 truncate">
-                        {topSubCagr.name}
-                      </p>
-                    </div>
-                    <div className="flex-1 flex items-center gap-2 min-w-0">
-                      <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full"
-                          style={{
-                            width: `${Math.min(100, topSubCagr.cagr_pct * 1.5)}%`,
-                            background: color,
-                          }}
-                        />
+                  <p className="text-[10px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none">
+                    🔥 Trending
+                  </p>
+                  <p className="text-[13px] font-semibold text-ivory/95 leading-tight mt-1 truncate">
+                    {stats.trending.company}
+                  </p>
+                  <p className="text-[10.5px] text-ivory/65 leading-snug mt-1 line-clamp-3">
+                    {stats.trending.stat}
+                  </p>
+                </div>
+
+                {/* TILE C — 👀 TO WATCH */}
+                <div
+                  className="rounded-xl px-3 py-2 min-w-0"
+                  style={{
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.10)',
+                  }}
+                >
+                  <p className="text-[10px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none">
+                    👀 To Watch
+                  </p>
+                  <p className="text-[13px] font-semibold text-ivory/95 leading-tight mt-1 truncate">
+                    {stats.watch.company}
+                  </p>
+                  <p className="text-[10.5px] text-ivory/65 leading-snug mt-1 line-clamp-3">
+                    {stats.watch.why}
+                  </p>
+                </div>
+
+                {/* TILE D — HOTTEST SUB-SPACE */}
+                {topSubCagr && (
+                  <div
+                    className="rounded-xl px-3 py-2 min-w-0"
+                    style={{
+                      gridColumn: '1 / -1',
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.10)',
+                    }}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="shrink-0 min-w-0 max-w-[45%]">
+                        <p className="text-[9.5px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none">
+                          Hottest Sub-Space
+                        </p>
+                        <p className="text-[13px] text-ivory/90 font-semibold leading-tight mt-1 truncate">
+                          {topSubCagr.name}
+                        </p>
                       </div>
-                      <span
-                        className="text-[12px] font-mono font-bold shrink-0"
-                        style={{ color: GOLD_SOLID }}
-                      >
-                        {topSubCagr.cagr_pct}%
-                      </span>
+                      <div className="flex-1 flex items-center gap-2 min-w-0">
+                        <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                          <div
+                            className="h-full rounded-full"
+                            style={{
+                              width: `${Math.min(100, topSubCagr.cagr_pct * 1.5)}%`,
+                              background: color,
+                            }}
+                          />
+                        </div>
+                        <span
+                          className="text-[12px] font-mono font-bold shrink-0"
+                          style={{ color: GOLD_SOLID }}
+                        >
+                          {topSubCagr.cagr_pct}%
+                        </span>
+                      </div>
                     </div>
+                  </div>
+                )}
+              </div>
+
+              {/* QUICK STATS ROW — 3 mini tiles, only when we have data */}
+              {industry.quick_stats && (
+                <div className="grid grid-cols-3 gap-1.5 px-5 pt-1 pb-3">
+                  {industry.quick_stats.three_year_growth_pct !== undefined && (
+                    <div
+                      className="rounded-lg px-2 py-1.5 text-center min-w-0"
+                      style={{
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.10)',
+                      }}
+                    >
+                      <p className="text-[8px] font-mono uppercase tracking-wider text-ivory/40 leading-tight truncate">
+                        3-YR GROWTH
+                      </p>
+                      <p className="text-[14px] font-bold leading-tight mt-0.5" style={{ color: '#10B981' }}>
+                        +{industry.quick_stats.three_year_growth_pct}%
+                      </p>
+                    </div>
+                  )}
+                  {industry.quick_stats.india_startups_count && (
+                    <div
+                      className="rounded-lg px-2 py-1.5 text-center min-w-0"
+                      style={{
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.10)',
+                      }}
+                    >
+                      <p className="text-[8px] font-mono uppercase tracking-wider text-ivory/40 leading-tight truncate">
+                        INDIA COS
+                      </p>
+                      <p className="text-[14px] font-bold leading-tight mt-0.5" style={{ color: GOLD_SOLID }}>
+                        {industry.quick_stats.india_startups_count}
+                      </p>
+                    </div>
+                  )}
+                  {industry.quick_stats.biggest_recent_exit && (
+                    <div
+                      className="rounded-lg px-2 py-1.5 text-center min-w-0"
+                      style={{
+                        background: 'rgba(255,255,255,0.04)',
+                        border: '1px solid rgba(255,255,255,0.10)',
+                      }}
+                    >
+                      <p className="text-[8px] font-mono uppercase tracking-wider text-ivory/40 leading-tight truncate">
+                        RECENT EXIT
+                      </p>
+                      <p className="text-[10px] font-bold leading-tight mt-0.5 line-clamp-2" style={{ color: '#60A5FA' }}>
+                        {industry.quick_stats.biggest_recent_exit}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* SECOND WITTY PROMPT — rewards scrolling */}
+              {bottomPrompt && (
+                <div className="mx-5 mb-3 pt-3 border-t border-white/[0.08]">
+                  <div className="flex items-start gap-2">
+                    <p
+                      className="text-[9px] font-mono uppercase text-gold/55 mt-0.5 shrink-0 w-[76px] leading-[1.3]"
+                      style={{ letterSpacing: '0.18em' }}
+                    >
+                      {bottomPrompt.label}
+                    </p>
+                    <p className="text-[13px] italic text-white/80 leading-snug flex-1">
+                      &ldquo;{bottomPrompt.text}&rdquo;
+                    </p>
                   </div>
                 </div>
               )}
+
+              {/* Bottom spacer — keeps real content above the mask fade */}
+              <div className="h-20" aria-hidden />
             </div>
 
-            {/* ─── FOOTER / HINT ─── */}
-            <div className="shrink-0 flex items-center justify-center py-1.5">
-              <p className="text-[10px] italic text-ivory/35 tracking-wide">
-                ↻  flip for the deeper read
-              </p>
-            </div>
+            {/* Scroll hint — bottom-center, fades on first scroll */}
+            <AnimatePresence>
+              {scrollHintVisible && (
+                <motion.div
+                  key="scroll-hint"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.55 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute bottom-14 left-1/2 -translate-x-1/2 z-10 pointer-events-none"
+                >
+                  <motion.div
+                    animate={{ y: [0, 4, 0] }}
+                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                    className="flex flex-col items-center gap-0.5 text-white/70"
+                  >
+                    <span className="text-[10px] font-mono uppercase tracking-wider">
+                      scroll for more
+                    </span>
+                    <span className="text-[14px] leading-none">⌄</span>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Flip corner icon — replaces the old text footer */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setFlipped(true);
+              }}
+              className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform hover:scale-110"
+              style={{
+                background: 'rgba(12,14,18,0.50)',
+                border: '1px solid rgba(255,255,255,0.15)',
+              }}
+              aria-label="Flip card for the deeper read"
+            >
+              <span className="text-[14px] text-white/75 leading-none">↻</span>
+            </button>
           </div>
 
           {/* ═══════════════ BACK ═══════════════ */}
@@ -463,6 +647,40 @@ export function IndustrySwipeCard({
               </div>
             </div>
 
+            {/* Market-growth sparkline — synthesized from market_size_b + CAGR
+                (the source JSON has no explicit growth_chart). */}
+            {growthSeries.length > 0 && (
+              <div className="shrink-0 px-5 pt-3 pb-2 border-b border-white/5">
+                <p className="text-[9px] font-mono uppercase tracking-widest text-ivory/45 mb-1">
+                  Market growth (US$ B)
+                </p>
+                <div style={{ height: 56 }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart
+                      data={growthSeries}
+                      margin={{ top: 4, right: 4, bottom: 4, left: 4 }}
+                    >
+                      <Line
+                        type="monotone"
+                        dataKey="value"
+                        stroke={color}
+                        strokeWidth={2}
+                        dot={{ r: 2, fill: color }}
+                        isAnimationActive={false}
+                      />
+                      <XAxis dataKey="year" hide />
+                      <YAxis hide domain={['dataMin', 'dataMax']} />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="flex justify-between text-[9px] text-ivory/35 font-mono mt-0.5">
+                  {growthSeries.map((d) => (
+                    <span key={d.year}>{d.year}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Back witty prompt — different pick than front, restores Hinge flavor */}
             {backPrompt && (
               <div className="shrink-0 flex items-start gap-2 px-5 py-2.5 border-b border-white/5">
@@ -479,7 +697,10 @@ export function IndustrySwipeCard({
             )}
 
             {/* 5-zone body */}
-            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 min-h-0">
+            <div
+              className="flex-1 overflow-y-auto scrollbar-hide px-5 py-4 space-y-4 min-h-0"
+              style={{ touchAction: 'pan-y' }}
+            >
               {/* 1. AI disruption angle — full */}
               {industry.ai_disruption_angle && (
                 <div className="bg-purple-500/10 border border-purple-500/25 rounded-xl p-3 flex items-start gap-2">
@@ -576,10 +797,21 @@ export function IndustrySwipeCard({
               )}
             </div>
 
-            {/* Footer */}
-            <div className="shrink-0 px-5 py-2 border-t border-white/5">
-              <p className="text-[10px] text-ivory/55 italic">← back to pitch</p>
-            </div>
+            {/* Flip-back corner icon — replaces the old text footer */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setFlipped(false);
+              }}
+              className="absolute bottom-3 left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform hover:scale-110"
+              style={{
+                background: 'rgba(12,14,18,0.50)',
+                border: '1px solid rgba(255,255,255,0.15)',
+              }}
+              aria-label="Back to pitch"
+            >
+              <span className="text-[14px] text-white/75 leading-none">↺</span>
+            </button>
           </div>
         </motion.div>
       </div>

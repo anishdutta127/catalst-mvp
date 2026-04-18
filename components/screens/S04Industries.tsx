@@ -64,11 +64,29 @@ export function S04Industries() {
   const [nudge, setNudge] = useState('');
   const [isPulsing, setIsPulsing] = useState(false);
   const [pipReaction, setPipReaction] = useState<string | null>(null);
+  // Pip physically leans toward the card when he reacts. Auto-resets after
+  // ~900ms so the sprite returns to its neutral pose between beats.
+  const [pipLeaning, setPipLeaning] = useState(false);
   const dialogueSent = useRef(false);
   const hasPulsed = useRef(false);
   const firstKeepFired = useRef(false);
   const firstEdgeFired = useRef(false);
   const thresholdFired = useRef(false);
+  const leanTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Lean Pip toward the card center when a reaction fires. Cleans up on
+  // unmount and gets re-armed on every call.
+  function triggerPipLean() {
+    setPipLeaning(true);
+    if (leanTimer.current) clearTimeout(leanTimer.current);
+    leanTimer.current = setTimeout(() => setPipLeaning(false), 900);
+  }
+
+  useEffect(() => {
+    return () => {
+      if (leanTimer.current) clearTimeout(leanTimer.current);
+    };
+  }, []);
 
   // Intro dialogue — once per mount. Cedric goes into the chat strip; Pip
   // routes to the local floating bubble so the chat strip stays Cedric-only.
@@ -78,6 +96,7 @@ export function S04Industries() {
     enqueueMessage({ speaker: 'cedric', text: lines.s04.cedric.intro, type: 'instruction' });
     const t = setTimeout(() => {
       setPipReaction(lines.s04.pip.intro);
+      triggerPipLean();
     }, 2500);
     return () => clearTimeout(t);
   }, [enqueueMessage]);
@@ -142,6 +161,7 @@ export function S04Industries() {
       firstKeepFired.current = true;
       setTimeout(() => {
         setPipReaction(lines.s04.pip.afterFirstKeep);
+        triggerPipLean();
       }, 180);
     }
 
@@ -151,6 +171,7 @@ export function S04Industries() {
       thresholdFired.current = true;
       setTimeout(() => {
         setPipReaction(lines.s04.pip.atThreshold);
+        triggerPipLean();
       }, 850);
     }
   }
@@ -170,6 +191,7 @@ export function S04Industries() {
       firstEdgeFired.current = true;
       setTimeout(() => {
         setPipReaction(lines.s04.pip.afterFirstEdge);
+        triggerPipLean();
       }, 180);
     }
   }
@@ -204,28 +226,8 @@ export function S04Industries() {
 
   return (
     <div className="relative flex flex-col h-full">
-      {/* ════════ Pip — absolute top-right of the activity zone ════════ */}
-      <div className="absolute z-30 pointer-events-none" style={{ top: 4, right: 4 }}>
-        <PipSprite emotion={pipEmotion} color={PIP_COLOR} size={48} />
-      </div>
-
-      {/* Pip floating reaction bubble — slides in to the LEFT of the sprite.
-          Absolutely positioned, so it sits outside the flex-column stack and
-          doesn't steal vertical space. */}
-      <AnimatePresence>
-        {pipReaction && (
-          <PipFloatingBubble
-            key={pipReaction}
-            text={pipReaction}
-            color={PIP_COLOR}
-            onComplete={() => setPipReaction(null)}
-          />
-        )}
-      </AnimatePresence>
-
       {/* ════════ [A] Filter strip — 36px wavelength bar ════════ */}
-      {/* pr-14 reserves Pip's top-right airspace (~56px) */}
-      <div className="shrink-0 h-9 flex overflow-x-auto scrollbar-none rounded-lg border border-white/5 bg-white/[0.02] pr-14">
+      <div className="shrink-0 h-9 flex overflow-x-auto scrollbar-none rounded-lg border border-white/5 bg-white/[0.02]">
         {CATEGORIES.map((c, i) => {
           const active = activeCategory === c.id;
           return (
@@ -262,8 +264,7 @@ export function S04Industries() {
       </div>
 
       {/* ════════ [B] Counter + undo — 24px ════════ */}
-      {/* pr-14 matches the filter strip — keeps text out of Pip's column */}
-      <div className="shrink-0 h-6 flex items-center justify-between pl-1 pr-14 text-[10px] font-mono uppercase tracking-wider">
+      <div className="shrink-0 h-6 flex items-center justify-between px-1 text-[10px] font-mono uppercase tracking-wider">
         <span className="text-ivory/40">
           {totalSeen} of {INDUSTRIES.length} · {industriesKept.length} kept
           {industriesEdged.length > 0 && ` · ${industriesEdged.length} edged`}
@@ -280,6 +281,34 @@ export function S04Industries() {
 
       {/* ════════ [C] Card zone — flex-1, floating action circles overlaid ════════ */}
       <div className="flex-1 relative min-h-0 pt-3 pb-1.5">
+        {/* Pip — anchored to the card's top-right corner. He extends above
+            the card slightly (top: -10) so he visually "leans on its shoulder."
+            The pointer-events-none wrapper lets swipes still reach the card. */}
+        <div
+          className="absolute z-30 pointer-events-none"
+          style={{ top: -10, right: 12 }}
+        >
+          <motion.div
+            animate={pipLeaning ? { rotate: -8, x: -4 } : { rotate: 0, x: 0 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+          >
+            <PipSprite emotion={pipEmotion} color={PIP_COLOR} size={52} />
+          </motion.div>
+        </div>
+
+        {/* Pip floating reaction bubble — slides in from Pip's left with a
+            dotted connective line so the reaction reads as HIS reaction. */}
+        <AnimatePresence>
+          {pipReaction && (
+            <PipFloatingBubble
+              key={pipReaction}
+              text={pipReaction}
+              color={PIP_COLOR}
+              onComplete={() => setPipReaction(null)}
+            />
+          )}
+        </AnimatePresence>
+
         <AnimatePresence mode="popLayout">
           {!currentCard && (
             <motion.div
@@ -342,11 +371,13 @@ export function S04Industries() {
             disabled={!currentCard}
             data-testid="action-pass"
             aria-label="Pass"
-            className="pointer-events-auto w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-md border-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="pointer-events-auto w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             style={{
-              background: 'rgba(12,14,18,0.62)',
-              borderColor: 'rgba(244,63,94,0.55)',
-              boxShadow: '0 4px 16px rgba(244,63,94,0.25)',
+              background: 'rgba(12,14,18,0.35)',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+              borderColor: 'rgba(244,63,94,0.45)',
+              boxShadow: '0 4px 16px rgba(244,63,94,0.22)',
             }}
           >
             <span className="text-[22px] text-rose-400 font-bold leading-none">✕</span>
@@ -358,13 +389,15 @@ export function S04Industries() {
             disabled={!edgeAvailable || !currentCard}
             data-testid="action-edge"
             aria-label="Edge"
-            className={`pointer-events-auto relative w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-md border-2 transition-colors ${
+            className={`pointer-events-auto relative w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors ${
               edgeAvailable && currentCard ? '' : 'opacity-40 cursor-not-allowed'
             }`}
             style={{
-              background: 'rgba(12,14,18,0.62)',
-              borderColor: edgeAvailable ? 'rgba(212,168,67,0.70)' : 'rgba(255,255,255,0.15)',
-              boxShadow: edgeAvailable ? '0 4px 16px rgba(212,168,67,0.30)' : 'none',
+              background: 'rgba(12,14,18,0.35)',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+              borderColor: edgeAvailable ? 'rgba(212,168,67,0.55)' : 'rgba(255,255,255,0.15)',
+              boxShadow: edgeAvailable ? '0 4px 16px rgba(212,168,67,0.28)' : 'none',
             }}
           >
             <span className="text-[22px] leading-none" style={{ color: '#D4A843' }}>★</span>
@@ -388,11 +421,13 @@ export function S04Industries() {
             disabled={!currentCard}
             data-testid="action-keep"
             aria-label="Keep"
-            className="pointer-events-auto w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-md border-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="pointer-events-auto w-14 h-14 rounded-full flex items-center justify-center border-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             style={{
-              background: 'rgba(12,14,18,0.62)',
-              borderColor: 'rgba(52,211,153,0.60)',
-              boxShadow: '0 4px 16px rgba(52,211,153,0.30)',
+              background: 'rgba(12,14,18,0.35)',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+              borderColor: 'rgba(52,211,153,0.50)',
+              boxShadow: '0 4px 16px rgba(52,211,153,0.28)',
             }}
           >
             <span className="text-[22px] text-emerald-400 font-bold leading-none">✓</span>
