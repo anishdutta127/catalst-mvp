@@ -10,7 +10,8 @@ import housesRaw from '@/content/houses.json';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { IdeaDossier } from '@/components/ui/IdeaDossier';
 import { MysticVaultCard } from '@/components/ui/MysticVaultCard';
-import { useAmbientPipLine } from '@/lib/ambient-pip';
+import { PipWithPoof } from '@/components/characters/PipWithPoof';
+import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
 
 /**
  * S09 — Ideas Revealed (Batch 3 rebuild).
@@ -90,9 +91,24 @@ export function S09Ideas() {
 
   const [mode, setMode] = useState<'grid' | 'dossier'>('grid');
   const [activeIdeaId, setActiveIdeaId] = useState<string | null>(null);
+  const [pipReaction, setPipReaction] = useState<string | null>(null);
   const dialogueSent = useRef(false);
+  const ambientFiredRef = useRef(false);
 
-  useAmbientPipLine('s09');
+  // Ambient Pip dwell line — local state (not messageQueue) because
+  // PipFloater is hidden on s09 (screenOwnsPip). Fires once at 15s if the
+  // user hasn't already crowned anything.
+  useEffect(() => {
+    if (ambientFiredRef.current) return;
+    const bank = lines.ambientPip.s09;
+    if (!bank || bank.length === 0) return;
+    const t = setTimeout(() => {
+      if (ambientFiredRef.current) return;
+      ambientFiredRef.current = true;
+      setPipReaction(bank[Math.floor(Math.random() * bank.length)]);
+    }, 15000);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     if (!matchedIdeas) { goToScreen('s08'); return; }
@@ -102,7 +118,10 @@ export function S09Ideas() {
     if (dialogueSent.current || !matchedIdeas) return;
     dialogueSent.current = true;
     enqueueMessage({ speaker: 'cedric', text: lines.s09.cedric.reveal1, type: 'dialogue' });
-    setTimeout(() => enqueueMessage({ speaker: 'pip', text: lines.s09.pip.reveal, type: 'dialogue' }), 2000);
+    // Pip's reveal routes to LOCAL pipReaction — PipFloater is hidden on s09
+    // (screenOwnsPip), so an enqueueMessage here would silently disappear.
+    const t = setTimeout(() => setPipReaction(lines.s09.pip.reveal), 2000);
+    return () => clearTimeout(t);
   }, [enqueueMessage, matchedIdeas]);
 
   if (!matchedIdeas) return null;
@@ -232,12 +251,42 @@ export function S09Ideas() {
   // GRID MODE — 3 idea preview cards
   // ─────────────────────────────────────────────────
   return (
-    <div className="flex flex-col h-full gap-4" data-testid="s09-grid-mode">
-      <div className="flex-1 overflow-y-auto space-y-3 pb-2">
+    <div className="flex flex-col h-full gap-4 relative" data-testid="s09-grid-mode">
+      {/* Pip — top-right, above the cards. The pt-14 on the grid below
+          reserves dedicated airspace for him so the bubble doesn't clash
+          with the first idea card. */}
+      <div
+        className="absolute z-30 pointer-events-none"
+        style={{ top: 0, right: 12 }}
+      >
+        <PipWithPoof
+          emotion="glow"
+          color="#4ade80"
+          size={48}
+          enterDelay={1200}
+          visible={true}
+        />
+      </div>
+
+      {/* Pip reaction bubble — slides in from the LEFT of the sprite */}
+      <AnimatePresence>
+        {pipReaction && (
+          <PipFloatingBubble
+            key={pipReaction}
+            text={pipReaction}
+            color="#4ade80"
+            direction="top-right"
+            onComplete={() => setPipReaction(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <div className="flex-1 overflow-y-auto space-y-3 pb-2 pt-14">
         {/* Idea preview cards — stack on mobile, grid on ≥640. Cards reveal
             one-at-a-time with a spring (180ms stagger) so the three matches
-            feel like a constellation being named, not a list dropped in. */}
-        <div className="flex flex-col sm:flex-row gap-3">
+            feel like a constellation being named, not a list dropped in.
+            min-h gives each card real breathing room so content isn't cramped. */}
+        <div className="flex flex-col sm:flex-row gap-4">
           {ideas.map(({ scored, tier }, idx) => {
             const isCrowned = crownedIdeaId === scored.idea.idea_id;
             const meta = TIER_META[tier];
@@ -262,7 +311,7 @@ export function S09Ideas() {
                 whileTap={{ scale: 0.99 }}
                 onClick={() => openDossier(scored.idea.idea_id)}
                 data-testid={`idea-card-${tier}`}
-                className="flex-1 rounded-2xl overflow-hidden text-left group cursor-pointer relative"
+                className="flex-1 min-h-[280px] sm:min-h-[320px] rounded-2xl overflow-hidden text-left group cursor-pointer relative"
                 style={{
                   background: `linear-gradient(160deg, ${meta.colorDim}35 0%, rgba(20,23,30,0.96) 55%, rgba(12,14,18,0.98) 100%)`,
                   border: `1px solid ${isCrowned ? 'rgba(212,168,67,0.70)' : `${meta.color}35`}`,

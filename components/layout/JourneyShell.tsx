@@ -40,9 +40,11 @@ export function JourneyShell({
   // activity zone. The shell suppresses the default PipFloater for these so
   // we never get two Pips visible at once.
   //   s04 — Pip on the card's top-right corner
-  //   s07 — Pip anchored bottom-right above the CTA (chronicle card hero
-  //         headline takes the top half; Pip would collide there)
-  const screenOwnsPip = currentScreen === 's04' || currentScreen === 's07';
+  //   s07 — Pip anchored bottom-right above the CTA
+  //   s09 — Pip top-right above the idea cards (cards would collide with
+  //         the default PipFloater position otherwise)
+  const screenOwnsPip =
+    currentScreen === 's04' || currentScreen === 's07' || currentScreen === 's09';
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-dark flex flex-col">
