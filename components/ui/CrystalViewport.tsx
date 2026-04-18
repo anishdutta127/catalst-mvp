@@ -72,17 +72,26 @@ function blendColors(hexColors: string[]): {
     { r: 0, g: 0, b: 0 },
   );
 
-  const base = rgbToHex(blended.r, blended.g, blended.b);
+  // Warmth bias — averaging opposite hues (e.g. purple + teal) produces cold
+  // muddy tones. Pull the base slightly toward warm gold so the gem reads as
+  // friendly rather than clinical. Small lift in R, smaller lift in G, B
+  // untouched so cool orbs keep their character.
+  const warmth = 0.15;
+  const warmR = Math.min(255, blended.r + (255 - blended.r) * warmth * 0.3);
+  const warmG = Math.min(255, blended.g + (180 - blended.g) * warmth * 0.2);
+  const warmB = blended.b;
+
+  const base = rgbToHex(warmR, warmG, warmB);
   const primary = list[0];
   const balancing = list[list.length - 1];
 
-  // 70% balancing + 30% base — pulls the bottom of the gem toward the
+  // 70% balancing + 30% warm base — pulls the bottom of the gem toward the
   // "balancing" orb's hue without losing cohesion.
   const balRgb = hexToRgb(balancing);
   const lowAccent = rgbToHex(
-    balRgb.r * 0.7 + blended.r * 0.3,
-    balRgb.g * 0.7 + blended.g * 0.3,
-    balRgb.b * 0.7 + blended.b * 0.3,
+    balRgb.r * 0.7 + warmR * 0.3,
+    balRgb.g * 0.7 + warmG * 0.3,
+    balRgb.b * 0.7 + warmB * 0.3,
   );
 
   return {
@@ -421,12 +430,12 @@ function CrystalViewportImpl({
 
           {count === 2 && (
             <motion.g
-              key="v2"
+              key="v2-growing-shard"
               initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: [0.5, 1.12, 1], opacity: 1 }}
+              animate={{ scale: [0.5, 1.1, 1], opacity: 1 }}
               exit={{ scale: 0.3, opacity: 0 }}
               transition={{
-                duration: 0.75,
+                duration: 0.7,
                 times: [0, 0.6, 1],
                 ease: [0.34, 1.56, 0.64, 1],
               }}
@@ -436,51 +445,49 @@ function CrystalViewportImpl({
               <motion.circle
                 cx={cx}
                 cy={cy}
-                r={W * 1.8}
+                r={W * 1.5}
                 fill={gemColors.base}
                 animate={{
-                  r: [W * 1.8, W * 2.2, W * 1.8],
-                  opacity: [0.18, 0.35, 0.18],
+                  r: [W * 1.5, W * 1.8, W * 1.5],
+                  opacity: [0.14, 0.28, 0.14],
                 }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
               />
-              {/* Left half — Dominant orb's warmer side */}
-              <polygon
-                points={leftHalfPoints}
-                fill="url(#cv-body-left)"
-                opacity="0.95"
-              />
-              {/* Right half — cooler shadow side */}
-              <polygon
-                points={rightHalfPoints}
-                fill="url(#cv-body-right)"
-                opacity="0.88"
-              />
-              {/* Crisp outline */}
-              <polygon
-                points={outlinePoints}
-                fill="none"
-                stroke={primaryColor}
-                strokeWidth="1"
-                opacity="0.75"
-              />
-              {/* Subtle vertical seam */}
-              <line
-                x1={gem.T.x}
-                y1={gem.T.y}
-                x2={gem.B.x}
-                y2={gem.B.y}
+              {/* Growing crystal shard — elongated ellipse aligned to the axis
+                  between the two selected orbs' ring positions. Replaces the
+                  earlier broken-triangle attempt which produced a jagged
+                  dotted outline in this intermediate state. */}
+              <motion.ellipse
+                cx={cx}
+                cy={cy}
+                rx={W * 0.55}
+                ry={H * 0.85}
+                fill={gemColors.midDark}
                 stroke={gemColors.midLight}
-                strokeWidth="0.5"
-                opacity="0.3"
+                strokeWidth="1"
+                animate={{
+                  opacity: [0.75, 0.9, 0.75],
+                }}
+                transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
               />
-              {/* Specular highlight near top */}
-              <polygon
-                points={`${gem.T.x},${gem.T.y} ${cx - W * 0.5},${cy - H * 0.45} ${cx - W * 0.1},${cy - H * 0.2}`}
+              <motion.ellipse
+                cx={cx}
+                cy={cy}
+                rx={W * 0.3}
+                ry={H * 0.55}
+                fill={gemColors.base}
+                opacity="0.5"
+              />
+              {/* Highlight sheen on the shard */}
+              <ellipse
+                cx={cx - W * 0.1}
+                cy={cy - H * 0.25}
+                rx={W * 0.12}
+                ry={H * 0.2}
                 fill="white"
                 opacity="0.35"
               />
-              {/* Accent beads at top (orb 0) and left waist (orb 1) */}
+              {/* Two orb accents — Dominant + Supporting */}
               <OrbAccent cx={gem.T.x} cy={gem.T.y} color={selectedColors[0]} size={6} />
               <OrbAccent cx={gem.WL.x} cy={gem.WL.y} color={selectedColors[1]} size={6} />
             </motion.g>
@@ -488,129 +495,127 @@ function CrystalViewportImpl({
 
           {count === 3 && (
             <motion.g
-              key="v3"
+              key="v3-diamond"
               initial={{ scale: 0, opacity: 0 }}
               animate={{
-                scale: celebrating ? [1, 1.18, 1.05] : [0, 1.1, 1],
+                scale: celebrating ? [1, 1.18, 1.05] : [0, 1.15, 1],
                 opacity: 1,
-                // Gentle float — replaces the old pinwheel rotation that made
-                // the gem look like a spinning logo instead of a real object.
-                y: celebrating ? 0 : [0, -2, 0],
               }}
               exit={{ scale: 0.7, opacity: 0 }}
               transition={{
                 scale: {
-                  duration: celebrating ? 1.4 : 0.85,
+                  duration: celebrating ? 1.4 : 0.9,
                   times: [0, 0.6, 1],
                   ease: [0.34, 1.56, 0.64, 1],
                 },
                 opacity: { duration: 0.4 },
-                y: { duration: 4.5, repeat: Infinity, ease: 'easeInOut' },
               }}
               style={{ transformOrigin: `${cx}px ${cy}px` }}
             >
-              {/* Breathing halo — blended color radiates outward */}
+              {/* Soft outer halo — gentler pulse than the 2-of-3 state */}
               <motion.circle
                 cx={cx}
                 cy={cy}
-                r={W * 1.7}
+                r={H * 1.8}
                 fill={gemColors.base}
                 animate={{
-                  r: [W * 1.7, W * 2.1, W * 1.7],
-                  opacity: [0.2, 0.42, 0.2],
+                  r: [H * 1.8, H * 2.1, H * 1.8],
+                  opacity: [0.14, 0.26, 0.14],
                 }}
-                transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{ duration: 3.0, repeat: Infinity, ease: 'easeInOut' }}
               />
 
-              {/* LEFT-HALF BODY — lit side (warmer top, soft deep base) */}
-              <polygon points={leftHalfPoints} fill="url(#cv-body-left)" />
-
-              {/* RIGHT-HALF BODY — shadow side (cooler, pulls toward orb 2) */}
-              <polygon points={rightHalfPoints} fill="url(#cv-body-right)" />
-
-              {/* Crisp outline stroke in the dominant orb's full color */}
-              <polygon
-                points={outlinePoints}
-                fill="none"
-                stroke={primaryColor}
-                strokeWidth="1.2"
-                opacity="0.85"
-              />
-
-              {/* Vertical seam — the two halves meeting */}
-              <line
-                x1={gem.T.x}
-                y1={gem.T.y}
-                x2={gem.B.x}
-                y2={gem.B.y}
-                stroke={gemColors.midLight}
-                strokeWidth="0.6"
-                opacity="0.32"
-              />
-
-              {/* Horizontal waist line */}
-              <line
-                x1={gem.WL.x}
-                y1={gem.WL.y}
-                x2={gem.WR.x}
-                y2={gem.WR.y}
-                stroke={gemColors.midLight}
-                strokeWidth="0.8"
-                opacity="0.45"
-              />
-
-              {/* Specular sheen — large soft triangle near top-left, like a
-                  reflection catching on the highest facet */}
-              <polygon
-                points={`${gem.T.x},${gem.T.y} ${cx - W * 0.55},${cy - H * 0.45} ${cx - W * 0.08},${cy - H * 0.15}`}
-                fill="white"
-                opacity="0.38"
-              />
-
-              {/* Shimmer gleam — animated bright line sweeping the gem.
-                  Clipped so it only shows inside the outline (reads as a
-                  reflection, not a passing line). */}
-              <g clipPath="url(#cv-gem-clip)">
-                <motion.line
-                  x1={cx - W * 1.3}
-                  y1={cy - H * 1.3}
-                  x2={cx - W * 0.9}
-                  y2={cy - H * 0.9}
-                  stroke="white"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  animate={{
-                    x1: [cx - W * 1.3, cx + W * 0.9],
-                    y1: [cy - H * 1.3, cy + H * 0.9],
-                    x2: [cx - W * 0.9, cx + W * 1.3],
-                    y2: [cy - H * 0.9, cy + H * 1.3],
-                    opacity: [0, 0.55, 0],
-                  }}
-                  transition={{
-                    duration: 3.6,
-                    repeat: Infinity,
-                    repeatDelay: 2.4,
-                    times: [0, 0.5, 1],
-                    ease: 'easeInOut',
-                  }}
+              {/* Rotating diamond group — slow Y-axis spin. Elegant gem
+                  rotation: appears to flatten at 90°/270° as the 3D
+                  rotateY projects onto the 2D plane, which reads as a real
+                  spinning diamond catching light from different angles. */}
+              <motion.g
+                animate={{ rotateY: 360 }}
+                transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+                style={{ transformOrigin: `${cx}px ${cy}px`, transformBox: 'fill-box' }}
+              >
+                {/* CROWN — top half of diamond, rounded edges for a softer
+                    silhouette than the old pointed facets */}
+                <path
+                  d={`M ${cx} ${cy - H} Q ${cx - W * 0.35} ${cy - H * 0.6} ${cx - W * 0.7} ${cy - H * 0.35} Q ${cx - W * 0.92} ${cy - H * 0.18} ${cx - W} ${cy} L ${cx + W} ${cy} Q ${cx + W * 0.92} ${cy - H * 0.18} ${cx + W * 0.7} ${cy - H * 0.35} Q ${cx + W * 0.35} ${cy - H * 0.6} ${cx} ${cy - H} Z`}
+                  fill={gemColors.midDark}
+                  stroke={gemColors.midLight}
+                  strokeWidth="1"
+                  strokeLinejoin="round"
                 />
-              </g>
 
-              {/* Three orb accents seated at T (Dominant), WL (Supporting),
-                  WR (Balancing). Small — they accent the gem without
-                  competing with its body. */}
-              <OrbAccent cx={gem.T.x} cy={gem.T.y} color={selectedColors[0]} size={7} />
-              <OrbAccent cx={gem.WL.x} cy={gem.WL.y} color={selectedColors[1]} size={6} />
-              <OrbAccent cx={gem.WR.x} cy={gem.WR.y} color={selectedColors[2]} size={6} />
+                {/* PAVILION — bottom half, pointed tip, curved sides */}
+                <path
+                  d={`M ${cx - W} ${cy} Q ${cx - W * 0.55} ${cy + H * 0.9} ${cx} ${cy + H * 1.2} Q ${cx + W * 0.55} ${cy + H * 0.9} ${cx + W} ${cy} Z`}
+                  fill={gemColors.midDark}
+                  stroke={gemColors.midLight}
+                  strokeWidth="1"
+                  strokeLinejoin="round"
+                />
 
-              {/* Inner pulsing core — crystal's heartbeat */}
+                {/* Crown facet shading — left facet darker, right lighter for
+                    volumetric feel */}
+                <path
+                  d={`M ${cx} ${cy - H} L ${cx - W * 0.7} ${cy - H * 0.35} L ${cx - W} ${cy} Z`}
+                  fill={gemColors.base}
+                  opacity="0.45"
+                />
+                <path
+                  d={`M ${cx} ${cy - H} L ${cx + W * 0.7} ${cy - H * 0.35} L ${cx + W} ${cy} Z`}
+                  fill={gemColors.midLight}
+                  opacity="0.35"
+                />
+
+                {/* Pavilion facet shading */}
+                <path
+                  d={`M ${cx - W} ${cy} L ${cx} ${cy + H * 1.2} L ${cx} ${cy} Z`}
+                  fill={gemColors.base}
+                  opacity="0.55"
+                />
+                <path
+                  d={`M ${cx} ${cy} L ${cx} ${cy + H * 1.2} L ${cx + W} ${cy} Z`}
+                  fill={gemColors.midLight}
+                  opacity="0.4"
+                />
+
+                {/* Girdle — the waist line between crown and pavilion */}
+                <line
+                  x1={cx - W}
+                  y1={cy}
+                  x2={cx + W}
+                  y2={cy}
+                  stroke={gemColors.midLight}
+                  strokeWidth="0.8"
+                  opacity="0.6"
+                />
+
+                {/* Sparkle highlight ellipse on crown (tilted, off-center) */}
+                <ellipse
+                  cx={cx - W * 0.2}
+                  cy={cy - H * 0.5}
+                  rx={W * 0.15}
+                  ry={H * 0.28}
+                  fill="white"
+                  opacity="0.35"
+                  transform={`rotate(-15 ${cx - W * 0.2} ${cy - H * 0.5})`}
+                />
+
+                {/* Three orb accents — at Dominant (top), Supporting (girdle
+                    left), Balancing (girdle right) */}
+                <OrbAccent cx={cx} cy={cy - H} color={selectedColors[0]} size={7} />
+                <OrbAccent cx={cx - W} cy={cy} color={selectedColors[1]} size={6} />
+                <OrbAccent cx={cx + W} cy={cy} color={selectedColors[2]} size={6} />
+              </motion.g>
+
+              {/* Pulsing white core — stays centered (doesn't rotate with the
+                  diamond) so it reads as the gem's steady heartbeat */}
               <motion.circle
                 cx={cx}
                 cy={cy}
                 r={4}
                 fill="white"
                 animate={{
-                  opacity: [0.55, 0.95, 0.55],
+                  opacity: [0.65, 1, 0.65],
                   r: celebrating ? [4, 9, 4] : [3, 6, 3],
                 }}
                 transition={{
@@ -727,7 +732,10 @@ function OrbButtonImpl({
       aria-label={`${orb.id} — ${orb.label}${isSelected ? ` (selected position ${selectedIdx + 1})` : ''}`}
       whileTap={disabled ? undefined : { scale: 0.88 }}
       animate={{
-        opacity: isFaded ? 0.22 : 1,
+        // Dim unselected orbs so they don't compete with the crystal — the
+        // chosen ones stay bright, unpicked dock orbs recede to a quieter
+        // 0.5. Once the crystal is full, unselected fade further (0.22).
+        opacity: isFaded ? 0.22 : isSelected ? 1 : 0.5,
       }}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="absolute flex flex-col items-center gap-1 cursor-pointer disabled:cursor-not-allowed"
