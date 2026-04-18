@@ -49,6 +49,23 @@ const CATEGORIES: ReadonlyArray<{ label: string; id: string | null; tint: string
 
 const INDUSTRIES = industriesRaw as unknown as IndustryCardData[];
 
+/**
+ * Pick an idle-dwell line for the given industry card. Industry-specific bank
+ * first, general fallback if nothing matches. Picks randomly inside the bank
+ * on every call so repeat hits on the same industry won't feel scripted.
+ */
+function pickIdleLine(card: IndustryCardData): string | null {
+  const byInd = lines.s04.pip.idleByIndustry[card.id];
+  if (byInd && byInd.length > 0) {
+    return byInd[Math.floor(Math.random() * byInd.length)];
+  }
+  const general = lines.s04.pip.idleGeneral;
+  if (general && general.length > 0) {
+    return general[Math.floor(Math.random() * general.length)];
+  }
+  return null;
+}
+
 export function S04Industries() {
   const industriesKept   = useJourneyStore((s) => s.industriesKept);
   const industriesPassed = useJourneyStore((s) => s.industriesPassed);
@@ -67,12 +84,20 @@ export function S04Industries() {
   // Pip physically leans toward the card when he reacts. Auto-resets after
   // ~900ms so the sprite returns to its neutral pose between beats.
   const [pipLeaning, setPipLeaning] = useState(false);
+  // Delay Pip's entry so he materializes AFTER the first card has settled
+  // and Cedric's bubble is visible. Animated via AnimatePresence below.
+  const [pipMounted, setPipMounted] = useState(false);
   const dialogueSent = useRef(false);
   const hasPulsed = useRef(false);
   const firstKeepFired = useRef(false);
   const firstEdgeFired = useRef(false);
   const thresholdFired = useRef(false);
   const leanTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Per-card dwell timer: fires an idle Pip line if the user sits for 12s
+  // without swiping. idleFiredForCard tracks which cards have already fired
+  // so a returning user doesn't get the same idle beat twice.
+  const dwellTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const idleFiredForCard = useRef<Set<string>>(new Set());
 
   // Lean Pip toward the card center when a reaction fires. Cleans up on
   // unmount and gets re-armed on every call.
@@ -82,9 +107,20 @@ export function S04Industries() {
     leanTimer.current = setTimeout(() => setPipLeaning(false), 900);
   }
 
+  // Pip enters ~1.2s after screen mount — lands after the first card has
+  // settled and Cedric's intro has started streaming.
+  useEffect(() => {
+    const t = setTimeout(() => setPipMounted(true), 1200);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Final cleanup on screen unmount — stops any pending timers so idle
+  // lines never fire after the user has moved on to S06.
   useEffect(() => {
     return () => {
       if (leanTimer.current) clearTimeout(leanTimer.current);
+      if (dwellTimer.current) clearTimeout(dwellTimer.current);
+      idleFiredForCard.current.clear();
     };
   }, []);
 
@@ -131,6 +167,27 @@ export function S04Industries() {
   const totalSeen = industriesKept.length + industriesPassed.length + industriesEdged.length;
   const edgeAvailable = industriesEdged.length < MAX_EDGES;
   const canContinue = industriesKept.length >= MIN_KEEPS_TO_CONTINUE;
+
+  // Idle-dwell timer — fires a Pip line after 12s on a single card without
+  // a swipe. Re-armed every time the card changes; skips cards that have
+  // already fired so the same beat doesn't repeat on an undo loop.
+  useEffect(() => {
+    if (dwellTimer.current) clearTimeout(dwellTimer.current);
+    if (!currentCard) return;
+    if (idleFiredForCard.current.has(currentCard.id)) return;
+    const cardForTimer = currentCard;
+    dwellTimer.current = setTimeout(() => {
+      const line = pickIdleLine(cardForTimer);
+      if (line) {
+        setPipReaction(line);
+        triggerPipLean();
+        idleFiredForCard.current.add(cardForTimer.id);
+      }
+    }, 12000);
+    return () => {
+      if (dwellTimer.current) clearTimeout(dwellTimer.current);
+    };
+  }, [currentCard]);
 
   // Pip emotion — mirrors the last beat so the sprite "reacts" alongside the
   // floating bubble. idle before any action, wideeye on edge, glow once we
@@ -283,18 +340,28 @@ export function S04Industries() {
       <div className="flex-1 relative min-h-0 pt-3 pb-1.5">
         {/* Pip — anchored to the card's top-right corner. He extends above
             the card slightly (top: -10) so he visually "leans on its shoulder."
-            The pointer-events-none wrapper lets swipes still reach the card. */}
-        <div
-          className="absolute z-30 pointer-events-none"
-          style={{ top: -10, right: 12 }}
-        >
-          <motion.div
-            animate={pipLeaning ? { rotate: -8, x: -4 } : { rotate: 0, x: 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 18 }}
-          >
-            <PipSprite emotion={pipEmotion} color={PIP_COLOR} size={52} />
-          </motion.div>
-        </div>
+            Entry animation drops him in 1.2s after screen mount so he
+            materializes intentionally instead of popping. */}
+        <AnimatePresence>
+          {pipMounted && (
+            <motion.div
+              key="pip-sprite"
+              className="absolute z-30 pointer-events-none"
+              style={{ top: -10, right: 12 }}
+              initial={{ opacity: 0, y: -16, scale: 0.6 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ type: 'spring', stiffness: 260, damping: 18 }}
+            >
+              <motion.div
+                animate={pipLeaning ? { rotate: -8, x: -4 } : { rotate: 0, x: 0 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+              >
+                <PipSprite emotion={pipEmotion} color={PIP_COLOR} size={52} />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Pip floating reaction bubble — slides in from Pip's left with a
             dotted connective line so the reaction reads as HIS reaction. */}

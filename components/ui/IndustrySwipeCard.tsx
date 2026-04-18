@@ -94,6 +94,32 @@ function hashString(s: string): number {
  * market size + CAGR we already store. If either is missing, returns []
  * and the sparkline won't render.
  */
+/**
+ * FlipIcon — two small arrows pointing at each other, with a gap between.
+ * Reads as "flip between two sides" (unlike ↻ which reads as "refresh").
+ * Sized inline via the `size` prop; color inherits from its container.
+ */
+function FlipIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      style={{ color: 'rgba(255,255,255,0.75)' }}
+    >
+      <path
+        d="M3 5 L1 7 L3 9 M1 7 L6 7 M11 5 L13 7 L11 9 M13 7 L8 7"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function synthGrowthSeries(
   marketSizeB: number | undefined,
   cagrPct: number | undefined,
@@ -313,6 +339,9 @@ export function IndustrySwipeCard({
               backfaceVisibility: 'hidden',
               WebkitBackfaceVisibility: 'hidden',
               boxShadow: `0 14px 44px -10px ${color}80, 0 0 0 1px ${color}30`,
+              // Only the visible face gets pointer events so the hidden face's
+              // flip button can't be clicked through the 3D stack.
+              pointerEvents: flipped ? 'none' : 'auto',
             }}
           >
             {/* ─── HERO — logo left, text right ─── */}
@@ -373,7 +402,7 @@ export function IndustrySwipeCard({
               }}
             >
               {/* HOOK — italic tagline */}
-              <div className="flex items-center px-5 py-2">
+              <div className="flex items-center px-5 pt-[14px] pb-2">
                 {hookText && (
                   <p className="text-[13px] italic text-ivory/85 leading-snug line-clamp-2">
                     {hookText}
@@ -383,7 +412,7 @@ export function IndustrySwipeCard({
 
               {/* WITTY PROMPT #1 */}
               {frontPrompt && (
-                <div className="flex items-start gap-2 px-5 py-2.5 border-y border-white/5">
+                <div className="flex items-start gap-2 px-5 py-3 border-y border-white/5">
                   <p
                     className="text-[9px] font-mono uppercase text-gold/60 mt-0.5 shrink-0 w-[76px] leading-[1.3]"
                     style={{ letterSpacing: '0.18em' }}
@@ -398,7 +427,7 @@ export function IndustrySwipeCard({
 
               {/* BENTO — auto height now that parent scrolls */}
               <div
-                className="grid gap-2 px-4 pt-3 pb-2"
+                className="grid gap-2.5 px-5 pt-[14px] pb-2"
                 style={{ gridTemplateColumns: '1fr 1fr' }}
               >
                 {/* TILE A — 💡 OPPORTUNITY */}
@@ -508,7 +537,7 @@ export function IndustrySwipeCard({
 
               {/* QUICK STATS ROW — 3 mini tiles, only when we have data */}
               {industry.quick_stats && (
-                <div className="grid grid-cols-3 gap-1.5 px-5 pt-1 pb-3">
+                <div className="grid grid-cols-3 gap-2 px-5 pt-[14px] pb-3">
                   {industry.quick_stats.three_year_growth_pct !== undefined && (
                     <div
                       className="rounded-lg px-2 py-1.5 text-center min-w-0"
@@ -577,8 +606,9 @@ export function IndustrySwipeCard({
                 </div>
               )}
 
-              {/* Bottom spacer — keeps real content above the mask fade */}
-              <div className="h-20" aria-hidden />
+              {/* Bottom spacer — keeps real content from ending behind the
+                  floating action circles during a deep scroll. */}
+              <div className="h-[120px]" aria-hidden />
             </div>
 
             {/* Scroll hint — bottom-center, fades on first scroll */}
@@ -606,20 +636,25 @@ export function IndustrySwipeCard({
               )}
             </AnimatePresence>
 
-            {/* Flip corner icon — replaces the old text footer */}
+            {/* Flip corner icon — replaces the old text footer. zIndex 50
+                puts it above the floating action circles (zIndex 20) that
+                live in the parent S04 card zone. */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setFlipped(true);
+                e.preventDefault();
+                setFlipped((f) => !f);
               }}
-              className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform hover:scale-110"
+              onPointerDown={(e) => e.stopPropagation()}
+              className="absolute bottom-3 right-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform hover:scale-110"
               style={{
+                zIndex: 50,
                 background: 'rgba(12,14,18,0.50)',
                 border: '1px solid rgba(255,255,255,0.15)',
               }}
               aria-label="Flip card for the deeper read"
             >
-              <span className="text-[14px] text-white/75 leading-none">↻</span>
+              <FlipIcon />
             </button>
           </div>
 
@@ -632,6 +667,9 @@ export function IndustrySwipeCard({
               WebkitBackfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
               boxShadow: `0 14px 44px -10px ${color}80, 0 0 0 1px ${color}30`,
+              // Only the visible face gets pointer events so flip-back clicks
+              // actually reach the button inside this face.
+              pointerEvents: flipped ? 'auto' : 'none',
             }}
           >
             {/* Header strip */}
@@ -698,7 +736,7 @@ export function IndustrySwipeCard({
 
             {/* 5-zone body */}
             <div
-              className="flex-1 overflow-y-auto scrollbar-hide px-5 py-4 space-y-4 min-h-0"
+              className="flex-1 overflow-y-auto scrollbar-hide px-5 pt-4 pb-[120px] space-y-[14px] min-h-0"
               style={{ touchAction: 'pan-y' }}
             >
               {/* 1. AI disruption angle — full */}
@@ -797,20 +835,26 @@ export function IndustrySwipeCard({
               )}
             </div>
 
-            {/* Flip-back corner icon — replaces the old text footer */}
+            {/* Flip-back corner icon — zIndex 50 so the click actually
+                registers above anything else layered on the card. Uses
+                onPointerDown stopPropagation in addition to onClick to
+                prevent Framer Motion's drag from eating the event. */}
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setFlipped(false);
+                e.preventDefault();
+                setFlipped((f) => !f);
               }}
-              className="absolute bottom-3 left-3 z-10 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform hover:scale-110"
+              onPointerDown={(e) => e.stopPropagation()}
+              className="absolute bottom-3 left-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform hover:scale-110"
               style={{
+                zIndex: 50,
                 background: 'rgba(12,14,18,0.50)',
                 border: '1px solid rgba(255,255,255,0.15)',
               }}
               aria-label="Back to pitch"
             >
-              <span className="text-[14px] text-white/75 leading-none">↺</span>
+              <FlipIcon />
             </button>
           </div>
         </motion.div>

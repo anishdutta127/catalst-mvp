@@ -125,6 +125,71 @@ export const lines = {
       afterFirstEdge: 'Whoa — an obsession. Only two of those allowed.',
       atThreshold: 'You could stop here. Or keep going and find the OBSESSIONS.',
       afterAll: 'I wanted to edge ALL of them. Cedric said that \'defeats the purpose.\' Whatever that means.',
+      // Idle-dwell bank — one fires if the user sits on a card for 12s without
+      // swiping. Industry-specific first, general fallback if no match.
+      idleByIndustry: {
+        ai_ml: [
+          'Still reading? The model finished training already.',
+          'At this rate, GPT-7 will ship before you swipe.',
+        ],
+        health_wellness: [
+          'Don\'t think too long — you\'ll lose a healthspan year.',
+          'Your smart ring is judging this dwell time.',
+        ],
+        creator_media: [
+          'Attention spans are 8 seconds now. What\'s yours?',
+          'You could\'ve made a Reel in the time you\'ve been staring.',
+        ],
+        finance_payments: [
+          'Compound interest waits for no one.',
+          'Every second you read, Razorpay processes ₹50 crore.',
+        ],
+        education_learning: [
+          'You\'re literally learning about learning right now.',
+          'Khan Academy finished explaining this 3 times over.',
+        ],
+        food_agriculture: [
+          'A startup just raised a seed round in the time you\'ve been here.',
+          'Somewhere, a tomato has ripened.',
+        ],
+        climate_energy: [
+          'The planet doesn\'t have time for this.',
+          'A solar panel generated 3Wh while you were staring.',
+        ],
+        gaming_entertainment: [
+          'This card has been watching you for longer than most NPCs.',
+          'Achievement unlocked: Dwell Time +100.',
+        ],
+        fashion_beauty: [
+          'The trend cycle is shorter than your reading time.',
+          'In the time you took, Foxtale dropped 2 new SKUs.',
+        ],
+        sports_fitness: [
+          'You\'ve burned 0.6 calories reading this. Keep scrolling for a workout.',
+        ],
+        community_social: [
+          'Real communities keep moving. Swipe or join.',
+        ],
+        real_estate_home: [
+          'While you read, rent in Bangalore went up 4%.',
+        ],
+        logistics_mobility: [
+          'Zepto could\'ve delivered groceries in the time you took.',
+        ],
+        legal_compliance: [
+          'Even lawyers are faster than this. Well. Some of them.',
+        ],
+        hardware_robotics: [
+          'A Figure robot folded 80 shirts while you decided.',
+        ],
+      } as Record<string, string[]>,
+      idleGeneral: [
+        'Still reading? The garden\'s patient. I\'m less so.',
+        'Cedric says "the best founders decide fast." I\'m just passing that along.',
+        'Window shopping the future? Me too honestly.',
+        'This card isn\'t going anywhere. But the founders of this space are.',
+        'I\'d make a joke but you\'ve been reading for a while.',
+      ] as string[],
     },
   },
 
