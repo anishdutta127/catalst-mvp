@@ -186,15 +186,32 @@ export function S11Profile() {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease: easeOvershoot }}
         >
-          <motion.div
-            className="rounded-3xl p-[2px]"
-            style={{
-              background: `conic-gradient(from 0deg, ${houseColor}, ${houseColor}aa, #ffffff22, ${houseColor}, ${houseColor})`,
-            }}
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-          >
-            <div className="rounded-[22px] bg-black/75 backdrop-blur-md p-4 sm:p-5 aspect-[9/16] relative overflow-hidden">
+          {/* Border stays STILL — a rotating conic read as busy on a share
+              artifact. Instead we breathe a glow halo around the card so it
+              feels alive without the motion distracting from the content. */}
+          <div className="relative rounded-3xl p-[2px]">
+            {/* Breathing halo — sits BEHIND the border, blurs out past the
+                card edge. Pulses opacity + spread so the card reads "lit"
+                rather than "spinning." Matches the pattern of the Forge
+                Crystal CTA's boxShadow pulse (S06). */}
+            <motion.div
+              aria-hidden
+              className="absolute -inset-2 rounded-[26px] pointer-events-none"
+              style={{
+                background: `radial-gradient(circle at 50% 50%, ${houseColor}55, ${houseColor}00 70%)`,
+                filter: 'blur(14px)',
+              }}
+              animate={{ opacity: [0.45, 0.85, 0.45], scale: [1, 1.04, 1] }}
+              transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            {/* Static holographic border — conic fill, no rotation. */}
+            <div
+              className="absolute inset-0 rounded-3xl pointer-events-none"
+              style={{
+                background: `conic-gradient(from 140deg, ${houseColor}, ${houseColor}aa, #ffffff22, ${houseColor}, ${houseColor})`,
+              }}
+            />
+            <div className="relative rounded-[22px] bg-black/75 backdrop-blur-md p-4 sm:p-5 aspect-[9/16] overflow-hidden">
               {/* Row 1: house label + rarity tier */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -281,7 +298,7 @@ export function S11Profile() {
                 </span>
               </div>
             </div>
-          </motion.div>
+          </div>
         </motion.div>
 
         {/* ══════════ QUICK SHARE ROW ══════════════════════════════════ */}
