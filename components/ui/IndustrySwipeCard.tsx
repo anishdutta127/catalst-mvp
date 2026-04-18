@@ -78,9 +78,6 @@ interface IndustrySwipeCardProps {
   industry: IndustryCardData;
   onPass: () => void;
   onKeep: () => void;
-  onEdge: () => void;
-  edgeAvailable: boolean;
-  edgesUsed: number;
   cardKey: string | number;
 }
 
@@ -181,12 +178,10 @@ export function IndustrySwipeCard({
   industry,
   onPass,
   onKeep,
-  onEdge,
-  edgeAvailable,
   cardKey,
 }: IndustrySwipeCardProps) {
   const [flipped, setFlipped] = useState(false);
-  const [exitDirection, setExitDirection] = useState<'left' | 'right' | 'up' | null>(null);
+  const [exitDirection, setExitDirection] = useState<'left' | 'right' | null>(null);
   // Scroll hint — shown on mount, fades on first scroll. Re-armed each time
   // the card flips back to the front.
   const [scrollHintVisible, setScrollHintVisible] = useState(true);
@@ -195,11 +190,9 @@ export function IndustrySwipeCard({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const x = useMotionValue(0);
-  const y = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-15, 15]);
   const passOpacity = useTransform(x, [-120, -40], [1, 0]);
   const keepOpacity = useTransform(x, [40, 120], [0, 1]);
-  const edgeOpacity = useTransform(y, [-120, -40], [1, 0]);
 
   const color = industry.color_primary || '#D4A843';
   const colorDark = industry.color_secondary || '#78350F';
@@ -271,7 +264,7 @@ export function IndustrySwipeCard({
   }, [flipped]);
 
   function handleDragEnd(_: unknown, info: { offset: { x: number; y: number } }) {
-    const { x: dx, y: dy } = info.offset;
+    const { x: dx } = info.offset;
     const SWIPE_THRESHOLD = 100;
     if (dx < -SWIPE_THRESHOLD) {
       setExitDirection('left');
@@ -279,12 +272,8 @@ export function IndustrySwipeCard({
     } else if (dx > SWIPE_THRESHOLD) {
       setExitDirection('right');
       setTimeout(onKeep, 200);
-    } else if (dy < -SWIPE_THRESHOLD && edgeAvailable) {
-      setExitDirection('up');
-      setTimeout(onEdge, 200);
     } else {
       x.set(0);
-      y.set(0);
     }
   }
 
@@ -292,7 +281,6 @@ export function IndustrySwipeCard({
     ? {
         left: { x: -500, opacity: 0, rotate: -25 },
         right: { x: 500, opacity: 0, rotate: 25 },
-        up: { y: -500, opacity: 0, scale: 0.9 },
       }[exitDirection]
     : undefined;
 
@@ -302,11 +290,11 @@ export function IndustrySwipeCard({
   return (
     <motion.div
       key={cardKey}
-      drag
-      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
+      drag="x"
+      dragConstraints={{ left: 0, right: 0 }}
       dragElastic={0.7}
       onDragEnd={handleDragEnd}
-      style={{ x, y, rotate, touchAction: 'none' }}
+      style={{ x, rotate }}
       initial={{ opacity: 0, scale: 0.92, y: 30 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={exitAnim}
@@ -322,11 +310,6 @@ export function IndustrySwipeCard({
       <motion.div style={{ opacity: keepOpacity }} className="absolute top-5 right-5 z-20 pointer-events-none">
         <div className="text-green-500 border-4 border-green-500 rounded-xl px-4 py-2 text-xl font-black tracking-widest rotate-[12deg]">
           KEEP
-        </div>
-      </motion.div>
-      <motion.div style={{ opacity: edgeOpacity }} className="absolute top-5 left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-        <div className="text-gold border-4 border-gold rounded-xl px-4 py-2 text-xl font-black tracking-widest">
-          ★ EDGE
         </div>
       </motion.div>
 

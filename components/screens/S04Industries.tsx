@@ -501,9 +501,6 @@ export function S04Industries() {
                 cardKey={currentCard.id}
                 onPass={handlePass}
                 onKeep={handleKeep}
-                onEdge={handleEdge}
-                edgeAvailable={edgeAvailable}
-                edgesUsed={industriesEdged.length}
               />
             </div>
           )}

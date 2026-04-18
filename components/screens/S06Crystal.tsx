@@ -90,7 +90,7 @@ export function S06Crystal() {
     .filter((o): o is OrbDef => Boolean(o));
 
   return (
-    <div className="flex flex-col h-full relative overflow-hidden">
+    <div className="flex flex-col min-h-full relative pb-4">
       {/* Instruction pill — sits ABOVE the viewport so it never collides
           with the central halo orb. Fades out once the user taps their
           first essence (the forming crystal is its own signal from then). */}
