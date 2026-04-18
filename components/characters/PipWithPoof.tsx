@@ -35,24 +35,26 @@ function PipWithPoofImpl({
 
   // Memoize the entry/exit configs so Framer doesn't think they "changed" on
   // every parent re-render — if the values aren't stable the entry animation
-  // can re-fire and read as a flicker.
-  const sparkleInitial = useMemo(() => ({ opacity: 0, scale: 0.3 }), []);
-  const sparkleAnim = useMemo(() => ({ opacity: [0, 1, 0], scale: [0.3, 1.6, 2] }), []);
+  // can re-fire and read as a flicker. Tuned softer than before so Pip's
+  // arrivals feel gentle and inviting rather than energetic/snappy.
+  const sparkleInitial = useMemo(() => ({ opacity: 0, scale: 0.4 }), []);
+  const sparkleAnim = useMemo(() => ({ opacity: [0, 0.85, 0], scale: [0.4, 1.5, 2] }), []);
   const sparkleExit = useMemo(() => ({ opacity: 0 }), []);
   const sparkleTrans = useMemo(
-    () => ({ duration: 0.55, times: [0, 0.3, 1], delay: delaySec }),
+    () => ({ duration: 0.75, times: [0, 0.35, 1], delay: delaySec, ease: 'easeOut' as const }),
     [delaySec],
   );
 
-  const pipInitial = useMemo(() => ({ opacity: 0, scale: 0 }), []);
-  const pipAnim = useMemo(() => ({ opacity: 1, scale: [0, 1.2, 1] }), []);
-  const pipExit = useMemo(() => ({ opacity: 0, scale: 0 }), []);
+  const pipInitial = useMemo(() => ({ opacity: 0, scale: 0.2 }), []);
+  // Gentler overshoot — blows past 1 by ~10% instead of 20%, settles soft.
+  const pipAnim = useMemo(() => ({ opacity: 1, scale: [0.2, 1.08, 1] }), []);
+  const pipExit = useMemo(() => ({ opacity: 0, scale: 0.4 }), []);
   const pipTrans = useMemo(
     () => ({
-      duration: 0.5,
-      times: [0, 0.65, 1],
-      // Gentle elastic overshoot — scale blows past 1, settles back to 1.
-      ease: [0.34, 1.56, 0.64, 1] as [number, number, number, number],
+      duration: 0.7,
+      times: [0, 0.7, 1],
+      // Softer cubic-bezier — slight overshoot, cushioned landing.
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
       delay: delaySec,
     }),
     [delaySec],

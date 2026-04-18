@@ -340,8 +340,8 @@ export function S04Industries() {
           style={{ top: -10, right: 12 }}
         >
           <motion.div
-            animate={pipLeaning ? { rotate: -8, x: -4 } : { rotate: 0, x: 0 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 18 }}
+            animate={pipLeaning ? { rotate: -7, x: -3 } : { rotate: 0, x: 0 }}
+            transition={{ type: 'spring', stiffness: 220, damping: 24 }}
           >
             <PipWithPoof
               emotion={pipEmotion}

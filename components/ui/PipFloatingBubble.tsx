@@ -40,10 +40,10 @@ export function PipFloatingBubble({
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: 10, scale: 0.95 }}
+      initial={{ opacity: 0, x: 12, scale: 0.92 }}
       animate={{ opacity: 1, x: 0, scale: 1 }}
       exit={{ opacity: 0, x: 8, scale: 0.95 }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="absolute z-40 pointer-events-none"
       style={{
         // Pip now sits at top:-10 / right:12, size 52px (card zone coords).

@@ -36,22 +36,23 @@ function PipSpriteImpl({ emotion = 'idle', color = '#4ade80', size = 48 }: PipSp
     glow:    { rx: 5.0, ry: 5.2, pupilR: 2.6, pupilDx: 0,    pupilDy: -0.4 },  // wide and excited
   }[emotion]), [emotion]);
 
+  // Softer, more "Duolingo-like" body motion — gentle, never frantic.
   const bodyAnim = useMemo(() => ({
-    idle:    { scale: [1, 1.05, 1], y: [0, -1.5, 0] },
-    happy:   { scale: [1, 1.12, 1], y: [0, -4, 0] },
-    wideeye: { scale: [1, 1.02, 1], y: 0 },
-    tilt:    { scale: 1,            y: 0, rotate: [-6, 6, -6] },
-    shy:     { scale: 0.9,          y: 1 },
-    glow:    { scale: [1, 1.15, 1], y: [0, -3, 0] },
+    idle:    { scale: [1, 1.04, 1], y: [0, -1.5, 0] },
+    happy:   { scale: [1, 1.09, 1], y: [0, -3, 0] },
+    wideeye: { scale: [1, 1.015, 1], y: [0, -0.5, 0] },
+    tilt:    { scale: 1,             y: 0, rotate: [-5, 5, -5] },
+    shy:     { scale: 0.94,          y: 1.5 },
+    glow:    { scale: [1, 1.10, 1], y: [0, -2.5, 0] },
   }[emotion]), [emotion]);
 
   const bodyTransition = useMemo(() => ({
-    idle:    { duration: 2.4, repeat: Infinity, ease: 'easeInOut' as const },
-    happy:   { duration: 0.55, repeat: Infinity, ease: 'easeInOut' as const },
-    wideeye: { duration: 0.3 },
-    tilt:    { duration: 1.6, repeat: Infinity, ease: 'easeInOut' as const },
-    shy:     { duration: 0.4 },
-    glow:    { duration: 1.4, repeat: Infinity, ease: 'easeInOut' as const },
+    idle:    { duration: 2.6, repeat: Infinity, ease: 'easeInOut' as const },
+    happy:   { duration: 0.95, repeat: Infinity, ease: 'easeInOut' as const },
+    wideeye: { duration: 2.2, repeat: Infinity, ease: 'easeInOut' as const },
+    tilt:    { duration: 2.0, repeat: Infinity, ease: 'easeInOut' as const },
+    shy:     { duration: 0.6, ease: 'easeOut' as const },
+    glow:    { duration: 1.8, repeat: Infinity, ease: 'easeInOut' as const },
   }[emotion]), [emotion]);
 
   const auraIntensity = emotion === 'glow' ? 1 : emotion === 'happy' ? 0.85 : emotion === 'shy' ? 0.45 : 0.7;

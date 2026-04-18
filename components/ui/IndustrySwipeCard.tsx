@@ -611,53 +611,9 @@ export function IndustrySwipeCard({
               <div className="h-[120px]" aria-hidden />
             </div>
 
-            {/* Scroll hint — bottom-center, fades on first scroll */}
-            <AnimatePresence>
-              {scrollHintVisible && (
-                <motion.div
-                  key="scroll-hint"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 0.55 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute bottom-14 left-1/2 -translate-x-1/2 z-10 pointer-events-none"
-                >
-                  <motion.div
-                    animate={{ y: [0, 4, 0] }}
-                    transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                    className="flex flex-col items-center gap-0.5 text-white/70"
-                  >
-                    <span className="text-[10px] font-mono uppercase tracking-wider">
-                      scroll for more
-                    </span>
-                    <span className="text-[14px] leading-none">⌄</span>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Flip pill — icon + label. Reads clearly as "flip to the back."
-                zIndex 50 puts it above the floating action circles (z-20). */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setFlipped((f) => !f);
-              }}
-              onPointerDown={(e) => e.stopPropagation()}
-              className="absolute bottom-3 right-3 h-8 px-3 rounded-full flex items-center gap-1.5 backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
-              style={{
-                zIndex: 50,
-                background: 'rgba(12,14,18,0.55)',
-                border: '1px solid rgba(255,255,255,0.18)',
-              }}
-              aria-label="Flip card for the deeper read"
-            >
-              <FlipIcon size={12} />
-              <span className="text-[11px] font-medium text-white/80 leading-none">
-                Read more
-              </span>
-            </button>
+            {/* Scroll hint + Flip pill are rendered OUTSIDE the 3D-rotating
+                faces (below this flipper div) so their text never mirrors
+                when the card flips. */}
           </div>
 
           {/* ═══════════════ BACK ═══════════════ */}
@@ -837,32 +793,61 @@ export function IndustrySwipeCard({
               )}
             </div>
 
-            {/* Flip-back pill — mirrors the front pill, bottom-LEFT on the
-                back face. stopPropagation on both onClick and onPointerDown
-                so Framer Motion's drag never eats the event. */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setFlipped((f) => !f);
-              }}
-              onPointerDown={(e) => e.stopPropagation()}
-              className="absolute bottom-3 left-3 h-8 px-3 rounded-full flex items-center gap-1.5 backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
-              style={{
-                zIndex: 50,
-                background: 'rgba(12,14,18,0.55)',
-                border: '1px solid rgba(255,255,255,0.18)',
-              }}
-              aria-label="Back to pitch"
-            >
-              <FlipIcon size={12} />
-              <span className="text-[11px] font-medium text-white/80 leading-none">
-                Back
-              </span>
-            </button>
+            {/* (Flip pill lives outside the flipper — see below.) */}
           </div>
         </motion.div>
       </div>
+
+      {/* Flip pill — single, outside the 3D-rotating faces so its text
+          stays right-side-up regardless of flip state. Always bottom-right.
+          zIndex 50 puts it above the floating action circles (z-20). */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          setFlipped((f) => !f);
+        }}
+        onPointerDown={(e) => e.stopPropagation()}
+        className="absolute bottom-3 right-3 h-8 px-3 rounded-full flex items-center gap-1.5 backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
+        style={{
+          zIndex: 50,
+          background: 'rgba(12,14,18,0.55)',
+          border: '1px solid rgba(255,255,255,0.18)',
+        }}
+        aria-label={flipped ? 'Flip back to the pitch' : 'Flip for the deeper read'}
+      >
+        <FlipIcon size={12} />
+        <span className="text-[11px] font-medium text-white/80 leading-none">
+          Flip
+        </span>
+      </button>
+
+      {/* Scroll hint — only on the front face. Lives outside the flipper so
+          its text reads normally; conditionally hidden when flipped. */}
+      <AnimatePresence>
+        {!flipped && scrollHintVisible && (
+          <motion.div
+            key="scroll-hint"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.55 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+            className="absolute bottom-14 left-1/2 -translate-x-1/2 pointer-events-none"
+            style={{ zIndex: 40 }}
+          >
+            <motion.div
+              animate={{ y: [0, 4, 0] }}
+              transition={{ duration: 2.0, repeat: Infinity, ease: 'easeInOut' }}
+              className="flex flex-col items-center gap-0.5 text-white/70"
+            >
+              <span className="text-[10px] font-mono uppercase tracking-wider">
+                scroll for more
+              </span>
+              <span className="text-[14px] leading-none">⌄</span>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
