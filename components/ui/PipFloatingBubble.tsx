@@ -12,15 +12,15 @@ interface PipFloatingBubbleProps {
 }
 
 /**
- * PipFloatingBubble — transient reaction bubble anchored near Pip's sprite
- * (top-right of the activity zone). Fades in, holds, fades out.
+ * PipFloatingBubble — transient reaction bubble that sits to the LEFT of Pip's
+ * sprite. Positions absolutely relative to the nearest positioned ancestor, so
+ * the caller must render it inside a relatively-positioned container (e.g.
+ * S04's outer `<div className="relative ...">` which is itself scoped to the
+ * 720px activity column).
  *
  * Exists for "heat-of-the-moment" beats triggered by user actions (first keep,
- * first edge, threshold-crossed) that should pop over the card instead of
+ * first edge, threshold-crossed) that should pop next to Pip instead of
  * stacking in the chat strip and cramping the activity zone.
- *
- * The intro Pip line on each screen still goes through the chat messageQueue —
- * this is only for ephemeral reactions.
  */
 export function PipFloatingBubble({
   text,
@@ -40,18 +40,17 @@ export function PipFloatingBubble({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: -8, scale: 0.95 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -6, scale: 0.95 }}
+      initial={{ opacity: 0, x: 8, scale: 0.95 }}
+      animate={{ opacity: 1, x: 0, scale: 1 }}
+      exit={{ opacity: 0, x: 8, scale: 0.95 }}
       transition={{ duration: 0.25 }}
-      className="fixed z-40 pointer-events-none"
+      className="absolute z-40 pointer-events-none"
       style={{
-        top: 110,
-        // Anchor to the right edge of the 720px-capped activity column, with
-        // a 24px inset. On narrow viewports (< 720px) the calc goes negative
-        // and max() clamps to 24px — bubble sticks to viewport right.
-        right: 'max(24px, calc((100vw - 720px) / 2 + 24px))',
-        maxWidth: 280,
+        // Sprite sits at top:4 / right:4, size 48px, so the bubble starts
+        // 16px to the left of the sprite's left edge.
+        top: 16,
+        right: 68,
+        maxWidth: 240,
       }}
     >
       <div

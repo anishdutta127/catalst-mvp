@@ -11,25 +11,28 @@ import { IDEAS } from '@/lib/scoring/engine';
 import { ScreenQuote } from '@/components/ui/ScreenQuote';
 import { IndustrySwipeCard, type IndustryCardData } from '@/components/ui/IndustrySwipeCard';
 import { PipFloatingBubble } from '@/components/ui/PipFloatingBubble';
+import { PipSprite, type PipEmotion } from '@/components/characters/PipSprite';
 
 /**
- * S04 — Industry Discovery (zero-scroll layout rebuild).
+ * S04 — Industry Discovery (zero-scroll layout rebuild, Hinge-style actions).
  *
  * Layout laws (top to bottom, strict fixed heights):
  *   [A] Filter strip   — 36px : wavelength-style category bar, tints + gold underline.
  *   [B] Counter + undo — 24px : progress mono text + optional undo link.
- *   [C] Card zone      — flex-1 : IndustrySwipeCard + blurred peek behind.
- *   [D] Action bar     — 64px : Pass / Edge / Keep thumb-zone buttons.
+ *   [C] Card zone      — flex-1 : card + floating ✕ ★ ✓ action circles overlaid
+ *                                 at bottom. The old [D] 64px button row is
+ *                                 reclaimed — the card gets that space.
  *   [E] Continue CTA   — 56px : always visible, greyed until 2 keeps,
  *                               one-shot gold pulse at threshold crossing.
  *   [F] Screen quote   — 24px : philosophy bottom line.
  *
- * Total fixed: 204px. Card takes all remaining space — it is the hero.
- * No scroll on the activity zone itself.
+ * Pip lives on this screen's top-right (sprite + reaction bubble to his left).
+ * The shell hides its own PipFloater on s04 so there's only one Pip.
  */
 
 const MAX_EDGES = 2;
 const MIN_KEEPS_TO_CONTINUE = 2;
+const PIP_COLOR = '#4ade80';
 
 // Filter strip — category id + subtle tint for the wavelength bar.
 const CATEGORIES: ReadonlyArray<{ label: string; id: string | null; tint: string }> = [
@@ -67,13 +70,14 @@ export function S04Industries() {
   const firstEdgeFired = useRef(false);
   const thresholdFired = useRef(false);
 
-  // Intro dialogue — once per mount.
+  // Intro dialogue — once per mount. Cedric goes into the chat strip; Pip
+  // routes to the local floating bubble so the chat strip stays Cedric-only.
   useEffect(() => {
     if (dialogueSent.current) return;
     dialogueSent.current = true;
     enqueueMessage({ speaker: 'cedric', text: lines.s04.cedric.intro, type: 'instruction' });
     const t = setTimeout(() => {
-      enqueueMessage({ speaker: 'pip', text: lines.s04.pip.intro, type: 'dialogue' });
+      setPipReaction(lines.s04.pip.intro);
     }, 2500);
     return () => clearTimeout(t);
   }, [enqueueMessage]);
@@ -108,6 +112,17 @@ export function S04Industries() {
   const totalSeen = industriesKept.length + industriesPassed.length + industriesEdged.length;
   const edgeAvailable = industriesEdged.length < MAX_EDGES;
   const canContinue = industriesKept.length >= MIN_KEEPS_TO_CONTINUE;
+
+  // Pip emotion — mirrors the last beat so the sprite "reacts" alongside the
+  // floating bubble. idle before any action, wideeye on edge, glow once we
+  // cross the 2-keep threshold, happy on a fresh keep, idle on pass.
+  const pipEmotion: PipEmotion = useMemo(() => {
+    if (!lastAction) return 'idle';
+    if (lastAction.type === 'edge') return 'wideeye';
+    if (lastAction.type === 'keep' && industriesKept.length >= MIN_KEEPS_TO_CONTINUE) return 'glow';
+    if (lastAction.type === 'keep') return 'happy';
+    return 'idle';
+  }, [lastAction, industriesKept.length]);
 
   function handlePass() {
     if (!currentCard) return;
@@ -188,7 +203,26 @@ export function S04Industries() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="relative flex flex-col h-full">
+      {/* ════════ Pip — absolute top-right of the activity zone ════════ */}
+      <div className="absolute z-30 pointer-events-none" style={{ top: 4, right: 4 }}>
+        <PipSprite emotion={pipEmotion} color={PIP_COLOR} size={48} />
+      </div>
+
+      {/* Pip floating reaction bubble — slides in to the LEFT of the sprite.
+          Absolutely positioned, so it sits outside the flex-column stack and
+          doesn't steal vertical space. */}
+      <AnimatePresence>
+        {pipReaction && (
+          <PipFloatingBubble
+            key={pipReaction}
+            text={pipReaction}
+            color={PIP_COLOR}
+            onComplete={() => setPipReaction(null)}
+          />
+        )}
+      </AnimatePresence>
+
       {/* ════════ [A] Filter strip — 36px wavelength bar ════════ */}
       {/* pr-14 reserves Pip's top-right airspace (~56px) */}
       <div className="shrink-0 h-9 flex overflow-x-auto scrollbar-none rounded-lg border border-white/5 bg-white/[0.02] pr-14">
@@ -244,8 +278,7 @@ export function S04Industries() {
         )}
       </div>
 
-      {/* ════════ [C] Card zone — flex-1 ════════ */}
-      {/* pt-3 = 12px buffer between counter row and card top */}
+      {/* ════════ [C] Card zone — flex-1, floating action circles overlaid ════════ */}
       <div className="flex-1 relative min-h-0 pt-3 pb-1.5">
         <AnimatePresence mode="popLayout">
           {!currentCard && (
@@ -299,60 +332,87 @@ export function S04Industries() {
           )}
         </AnimatePresence>
 
-        {/* Nudge overlay — absolutely positioned so it doesn't steal layout */}
+        {/* Floating action circles — Hinge-style, overlaid on the card's
+            bottom. The empty gaps between buttons are pointer-events-none so
+            drag gestures still reach the card underneath. */}
+        <div className="absolute z-20 left-0 right-0 bottom-4 flex justify-center gap-6 pointer-events-none">
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={handlePass}
+            disabled={!currentCard}
+            data-testid="action-pass"
+            aria-label="Pass"
+            className="pointer-events-auto w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-md border-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{
+              background: 'rgba(12,14,18,0.62)',
+              borderColor: 'rgba(244,63,94,0.55)',
+              boxShadow: '0 4px 16px rgba(244,63,94,0.25)',
+            }}
+          >
+            <span className="text-[22px] text-rose-400 font-bold leading-none">✕</span>
+          </motion.button>
+
+          <motion.button
+            whileTap={edgeAvailable && currentCard ? { scale: 0.9 } : undefined}
+            onClick={handleEdge}
+            disabled={!edgeAvailable || !currentCard}
+            data-testid="action-edge"
+            aria-label="Edge"
+            className={`pointer-events-auto relative w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-md border-2 transition-colors ${
+              edgeAvailable && currentCard ? '' : 'opacity-40 cursor-not-allowed'
+            }`}
+            style={{
+              background: 'rgba(12,14,18,0.62)',
+              borderColor: edgeAvailable ? 'rgba(212,168,67,0.70)' : 'rgba(255,255,255,0.15)',
+              boxShadow: edgeAvailable ? '0 4px 16px rgba(212,168,67,0.30)' : 'none',
+            }}
+          >
+            <span className="text-[22px] leading-none" style={{ color: '#D4A843' }}>★</span>
+            {industriesEdged.length > 0 && (
+              <span
+                className="absolute -top-1 -right-1 text-[9px] font-mono font-bold rounded-full px-1.5 py-[2px] leading-none"
+                style={{
+                  background: '#D4A843',
+                  color: '#0C0E12',
+                  border: '1px solid rgba(12,14,18,0.8)',
+                }}
+              >
+                {industriesEdged.length}/{MAX_EDGES}
+              </span>
+            )}
+          </motion.button>
+
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={handleKeep}
+            disabled={!currentCard}
+            data-testid="action-keep"
+            aria-label="Keep"
+            className="pointer-events-auto w-14 h-14 rounded-full flex items-center justify-center backdrop-blur-md border-2 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            style={{
+              background: 'rgba(12,14,18,0.62)',
+              borderColor: 'rgba(52,211,153,0.60)',
+              boxShadow: '0 4px 16px rgba(52,211,153,0.30)',
+            }}
+          >
+            <span className="text-[22px] text-emerald-400 font-bold leading-none">✓</span>
+          </motion.button>
+        </div>
+
+        {/* Nudge overlay — floats just above the action circles so it's
+            visible without covering them. */}
         <AnimatePresence>
           {nudge && (
             <motion.p
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
-              className="absolute bottom-2 left-0 right-0 text-center text-xs text-amber-400/90 pointer-events-none z-30"
+              className="absolute bottom-[84px] left-0 right-0 text-center text-xs text-amber-400/90 pointer-events-none z-30"
             >
               {nudge}
             </motion.p>
           )}
         </AnimatePresence>
-      </div>
-
-      {/* ════════ [D] Action bar — 64px ════════ */}
-      <div className="shrink-0 h-16 grid grid-cols-3 gap-3 py-1">
-        <motion.button
-          whileTap={{ scale: 0.96 }}
-          onClick={handlePass}
-          disabled={!currentCard}
-          data-testid="action-pass"
-          className="h-14 rounded-2xl bg-white/5 border-2 border-white/15 hover:border-red-400/50 hover:bg-red-500/10 text-ivory/80 font-semibold flex items-center justify-center gap-2 text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          <span className="text-[18px]">✕</span>
-          Pass
-        </motion.button>
-        <motion.button
-          whileTap={edgeAvailable && currentCard ? { scale: 0.96 } : undefined}
-          onClick={handleEdge}
-          data-testid="action-edge"
-          disabled={!edgeAvailable || !currentCard}
-          className={`h-14 rounded-2xl border-2 font-semibold flex items-center justify-center gap-1.5 text-sm transition-colors ${
-            edgeAvailable
-              ? 'bg-gold/10 border-gold/50 hover:border-gold hover:bg-gold/20 text-gold'
-              : 'bg-white/3 border-white/10 text-ivory/30 cursor-not-allowed'
-          }`}
-        >
-          <span className="text-[16px]">★</span>
-          <span>Edge</span>
-          <span className="text-[10px] font-mono opacity-70">
-            {industriesEdged.length}/{MAX_EDGES}
-          </span>
-        </motion.button>
-        <motion.button
-          whileTap={{ scale: 0.96 }}
-          onClick={handleKeep}
-          disabled={!currentCard}
-          data-testid="action-keep"
-          className="h-14 rounded-2xl bg-emerald-500/10 border-2 border-emerald-500/40 hover:border-emerald-400 hover:bg-emerald-500/20 text-emerald-300 font-semibold flex items-center justify-center gap-2 text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-        >
-          <span className="text-[18px]">✓</span>
-          Keep
-        </motion.button>
       </div>
 
       {/* ════════ [E] Continue CTA — 56px (always visible) ════════ */}
@@ -379,20 +439,6 @@ export function S04Industries() {
       <div className="shrink-0 h-6 flex items-center justify-center overflow-hidden">
         <ScreenQuote screen="s04" />
       </div>
-
-      {/* Pip floating reaction bubble — anchored near Pip's sprite. Fixed
-          positioning so it sits outside the flex-column stack and doesn't
-          steal vertical space from the card zone. */}
-      <AnimatePresence>
-        {pipReaction && (
-          <PipFloatingBubble
-            key={pipReaction}
-            text={pipReaction}
-            color="#4ade80"
-            onComplete={() => setPipReaction(null)}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }

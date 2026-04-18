@@ -40,7 +40,8 @@
       "Bash(cp C:/Users/anish/Downloads/merge-rich-data.js C:/Users/anish/Downloads/catalst-mvp/scripts/merge-rich-data.js)",
       "Bash(npx eslint *)",
       "Bash(gstack --help)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(echo \"EXIT=$?\")"
     ]
   }
 }

@@ -71,24 +71,34 @@ function truncateAtWord(text: string, max: number): string {
   return cut.slice(0, end).trimEnd() + '…';
 }
 
+/** Cheap deterministic hash (djb2-ish) — used to pick per-card witty prompts
+ *  stably across flip + re-renders without re-rolling on every paint. */
+function hashString(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h << 5) - h + s.charCodeAt(i);
+  return Math.abs(h);
+}
+
 /**
  * IndustrySwipeCard — S04 swipe card with a bento front and a rich back.
  *
- * Front stack (32/8/flex/10 vertical split):
- *   - HERO (32%)   : emoji 48px, name 24px serif, meta line
- *   - HOOK (8%)    : italicized tagline on dark bg (no label, no border)
- *   - BENTO (flex) : 2-col grid, 3 rows
- *       Row 1 [col-span-2] : TILE A — 💡 OPPORTUNITY (gold-tinted card)
+ * Front stack (auto / auto / auto / flex / auto vertical split):
+ *   - HERO           : logo tile (left) + name + meta (right)
+ *   - HOOK           : italicized tagline (single line)
+ *   - WITTY PROMPT   : Hinge-style prompt with label, randomized per card
+ *   - BENTO (flex)   : 2-col grid, 3 rows, EXPLICIT grid positions
+ *       Row 1 [col-span-2] : TILE A — 💡 OPPORTUNITY (gold-tinted)
  *       Row 2 [B | C]      : 🔥 TRENDING  |  👀 TO WATCH
  *       Row 3 [col-span-2] : HOTTEST SUB-SPACE — bar + CAGR %
- *   - FOOTER (10%) : "↻  flip for the deeper read"
+ *   - FOOTER         : "↻ flip for the deeper read"
  *
- * Back — 6 zones:
- *   1. ⚡ AI disruption angle                       (full-width thesis)
- *   2. Top 3 sub-CAGRs                              (full-width, bars)
- *   3. USER BEHAVIOR SHIFT | IMPACT POTENTIAL       (2-col row)
- *   4. 📰 What's happening (recent headline)        (full-width)
- *   5. 🇮🇳 India scene                              (full-width)
+ * Back — header + witty prompt + 5 zones:
+ *   1. WITTY PROMPT (different pick than front)
+ *   2. ⚡ AI disruption angle                       (full-width thesis)
+ *   3. Top 3 sub-CAGRs                              (full-width, bars)
+ *   4. USER BEHAVIOR SHIFT | IMPACT POTENTIAL       (2-col row)
+ *   5. 📰 What's happening (recent headline)        (full-width)
+ *   6. 🇮🇳 India scene                              (full-width)
  *
  * Gestures: drag left = Pass, right = Keep, up = Edge. Tap = flip.
  */
@@ -124,14 +134,30 @@ export function IndustrySwipeCard({
 
   const hookText = industry.tagline || industry.cultural_trend || '';
 
-  // TILE A — "TOGETHER WE COULD" prompt text, truncated to ~85 chars.
+  // TILE A — "TOGETHER WE COULD" prompt text, truncated to ~100 chars.
   const opportunityText = useMemo(() => {
     const bank = industry.hinge_prompts || [];
     if (bank.length === 0) return null;
     const together = bank.find((p) => p.label.toUpperCase() === 'TOGETHER WE COULD');
     const raw = (together || bank[0])?.text || null;
-    return raw ? truncateAtWord(raw, 85) : null;
+    return raw ? truncateAtWord(raw, 100) : null;
   }, [industry.hinge_prompts]);
+
+  // Front/back witty prompts — two distinct picks from the Hinge bank,
+  // excluding "TOGETHER WE COULD" (reserved for Tile A). Deterministic from
+  // industry.id so front/back don't re-shuffle on flip or re-render.
+  const { frontPrompt, backPrompt } = useMemo(() => {
+    const bank = (industry.hinge_prompts || []).filter(
+      (p) => p.label.toUpperCase() !== 'TOGETHER WE COULD',
+    );
+    if (bank.length === 0) return { frontPrompt: null, backPrompt: null };
+    const h = hashString(industry.id);
+    const frontIdx = h % bank.length;
+    const front = bank[frontIdx];
+    const remaining = bank.filter((_, i) => i !== frontIdx);
+    const back = remaining.length > 0 ? remaining[(h >> 3) % remaining.length] : null;
+    return { frontPrompt: front, backPrompt: back };
+  }, [industry.id, industry.hinge_prompts]);
 
   // TILE B + C — curated India company callouts
   const stats = INDUSTRY_STATS[industry.id] || FALLBACK_STAT;
@@ -221,11 +247,11 @@ export function IndustrySwipeCard({
               boxShadow: `0 14px 44px -10px ${color}80, 0 0 0 1px ${color}30`,
             }}
           >
-            {/* ─── HERO — 32% ─── */}
+            {/* ─── HERO — logo left, text right ─── */}
             <div
-              className="basis-[32%] shrink-0 relative flex flex-col justify-end px-5 pb-3"
+              className="shrink-0 relative flex items-center gap-3 px-5 pt-5 pb-4"
               style={{
-                background: `linear-gradient(160deg, ${color} 0%, ${colorDark} 65%, #0C0E12 100%)`,
+                background: `linear-gradient(160deg, ${color} 0%, ${colorDark} 70%, #0C0E12 100%)`,
               }}
             >
               <div
@@ -237,39 +263,72 @@ export function IndustrySwipeCard({
                   backgroundSize: '90px 90px',
                 }}
               />
-              <div className="relative">
-                <div className="text-[48px] leading-none select-none mb-1" aria-hidden>
-                  {emoji}
-                </div>
-                <h2 className="text-[24px] font-serif font-bold text-white leading-[1.05]">
+              {/* Logo tile */}
+              <div
+                className="relative shrink-0 w-16 h-16 rounded-xl flex items-center justify-center border backdrop-blur-sm leading-none"
+                style={{
+                  background: 'rgba(255,255,255,0.12)',
+                  borderColor: 'rgba(255,255,255,0.25)',
+                  fontSize: 32,
+                }}
+                aria-hidden
+              >
+                {emoji}
+              </div>
+              {/* Name + meta */}
+              <div className="relative flex-1 min-w-0">
+                <h2 className="text-[22px] sm:text-[24px] font-serif font-bold text-white leading-tight mb-0.5 truncate">
                   {industry.name}
                 </h2>
                 {metaLine && (
-                  <p className="text-[10.5px] font-mono uppercase tracking-[0.12em] text-white/65 mt-1">
+                  <p className="text-[11px] font-mono uppercase tracking-[0.12em] text-white/70 truncate">
                     {metaLine}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* ─── HOOK — 8% (no label, no border) ─── */}
-            <div className="basis-[8%] shrink-0 flex items-center px-4">
+            {/* ─── HOOK — italic tagline ─── */}
+            <div className="shrink-0 flex items-center px-5 py-2">
               {hookText && (
-                <p className="text-[14px] italic text-ivory/90 leading-snug line-clamp-1">
+                <p className="text-[13px] italic text-ivory/85 leading-snug line-clamp-1">
                   {hookText}
                 </p>
               )}
             </div>
 
-            {/* ─── BENTO GRID — flex-1 ─── */}
-            <div className="flex-1 grid grid-cols-2 grid-rows-[auto_minmax(0,1fr)_auto] gap-2 px-4 pb-1 min-h-0 overflow-hidden">
-              {/* TILE A — 💡 OPPORTUNITY (gold-tinted, full-width) */}
+            {/* ─── WITTY PROMPT — Hinge-style quote row ─── */}
+            {frontPrompt && (
+              <div className="shrink-0 flex items-start gap-2 px-5 py-2.5 border-y border-white/5">
+                <p
+                  className="text-[9px] font-mono uppercase text-gold/60 mt-0.5 shrink-0 w-[76px] leading-[1.3]"
+                  style={{ letterSpacing: '0.18em' }}
+                >
+                  {frontPrompt.label}
+                </p>
+                <p className="text-[12.5px] italic text-white/85 leading-snug flex-1 line-clamp-2">
+                  &ldquo;{frontPrompt.text}&rdquo;
+                </p>
+              </div>
+            )}
+
+            {/* ─── BENTO GRID — explicit grid positions (fixes overlap bug) ─── */}
+            <div
+              className="flex-1 grid gap-2 px-4 pt-2 pb-2 min-h-0 overflow-hidden"
+              style={{
+                gridTemplateColumns: '1fr 1fr',
+                gridTemplateRows: 'auto minmax(0, 1fr) auto',
+              }}
+            >
+              {/* TILE A — 💡 OPPORTUNITY (gold-tinted, row 1, full width) */}
               {opportunityText && (
                 <div
-                  className="col-span-2 rounded-xl"
+                  className="rounded-xl min-w-0"
                   style={{
-                    background: 'rgba(212,168,67,0.09)',
-                    border: '1px solid rgba(212,168,67,0.28)',
+                    gridColumn: '1 / -1',
+                    gridRow: '1',
+                    background: 'rgba(212,168,67,0.10)',
+                    border: '1px solid rgba(212,168,67,0.30)',
                     padding: '10px 12px',
                   }}
                 >
@@ -288,10 +347,12 @@ export function IndustrySwipeCard({
                 </div>
               )}
 
-              {/* TILE B — 🔥 TRENDING */}
+              {/* TILE B — 🔥 TRENDING (row 2, col 1) */}
               <div
-                className="rounded-xl px-3 py-2 min-w-0"
+                className="rounded-xl px-3 py-2 min-w-0 min-h-0 overflow-hidden"
                 style={{
+                  gridColumn: '1',
+                  gridRow: '2',
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.10)',
                 }}
@@ -307,10 +368,12 @@ export function IndustrySwipeCard({
                 </p>
               </div>
 
-              {/* TILE C — 👀 TO WATCH */}
+              {/* TILE C — 👀 TO WATCH (row 2, col 2) */}
               <div
-                className="rounded-xl px-3 py-2 min-w-0"
+                className="rounded-xl px-3 py-2 min-w-0 min-h-0 overflow-hidden"
                 style={{
+                  gridColumn: '2',
+                  gridRow: '2',
                   background: 'rgba(255,255,255,0.04)',
                   border: '1px solid rgba(255,255,255,0.10)',
                 }}
@@ -326,44 +389,50 @@ export function IndustrySwipeCard({
                 </p>
               </div>
 
-              {/* TILE D — HOTTEST SUB-SPACE (label + name+CAGR row + 2px bar) */}
+              {/* TILE D — HOTTEST SUB-SPACE (row 3, full width, inline bar) */}
               {topSubCagr && (
                 <div
-                  className="col-span-2 rounded-xl px-3 py-2 min-w-0"
+                  className="rounded-xl px-3 py-2 min-w-0"
                   style={{
+                    gridColumn: '1 / -1',
+                    gridRow: '3',
                     background: 'rgba(255,255,255,0.04)',
                     border: '1px solid rgba(255,255,255,0.10)',
                   }}
                 >
-                  <p className="text-[10px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none mb-1">
-                    Hottest Sub-Space
-                  </p>
-                  <div className="flex items-baseline justify-between mb-1.5 gap-2">
-                    <span className="text-[12px] text-ivory/90 font-medium truncate">
-                      {topSubCagr.name}
-                    </span>
-                    <span
-                      className="text-[11px] font-mono font-bold shrink-0"
-                      style={{ color: GOLD_SOLID }}
-                    >
-                      {topSubCagr.cagr_pct}% CAGR
-                    </span>
-                  </div>
-                  <div className="h-[2px] w-full bg-white/[0.08] rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${Math.min(100, topSubCagr.cagr_pct * 1.5)}%`,
-                        background: color,
-                      }}
-                    />
+                  <div className="flex items-center gap-3">
+                    <div className="shrink-0 min-w-0 max-w-[45%]">
+                      <p className="text-[9.5px] font-mono uppercase text-ivory/45 tracking-[0.15em] leading-none">
+                        Hottest Sub-Space
+                      </p>
+                      <p className="text-[13px] text-ivory/90 font-semibold leading-tight mt-1 truncate">
+                        {topSubCagr.name}
+                      </p>
+                    </div>
+                    <div className="flex-1 flex items-center gap-2 min-w-0">
+                      <div className="flex-1 h-1.5 bg-white/[0.06] rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full"
+                          style={{
+                            width: `${Math.min(100, topSubCagr.cagr_pct * 1.5)}%`,
+                            background: color,
+                          }}
+                        />
+                      </div>
+                      <span
+                        className="text-[12px] font-mono font-bold shrink-0"
+                        style={{ color: GOLD_SOLID }}
+                      >
+                        {topSubCagr.cagr_pct}%
+                      </span>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* ─── FOOTER / HINT — 10% ─── */}
-            <div className="basis-[10%] shrink-0 flex items-center justify-center">
+            {/* ─── FOOTER / HINT ─── */}
+            <div className="shrink-0 flex items-center justify-center py-1.5">
               <p className="text-[10px] italic text-ivory/35 tracking-wide">
                 ↻  flip for the deeper read
               </p>
@@ -394,7 +463,22 @@ export function IndustrySwipeCard({
               </div>
             </div>
 
-            {/* 6-zone body */}
+            {/* Back witty prompt — different pick than front, restores Hinge flavor */}
+            {backPrompt && (
+              <div className="shrink-0 flex items-start gap-2 px-5 py-2.5 border-b border-white/5">
+                <p
+                  className="text-[9px] font-mono uppercase text-gold/60 mt-0.5 shrink-0 w-[76px] leading-[1.3]"
+                  style={{ letterSpacing: '0.18em' }}
+                >
+                  {backPrompt.label}
+                </p>
+                <p className="text-[12.5px] italic text-white/85 leading-snug flex-1 line-clamp-2">
+                  &ldquo;{backPrompt.text}&rdquo;
+                </p>
+              </div>
+            )}
+
+            {/* 5-zone body */}
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-4 min-h-0">
               {/* 1. AI disruption angle — full */}
               {industry.ai_disruption_angle && (

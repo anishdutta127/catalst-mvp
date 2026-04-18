@@ -35,6 +35,10 @@ export function JourneyShell({
   const bgImage = SCREEN_BACKGROUNDS[currentScreen];
   const messages = useUIStore((s) => s.messageQueue);
   const hasChatContent = messages.length > 0 && currentScreen !== 's00';
+  // Screens that anchor their own Pip (sprite + reaction bubbles) inside the
+  // activity zone. The shell suppresses the default PipFloater for these so
+  // we never get two Pips visible at once.
+  const screenOwnsPip = currentScreen === 's04';
 
   return (
     <div className="relative h-dvh w-full overflow-hidden bg-dark flex flex-col">
@@ -86,7 +90,7 @@ export function JourneyShell({
                 boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)',
               }}
             >
-              <ChatZone />
+              <ChatZone hidePip={screenOwnsPip} />
             </div>
           </motion.div>
         )}
@@ -108,8 +112,9 @@ export function JourneyShell({
             </motion.div>
           </AnimatePresence>
 
-          {/* Pip lives in the activity zone, bottom-right */}
-          <PipFloater />
+          {/* Pip lives in the activity zone, bottom-right — unless the screen
+              has taken Pip over (e.g. S04 anchors its own Pip top-right). */}
+          {!screenOwnsPip && <PipFloater />}
         </div>
       </div>
 
