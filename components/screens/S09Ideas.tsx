@@ -308,11 +308,24 @@ export function S09Ideas() {
                   stiffness: 220,
                   damping: 22,
                 }}
-                whileHover={!crownedIdeaId ? { y: -3 } : undefined}
+                // Reinforce tappability on hover — tiny lift + scale bump +
+                // border intensifies to the tier's own color. Suppressed once
+                // a card is crowned so the hover doesn't compete with the
+                // crowned state's own glow.
+                whileHover={
+                  !crownedIdeaId
+                    ? {
+                        y: -3,
+                        scale: 1.015,
+                        borderColor: `${meta.color}80`,
+                        transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
+                      }
+                    : undefined
+                }
                 whileTap={{ scale: 0.99 }}
                 onClick={() => openDossier(scored.idea.idea_id)}
                 data-testid={`idea-card-${tier}`}
-                className="flex-1 min-h-[280px] sm:min-h-[320px] rounded-2xl overflow-hidden text-left group cursor-pointer relative"
+                className="flex-1 min-h-[280px] sm:min-h-[320px] rounded-2xl overflow-hidden text-left group cursor-pointer relative flex flex-col"
                 style={{
                   background: `linear-gradient(160deg, ${meta.colorDim}35 0%, rgba(20,23,30,0.96) 55%, rgba(12,14,18,0.98) 100%)`,
                   border: `1px solid ${isCrowned ? 'rgba(212,168,67,0.70)' : `${meta.color}35`}`,
@@ -321,18 +334,16 @@ export function S09Ideas() {
                     : `0 4px 18px -8px ${meta.color}40`,
                 }}
               >
-                {/* Tier identity strip at top — full-width colored bar, thicker
-                    than before so the tier reads at a glance */}
+                {/* Tier identity strip at top */}
                 <div
                   className="h-1.5"
                   style={{ background: `linear-gradient(90deg, ${meta.color} 0%, ${meta.colorDim} 100%)` }}
                 />
 
-                <div className="p-4 sm:p-5">
+                <div className="p-4 sm:p-5 flex flex-col flex-1">
                   {/* Header row: tier badge + match percentage */}
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-2">
-                      {/* Tier emoji badge — rounded tinted circle */}
                       <div
                         className="w-8 h-8 rounded-full flex items-center justify-center text-[16px] leading-none shrink-0"
                         style={{
@@ -369,13 +380,17 @@ export function S09Ideas() {
                     {scored.idea.idea_name}
                   </h3>
 
-                  {/* One-liner */}
-                  <p className="text-[12.5px] text-ivory/70 leading-relaxed line-clamp-3 mb-3">
+                  {/* One-liner — extra bottom margin to breathe from the
+                      tag row below, now that the row no longer shares a
+                      line with the CTA. */}
+                  <p className="text-[12.5px] text-ivory/70 leading-relaxed line-clamp-3 mb-4">
                     {scored.idea.one_liner}
                   </p>
 
-                  {/* Footer: domain pill + read-more affordance */}
-                  <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+                  {/* Tag row — own line, wraps if more tags arrive later.
+                      Separated from the CTA so overlap is structurally
+                      impossible regardless of tag count or length. */}
+                  <div className="flex flex-wrap gap-2 mb-3">
                     <span
                       className="text-[9.5px] px-2 py-0.5 rounded-full font-medium"
                       style={{
@@ -386,18 +401,30 @@ export function S09Ideas() {
                     >
                       {scored.idea.domain_primary?.replace(/_/g, ' ')}
                     </span>
-                    <span className="text-[10px] text-ivory/45 group-hover:text-gold/80 transition-colors flex items-center gap-1">
-                      read the deep read
+                  </div>
+
+                  {/* Spacer so the CTA pins to the bottom edge on taller cards. */}
+                  <div className="flex-1" />
+
+                  {/* Full-width CTA — bigger tap target, sits below a thin
+                      divider so the hierarchy is: title → desc → tags → CTA.
+                      Rendered as a <div> (not <button>) because the outer
+                      motion.button already owns the click handler; nesting
+                      buttons is invalid HTML. */}
+                  <div className="pt-3 border-t border-white/10">
+                    <div className="w-full text-center text-[13px] tracking-wide text-ivory/80 group-hover:text-ivory transition py-2 flex items-center justify-center gap-2 font-medium">
+                      Read the deep read
                       <motion.span
+                        className="inline-flex"
                         animate={{ x: [0, 3, 0] }}
                         transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
                       >
-                        →
+                        <ArrowRightIcon />
                       </motion.span>
-                    </span>
+                    </div>
                   </div>
 
-                  {/* Crown overlay — brief burst when this card is crowned */}
+                  {/* Crown overlay */}
                   <AnimatePresence>
                     {isCrowned && (
                       <motion.div
@@ -491,5 +518,26 @@ export function S09Ideas() {
 
       <ScreenQuote screen="s09" />
     </div>
+  );
+}
+
+// ─── Inline icon (lucide-react isn't a dep) ──────────────────────────────
+
+function ArrowRightIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <line x1="5" y1="12" x2="19" y2="12" />
+      <polyline points="12 5 19 12 12 19" />
+    </svg>
   );
 }
