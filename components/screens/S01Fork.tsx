@@ -123,6 +123,21 @@ export function S01Fork() {
           transition={{ type: 'spring', stiffness: 280, damping: 26 }}
           className="flex flex-col items-center justify-center gap-4 h-full px-4"
         >
+          {/* Back chip — escape hatch from the textarea view. Clears any
+              half-typed idea so re-entering starts clean. */}
+          <div className="w-full max-w-md flex items-center justify-start">
+            <button
+              onClick={() => {
+                setShowIdeaInput(false);
+                setIdeaText('');
+              }}
+              data-testid="path-b-back"
+              className="flex items-center gap-1 text-[11px] text-ivory/50 hover:text-gold transition-colors uppercase tracking-wider"
+            >
+              <span>◂</span>
+              <span>Back</span>
+            </button>
+          </div>
           <p className="text-xs text-ivory/40 uppercase tracking-wider">Describe your idea</p>
           <textarea
             value={ideaText}
