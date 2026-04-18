@@ -47,6 +47,7 @@ export interface Idea {
   why_now: string;
   starter_model: string;
   first_7day_move: string;
+  tags: string[];
   analytics: {
     revenueModel: string;
     priceRange: string;
