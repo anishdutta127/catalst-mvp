@@ -25,11 +25,52 @@ import { useAmbientPipLine } from '@/lib/ambient-pip';
  *   - Advance to S10 via a "Continue to your house" gold CTA that shows once crowned.
  */
 
-const TIER_META: Record<string, { emoji: string; label: string; gradient: string; color: string }> = {
-  nest: { emoji: '🏠', label: 'Nest', gradient: 'from-amber-400 to-amber-600', color: '#F59E0B' },
-  spark: { emoji: '✨', label: 'Spark', gradient: 'from-yellow-400 to-amber-500', color: '#FCD34D' },
-  wildvine: { emoji: '🌿', label: 'Wildvine', gradient: 'from-emerald-400 to-emerald-600', color: '#10B981' },
-  your_idea: { emoji: '🔥', label: 'Your Idea', gradient: 'from-orange-400 to-red-500', color: '#F97316' },
+/** Tier visual identity: the four "flavors" of matched ideas. Each carries
+ *  its own color, emoji, and one-line intent — the reveal feels like a
+ *  constellation of four distinct destinies, not a uniform list. */
+const TIER_META: Record<
+  string,
+  {
+    emoji: string;
+    label: string;
+    intent: string;
+    gradient: string;
+    color: string;
+    colorDim: string;
+  }
+> = {
+  nest: {
+    emoji: '🏠',
+    label: 'Nest',
+    intent: 'Safest fit',
+    gradient: 'from-amber-400 to-amber-600',
+    color: '#F59E0B',
+    colorDim: '#78350F',
+  },
+  spark: {
+    emoji: '✨',
+    label: 'Spark',
+    intent: 'Strongest match',
+    gradient: 'from-yellow-400 to-amber-500',
+    color: '#FCD34D',
+    colorDim: '#78350F',
+  },
+  wildvine: {
+    emoji: '🌿',
+    label: 'Wildvine',
+    intent: 'The bold leap',
+    gradient: 'from-emerald-400 to-emerald-600',
+    color: '#10B981',
+    colorDim: '#064E3B',
+  },
+  your_idea: {
+    emoji: '🔥',
+    label: 'Your Idea',
+    intent: 'What you brought in',
+    gradient: 'from-orange-400 to-red-500',
+    color: '#F97316',
+    colorDim: '#7C2D12',
+  },
 };
 
 interface HouseJson { id: string; name: string; hex: string; tagline: string }
@@ -193,7 +234,9 @@ export function S09Ideas() {
   return (
     <div className="flex flex-col h-full gap-4" data-testid="s09-grid-mode">
       <div className="flex-1 overflow-y-auto space-y-3 pb-2">
-        {/* Idea preview cards */}
+        {/* Idea preview cards — stack on mobile, grid on ≥640. Cards reveal
+            one-at-a-time with a spring (180ms stagger) so the three matches
+            feel like a constellation being named, not a list dropped in. */}
         <div className="flex flex-col sm:flex-row gap-3">
           {ideas.map(({ scored, tier }, idx) => {
             const isCrowned = crownedIdeaId === scored.idea.idea_id;
@@ -203,38 +246,124 @@ export function S09Ideas() {
             return (
               <motion.button
                 key={scored.idea.idea_id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: isDimmed ? 0.55 : 1, y: 0 }}
-                transition={{ delay: idx * 0.12, duration: 0.4 }}
-                whileHover={{ scale: 1.015 }}
+                initial={{ opacity: 0, y: 28, scale: 0.94 }}
+                animate={{
+                  opacity: isDimmed ? 0.45 : 1,
+                  y: 0,
+                  scale: isCrowned ? 1.02 : 1,
+                }}
+                transition={{
+                  delay: idx * 0.18,
+                  type: 'spring',
+                  stiffness: 220,
+                  damping: 22,
+                }}
+                whileHover={!crownedIdeaId ? { y: -3 } : undefined}
+                whileTap={{ scale: 0.99 }}
                 onClick={() => openDossier(scored.idea.idea_id)}
                 data-testid={`idea-card-${tier}`}
-                className={`flex-1 rounded-2xl overflow-hidden text-left transition-all group ${
-                  isCrowned ? 'ring-2 ring-gold shadow-[0_0_20px_rgba(212,168,67,0.4)]' : ''
-                } cursor-pointer`}
+                className="flex-1 rounded-2xl overflow-hidden text-left group cursor-pointer relative"
+                style={{
+                  background: `linear-gradient(160deg, ${meta.colorDim}35 0%, rgba(20,23,30,0.96) 55%, rgba(12,14,18,0.98) 100%)`,
+                  border: `1px solid ${isCrowned ? 'rgba(212,168,67,0.70)' : `${meta.color}35`}`,
+                  boxShadow: isCrowned
+                    ? `0 0 24px rgba(212,168,67,0.45), 0 0 0 1px rgba(212,168,67,0.30) inset`
+                    : `0 4px 18px -8px ${meta.color}40`,
+                }}
               >
-                <div className={`h-1 bg-gradient-to-r ${meta.gradient}`} />
-                <div className="bg-dark-surface/90 backdrop-blur-sm p-4 sm:p-5 border-x border-b border-white/10 rounded-b-2xl">
-                  <div className="flex items-center gap-1.5 mb-2">
-                    <span className="text-sm">{meta.emoji}</span>
-                    <span className="text-[10px] font-mono text-gold/60 uppercase tracking-wider">{meta.label}</span>
-                    {isCrowned && <span>👑</span>}
-                    <span className="ml-auto text-[11px] font-mono text-gold font-semibold">{scored.displayScore}%</span>
+                {/* Tier identity strip at top — full-width colored bar, thicker
+                    than before so the tier reads at a glance */}
+                <div
+                  className="h-1.5"
+                  style={{ background: `linear-gradient(90deg, ${meta.color} 0%, ${meta.colorDim} 100%)` }}
+                />
+
+                <div className="p-4 sm:p-5">
+                  {/* Header row: tier badge + match percentage */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      {/* Tier emoji badge — rounded tinted circle */}
+                      <div
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-[16px] leading-none shrink-0"
+                        style={{
+                          background: `${meta.color}22`,
+                          border: `1px solid ${meta.color}50`,
+                        }}
+                      >
+                        {meta.emoji}
+                      </div>
+                      <div className="min-w-0">
+                        <p
+                          className="text-[10px] font-mono uppercase tracking-[0.18em] font-bold leading-none"
+                          style={{ color: meta.color }}
+                        >
+                          {meta.label}
+                        </p>
+                        <p className="text-[9.5px] text-ivory/50 leading-none mt-1">
+                          {meta.intent}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-[20px] sm:text-[22px] font-serif font-bold leading-none" style={{ color: '#D4A843' }}>
+                        {scored.displayScore}%
+                      </p>
+                      <p className="text-[9px] font-mono text-ivory/45 uppercase tracking-widest leading-none mt-1">
+                        match
+                      </p>
+                    </div>
                   </div>
-                  <h3 className="text-[17px] sm:text-[19px] font-serif font-bold text-ivory mb-1.5 leading-tight">
+
+                  {/* Idea name — big serif hero */}
+                  <h3 className="text-[18px] sm:text-[20px] font-serif font-bold text-ivory leading-[1.15] mb-1.5">
                     {scored.idea.idea_name}
                   </h3>
-                  <p className="text-[12px] text-ivory/55 leading-relaxed line-clamp-2 mb-3">
+
+                  {/* One-liner */}
+                  <p className="text-[12.5px] text-ivory/70 leading-relaxed line-clamp-3 mb-3">
                     {scored.idea.one_liner}
                   </p>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold/70 border border-gold/20">
+
+                  {/* Footer: domain pill + read-more affordance */}
+                  <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+                    <span
+                      className="text-[9.5px] px-2 py-0.5 rounded-full font-medium"
+                      style={{
+                        background: `${meta.color}18`,
+                        color: meta.color,
+                        border: `1px solid ${meta.color}35`,
+                      }}
+                    >
                       {scored.idea.domain_primary?.replace(/_/g, ' ')}
                     </span>
-                    <span className="text-[10px] text-ivory/40 group-hover:text-gold/70 transition-colors">
-                      read the deep dive →
+                    <span className="text-[10px] text-ivory/45 group-hover:text-gold/80 transition-colors flex items-center gap-1">
+                      read the deep read
+                      <motion.span
+                        animate={{ x: [0, 3, 0] }}
+                        transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                      >
+                        →
+                      </motion.span>
                     </span>
                   </div>
+
+                  {/* Crown overlay — brief burst when this card is crowned */}
+                  <AnimatePresence>
+                    {isCrowned && (
+                      <motion.div
+                        key="crown-badge"
+                        initial={{ opacity: 0, scale: 0 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0 }}
+                        transition={{ type: 'spring', stiffness: 320, damping: 20 }}
+                        className="absolute top-3 right-3 text-[20px] leading-none"
+                        style={{ filter: 'drop-shadow(0 0 8px rgba(212,168,67,0.8))' }}
+                        aria-hidden
+                      >
+                        👑
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
               </motion.button>
             );
@@ -246,10 +375,10 @@ export function S09Ideas() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
+            transition={{ delay: 0.8 }}
             className="text-center py-2"
           >
-            <p className="text-[12px] text-ivory/45 italic">
+            <p className="text-[12px] text-ivory/55 italic">
               Tap any idea to read its full dossier. Crown the one that fits.
             </p>
           </motion.div>
@@ -266,23 +395,44 @@ export function S09Ideas() {
         )}
       </div>
 
-      {/* Sticky bottom: Advance CTA once crowned */}
+      {/* Sticky bottom: Advance CTA once crowned — gold breathing pulse
+          matches S06/S07 so the three "ready to continue" moments share a
+          visual language. */}
       <AnimatePresence>
         {crownedIdeaId && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, y: 6 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="shrink-0"
           >
             <motion.button
-              whileHover={{ scale: 1.02, boxShadow: '0 0 28px rgba(212,168,67,0.55)' }}
+              whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => advanceScreen()}
               data-testid="crown-cta"
-              className="w-full h-14 rounded-2xl font-bold text-[16px] text-dark bg-gold hover:bg-gold/95 border border-gold/60 shadow-[0_0_18px_rgba(212,168,67,0.4)] flex items-center justify-center gap-2 transition-all"
+              className="relative w-full h-14 rounded-2xl font-bold text-[15px] text-dark bg-gold flex items-center justify-center gap-2 overflow-hidden"
             >
-              👑 This is my idea → continue to your house
+              <motion.span
+                className="absolute inset-0 rounded-2xl pointer-events-none"
+                animate={{
+                  boxShadow: [
+                    '0 0 14px rgba(212,168,67,0.40)',
+                    '0 0 32px rgba(212,168,67,0.85)',
+                    '0 0 14px rgba(212,168,67,0.40)',
+                  ],
+                }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <span className="relative">👑 Crown it — continue to your house</span>
+              <motion.span
+                className="relative"
+                animate={{ x: [0, 3, 0] }}
+                transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                →
+              </motion.span>
             </motion.button>
           </motion.div>
         )}
