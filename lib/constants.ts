@@ -97,8 +97,12 @@ export const CRYSTAL_ORBS: CrystalOrbDef[] = [
 // ── Timer Defaults (ms) ───────────────────────────────────────
 
 export const TIMER_DEFAULTS = {
-  s02_blot: 8000,
-  s03_word: 4000,
+  // +1.5s on both active timers — enough forgiveness for slower readers
+  // (older parents playing the MVP) without sagging the pace for everyone
+  // else. s03_word was the tightest (4s) so the 1.5s bump is proportionally
+  // the biggest lift there.
+  s02_blot: 9500,
+  s03_word: 5500,
   s04_expanded: 5000,
   s05_scenario: 5000,
   s06_crystal: 20000,
