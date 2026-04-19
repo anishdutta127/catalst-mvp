@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion, useMotionValue, useTransform } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'; // pie-only now that the back uses share charts instead of growth lines
 import { staggerContainer, fadeSlideUp } from '@/lib/motion';
 import { INDUSTRY_STATS, FALLBACK_STAT } from '@/content/industry-stats';
@@ -76,8 +76,6 @@ export interface IndustryCardData {
 
 interface IndustrySwipeCardProps {
   industry: IndustryCardData;
-  onPass: () => void;
-  onKeep: () => void;
   cardKey: string | number;
 }
 
@@ -172,27 +170,22 @@ function FlipIcon({ size = 14 }: { size?: number }) {
  *   5. 📰 What's happening (recent headline)        (full-width)
  *   6. 🇮🇳 India scene                              (full-width)
  *
- * Gestures: drag left = Pass, right = Keep, up = Edge. Tap = flip.
+ * Gestures: buttons only — pass/edge/keep live in the parent S04. Vertical
+ * scroll inside the card reveals the deep read. Tap the flip pill to flip.
+ * (Horizontal drag was removed: on mobile it was swallowing vertical pan
+ * gestures on the sides, breaking scroll. Buttons already cover the action.)
  */
 export function IndustrySwipeCard({
   industry,
-  onPass,
-  onKeep,
   cardKey,
 }: IndustrySwipeCardProps) {
   const [flipped, setFlipped] = useState(false);
-  const [exitDirection, setExitDirection] = useState<'left' | 'right' | null>(null);
   // Scroll hint — shown on mount, fades on first scroll. Re-armed each time
   // the card flips back to the front.
   const [scrollHintVisible, setScrollHintVisible] = useState(true);
   // Which sub-category tab is active on the back's pie-chart section.
   const [activeSubcat, setActiveSubcat] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 200], [-15, 15]);
-  const passOpacity = useTransform(x, [-120, -40], [1, 0]);
-  const keepOpacity = useTransform(x, [40, 120], [0, 1]);
 
   const color = industry.color_primary || '#D4A843';
   const colorDark = industry.color_secondary || '#78350F';
@@ -263,63 +256,18 @@ export function IndustrySwipeCard({
     }
   }, [flipped]);
 
-  function handleDragEnd(_: unknown, info: { offset: { x: number; y: number } }) {
-    const { x: dx, y: dy } = info.offset;
-    const SWIPE_THRESHOLD = 120;
-    // Direction-bail: if the gesture was dominantly vertical, the user was
-    // trying to scroll the card contents — not swipe-through. Snap back
-    // without triggering pass/keep even if |dx| crossed the threshold.
-    if (Math.abs(dy) > Math.abs(dx)) {
-      x.set(0);
-      return;
-    }
-    if (dx < -SWIPE_THRESHOLD) {
-      setExitDirection('left');
-      setTimeout(onPass, 200);
-    } else if (dx > SWIPE_THRESHOLD) {
-      setExitDirection('right');
-      setTimeout(onKeep, 200);
-    } else {
-      x.set(0);
-    }
-  }
-
-  const exitAnim = exitDirection
-    ? {
-        left: { x: -500, opacity: 0, rotate: -25 },
-        right: { x: 500, opacity: 0, rotate: 25 },
-      }[exitDirection]
-    : undefined;
-
   const GOLD_SOLID = '#D4A843';
   const GOLD_70 = 'rgba(212,168,67,0.70)';
 
   return (
     <motion.div
       key={cardKey}
-      drag="x"
-      dragConstraints={{ left: 0, right: 0 }}
-      dragElastic={0.35}
-      onDragEnd={handleDragEnd}
-      style={{ x, rotate }}
       initial={{ opacity: 0, scale: 0.92, y: 30 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
-      exit={exitAnim}
+      exit={{ opacity: 0, scale: 0.96, transition: { duration: 0.2 } }}
       transition={{ type: 'spring', stiffness: 280, damping: 22 }}
-      className="absolute inset-0 cursor-grab active:cursor-grabbing"
+      className="absolute inset-0"
     >
-      {/* Drag overlays */}
-      <motion.div style={{ opacity: passOpacity }} className="absolute top-5 left-5 z-20 pointer-events-none">
-        <div className="text-red-500 border-4 border-red-500 rounded-xl px-4 py-2 text-xl font-black tracking-widest rotate-[-12deg]">
-          PASS
-        </div>
-      </motion.div>
-      <motion.div style={{ opacity: keepOpacity }} className="absolute top-5 right-5 z-20 pointer-events-none">
-        <div className="text-green-500 border-4 border-green-500 rounded-xl px-4 py-2 text-xl font-black tracking-widest rotate-[12deg]">
-          KEEP
-        </div>
-      </motion.div>
-
       {/* Flipper */}
       <div className="relative w-full h-full rounded-2xl overflow-hidden" style={{ perspective: '1600px' }}>
         <motion.div

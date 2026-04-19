@@ -154,11 +154,21 @@ export function S10Sorting() {
         }, 3800 + nudgeMs + 400);
       }
     }, 7200 + lineageDuration + 1200);
-    // NOTE: auto-advance removed. The user now controls when to continue via
-    // the "Continue to my profile →" CTA that appears during the complete
-    // phase. Prevents the ceremony from cutting away before the user has
-    // had time to read the lineage + collective-impact content.
+    // NOTE: the manual "Continue to my profile →" CTA still appears during
+    // the complete phase for users who want to advance immediately — the
+    // effect below layers a gentle auto-advance on top of it.
   }, [enqueueMessage, winningHouse]);
+
+  // Auto-advance to S11 a beat after the complete phase begins. The closing
+  // dialogue (afterLineage + optional nudge beats) lands in the first ~6s;
+  // the user gets another few seconds to take in the lineage + collective
+  // impact, then the ceremony closes itself. The manual CTA remains so
+  // anyone who wants to keep moving can.
+  useEffect(() => {
+    if (phase !== 'complete') return;
+    const t = setTimeout(() => advanceScreen(), 12000);
+    return () => clearTimeout(t);
+  }, [phase, advanceScreen]);
 
   return (
     <div className="flex flex-col items-center h-full overflow-y-auto pb-6 relative">

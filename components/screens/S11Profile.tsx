@@ -262,44 +262,58 @@ export function S11Profile() {
             />
             <div
               ref={cardRef}
-              className="relative rounded-[22px] bg-black/75 backdrop-blur-md p-4 sm:p-5 aspect-[9/16] overflow-hidden"
+              className="relative rounded-[22px] bg-black/75 backdrop-blur-md p-3.5 sm:p-5 aspect-[9/16] overflow-hidden"
               style={{ boxShadow: `0 0 40px ${houseColor}4D` }}
             >
               {/* Row 1: house label + rarity tier */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 min-w-0">
                   <HouseCrest color={houseColor} name={house.name} />
-                  <span className="text-[10px] tracking-[0.25em] opacity-75">
+                  <span className="text-[9.5px] tracking-[0.22em] opacity-75 truncate">
                     {house.name?.toUpperCase() ?? 'FOUNDER'}
                   </span>
                 </div>
                 <span
-                  className="text-[10px] tracking-[0.25em] px-2 py-1 rounded-full border"
+                  className="text-[9.5px] tracking-[0.22em] px-2 py-0.5 rounded-full border shrink-0"
                   style={{ borderColor: `${houseColor}60`, color: houseColor }}
                 >
                   {archetype.rarity.toUpperCase()}
                 </span>
               </div>
 
-              {/* Row 2: name + archetype */}
-              <div className="mt-5">
-                <h1 className="font-serif text-3xl leading-none text-ivory">{displayName}</h1>
-                <h2 className="font-serif italic text-lg mt-1" style={{ color: houseColor }}>
+              {/* Row 2: ARCHETYPE HERO — "which founder they are" is the card's
+                  whole point, so it carries the biggest typography. Name drops
+                  to subtitle size; the "YOU ARE" kicker sets up the reveal. */}
+              <div className="mt-3">
+                <p className="text-[9px] tracking-[0.3em] opacity-60 uppercase">
+                  You are
+                </p>
+                <h1
+                  className="font-serif font-bold leading-[1.04] text-[28px] sm:text-[32px] mt-0.5"
+                  style={{
+                    color: houseColor,
+                    textShadow: `0 0 18px ${houseColor}44, 0 1px 2px rgba(0,0,0,0.7)`,
+                  }}
+                >
                   {archetype.name}
-                </h2>
+                </h1>
+                <p className="font-serif italic text-[15px] text-ivory/80 mt-1.5 truncate">
+                  — {displayName}
+                </p>
               </div>
 
-              {/* Row 3: pull quote — narrative, 14px+ on mobile per audit rule */}
+              {/* Row 3: pull quote — 2 lines max to protect vertical budget */}
               <blockquote
-                className="mt-4 text-[14px] italic text-ivory/90 border-l-2 pl-3 break-words whitespace-normal leading-snug line-clamp-3"
+                className="mt-3 text-[13px] italic text-ivory/90 border-l-2 pl-3 break-words whitespace-normal leading-snug line-clamp-2"
                 style={{ borderColor: houseColor }}
               >
                 &ldquo;{archetype.pullQuote}&rdquo;
               </blockquote>
 
-              {/* Row 4: radar */}
-              <div className="my-5 flex justify-center">
-                <RadarChart scores={radarScores} color={houseColor} size={200} />
+              {/* Row 4: radar — smaller so the 9:16 budget holds on small
+                  phones. Scaled up a touch on sm+ where we have more height. */}
+              <div className="my-3 flex justify-center">
+                <RadarChart scores={radarScores} color={houseColor} size={160} />
               </div>
 
               {/* Row 5: 3-stat pill row */}
@@ -310,16 +324,16 @@ export function S11Profile() {
               </div>
 
               {/* Row 6: founder twin */}
-              <div className="mt-5">
-                <div className="text-[10px] tracking-[0.25em] opacity-65 mb-2">YOUR FOUNDER TWIN</div>
+              <div className="mt-3.5">
+                <div className="text-[9.5px] tracking-[0.22em] opacity-65 mb-1.5">YOUR FOUNDER TWIN</div>
                 <FounderTwinInline twin={archetype.twinGlobal} color={houseColor} />
-                <div className="text-[10px] opacity-55 mt-2 text-center">
+                <div className="text-[10px] opacity-55 mt-1.5 text-center">
                   · and {archetype.twinIndian.name.split(' ').slice(-1)[0]} in India
                 </div>
               </div>
 
               {/* Row 7: signature + kryptonite */}
-              <div className="mt-5 grid grid-cols-2 gap-3 text-xs">
+              <div className="mt-3.5 grid grid-cols-2 gap-3 text-xs">
                 <div>
                   <div className="text-[9px] tracking-widest opacity-60 mb-1">SIGNATURE MOVE</div>
                   <div className="opacity-85 italic break-words whitespace-normal leading-snug">{archetype.signatureMove}</div>
@@ -332,21 +346,21 @@ export function S11Profile() {
 
               {/* Row 8: crowned idea */}
               {crowned && (
-                <div className="mt-5 rounded-xl border border-white/10 p-3">
+                <div className="mt-3.5 rounded-xl border border-white/10 p-2.5">
                   <div className="text-[9px] tracking-widest opacity-60">CROWNED IDEA</div>
-                  <div className="font-semibold text-base mt-1 text-ivory">
+                  <div className="font-semibold text-[15px] leading-snug mt-0.5 text-ivory line-clamp-1">
                     {crowned.idea.idea_name}
                   </div>
-                  <div className="text-xs opacity-70">
+                  <div className="text-[11px] opacity-70 truncate">
                     in {crowned.idea.domain_primary.replace(/_/g, ' ')}
                   </div>
                 </div>
               )}
 
               {/* Row 9: url + challenge badge */}
-              <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-[10px]">
+              <div className="mt-3.5 pt-3 border-t border-white/10 flex items-center justify-between text-[9.5px]">
                 <span className="tracking-widest opacity-50">#CATALSTCHALLENGE</span>
-                <span className="font-mono opacity-60">
+                <span className="font-mono opacity-60 truncate">
                   catalst.app/{houseId ?? 'founder'}/{displayName.toLowerCase()}
                 </span>
               </div>
@@ -502,17 +516,17 @@ function StatPill({
 
 function FounderTwinInline({ twin, color }: { twin: FounderTwin; color: string }) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/5 border border-white/10">
+    <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-white/5 border border-white/10">
       <div
-        className="w-12 h-12 rounded-full grid place-items-center font-serif text-lg font-bold shrink-0 text-white"
+        className="w-10 h-10 rounded-full grid place-items-center font-serif text-base font-bold shrink-0 text-white"
         style={{ background: `linear-gradient(135deg, ${color}, ${color}aa)` }}
       >
         {twin.initials}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="font-semibold text-sm truncate text-ivory">{twin.name}</div>
-        <div className="text-xs opacity-70 truncate">{twin.company}</div>
-        <div className="text-xs italic opacity-60 mt-1 line-clamp-2">&ldquo;{twin.whyQuote}&rdquo;</div>
+        <div className="font-semibold text-[13px] truncate text-ivory">{twin.name}</div>
+        <div className="text-[11px] opacity-70 truncate">{twin.company}</div>
+        <div className="text-[11px] italic opacity-60 mt-0.5 line-clamp-1">&ldquo;{twin.whyQuote}&rdquo;</div>
       </div>
     </div>
   );

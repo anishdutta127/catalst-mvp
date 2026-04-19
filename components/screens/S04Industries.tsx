@@ -499,8 +499,6 @@ export function S04Industries() {
               <IndustrySwipeCard
                 industry={currentCard}
                 cardKey={currentCard.id}
-                onPass={handlePass}
-                onKeep={handleKeep}
               />
             </div>
           )}

@@ -230,16 +230,44 @@ export function MysticVaultCard({
           </span>
         </motion.a>
 
-        {/* Secondary CTA — "Maybe later" escape hatch. Only rendered when the
-            caller passes onContinue; on S11 (no further screen) it's hidden. */}
+        {/* Secondary CTA — forward path to the sorting ceremony. Gold-accented
+            with a breathing glow so it reads as a real "next step" rather than
+            an afterthought; stays visually quieter than the WhatsApp primary
+            so the hierarchy holds. Only rendered when caller passes onContinue;
+            on S11 (no further screen) it's hidden. */}
         {onContinue && (
-          <button
+          <motion.button
             onClick={onContinue}
             data-testid="vault-continue-cta"
-            className="w-full h-10 rounded-xl bg-transparent border border-white/15 text-blue-100/60 text-[12px] hover:bg-white/5 hover:text-blue-50/90 hover:border-white/25 transition-all"
+            whileHover={{ scale: 1.015 }}
+            whileTap={{ scale: 0.97 }}
+            className="relative w-full h-12 rounded-2xl overflow-hidden font-semibold text-[14px] flex items-center justify-center gap-2"
+            style={{
+              background: 'linear-gradient(95deg, rgba(212,168,67,0.18), rgba(212,168,67,0.32), rgba(212,168,67,0.18))',
+              border: '1.5px solid rgba(212,168,67,0.65)',
+              color: '#F5E6B3',
+            }}
           >
-            Maybe later — continue to my house →
-          </button>
+            <motion.span
+              className="absolute inset-0 rounded-2xl pointer-events-none"
+              animate={{
+                boxShadow: [
+                  '0 0 10px rgba(212,168,67,0.30)',
+                  '0 0 22px rgba(212,168,67,0.60)',
+                  '0 0 10px rgba(212,168,67,0.30)',
+                ],
+              }}
+              transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+            />
+            <span className="relative">Continue to your house</span>
+            <motion.span
+              className="relative"
+              animate={{ x: [0, 3, 0] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              →
+            </motion.span>
+          </motion.button>
         )}
 
         {/* LinkedIn link */}
